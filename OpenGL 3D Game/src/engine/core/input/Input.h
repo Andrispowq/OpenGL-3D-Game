@@ -1,6 +1,3 @@
-#ifndef INPUT_H_INCLUDED
-#define INPUT_H_INCLUDED
-
 #include <vector>
 #include "engine/core/Window.h"
 #include "engine/core/Math.h"
@@ -13,13 +10,13 @@ public:
 	bool Init(const Window& window) const;
 	bool Update();
 
-	bool IsKeyPushed(int key) const { return std::find(pushedKeys.begin(), pushedKeys.end(), key) != pushedKeys.end(); }
-	bool IsKeyHeld(int key) const { return std::find(keysHolding.begin(), keysHolding.end(), key) != keysHolding.end(); }
-	bool IsKeyReleased(int key) const { return std::find(releasedKeys.begin(), releasedKeys.end(), key) != releasedKeys.end(); }
+	bool IsKeyPushed(const int& key) const { return std::find(pushedKeys.begin(), pushedKeys.end(), key) != pushedKeys.end(); }
+	bool IsKeyHeld(const int& key) const { return std::find(keysHolding.begin(), keysHolding.end(), key) != keysHolding.end(); }
+	bool IsKeyReleased(const int& key) const { return std::find(releasedKeys.begin(), releasedKeys.end(), key) != releasedKeys.end(); }
 
-	bool IsButtonPushed(int button) const { return std::find(pushedButtons.begin(), pushedButtons.end(), button) != pushedButtons.end(); }
-	bool IsButtonHeld(int button) const { return std::find(buttonsHolding.begin(), buttonsHolding.end(), button) != buttonsHolding.end(); }
-	bool IsButtonReleased(int button) const { return std::find(releasedButtons.begin(), releasedButtons.end(), button) != releasedButtons.end(); }
+	bool IsButtonPushed(const int& button) const { return std::find(pushedButtons.begin(), pushedButtons.end(), button) != pushedButtons.end(); }
+	bool IsButtonHeld(const int& button) const { return std::find(buttonsHolding.begin(), buttonsHolding.end(), button) != buttonsHolding.end(); }
+	bool IsButtonReleased(const int& button) const { return std::find(releasedButtons.begin(), releasedButtons.end(), button) != releasedButtons.end(); }
 
 	bool IsPause() const { return pause; }
 	void SetPause(bool pause) { Input::pause = pause; }
@@ -43,6 +40,14 @@ public:
 	inline std::vector<int> GetPushedButtons() const { return pushedButtons; }
 	inline std::vector<int> GetButtonsHolding() const { return buttonsHolding; }
 	inline std::vector<int> GetReleasedButtons() const { return releasedButtons; }
+
+	inline void SetPushedKeys(const std::vector<int>& pushedKeys) { this->pushedKeys = pushedKeys; }
+	inline void SetKeysHolding(const std::vector<int>& keysHolding) { this->keysHolding = keysHolding; }
+	inline void SetReleasedKeys(const std::vector<int>& releasedKeys) { this->releasedKeys = releasedKeys; }
+
+	inline void SetPushedButtons(const std::vector<int>& pushedButtons) { this->pushedButtons = pushedButtons; }
+	inline void SetButtonsHolding(const std::vector<int>& buttonsHolding) { this->buttonsHolding = buttonsHolding; }
+	inline void SetReleasedButtons(const std::vector<int>& releasedButtons) { this->releasedButtons = releasedButtons; }
 private:
 	Input() {};
 	virtual ~Input() {}
@@ -64,5 +69,3 @@ private:
 	
 	bool pause;
 };
-
-#endif

@@ -112,5 +112,5 @@ void Window::render() const
 
 bool Window::shouldClose() const
 {
-	return glfwWindowShouldClose(window);
+	return glfwWindowShouldClose(window) || closed;
 }

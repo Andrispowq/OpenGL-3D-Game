@@ -10,7 +10,7 @@ uniform float scale;
 
 void main()
 {
-	gl_Position = vec4(scale == 0 ? position_VS : position_VS * scale, 1);
+	gl_Position = vec4(position_VS * scale, 1);
 
 	colour_FS = position_VS;
 }

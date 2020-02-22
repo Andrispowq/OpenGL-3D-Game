@@ -17,7 +17,8 @@ int main()
 
 	window.clearColor(0, 0, 0, 1);
 
-	Input::GetInstance().Init(window);
+	Input* in = &(Input::GetInstance());
+	in->Init(window);
 
 	VBO vbo;
 	Mesh mesh;
@@ -56,15 +57,26 @@ int main()
 	if (!shader.CompileShader())
 		std::cerr << "Shader couldn't be compiled" << std::endl;
 
-	shader.AddUniform("scale");
+	if (!shader.AddUniform("scale"))
+	{
+		exit(-1);
+	}
+	
+	shader.Bind();
 	shader.SetUniformf("scale", 0.5f);
-
+	shader.Unbind();
+	
 	while (!window.shouldClose())
 	{
-		Input::GetInstance().Update();
+		in->Update();
 
 		window.clearScreen();
 		window.input();
+
+		if (in->IsKeyPushed(GLFW_KEY_ESCAPE))
+		{
+			window.SetClosed(true);
+		}
 
 		shader.Bind();
 		vbo.draw();

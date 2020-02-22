@@ -9,21 +9,28 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 
 void invoke_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	auto pushedKeys = Input::GetInstance().GetPushedKeys();
+
 	if (action == GLFW_PRESS)
 	{
-		if (std::find(Input::GetInstance().GetPushedKeys().begin(), Input::GetInstance().GetPushedKeys().end(), key) == Input::GetInstance().GetPushedKeys().end())
+		if (std::find(pushedKeys.begin(), pushedKeys.end(), key) == pushedKeys.end())
 		{
-			Input::GetInstance().GetPushedKeys().push_back(key);
-			Input::GetInstance().GetKeysHolding().push_back(key);
+			pushedKeys.push_back(key);
+			pushedKeys.push_back(key);
 		}
 	}
 
 	if (action == GLFW_RELEASE)
 	{
-		auto index = std::find(Input::GetInstance().GetPushedKeys().begin(), Input::GetInstance().GetPushedKeys().end(), key);
-		Input::GetInstance().GetPushedKeys().erase(index);
-		Input::GetInstance().GetKeysHolding().erase(index);
+		auto index = std::find(pushedKeys.begin(), pushedKeys.end(), key);
+		if (index != pushedKeys.end())
+		{
+			pushedKeys.erase(index);
+			pushedKeys.erase(index);
+		}
 	}
+
+	Input::GetInstance().SetPushedKeys(pushedKeys);
 }
 
 Input& Input::GetInstance()

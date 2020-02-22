@@ -1,6 +1,3 @@
-#ifndef WINDOW_H_INCLUDED
-#define WINDOW_H_INDLUDED
-
 #include <iostream>
 #include <glew.h>
 #include <glfw3.h>
@@ -23,6 +20,9 @@ public:
 	void render() const;
 
 	inline GLFWwindow* getWindow() const { return window; }
+
+	inline bool GetClosed() const { return closed; }
+	inline void SetClosed(const bool& closed) { this->closed = closed; }
 private:
 	bool initGLFW() const;
 	bool initGLEW() const;
@@ -31,8 +31,7 @@ private:
 	int height;
 	const char* title;
 	bool fullscreen;
+	bool closed;
 
 	GLFWwindow* window;
 };
-
-#endif
