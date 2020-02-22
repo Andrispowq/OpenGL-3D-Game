@@ -5,8 +5,17 @@
 
 #define PI 3.141592653589793
 
-#define ToRadians(x) (x * PI) / 180
-#define ToDegrees(x) (x * 180) / PI
+template<typename T>
+T ToDegrees(T x)
+{
+	return (x / PI) * 180;
+}
+
+template<typename T>
+T ToRadians(T x)
+{
+	return (x * PI) / 180;
+}
 
 template<typename T>
 class Vector2
