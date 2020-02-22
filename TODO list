@@ -1,7 +1,6 @@
 This file contains the list of known bugs, and things what I want to implement.
 Erors that need fix:
-  -in Application.cpp, the 3 functionalities from Input.h that have been implemented in Input.cpp throw unresolved external symbol link errors.
-  -shader uniforms don't work yet, they cannot be uploaded to the shaders
+   -shader uniforms don't work yet, they cannot be uploaded to the shaders
   
 TODO list:
   -Better organization of the classes
