@@ -59,6 +59,9 @@
     <ClInclude Include="src\engine\core\math\Math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\core\math\MathT.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\engine\core\model\Mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>

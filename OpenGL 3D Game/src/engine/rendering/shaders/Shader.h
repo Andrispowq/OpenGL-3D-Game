@@ -51,22 +51,22 @@ public:
 		glUniform1f(uniforms.at(name), value);
 	}
 
-	void SetUniform(const std::string& name, Vector2f value) const
+	void SetUniform(const std::string& name, const Vector2f& value) const
 	{
 		glUniform2f(uniforms.at(name), value.x, value.y);
 	}
 
-	void SetUniform(const std::string& name, Vector3f value) const
+	void SetUniform(const std::string& name, const Vector3f& value) const
 	{
 		glUniform3f(uniforms.at(name), value.x, value.y, value.z);
 	}
 
-	void SetUniform(const std::string& name, Vector4f value) const
+	void SetUniform(const std::string& name, const Vector4f& value) const
 	{
 		glUniform4f(uniforms.at(name), value.x, value.y, value.z, value.w);
 	}
 
-	void SetUniform(const std::string& name, Matrix4f matrix) const
+	void SetUniform(const std::string& name, const Matrix4f& matrix) const
 	{
 		glUniformMatrix4fv(uniforms.at(name), 1, GL_FALSE, &matrix[0][0]);
 	}

@@ -49,7 +49,7 @@ public:
 	inline Vector2<T> operator*=(const T& v) { return Vector2<T>(x *= v, y *= v); }
 	inline Vector2<T> operator/=(const T& v) { return Vector2<T>(x /= v, y /= v); }
 
-	inline T& operator[](const int index) const
+	inline T operator[](const int& index) const
 	{
 		if (index == 0)
 			return x;
@@ -66,8 +66,8 @@ public:
 	inline bool operator==(const Vector2<T>& v) const { return x == v.x && y == v.y; }
 	inline bool operator!=(const Vector2<T>& v) const { return !(operator==(v)); }
 
-	inline T length() const { return sqrt(this->dot(this)); }
-	inline T lengthSquared() const { return this->dot(this); }
+	inline T length() const { return sqrt(this->dot(*this)); }
+	inline T lengthSquared() const { return this->dot(*this); }
 	inline Vector2<T> normalize() const { return *this / length(); }
 	inline T dot(const Vector2<T>& v) const { return x * v.x + y * v.y;	}
 
@@ -121,7 +121,7 @@ public:
 	inline Vector3<T> operator*=(const T& v) { return Vector3<T>(x *= v, y *= v, z *= v); }
 	inline Vector3<T> operator/=(const T& v) { return Vector3<T>(x /= v, y /= v, z /= v); }
 	
-	inline T& operator[](const int index) const
+	inline T operator[](const int& index) const
 	{
 		if (index == 0)
 			return x;
@@ -216,7 +216,7 @@ public:
 	inline Vector4<T> operator*=(const T& v) { return Vector4<T>(x *= v, y *= v, z *= v, w *= v); }
 	inline Vector4<T> operator/=(const T& v) { return Vector4<T>(x /= v, y /= v, z /= v, w /= v); }
 
-	inline T& operator[](const int index) const
+	inline T operator[](const int& index) const
 	{
 		if (index == 0)
 			return x;
@@ -262,10 +262,6 @@ typedef Vector2<int> Vector2i;
 typedef Vector3<int> Vector3i;
 typedef Vector4<int> Vector4i;
 
-typedef Vector2<unsigned int> Vector2ui;
-typedef Vector3<unsigned int> Vector3ui;
-typedef Vector4<unsigned int> Vector4ui;
-
 typedef Vector2<double> Vector2d;
 typedef Vector3<double> Vector3d;
 typedef Vector4<double> Vector4d;
@@ -305,25 +301,45 @@ public:
 	inline Matrix4f operator*(Matrix4f v) const;
 	inline Matrix4f operator*=(Matrix4f v);
 
-	inline Vector4f operator*(Vector4f v) const;
+	Vector4f operator*(Vector4f v) const;
 
 	inline float * operator[](const int index) const
 	{
 		return m[index];
 	}
 
-	static Matrix4f Identity();
-	static Matrix4f Zero();
+	Matrix4f Identity() const;
+	Matrix4f Zero() const;
 
-	static Matrix4f Translation(Vector3f position);
-	static Matrix4f Rotation(Vector3f rotation);
-	static Matrix4f Scaling(Vector3f scale);
+	Matrix4f Translation(Vector3f position) const;
+	Matrix4f Rotation(Vector3f rotation) const;
+	Matrix4f Scaling(Vector3f scale) const;
 
-	static Matrix4f Transformation(Vector3f translation, Vector3f rotation, Vector3f scaling);
-	static Matrix4f PerspectiveProjection(float fov, float aspectRatio, float nearPlane, float farPlane);
-	static Matrix4f View(Vector3f forward, Vector3f up);
+	Matrix4f Transformation(Vector3f translation, Vector3f rotation, Vector3f scaling) const;
+	Matrix4f PerspectiveProjection(float fov, float aspectRatio, float nearPlane, float farPlane) const;
+	Matrix4f View(Vector3f forward, Vector3f up) const;
 
-	inline float * const getRow(int i) const;
+	float * const getRow(int i) const;
+
+	void print() const
+	{
+		std::string out;
+
+		for (int i = 0; i < 4; i++)
+		{
+			out += "| ";
+			out += m[i][0];
+			out += ", ";
+			out += m[i][1];
+			out += ", ";
+			out += m[i][2];
+			out += ", ";
+			out += m[i][3];
+			out += " |\n";
+		}
+
+		std::cout << out.c_str() << std::endl;
+	}
 public:
 	float **m;
 };

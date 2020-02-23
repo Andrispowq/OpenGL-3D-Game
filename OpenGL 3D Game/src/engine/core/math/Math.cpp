@@ -1,147 +1,5 @@
 #include "Math.h"
 
-template<typename T>
-inline Vector2<T> Vector2<T>::abs() const
-{
-	return Vector2(fabs((*this).x), fabs((*this).y));
-}
-
-template<typename T>
-Vector2<T> Vector2<T>::lerp(const Vector2<T>& b, const T& t, const bool& invert) const
-{
-	float x_ = x + (b.x - x) * t;
-	float y_ = y + (b.y - y) * t;
-
-	return invert ? Vector2<T>(y_, x_) : Vector2<T>(x_, y_);
-}
-
-template<typename T>
-Vector2<T> Vector2<T>::lerp(const Vector2<T>& b, const Vector2<T>& t, const bool& invert) const
-{
-	float x_ = x + (b.x - x) * t.x;
-	float y_ = y + (b.y - y) * t.y;
-
-	return invert ? Vector2<T>(y_, x_) : Vector2<T>(x_, y_);
-}
-
-template<typename T>
-Vector2<T> Vector2<T>::swap() const
-{
-	return Vector2<T>(y, x);
-}
-
-template<typename T>
-inline Vector3<T> Vector3<T>::abs() const
-{
-	return Vector3<T>(std::abs(x), std::abs(y), std::abs(z));
-}
-
-template<typename T>
-Vector3<T> Vector3<T>::cross(const Vector3<T>& v) const
-{
-	float x_ = y * v.z - z * v.y;
-	float y_ = z * v.x - x * v.z;
-	float z_ = x * v.y - y * v.x;
-
-	return Vector3<T>(x_, y_, z_);
-}
-
-template<typename T>
-Vector3<T> Vector3<T>::reflect(const Vector3<T>& normal) const
-{
-	return *this - normal * 2 * this->dot(normal);
-}
-
-template<typename T>
-Vector3<T> Vector3<T>::refract(const Vector3<T>& normal, const T& eta) const
-{
-	float k = 1 - std::pow(eta, 2) * (1 - std::pow(this->dot(normal), 2));
-
-	if (k < 0)
-		return Vector3<T>(0);
-	else
-		return *this * eta - normal * (eta * this->dot(normal) + std::sqrt(k));
-}
-
-template<typename T>
-Vector3<T> Vector3<T>::lerp(const Vector3<T>& b, const T& t) const
-{
-	float x_ = x + (b.x - x) * t;
-	float y_ = y + (b.y - y) * t;
-	float z_ = z + (b.z - z) * t;
-
-	return Vector3<T>(x_, y_, z_);
-}
-
-template<typename T>
-Vector3<T> Vector3<T>::lerp(const Vector3<T>& b, const Vector3<T>& t) const
-{
-	float x_ = x + (b.x - x) * t.x;
-	float y_ = y + (b.y - y) * t.y;
-	float z_ = z + (b.z - z) * t.z;
-
-	return Vector3<T>(x_, y_, z_);
-}
-
-template<typename T>
-Vector3<T> Vector3<T>::rotate(const Vector3<T>& angles) const
-{
-	Vector3<T> rotX = this->rotate(Vector3<T>(1, 0, 0), angles.x);
-	Vector3<T> rotY = this->rotate(Vector3<T>(0, 1, 0), angles.y);
-	Vector3<T> rotZ = this->rotate(Vector3<T>(0, 0, 1), angles.z);
-
-	return *this + rotX + rotY + rotZ;
-}
-
-template<typename T>
-Vector3<T> Vector3<T>::rotate(const Vector3<T>& axis, const T& angle) const
-{
-	Vector3<T> result;
-
-	if (axis.x != 0)
-	{
-		result = *this + Vector3<T>(0, this->x, x / std::tan(angle));
-	}
-	else if (axis.y != 0)
-	{
-		result = *this + Vector3<T>(this->x, 0, x / std::tan(angle));
-	}
-	else if (axis.z != 0)
-	{
-		result = *this + Vector3<T>(this->x, x / std::tan(angle), 0);
-	}
-
-	return *this + result;
-}
-
-template<typename T>
-inline Vector4<T> Vector4<T>::abs() const
-{
-	return Vector4<T>(std::abs(x), std::abs(y), std::abs(z), std::abs(w));
-}
-
-template<typename T>
-Vector4<T> Vector4<T>::lerp(const Vector4<T>& b, const T& t) const
-{
-	float x_ = x + (b.x - x) * t;
-	float y_ = y + (b.y - y) * t;
-	float z_ = z + (b.z - z) * t;
-	float w_ = w + (b.w - w) * t;
-
-	return Vector4<T>(x_, y_, z_, w_);
-}
-
-template<typename T>
-Vector4<T> Vector4<T>::lerp(const Vector4<T>& b, const Vector4<T>& t) const
-{
-	float x_ = x + (b.x - x) * t.x;
-	float y_ = y + (b.y - y) * t.y;
-	float z_ = z + (b.z - z) * t.z;
-	float w_ = w + (b.w - w) * t.w;
-
-	return Vector4<T>(x_, y_, z_, w_);
-}
-
 Matrix4f::Matrix4f(const Matrix4f& m)
 {
 	this->m = new float*[4];
@@ -200,7 +58,7 @@ Matrix4f::~Matrix4f()
 {
 	for (int i = 0; i < 4; i++)
 	{
-		delete[] m[i];
+ 		delete[] m[i];
 	}
 
 	delete[] m;
@@ -382,7 +240,9 @@ inline Matrix4f Matrix4f::operator*(Matrix4f v) const
 	{
 		for (int j = 0; j < 4; j++)
 		{
-			res.m[i][j] = m[i][0] * v.m[0][j] + m[i][1] * v.m[1][j] + m[i][2] * v.m[2][j] + m[i][3] * v.m[3][j];
+			//j -> this matrix
+			//i -> v matrix
+			res.m[i][j] = v[i][0] * m[0][j] + v[i][1] * m[1][j] + v[i][2] * m[2][j] + v[i][3] * m[3][j];
 		}
 	}
 
@@ -412,7 +272,7 @@ inline Matrix4f Matrix4f::operator*=(Matrix4f v)
 	return *this;
 }
 
-inline Vector4f Matrix4f::operator*(Vector4f v) const
+Vector4f Matrix4f::operator*(Vector4f v) const
 {
 	Vector4f res = Vector4f();
 
@@ -424,7 +284,7 @@ inline Vector4f Matrix4f::operator*(Vector4f v) const
 	return res;
 }
 
-Matrix4f Matrix4f::Identity()
+Matrix4f Matrix4f::Identity() const
 {
 	Matrix4f res = Matrix4f();
 
@@ -442,7 +302,7 @@ Matrix4f Matrix4f::Identity()
 	return res;
 }
 
-Matrix4f Matrix4f::Zero()
+Matrix4f Matrix4f::Zero() const
 {
 	Matrix4f res = Matrix4f();
 
@@ -457,9 +317,9 @@ Matrix4f Matrix4f::Zero()
 	return res;
 }
 
-Matrix4f Matrix4f::Translation(Vector3f position) 
+Matrix4f Matrix4f::Translation(Vector3f position) const
 {
-	Matrix4f res = Matrix4f().Identity();
+	Matrix4f res = Matrix4f();
 
 	res.m[3][0] = position.x;
 	res.m[3][1] = position.y;
@@ -468,7 +328,7 @@ Matrix4f Matrix4f::Translation(Vector3f position)
 	return res;
 }
 
-Matrix4f Matrix4f::Rotation(Vector3f rotation)
+Matrix4f Matrix4f::Rotation(Vector3f rotation) const
 {
 	Matrix4f rx = Matrix4f().Identity();
 	Matrix4f ry = Matrix4f().Identity();
@@ -496,7 +356,7 @@ Matrix4f Matrix4f::Rotation(Vector3f rotation)
 	return ry * rx * rz;
 }
 
-Matrix4f Matrix4f::Scaling(Vector3f scale)
+Matrix4f Matrix4f::Scaling(Vector3f scale) const
 {
 	Matrix4f res = Matrix4f().Identity();
 
@@ -507,7 +367,7 @@ Matrix4f Matrix4f::Scaling(Vector3f scale)
 	return res;
 }
 
-Matrix4f Matrix4f::Transformation(Vector3f translation, Vector3f rotation, Vector3f scaling)
+Matrix4f Matrix4f::Transformation(Vector3f translation, Vector3f rotation, Vector3f scaling) const
 {
 	Matrix4f Translation = Matrix4f().Translation(translation);
 	Matrix4f Rotation = Matrix4f().Rotation(rotation);
@@ -516,7 +376,7 @@ Matrix4f Matrix4f::Transformation(Vector3f translation, Vector3f rotation, Vecto
 	return Scaling * Rotation * Translation;
 }
 
-Matrix4f Matrix4f::PerspectiveProjection(float fov, float aspectRatio, float nearPlane, float farPlane)
+Matrix4f Matrix4f::PerspectiveProjection(float fov, float aspectRatio, float nearPlane, float farPlane) const
 {
 	Matrix4f res = Matrix4f().Identity();
 
@@ -533,7 +393,7 @@ Matrix4f Matrix4f::PerspectiveProjection(float fov, float aspectRatio, float nea
 	return res;
 }
 
-Matrix4f Matrix4f::View(Vector3f forward, Vector3f up)
+Matrix4f Matrix4f::View(Vector3f forward, Vector3f up) const
 {
 	Vector3f right = up.cross(forward);
 
@@ -557,7 +417,7 @@ Matrix4f Matrix4f::View(Vector3f forward, Vector3f up)
 /*
 	The parameter <i> is the index of the row, so to get the first row, the parameter MUST be 0
 */
-inline float * const Matrix4f::getRow(int i) const
+float * const Matrix4f::getRow(int i) const
 {
 	float* ptr = new float[4];
 

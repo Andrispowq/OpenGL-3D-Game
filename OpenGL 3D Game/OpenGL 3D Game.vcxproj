@@ -36,6 +36,7 @@
     <ClInclude Include="src\engine\core\framework\Input.h" />
     <ClInclude Include="src\engine\core\framework\Window.h" />
     <ClInclude Include="src\engine\core\math\Math.h" />
+    <ClInclude Include="src\engine\core\math\MathT.h" />
     <ClInclude Include="src\engine\core\model\Mesh.h" />
     <ClInclude Include="src\engine\core\model\Vertex.h" />
     <ClInclude Include="src\engine\core\movement\Camera.h" />

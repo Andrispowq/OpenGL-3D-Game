@@ -11,6 +11,8 @@ public:
 	Camera(float moveAmt = 0.1f, float rotAmt = 0.8f, float mouseSensitivity = 0.8f, float fov = 90.0f, const Vector3f& position = Vector3f());
 	Camera(const Vector3f& position, float fov);
 
+	virtual ~Camera();
+
 	void LogStage() const;
 	void SetProjection(const float& fov, const float& width, const float& height);
 
@@ -62,5 +64,7 @@ private:
     Vector4f* frustumPlanes;
     Vector3f* frustumCorners;
 };
+
+#include "engine/core/math/MathT.h"
 
 #endif

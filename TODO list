@@ -1,8 +1,0 @@
-This file contains the list of known bugs, and things what I want to implement.
-Erors that need fix:
-   
-
-TODO list:
-  -Better organization of the classes
-  -Implementing an Entity-Component system which I wrote in Java
-  -Creating a renderer, that's better then the Java version

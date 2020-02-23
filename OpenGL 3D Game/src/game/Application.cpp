@@ -20,29 +20,30 @@ int main()
 	Input* in = &(Input::GetInstance());
 	in->Init(window);
 
-	/*Vector3f a;
-	Vector3f b;
-	a.lerp(b, 0.5f).print();
-	a.cross(b).print();
-	a.reflect(b).print();
-	a.refract(b, 0.2f).print();*/
-
-	Camera camera(Vector3f(0, 0, 0), 90);
+	//Camera camera(Vector3f(0, 0, 0), 90);
 
 	VBO vbo;
 	Mesh mesh;
 
-	Vertex v0(Vector3f(-1, -1, 0));
-	Vertex v1(Vector3f(-1,  1, 0));
-	Vertex v2(Vector3f( 1,  1, 0));
-	Vertex v3(Vector3f( 1, -1, 0));
+	Vertex v0(Vector3f(-1, -1, -1));
+	Vertex v1(Vector3f(-1,  1, -1));
+	Vertex v2(Vector3f( 1,  1, -1));
+	Vertex v3(Vector3f( 1, -1, -1));
+
+	Vertex v0(Vector3f(-1, -1,  1));
+	Vertex v1(Vector3f(-1,  1,  1));
+	Vertex v2(Vector3f( 1,  1,  1));
+	Vertex v3(Vector3f( 1, -1,  1));
 
 	std::vector<Vertex> vertices;
 	std::vector<unsigned short> indices;
 
 	vertices.push_back(v0);
 	vertices.push_back(v1);
-	vertices.push_back(v2);	vertices.push_back(v3);
+	vertices.push_back(v2);	
+	vertices.push_back(v3);
+
+	unsigned short arr[] = { 1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11, 12, 13, 14, 15, 0, 16, 17, 18, 1, 3, 19, 7, 5, 20, 4, 9, 21, 10, 12, 22, 13, 15, 23, 0, 17 };
 
 	indices.push_back(0);
 	indices.push_back(1);
@@ -66,15 +67,11 @@ int main()
 	if (!shader.CompileShader())
 		std::cerr << "Shader couldn't be compiled" << std::endl;
 
-	if (!shader.AddUniform("scale"))
+	if (!shader.AddUniform("rotMat"))
 	{
 		exit(-1);
 	}
-	
-	shader.Bind();
-	shader.SetUniformf("scale", 0.5f);
-	shader.Unbind();
-	
+
 	while (!window.shouldClose())
 	{
 		in->Update();
@@ -88,12 +85,12 @@ int main()
 		}
 
 		//Here are some test for the input system
-		if (in->IsButtonPushed(0))
+		/*if (in->IsButtonPushed(0))
 		{
 			println("hello");
 		}
 
-		in->GetCursorPosition().print();
+		in->GetCursorPosition().print();*/
 
 		shader.Bind();
 		vbo.draw();

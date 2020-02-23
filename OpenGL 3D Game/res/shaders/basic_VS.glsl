@@ -6,11 +6,11 @@ layout(location = 2) in vec3 normal_VS;
 
 out vec3 colour_FS;
 
-uniform float scale;
+uniform mat4 rotMat;
 
 void main()
 {
-	gl_Position = vec4(position_VS * scale, 1);
+	gl_Position = rotMat * vec4(position_VS, 1);
 
 	colour_FS = position_VS;
 }
