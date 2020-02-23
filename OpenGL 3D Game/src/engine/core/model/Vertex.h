@@ -1,4 +1,7 @@
-#include "Math.h"
+#ifndef VERTEX_H
+#define VERTEX_H
+
+#include "engine/core/math/Math.h"
 
 class Vertex
 {
@@ -21,3 +24,5 @@ private:
 	Vector2f texture;
 	Vector3f normal;
 };
+
+#endif

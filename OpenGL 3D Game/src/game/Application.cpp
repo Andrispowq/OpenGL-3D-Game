@@ -1,7 +1,7 @@
 #pragma once
 
-#include "engine/core/input/Input.h"
-#include "engine/core/VBO.h"
+#include "engine/core/movement/Camera.h"
+#include "engine/core/buffer/VBO.h"
 #include "engine/rendering/shaders/Shader.h"
 
 #define println(x) std::cout << x << std::endl;
@@ -19,6 +19,15 @@ int main()
 
 	Input* in = &(Input::GetInstance());
 	in->Init(window);
+
+	/*Vector3f a;
+	Vector3f b;
+	a.lerp(b, 0.5f).print();
+	a.cross(b).print();
+	a.reflect(b).print();
+	a.refract(b, 0.2f).print();*/
+
+	Camera camera(Vector3f(0, 0, 0), 90);
 
 	VBO vbo;
 	Mesh mesh;
@@ -77,6 +86,14 @@ int main()
 		{
 			window.SetClosed(true);
 		}
+
+		//Here are some test for the input system
+		if (in->IsButtonPushed(0))
+		{
+			println("hello");
+		}
+
+		in->GetCursorPosition().print();
 
 		shader.Bind();
 		vbo.draw();

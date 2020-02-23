@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MESH_H
+#define MESH_H
 
 #include <vector>
 #include "Vertex.h"
@@ -25,3 +26,5 @@ private:
 	std::vector<Vertex> vertices;
 	std::vector<unsigned short> indices;
 };
+
+#endif

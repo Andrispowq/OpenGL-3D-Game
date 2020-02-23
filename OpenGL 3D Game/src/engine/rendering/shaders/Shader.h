@@ -1,10 +1,11 @@
-#pragma once
+#ifndef SHADER_H
+#define SHADER_H
 
 #include <glew.h>
 #include <fstream>
 #include <unordered_map>
 
-#include "engine/core/Math.h"
+#include "engine/core/math/Math.h"
 #include "engine/core/Util.h"
 
 enum ShaderType
@@ -88,3 +89,5 @@ private:
 	std::unordered_map<std::string, GLuint> uniforms;
 	mutable unsigned int counter;
 };
+
+#endif 

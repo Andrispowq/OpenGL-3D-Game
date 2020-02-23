@@ -19,26 +19,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\engine\core\Constants.h" />
-    <ClInclude Include="src\engine\core\input\Input.h" />
-    <ClInclude Include="src\engine\core\Math.h" />
-    <ClInclude Include="src\engine\core\Mesh.h" />
-    <ClInclude Include="src\engine\core\Util.h" />
-    <ClInclude Include="src\engine\core\VBO.h" />
-    <ClInclude Include="src\engine\core\Vertex.h" />
-    <ClInclude Include="src\engine\core\Window.h" />
-    <ClInclude Include="src\engine\rendering\shaders\Shader.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\engine\core\input\Input.cpp" />
-    <ClCompile Include="src\engine\core\Math.cpp" />
-    <ClCompile Include="src\engine\core\Mesh.cpp" />
+    <ClCompile Include="src\engine\core\buffer\VBO.cpp" />
+    <ClCompile Include="src\engine\core\framework\Input.cpp" />
+    <ClCompile Include="src\engine\core\framework\Window.cpp" />
+    <ClCompile Include="src\engine\core\math\Math.cpp" />
+    <ClCompile Include="src\engine\core\model\Mesh.cpp" />
+    <ClCompile Include="src\engine\core\model\Vertex.cpp" />
+    <ClCompile Include="src\engine\core\movement\Camera.cpp" />
     <ClCompile Include="src\engine\core\Util.cpp" />
-    <ClCompile Include="src\engine\core\VBO.cpp" />
-    <ClCompile Include="src\engine\core\Vertex.cpp" />
-    <ClCompile Include="src\engine\core\Window.cpp" />
     <ClCompile Include="src\engine\rendering\shaders\Shader.cpp" />
     <ClCompile Include="src\game\Application.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\engine\core\buffer\VBO.h" />
+    <ClInclude Include="src\engine\core\Constants.h" />
+    <ClInclude Include="src\engine\core\framework\Input.h" />
+    <ClInclude Include="src\engine\core\framework\Window.h" />
+    <ClInclude Include="src\engine\core\math\Math.h" />
+    <ClInclude Include="src\engine\core\model\Mesh.h" />
+    <ClInclude Include="src\engine\core\model\Vertex.h" />
+    <ClInclude Include="src\engine\core\movement\Camera.h" />
+    <ClInclude Include="src\engine\core\Util.h" />
+    <ClInclude Include="src\engine\rendering\shaders\Shader.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
@@ -100,7 +102,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\include\GLFW;$(SolutionDir)Dependencies\include\GL;$(ProjectDir)src</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)í</PreprocessorDefinitions>
-      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -117,7 +119,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\include\GLFW;$(SolutionDir)Dependencies\include\GL;$(ProjectDir)src</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)í</PreprocessorDefinitions>
-      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -136,7 +138,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\include\GLFW;$(SolutionDir)Dependencies\include\GL;$(ProjectDir)src</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)í</PreprocessorDefinitions>
-      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -157,7 +159,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\include\GLFW;$(SolutionDir)Dependencies\include\GL;$(ProjectDir)src</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions)í</PreprocessorDefinitions>
-      <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
+      <AssemblerOutput>NoListing</AssemblerOutput>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

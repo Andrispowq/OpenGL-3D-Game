@@ -1,7 +1,8 @@
-#pragma once
+#ifndef VBO_H
+#define VBO_H
 
 #include <glew.h>
-#include "Mesh.h"
+#include "engine/core/model/Mesh.h"
 
 class VBO
 {
@@ -19,3 +20,5 @@ private:
 	GLuint vbo;
 	GLuint ibo;
 };
+
+#endif

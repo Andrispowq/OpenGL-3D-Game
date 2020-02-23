@@ -1,3 +1,6 @@
+#ifndef WINDOW_H
+#define WINDOW_H
+
 #include <iostream>
 #include <glew.h>
 #include <glfw3.h>
@@ -35,3 +38,5 @@ private:
 
 	GLFWwindow* window;
 };
+
+#endif

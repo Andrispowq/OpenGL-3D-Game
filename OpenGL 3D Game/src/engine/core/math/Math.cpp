@@ -1,32 +1,6 @@
 #include "Math.h"
 
 template<typename T>
-inline T Vector2<T>::length() const
-{
-	return sqrt(x * x + y * y);
-}
-
-template<typename T>
-inline T Vector2<T>::lengthSquared() const
-{
-	return x * x + y * y;
-}
-
-template<typename T>
-inline Vector2<T> Vector2<T>::normalize() const
-{
-	float length = (*this).length();
-
-	return (*this) / length;
-}
-
-template<typename T>
-inline T Vector2<T>::dot(const Vector2<T>& v) const
-{
-	return x * v.x + y * v.y;
-}
-
-template<typename T>
 inline Vector2<T> Vector2<T>::abs() const
 {
 	return Vector2(fabs((*this).x), fabs((*this).y));
@@ -54,30 +28,6 @@ template<typename T>
 Vector2<T> Vector2<T>::swap() const
 {
 	return Vector2<T>(y, x);
-}
-
-template<typename T>
-inline T Vector3<T>::length() const
-{
-	return sqrt(x * x + y * y + z * z);
-}
-
-template<typename T>
-inline T Vector3<T>::lengthSquared() const
-{
-	return x * x + y * y + z * z;
-}
-
-template<typename T>
-inline Vector3<T> Vector3<T>::normalize() const
-{
-	return *this / this->length();
-}
-
-template<typename T>
-inline T Vector3<T>::dot(Vector3<T> v) const
-{
-	return x * v.x + y * v.y + z * z;
 }
 
 template<typename T>
@@ -162,30 +112,6 @@ Vector3<T> Vector3<T>::rotate(const Vector3<T>& axis, const T& angle) const
 	}
 
 	return *this + result;
-}
-
-template<typename T>
-inline T Vector4<T>::length() const
-{
-	return sqrt(x * x + y * y + z * z + w * w);
-}
-
-template<typename T>
-inline T Vector4<T>::lengthSquared() const
-{
-	return x * x + y * y + z * z + w * w;
-}
-
-template<typename T>
-inline Vector4<T> Vector4<T>::normalize() const
-{
-	return *this / this->length();
-}
-
-template<typename T>
-inline T Vector4<T>::dot(const Vector4<T>& v) const
-{
-	return x * v.x + y * v.y + z * v.z + w * w;
 }
 
 template<typename T>
@@ -498,7 +424,7 @@ inline Vector4f Matrix4f::operator*(Vector4f v) const
 	return res;
 }
 
-inline Matrix4f Matrix4f::Identity() const
+Matrix4f Matrix4f::Identity()
 {
 	Matrix4f res = Matrix4f();
 
@@ -516,7 +442,7 @@ inline Matrix4f Matrix4f::Identity() const
 	return res;
 }
 
-inline Matrix4f Matrix4f::Zero() const
+Matrix4f Matrix4f::Zero()
 {
 	Matrix4f res = Matrix4f();
 
@@ -531,7 +457,7 @@ inline Matrix4f Matrix4f::Zero() const
 	return res;
 }
 
-Matrix4f Matrix4f::Translation(Vector3f position) const
+Matrix4f Matrix4f::Translation(Vector3f position) 
 {
 	Matrix4f res = Matrix4f().Identity();
 
@@ -542,7 +468,7 @@ Matrix4f Matrix4f::Translation(Vector3f position) const
 	return res;
 }
 
-Matrix4f Matrix4f::Rotation(Vector3f rotation) const
+Matrix4f Matrix4f::Rotation(Vector3f rotation)
 {
 	Matrix4f rx = Matrix4f().Identity();
 	Matrix4f ry = Matrix4f().Identity();
@@ -570,7 +496,7 @@ Matrix4f Matrix4f::Rotation(Vector3f rotation) const
 	return ry * rx * rz;
 }
 
-Matrix4f Matrix4f::Scaling(Vector3f scale) const
+Matrix4f Matrix4f::Scaling(Vector3f scale)
 {
 	Matrix4f res = Matrix4f().Identity();
 
@@ -581,7 +507,7 @@ Matrix4f Matrix4f::Scaling(Vector3f scale) const
 	return res;
 }
 
-Matrix4f Matrix4f::Transformation(Vector3f translation, Vector3f rotation, Vector3f scaling) const
+Matrix4f Matrix4f::Transformation(Vector3f translation, Vector3f rotation, Vector3f scaling)
 {
 	Matrix4f Translation = Matrix4f().Translation(translation);
 	Matrix4f Rotation = Matrix4f().Rotation(rotation);
@@ -590,7 +516,7 @@ Matrix4f Matrix4f::Transformation(Vector3f translation, Vector3f rotation, Vecto
 	return Scaling * Rotation * Translation;
 }
 
-Matrix4f Matrix4f::PerspectiveProjection(float fov, float aspectRatio, float nearPlane, float farPlane) const
+Matrix4f Matrix4f::PerspectiveProjection(float fov, float aspectRatio, float nearPlane, float farPlane)
 {
 	Matrix4f res = Matrix4f().Identity();
 
@@ -605,6 +531,27 @@ Matrix4f Matrix4f::PerspectiveProjection(float fov, float aspectRatio, float nea
 	res.m[3][3] = 0;
 
 	return res;
+}
+
+Matrix4f Matrix4f::View(Vector3f forward, Vector3f up)
+{
+	Vector3f right = up.cross(forward);
+
+	Matrix4f mat = Matrix4f().Identity();
+
+	mat[0][0] = right.x;
+	mat[0][1] = right.y;
+	mat[0][2] = right.z;
+
+	mat[1][0] = up.x;
+	mat[1][1] = up.y;
+	mat[1][2] = up.z;
+
+	mat[2][0] = forward.x;
+	mat[2][1] = forward.y;
+	mat[2][2] = forward.z;
+
+	return mat;
 }
 
 /*

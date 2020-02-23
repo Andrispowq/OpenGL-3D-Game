@@ -1,20 +1,20 @@
-#ifndef MATH_H_INCLUDED
-#define MATH_H_INCLUDED
+#ifndef MATH_H
+#define MATH_H
 
 #include <iostream>
 
-#define PI 3.141592653589793
+#define PI 3.14159265358979323846264338327950288419716939
 
 template<typename T>
 T ToDegrees(T x)
 {
-	return (x / PI) * 180;
+	return static_cast<T>((x / PI) * 180);
 }
 
 template<typename T>
 T ToRadians(T x)
 {
-	return (x * PI) / 180;
+	return static_cast<T>((x * PI) / 180);
 }
 
 template<typename T>
@@ -64,12 +64,12 @@ public:
 	inline bool operator<=(const Vector2<T>& v) const { return x <= v.x && y <= v.x; }
 	inline bool operator>=(const Vector2<T>& v) const { return x >= v.x && y >= v.x; }
 	inline bool operator==(const Vector2<T>& v) const { return x == v.x && y == v.y; }
+	inline bool operator!=(const Vector2<T>& v) const { return !(operator==(v)); }
 
-	inline T length() const;
-	inline T lengthSquared() const;
-	inline Vector2<T> normalize() const;
-
-	inline T dot(const Vector2<T>& v) const;
+	inline T length() const { return sqrt(this->dot(this)); }
+	inline T lengthSquared() const { return this->dot(this); }
+	inline Vector2<T> normalize() const { return *this / length(); }
+	inline T dot(const Vector2<T>& v) const { return x * v.x + y * v.y;	}
 
 	inline Vector2<T> abs() const;
 
@@ -138,11 +138,12 @@ public:
 	inline bool operator<=(const Vector3<T>& v) const { return x <= v.x && y <= v.x && z <= v.z; }
 	inline bool operator>=(const Vector3<T>& v) const { return x >= v.x && y >= v.x && z >= v.z; }
 	inline bool operator==(const Vector3<T>& v) const { return x == v.x && y == v.y && z == v.z; }
-	
-	inline T length() const;
-	inline T lengthSquared() const;
-	inline Vector3<T> normalize() const;
-	inline T dot(Vector3<T> v) const;
+	inline bool operator!=(const Vector3<T>& v) const { return !(operator==(v)); }
+
+	inline T length() const { return sqrt(this->dot(*this)); }
+	inline T lengthSquared() const { return this->dot(*this); }
+	inline Vector3<T> normalize() const { return *this / length(); }
+	inline T dot(const Vector3<T>& v) const { return x * v.x + y * v.y + z * v.z; }
 
 	inline Vector3<T> abs() const;
 
@@ -234,12 +235,12 @@ public:
 	inline bool operator<=(const Vector4<T>& v) const { return x <= v.x && y <= v.x && z <= v.z && w <= v.w; }
 	inline bool operator>=(const Vector4<T>& v) const { return x >= v.x && y >= v.x && z >= v.z && w >= v.w; }
 	inline bool operator==(const Vector4<T>& v) const { return x == v.x && y == v.y && z == v.z && w == v.w; }
+	inline bool operator!=(const Vector4<T>& v) const { return !(operator==(v)); }
 
-	inline T length() const;
-	inline T lengthSquared() const;
-	inline Vector4<T> normalize() const;
-
-	inline T dot(const Vector4<T>& v) const;
+	inline T length() const { return sqrt(this->dot(*this)); }
+	inline T lengthSquared() const { return this->dot(*this); }
+	inline Vector4<T> normalize() const { return *this / length(); }
+	inline T dot(const Vector4<T>& v) const { return x * v.x + y * v.y + z * v.z + w * v.w; }
 
 	inline Vector4<T> abs() const;
 
@@ -311,15 +312,16 @@ public:
 		return m[index];
 	}
 
-	inline Matrix4f Identity() const;
-	inline Matrix4f Zero() const;
+	static Matrix4f Identity();
+	static Matrix4f Zero();
 
-	Matrix4f Translation(Vector3f position) const;
-	Matrix4f Rotation(Vector3f rotation) const;
-	Matrix4f Scaling(Vector3f scale) const;
+	static Matrix4f Translation(Vector3f position);
+	static Matrix4f Rotation(Vector3f rotation);
+	static Matrix4f Scaling(Vector3f scale);
 
-	Matrix4f Transformation(Vector3f translation, Vector3f rotation, Vector3f scaling) const;
-	Matrix4f PerspectiveProjection(float fov, float aspectRatio, float nearPlane, float farPlane) const;
+	static Matrix4f Transformation(Vector3f translation, Vector3f rotation, Vector3f scaling);
+	static Matrix4f PerspectiveProjection(float fov, float aspectRatio, float nearPlane, float farPlane);
+	static Matrix4f View(Vector3f forward, Vector3f up);
 
 	inline float * const getRow(int i) const;
 public:

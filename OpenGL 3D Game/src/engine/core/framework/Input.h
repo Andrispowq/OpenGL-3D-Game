@@ -1,6 +1,11 @@
+#ifndef INPUT_H
+#define INPUT_H
+
 #include <vector>
-#include "engine/core/Window.h"
-#include "engine/core/Math.h"
+#include "Window.h"
+#include "engine/core/math/Math.h"
+
+#define InputInstance Input::GetInstance()
 
 class Input
 {
@@ -69,3 +74,5 @@ private:
 	
 	bool pause;
 };
+
+#endif
