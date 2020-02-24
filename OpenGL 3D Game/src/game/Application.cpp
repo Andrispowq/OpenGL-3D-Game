@@ -1,14 +1,16 @@
 #pragma once
 
-#include "engine/core/movement/Camera.h"
+#include "engine/core/model/Transform.h"
 #include "engine/core/buffer/VBO.h"
 #include "engine/rendering/shaders/Shader.h"
 
 #define println(x) std::cout << x << std::endl;
 
 int main()
-{ 
-	Window window = Window(WINDOW_WIDTH, WINDOW_HEIGHT, (const char*) WINDOW_TITLE, WINDOW_FULLSCREEN);
+{
+	FrameworkConfig::LoadConfig("res/config/framework.cfg");
+
+	Window window = Window(FrameworkConfig::windowWidth, FrameworkConfig::windowHeight, (const char*) FrameworkConfig::windowName, FrameworkConfig::windowFullScreen);
 
 	if (!window.create())
 	{
@@ -20,7 +22,7 @@ int main()
 	Input* in = &(Input::GetInstance());
 	in->Init(window);
 
-	//Camera camera(Vector3f(0, 0, 0), 90);
+	Camera camera(Vector3f(0, 0, 0), 90);
 
 	VBO vbo;
 	Mesh mesh;
@@ -30,11 +32,6 @@ int main()
 	Vertex v2(Vector3f( 1,  1, -1));
 	Vertex v3(Vector3f( 1, -1, -1));
 
-	Vertex v0(Vector3f(-1, -1,  1));
-	Vertex v1(Vector3f(-1,  1,  1));
-	Vertex v2(Vector3f( 1,  1,  1));
-	Vertex v3(Vector3f( 1, -1,  1));
-
 	std::vector<Vertex> vertices;
 	std::vector<unsigned short> indices;
 
@@ -42,8 +39,6 @@ int main()
 	vertices.push_back(v1);
 	vertices.push_back(v2);	
 	vertices.push_back(v3);
-
-	unsigned short arr[] = { 1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11, 12, 13, 14, 15, 0, 16, 17, 18, 1, 3, 19, 7, 5, 20, 4, 9, 21, 10, 12, 22, 13, 15, 23, 0, 17 };
 
 	indices.push_back(0);
 	indices.push_back(1);
@@ -67,10 +62,10 @@ int main()
 	if (!shader.CompileShader())
 		std::cerr << "Shader couldn't be compiled" << std::endl;
 
-	if (!shader.AddUniform("rotMat"))
-	{
+	Transform transform(Vector3f(0), Vector3f(0), Vector3f(0.5f));
+
+	if (!shader.AddUniform("m_transform"))
 		exit(-1);
-	}
 
 	while (!window.shouldClose())
 	{
@@ -92,12 +87,17 @@ int main()
 
 		in->GetCursorPosition().print();*/
 
+		transform.SetRotation(transform.GetRotation() + Vector3f(0, 0, 0.5f));
+
 		shader.Bind();
+		shader.SetUniform("m_transform", transform.getTransformationMatrix());
 		vbo.draw();
 		shader.Unbind();
 
 		window.render();
 	}
+
+	FrameworkConfig::CleanUp();
 
 	return 0;
 }

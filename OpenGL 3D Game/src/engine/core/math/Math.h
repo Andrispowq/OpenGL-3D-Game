@@ -273,75 +273,71 @@ typedef Vector4<float> Vector4f;
 class Matrix4f
 {
 public:
-	Matrix4f(const Matrix4f& m);
+	Matrix4f(const Matrix4f& v);
 
-	Matrix4f(Vector4f v);
+	Matrix4f(const Vector4f& v);
 	Matrix4f();
 
 	virtual ~Matrix4f();
 
-	inline Matrix4f operator+(Matrix4f v) const;
-	inline Matrix4f operator-(Matrix4f v) const;
+	Matrix4f operator=(const Matrix4f& v);
 
-	inline Matrix4f operator+=(Matrix4f v);
-	inline Matrix4f operator-=(Matrix4f v);
+	inline Matrix4f operator+(const Matrix4f& v) const;
+	inline Matrix4f operator-(const Matrix4f& v) const;
 
-	inline Matrix4f operator+(Vector4f v) const;
-	inline Matrix4f operator-(Vector4f v) const;
+	inline Matrix4f operator+=(const Matrix4f& v);
+	inline Matrix4f operator-=(const Matrix4f& v);
 
-	inline Matrix4f operator+=(Vector4f v);
-	inline Matrix4f operator-=(Vector4f v);
+	inline Matrix4f operator+(const Vector4f& v) const;
+	inline Matrix4f operator-(const Vector4f& v) const;
 
-	inline Matrix4f operator+(float v) const;
-	inline Matrix4f operator-(float v) const;
+	inline Matrix4f operator+=(const Vector4f& v);
+	inline Matrix4f operator-=(const Vector4f& v);
 
-	inline Matrix4f operator+=(float v);
-	inline Matrix4f operator-=(float v);
+	inline Matrix4f operator+(const float& v) const;
+	inline Matrix4f operator-(const float& v) const;
 
-	inline Matrix4f operator*(Matrix4f v) const;
-	inline Matrix4f operator*=(Matrix4f v);
+	inline Matrix4f operator+=(const float& v);
+	inline Matrix4f operator-=(const float& v);
 
-	Vector4f operator*(Vector4f v) const;
+	inline Matrix4f operator*(const Matrix4f& v) const;
+	inline Matrix4f operator*=(const Matrix4f& v);
 
-	inline float * operator[](const int index) const
-	{
-		return m[index];
-	}
+	Vector4f operator*(const Vector4f& v) const;
 
-	Matrix4f Identity() const;
-	Matrix4f Zero() const;
+	inline bool operator==(const Matrix4f& v) const;
 
-	Matrix4f Translation(Vector3f position) const;
-	Matrix4f Rotation(Vector3f rotation) const;
-	Matrix4f Scaling(Vector3f scale) const;
+	float* operator[](const int& index) const;
 
-	Matrix4f Transformation(Vector3f translation, Vector3f rotation, Vector3f scaling) const;
-	Matrix4f PerspectiveProjection(float fov, float aspectRatio, float nearPlane, float farPlane) const;
-	Matrix4f View(Vector3f forward, Vector3f up) const;
+	static Matrix4f Identity();
+	static Matrix4f Zero();
 
-	float * const getRow(int i) const;
+	static Matrix4f Translation(const Vector3f& position);
+	static Matrix4f Rotation(const Vector3f& rotation);
+	static Matrix4f Scaling(const Vector3f& scale);
+
+	static Matrix4f Transformation(const Vector3f& translation, const Vector3f& rotation, const Vector3f& scaling);
+	static Matrix4f PerspectiveProjection(const float& fov, const float& aspectRatio, const float& nearPlane, const float& farPlane);
+	static Matrix4f View(const Vector3f& forward, const Vector3f& up);
+
+	float * const getRow(const int i) const;
 
 	void print() const
 	{
-		std::string out;
-
 		for (int i = 0; i < 4; i++)
 		{
-			out += "| ";
-			out += m[i][0];
-			out += ", ";
-			out += m[i][1];
-			out += ", ";
-			out += m[i][2];
-			out += ", ";
-			out += m[i][3];
-			out += " |\n";
-		}
+			for (int j = 0; j < 4; j++)
+			{
+				std::cout << m[i * 4 + j] << "\t";
+			}
 
-		std::cout << out.c_str() << std::endl;
+			std::cout << "\n";
+		}
 	}
+private:
+	void clear();
 public:
-	float **m;
+	float* m;
 };
 
 #endif 

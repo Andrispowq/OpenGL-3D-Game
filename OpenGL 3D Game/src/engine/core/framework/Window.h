@@ -6,6 +6,7 @@
 #include <glfw3.h>
 
 #include "engine/core/Constants.h"
+#include "engine/config/FrameworkConfig.h"
 
 class Window
 {

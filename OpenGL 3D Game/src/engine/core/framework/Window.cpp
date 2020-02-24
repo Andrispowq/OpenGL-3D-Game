@@ -32,9 +32,10 @@ bool Window::create()
 
 	//Setting window properties and creating the window
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_ANY_PROFILE);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, FrameworkConfig::openglVersion.x);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, FrameworkConfig::openglVersion.y);
+	glfwWindowHint(GLFW_RESIZABLE, FrameworkConfig::windowResizable);
+	glfwWindowHint(GLFW_SAMPLES, FrameworkConfig::windowNumSamples);
 
 	window = glfwCreateWindow(width, height, title, fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
 
