@@ -96,7 +96,7 @@ void Window::clearColor(const float& red, const float& green, const float& blue,
 	glClearColor(red, green, blue, alpha);
 }
 
-void Window::input()
+void Window::Input()
 {
 	glfwPollEvents();
 }
@@ -106,7 +106,7 @@ void Window::clearScreen() const
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void Window::render() const
+void Window::Render() const
 {
 	glfwSwapBuffers(window);
 }

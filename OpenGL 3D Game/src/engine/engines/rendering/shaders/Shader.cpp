@@ -42,7 +42,7 @@ Shader::Shader(const std::string* files, unsigned int length)
 {
 	program = glCreateProgram();
 
-	shaders = new GLuint;
+	shaders = new GLuint[5]{ 0 };
 	counter = 0;
 
 	if (program == 0)
@@ -51,7 +51,7 @@ Shader::Shader(const std::string* files, unsigned int length)
 		exit(-1);
 	}
 
-	if (length = 1) //Compute shader
+	if (length == 1) //Compute shader
 	{
 		if (&files[0] == nullptr)
 			return;
@@ -59,7 +59,7 @@ Shader::Shader(const std::string* files, unsigned int length)
 		if (!AddShader(files[0], COMPUTE_SHADER))
 			std::cerr << "Compute shader couldn't be added";
 	}
-	else if (length = 2) // Vertex + fragment shader
+	else if (length == 2) // Vertex + fragment shader
 	{
 		if (&files[0] == nullptr || &files[1] == nullptr)
 			return;
@@ -69,7 +69,7 @@ Shader::Shader(const std::string* files, unsigned int length)
 		if (!AddShader(files[1], FRAGMENT_SHADER))
 			std::cerr << "Fragment shader couldn't be added";
 	}
-	else if (length = 3) //Vertex + geometry + fragment shader
+	else if (length == 3) //Vertex + geometry + fragment shader
 	{
 		if (&files[0] == nullptr || &files[1] == nullptr || &files[2] == nullptr)
 			return;
@@ -81,7 +81,7 @@ Shader::Shader(const std::string* files, unsigned int length)
 		if (!AddShader(files[2], FRAGMENT_SHADER))
 			std::cerr << "Fragment shader couldn't be added";
 	}
-	else if (length = 5) //Vertex + tess control + tess evaluation + geomtry + fragment shader
+	else if (length == 5) //Vertex + tess control + tess evaluation + geomtry + fragment shader
 	{
 		if (&files[0] == nullptr || &files[1] == nullptr || &files[2] == nullptr || &files[3] == nullptr || &files[4] == nullptr)
 			return;
@@ -103,7 +103,7 @@ Shader::Shader()
 {
 	program = glCreateProgram();
 
-	shaders = new GLuint[5]; //Maximum of 5 shaders can be used - compute shader or the 5 graphics pipeline shaders
+	shaders = new GLuint[5]{ 0 }; //Maximum of 5 shaders can be used - compute shader or the 5 graphics pipeline shaders
 	counter = 0;
 
 	if (program == 0)
@@ -115,6 +115,7 @@ Shader::Shader()
 
 Shader::~Shader()
 {
+	std::cout << "hello";
 	for (unsigned int i = 0; i < counter; i++)
 	{
 		glDetachShader(program, shaders[i]);
@@ -122,8 +123,6 @@ Shader::~Shader()
 	}
 
 	glDeleteProgram(program);
-
-	delete[] shaders;
 }
 
 void Shader::Bind() const

@@ -5,7 +5,7 @@
 #include <glew.h>
 #include <glfw3.h>
 
-#include "engine/core/Constants.h"
+#include "engine/core/util/Constants.h"
 #include "engine/config/FrameworkConfig.h"
 
 class Window
@@ -19,9 +19,9 @@ public:
 	bool create();
 	bool shouldClose() const;
 	void clearColor(const float& red, const float& green, const float& blue, const float& alpha) const;
-	void input();
+	void Input();
 	void clearScreen() const;
-	void render() const;
+	void Render() const;
 
 	inline GLFWwindow* getWindow() const { return window; }
 

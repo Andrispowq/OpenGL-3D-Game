@@ -3,23 +3,22 @@
 
 #include <fstream>
 
-#include "engine/core/Util.h"
+#include "engine/core/util/Util.h"
 #include "engine/core/math/Math.h"
 
 namespace FrameworkConfig
 {
 	void LoadConfig(const std::string& path);
-	void CleanUp();
 
-	//Config variables
-	const char* windowName;
-	int windowWidth;
-	int windowHeight;
-	bool windowFullScreen;
-	bool windowResizable;
-	int windowNumSamples;
+	extern std::string windowName;
+	extern int windowWidth;
+	extern int windowHeight;
+	extern bool windowFullScreen;
+	extern bool windowResizable;
+	extern int windowNumSamples;
+	extern int windowMaxFPS;
 
-	Vector2i openglVersion;
+	extern Vector2i openglVersion;
 };
 
 #endif

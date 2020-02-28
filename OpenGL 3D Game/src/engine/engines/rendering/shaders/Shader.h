@@ -6,7 +6,7 @@
 #include <unordered_map>
 
 #include "engine/core/math/Math.h"
-#include "engine/core/Util.h"
+#include "engine/core/util/Util.h"
 
 enum ShaderType
 {
@@ -68,7 +68,8 @@ public:
 
 	void SetUniform(const std::string& name, const Matrix4f& matrix) const
 	{
-		glUniformMatrix4fv(uniforms.at(name), 1, GL_FALSE, &(matrix.m[0]));
+		std::cout << &(matrix[0][0]);
+		glUniformMatrix4fv(uniforms.at(name), 1, GL_FALSE, &(matrix[0][0]));
 	}
 
 	void BindUniformBlock(const std::string& name, GLuint binding)
