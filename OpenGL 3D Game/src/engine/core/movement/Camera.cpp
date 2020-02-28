@@ -12,11 +12,11 @@ Camera::Camera(float moveAmt, float rotAmt, float mouseSensitivity, float fov, c
 
 	SetProjection(fov, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	this->viewMatrix = Matrix4f().View(forward, up) * Matrix4f().Translation(position * -1);
-	this->viewProjectionMatrix = Matrix4f().Zero();
+	this->viewMatrix = Matrix4f::View(forward, up) * Matrix4f::Translation(position * -1);
+	this->viewProjectionMatrix = Matrix4f::Zero();
 
-	previousViewMatrix = Matrix4f().Zero();
-	previousViewProjectionMatrix = Matrix4f().Zero();
+	previousViewMatrix = Matrix4f::Zero();
+	previousViewProjectionMatrix = Matrix4f::Zero();
 
 	frustumPlanes = new Vector4f[6];
 	frustumCorners = new Vector3f[8];
@@ -34,11 +34,11 @@ Camera::Camera(const Vector3f& position, float fov)
 
 	SetProjection(fov, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-	this->viewMatrix = Matrix4f().View(forward, up) * Matrix4f().Translation(position * -1);
-	this->viewProjectionMatrix = Matrix4f().Zero();
+	this->viewMatrix = Matrix4f::View(forward, up) * Matrix4f::Translation(position * -1);
+	this->viewProjectionMatrix = Matrix4f::Zero();
 
-	previousViewMatrix = Matrix4f().Zero();
-	previousViewProjectionMatrix = Matrix4f().Zero();
+	previousViewMatrix = Matrix4f::Zero();
+	previousViewProjectionMatrix = Matrix4f::Zero();
 
 	frustumPlanes = new Vector4f[6];
 	frustumCorners = new Vector3f[8];
@@ -197,7 +197,7 @@ void Camera::Input(const Window& window)
 	this->previousViewMatrix = viewMatrix;
 	this->previousViewProjectionMatrix = viewProjectionMatrix;
 
-	viewMatrix = Matrix4f().View(forward, up) * Matrix4f().Translation(position * -1);
+	viewMatrix = Matrix4f::View(forward, up) * Matrix4f::Translation(position * -1);
 	viewProjectionMatrix = projectionMatrix * viewMatrix;
 }
 
@@ -226,5 +226,5 @@ void Camera::SetProjection(const float& fov, const float& width, const float& he
 	this->width = width;
 	this->height = height;
 
-	this->projectionMatrix = Matrix4f().PerspectiveProjection(fovY, width / height, ZNEAR, ZFAR);
+	this->projectionMatrix = Matrix4f::PerspectiveProjection(fovY, width / height, ZNEAR, ZFAR);
 }

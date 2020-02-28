@@ -22,6 +22,10 @@ public:
     inline void Move(const Vector3f& d) { worldTransform->SetPosition(worldTransform->GetPosition() + d);}
     inline void Rotate(const Vector3f& d) { worldTransform->SetRotation(worldTransform->GetRotation() + d);}
     inline void Scale(const Vector3f& d) { worldTransform->SetScaling(worldTransform->GetScaling() + d);}
+
+    inline void SetPosition(const Vector3f& d) { worldTransform->SetPosition(d); }
+    inline void SetRotation(const Vector3f& d) { worldTransform->SetRotation(d); }
+    inline void SetScale(const Vector3f& d) { worldTransform->SetScaling(d); }
 protected:
     std::vector<Node*> children;
     Node * parent;

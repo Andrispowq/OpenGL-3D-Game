@@ -68,8 +68,7 @@ public:
 
 	void SetUniform(const std::string& name, const Matrix4f& matrix) const
 	{
-		std::cout << &(matrix[0][0]);
-		glUniformMatrix4fv(uniforms.at(name), 1, GL_FALSE, &(matrix[0][0]));
+		glUniformMatrix4fv(uniforms.at(name), 1, GL_FALSE, matrix.m);
 	}
 
 	void BindUniformBlock(const std::string& name, GLuint binding)

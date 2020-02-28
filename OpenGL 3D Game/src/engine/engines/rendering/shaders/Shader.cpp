@@ -115,7 +115,6 @@ Shader::Shader()
 
 Shader::~Shader()
 {
-	std::cout << "hello";
 	for (unsigned int i = 0; i < counter; i++)
 	{
 		glDetachShader(program, shaders[i]);

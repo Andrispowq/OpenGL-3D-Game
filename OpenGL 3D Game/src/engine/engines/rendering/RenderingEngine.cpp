@@ -52,6 +52,7 @@ void RenderingEngine::Render(GameObject* root)
 	}
 
 	window->Render();
+	models.clear();
 }
 
 void RenderingEngine::AddModel(Renderable* renderable)

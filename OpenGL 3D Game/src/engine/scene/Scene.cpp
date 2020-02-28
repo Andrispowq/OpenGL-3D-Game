@@ -11,10 +11,10 @@ void Scene::CreateScene(GameObject* root)
 	vbo = new VBO();
 	Mesh mesh;
 
-	Vertex v0(Vector3f(-1, -1, -1));
-	Vertex v1(Vector3f(-1, 1, -1));
-	Vertex v2(Vector3f(1, 1, -1));
-	Vertex v3(Vector3f(1, -1, -1));
+	Vertex v0(Vector3f(-1, -1, 1));
+	Vertex v1(Vector3f(-1, 1, 1));
+	Vertex v2(Vector3f(1, 1, 1));
+	Vertex v3(Vector3f(1, -1, 1));
 
 	std::vector<Vertex> vertices;
 	std::vector<unsigned short> indices;
@@ -47,6 +47,7 @@ void Scene::CreateScene(GameObject* root)
 
 	GameObject* child = new GameObject();
 	child->AddComponent("Renderer component", new Renderer(vbo, shader));
+	child->SetScale(0.5f);
 
 	root->AddChild(child);
 }

@@ -10,27 +10,33 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	auto pushedKeys = Input::GetInstance().GetPushedKeys();
+	auto keysHolding = Input::GetInstance().GetKeysHolding();
+	auto releasedKeys = Input::GetInstance().GetReleasedKeys();
 
 	if (action == GLFW_PRESS)
 	{
 		if (std::find(pushedKeys.begin(), pushedKeys.end(), key) == pushedKeys.end())
 		{
 			pushedKeys.push_back(key);
-			pushedKeys.push_back(key);
+			keysHolding.push_back(key);
 		}
 	}
 
 	if (action == GLFW_RELEASE)
 	{
+		releasedKeys.push_back(key);
+
 		auto index = std::find(pushedKeys.begin(), pushedKeys.end(), key);
+
 		if (index != pushedKeys.end())
 		{
 			pushedKeys.erase(index);
-			pushedKeys.erase(index);
+			keysHolding.erase(index);
 		}
 	}
 
 	Input::GetInstance().SetPushedKeys(pushedKeys);
+	Input::GetInstance().SetKeysHolding(keysHolding);
 }
 
 void mouse_callback(GLFWwindow* window, int button, int action, int mods)
@@ -50,19 +56,20 @@ void mouse_callback(GLFWwindow* window, int button, int action, int mods)
 
 	auto pushedButtons = in->GetPushedButtons();
 	auto buttonsHolding = in->GetButtonsHolding();
+	auto releasedButtons = in->GetReleasedButtons();
 
 	if (action == GLFW_PRESS)
 	{
 		if (std::find(pushedButtons.begin(), pushedButtons.end(), button) == pushedButtons.end())
 		{
 			pushedButtons.push_back(button);
-			in->GetButtonsHolding().push_back(button);
+			buttonsHolding.push_back(button);
 		}
 	}
 
 	if (action == GLFW_RELEASE)
 	{
-		in->GetReleasedButtons().push_back(button);
+		releasedButtons.push_back(button);
 
 		auto index = std::find(buttonsHolding.begin(), buttonsHolding.end(), button);
 		if (index != buttonsHolding.end())
@@ -73,6 +80,7 @@ void mouse_callback(GLFWwindow* window, int button, int action, int mods)
 
 	in->SetPushedButtons(pushedButtons);
 	in->SetButtonsHolding(buttonsHolding);
+	in->SetReleasedButtons(releasedButtons);
 }
 
 void cursor_pos_callback(GLFWwindow* window, double xPos, double yPos)
@@ -115,8 +123,10 @@ bool Input::Update()
 
 	pushedKeys.clear();
 	keysHolding.clear();
+
 	pushedButtons.clear();
 	buttonsHolding.clear();
+	releasedButtons.clear();
 
 	return true;
 }
