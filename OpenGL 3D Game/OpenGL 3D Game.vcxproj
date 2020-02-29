@@ -27,6 +27,7 @@
     <ClCompile Include="src\engine\engines\Engine.cpp" />
     <ClCompile Include="src\engine\CoreEngine.cpp" />
     <ClCompile Include="src\engine\engines\rendering\RenderingEngine.cpp" />
+    <ClCompile Include="src\engine\engines\rendering\shaders\basic\BasicShader.cpp" />
     <ClCompile Include="src\engine\engines\rendering\shaders\Shader.cpp" />
     <ClCompile Include="src\engine\core\gameObject\Node.cpp" />
     <ClCompile Include="src\engine\config\FrameworkConfig.cpp" />
@@ -50,6 +51,7 @@
     <ClInclude Include="src\engine\engines\Engine.h" />
     <ClInclude Include="src\engine\CoreEngine.h" />
     <ClInclude Include="src\engine\engines\rendering\RenderingEngine.h" />
+    <ClInclude Include="src\engine\engines\rendering\shaders\basic\BasicShader.h" />
     <ClInclude Include="src\engine\engines\rendering\shaders\Shader.h" />
     <ClInclude Include="src\engine\rendering\RenderingEngine.h" />
     <ClInclude Include="src\engine\core\gameObject\Node.h" />

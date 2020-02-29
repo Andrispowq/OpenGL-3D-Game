@@ -12,7 +12,7 @@ class Window
 {
 public:
 	Window();
-	Window(const int& width, const int& height, const char* title, const bool& fullscreen) : width(width), height(height), title(title), fullscreen(fullscreen) {}
+	Window(const int& width, const int& height, const char* title, const bool& fullscreen) : width(width), height(height), title(title), fullscreen(fullscreen), window(nullptr), closed(true) {}
 
 	virtual ~Window();
 

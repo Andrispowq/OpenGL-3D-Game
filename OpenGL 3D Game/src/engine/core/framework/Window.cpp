@@ -6,6 +6,9 @@ Window::Window()
 	height = DEFAULT_HEIGHT;
 	title = DEFAULT_TITLE;
 	fullscreen = DEFAULT_FULLSCREEN;
+
+	window = nullptr;
+	closed = true;
 }
 
 Window::~Window()
@@ -38,6 +41,8 @@ bool Window::create()
 	glfwWindowHint(GLFW_SAMPLES, FrameworkConfig::windowNumSamples);
 
 	window = glfwCreateWindow(width, height, title, fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
+
+	closed = false;
 
 	//Checking if a valid window was created
 	if (window == NULL)

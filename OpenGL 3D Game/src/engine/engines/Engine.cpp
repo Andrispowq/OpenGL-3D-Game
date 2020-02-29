@@ -33,11 +33,13 @@ void Engine::Input(const float frameTime)
 
 	InputInstance.Update();
 
+	root->PreInput(frameTime);
 	renderingEngine->Input(frameTime);
 }
 
 void Engine::Update()
 {
+	root->PreUpdate(frameTime);
 	renderingEngine->Update(frameTime);
 }
 

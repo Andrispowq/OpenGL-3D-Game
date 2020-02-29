@@ -21,16 +21,19 @@ public:
 	virtual void Render(const RenderingEngine& renderingEngine) = 0;
 
 	static std::vector<VBO*> GetVBOs() { return vbos; }
+	static std::vector<Shader*> GetShaders() { return shaders; }
+
 	inline size_t GetVboIndex() const { return vboIndex; }
-	inline Shader* GetShader() const { return shader; }
+	inline size_t GetShaderIndex() const { return shaderIndex; }
 
 	Renderable(const Renderable& renderable) = delete;
 	Renderable operator=(const Renderable& renderable) = delete;
 protected:
 	static std::vector<VBO*> vbos;
-	size_t vboIndex;
+	static std::vector<Shader*> shaders;
 
-	Shader* shader;
+	size_t vboIndex;
+	size_t shaderIndex;
 };
 
 #endif

@@ -88,7 +88,7 @@ Vector3<T> Vector3<T>::rotate(const Vector3<T>& angles) const
 	Vector3<T> rotY = this->rotate(Vector3<T>(0, 1, 0), angles.y);
 	Vector3<T> rotZ = this->rotate(Vector3<T>(0, 0, 1), angles.z);
 
-	return *this + rotX + rotY + rotZ;
+	return rotX + rotY + rotZ;
 }
 
 template<typename T>
@@ -96,20 +96,24 @@ Vector3<T> Vector3<T>::rotate(const Vector3<T>& axis, const T& angle) const
 {
 	Vector3<T> result;
 
-	if (axis.x != 0)
-	{
-		result = *this + Vector3<T>(0, this->x, x / std::tan(angle));
-	}
-	else if (axis.y != 0)
-	{
-		result = *this + Vector3<T>(this->x, 0, x / std::tan(angle));
-	}
-	else if (axis.z != 0)
-	{
-		result = *this + Vector3<T>(this->x, x / std::tan(angle), 0);
-	}
+	T sinHalfAngle = std::sin(ToRadians(angle / 2));
+	T cosHalfAngle = std::cos(ToRadians(angle / 2));
 
-	return *this + result;
+	T rx = axis.x * sinHalfAngle;
+	T ry = axis.y * sinHalfAngle;
+	T rz = axis.z * sinHalfAngle;
+	T rw = cosHalfAngle;
+
+	Quaternion<T> rotation(rx, ry, rz, rw);
+	Quaternion<T> conjugate = rotation.Conjugate();
+
+	Quaternion<T> w = rotation * (*this) * conjugate;
+
+	result.x = w.x;
+	result.y = w.y;
+	result.z = w.z;
+
+	return result;
 }
 
 template<typename T>
@@ -138,4 +142,112 @@ Vector4<T> Vector4<T>::lerp(const Vector4<T>& b, const Vector4<T>& t) const
 	float w_ = w + (b.w - w) * t.w;
 
 	return Vector4<T>(x_, y_, z_, w_);
+}
+template<typename T>
+Quaternion<T> Quaternion<T>::operator*(const Quaternion<T>& r) const
+{
+	float x_ = x * r.w + w * r.x + y * r.z - z * r.y;
+	float y_ = y * r.w + w * r.y + z * r.x - x * r.z;
+	float z_ = z * r.w + w * r.z + x * r.y - y * r.x;
+	float w_ = w * r.w - x * r.x - y * r.y - z * r.z;
+
+	return Quaternion(x_, y_, z_, w_);
+}
+
+template<typename T>
+Quaternion<T> Quaternion<T>::operator*(const Vector4<T>& r) const
+{
+	float x_ = x * r.w + w * r.x + y * r.z - z * r.y;
+	float y_ = y * r.w + w * r.y + z * r.x - x * r.z;
+	float z_ = z * r.w + w * r.z + x * r.y - y * r.x;
+	float w_ = w * r.w - x * r.x - y * r.y - z * r.z;
+
+	return Quaternion(x_, y_, z_, w_);
+}
+
+template<typename T>
+Quaternion<T> Quaternion<T>::operator*(const Vector3<T>& r) const
+{
+	float x_ = w * r.x + y * r.z - z * r.y;
+	float y_ = w * r.y + z * r.x - x * r.z;
+	float z_ = w * r.z + x * r.y - y * r.x;
+	float w_ = -x * r.x - y * r.y - z * r.z;
+
+	return Quaternion(x_, y_, z_, w_);
+}
+
+template<typename T>
+Quaternion<T> Quaternion<T>::operator*=(const Quaternion<T>& r) const
+{
+	float x_ = x * r.w + w * r.x + y * r.z - z * r.y;
+	float y_ = y * r.w + w * r.y + z * r.x - x * r.z;
+	float z_ = z * r.w + w * r.z + x * r.y - y * r.x;
+	float w_ = w * r.w - x * r.x - y * r.y - z * r.z;
+
+	this->x = x_;
+	this->y = y_;
+	this->z = z_;
+	this->w = w_;
+
+	return *this;
+}
+
+template<typename T>
+Quaternion<T> Quaternion<T>::operator*=(const Vector4<T>& r) const
+{
+	float x_ = x * r.w + w * r.x + y * r.z - z * r.y;
+	float y_ = y * r.w + w * r.y + z * r.x - x * r.z;
+	float z_ = z * r.w + w * r.z + x * r.y - y * r.x;
+	float w_ = w * r.w - x * r.x - y * r.y - z * r.z;
+
+	this->x = x_;
+	this->y = y_;
+	this->z = z_;
+	this->w = w_;
+
+	return *this;
+}
+
+template<typename T>
+Quaternion<T> Quaternion<T>::operator*=(const Vector3<T>& r) const
+{
+	float x_ = w * r.x + y * r.z - z * r.y;
+	float y_ = w * r.y + z * r.x - x * r.z;
+	float z_ = w * r.z + x * r.y - y * r.x;
+	float w_ = -x * r.x - y * r.y - z * r.z;
+
+	this->x = x_;
+	this->y = y_;
+	this->z = z_;
+	this->w = w_;
+
+	return *this;
+}
+
+template<typename T>
+inline Quaternion<T> Quaternion<T>::abs() const
+{
+	return Quaternion<T>(std::abs(x), std::abs(y), std::abs(z), std::abs(w));
+}
+
+template<typename T>
+Quaternion<T> Quaternion<T>::lerp(const Quaternion<T>& b, const T& t) const
+{
+	float x_ = x + (b.x - x) * t;
+	float y_ = y + (b.y - y) * t;
+	float z_ = z + (b.z - z) * t;
+	float w_ = w + (b.w - w) * t;
+
+	return Quaternion<T>(x_, y_, z_, w_);
+}
+
+template<typename T>
+Quaternion<T> Quaternion<T>::lerp(const Quaternion<T>& b, const Quaternion<T>& t) const
+{
+	float x_ = x + (b.x - x) * t.x;
+	float y_ = y + (b.y - y) * t.y;
+	float z_ = z + (b.z - z) * t.z;
+	float w_ = w + (b.w - w) * t.w;
+
+	return Quaternion<T>(x_, y_, z_, w_);
 }

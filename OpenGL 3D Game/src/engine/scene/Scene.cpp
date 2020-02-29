@@ -1,7 +1,7 @@
 #include "Scene.h"
 #include "engine/component/renderer/Renderer.h"
 #include "engine/core/gameObject/GameObject.h"
-#include "engine/engines/rendering/shaders/Shader.h"
+#include "engine/engines/rendering/shaders/basic/BasicShader.h"
 
 VBO* Scene::vbo;
 Shader* Scene::shader;
@@ -36,14 +36,7 @@ void Scene::CreateScene(GameObject* root)
 
 	vbo->store(mesh);
 
-	shader = new Shader();
-	shader->AddShader(ResourceLoader::LoadShader("basic_VS.glsl"), VERTEX_SHADER);
-	shader->AddShader(ResourceLoader::LoadShader("basic_FS.glsl"), FRAGMENT_SHADER);
-	shader->CompileShader();
-
-	shader->AddUniform("m_transform");
-	shader->AddUniform("m_view");
-	shader->AddUniform("m_projection");
+	shader = new BasicShader();
 
 	GameObject* child = new GameObject();
 	child->AddComponent("Renderer component", new Renderer(vbo, shader));
@@ -54,6 +47,5 @@ void Scene::CreateScene(GameObject* root)
 
 void Scene::DeleteData()
 {
-	delete vbo;
-	delete shader;
+	Renderable::CleanUp();
 }

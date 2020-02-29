@@ -23,6 +23,9 @@ namespace ResourceLoader
 	std::string LoadShader(const std::string& filename);
 };
 
+class GameObject;
+class Camera;
+
 class Shader
 {
 public:
@@ -40,6 +43,8 @@ public:
 
 	bool AddShader(const std::string& code, ShaderType type) const;
 	bool CompileShader() const;
+
+	virtual void UpdateUniforms(GameObject* object, Camera* camera) const {}
 
 	void SetUniformi(const std::string& name, int value) const
 	{
