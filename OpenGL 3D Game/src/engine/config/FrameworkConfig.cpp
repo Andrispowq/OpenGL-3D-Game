@@ -10,7 +10,8 @@ namespace FrameworkConfig
 	int FrameworkConfig::windowNumSamples;
 	int FrameworkConfig::windowMaxFPS;
 
-	Vector2i FrameworkConfig::openglVersion;
+	API FrameworkConfig::api;
+	Vector2i FrameworkConfig::apiVersion;
 
 	void FrameworkConfig::LoadConfig(const std::string& path)
 	{
@@ -38,7 +39,7 @@ namespace FrameworkConfig
 							name += tokens[i];
 						}
 
-						windowName = name.c_str();
+						windowName = name;
 					}
 					if (nameTokens[1] == "width")
 					{
@@ -65,11 +66,27 @@ namespace FrameworkConfig
 						windowMaxFPS = std::atoi(tokens[1].c_str());
 					}
 				}
-				if (nameTokens[0] == "opengl")
+				if (nameTokens[0] == "api")
 				{
+					if (nameTokens[1] == "name")
+					{
+						if (tokens[1] == "OpenGL")
+						{
+							api = OpenGL;
+						}
+						else if (tokens[1] == "Vulkan")
+						{
+							api = Vulkan;
+						}
+						else
+						{
+							printf("Specify a valid API (OpenGL or Vulkan) under res/config/framework.cfg!");
+							api = NO_API;
+						}
+					}
 					if (nameTokens[1] == "version")
 					{
-						openglVersion = { std::atoi(tokens[1].c_str()), std::atoi(tokens[2].c_str()) };
+						apiVersion = { std::atoi(tokens[1].c_str()), std::atoi(tokens[2].c_str()) };
 					}
 				}
 			}

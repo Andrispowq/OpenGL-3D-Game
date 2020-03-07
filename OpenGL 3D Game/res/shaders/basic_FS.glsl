@@ -2,9 +2,11 @@
 
 layout(location = 0) out vec4 out_Colour;
 
-in vec3 colour_FS;
+in vec2 texture_FS;
+
+uniform sampler2D  diffuse;
 
 void main()
 {
-	out_Colour = vec4(colour_FS, 1);
+	out_Colour = 1 - texture(diffuse, texture_FS);
 }

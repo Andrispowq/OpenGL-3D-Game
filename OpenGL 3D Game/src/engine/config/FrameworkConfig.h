@@ -3,8 +3,21 @@
 
 #include <fstream>
 
-#include "engine/core/util/Util.h"
-#include "engine/core/math/Math.h"
+#include "engine/prehistoric/core/util/Util.h"
+#include "engine/prehistoric/core/math/Math.h"
+
+/*
+	Implemented:
+		OpenGL
+	Under development:
+		Vulkan
+	Planned:
+		Vulkan_RTX, DirectX_11, DirectX_12, DirectX_RTX
+*/
+enum API
+{
+	OpenGL, Vulkan, Vulkan_RTX, DirectX_11, DirectX_12, DirectX_RTX, NO_API
+};
 
 namespace FrameworkConfig
 {
@@ -18,7 +31,8 @@ namespace FrameworkConfig
 	extern int windowNumSamples;
 	extern int windowMaxFPS;
 
-	extern Vector2i openglVersion;
+	extern API api;
+	extern Vector2i apiVersion;
 };
 
 #endif

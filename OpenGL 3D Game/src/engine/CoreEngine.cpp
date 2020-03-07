@@ -55,7 +55,7 @@ void CoreEngine::Run()
 
 			unprocessedTime -= frameTime;
 
-			if (engine->GetRenderingEngine()->GetWindow()->shouldClose() || InputInstance.IsKeyPushed(GLFW_KEY_ESCAPE))
+			if (engine->GetRenderingEngine()->GetWindow()->ShouldClose())
 			{
 				Stop();
 				break;
