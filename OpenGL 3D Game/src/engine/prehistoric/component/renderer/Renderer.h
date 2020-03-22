@@ -1,7 +1,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include <algorithm>
+#include "engine/prehistoric/core/util/Includes.hpp"
 
 #include "Renderable.h"
 
@@ -15,14 +15,21 @@ public:
 
 	virtual ~Renderer();
 
+	static void CleanUp();
+
 	void PreRender(RenderingEngine* renderingEngine) override;
 
 	void Render(const RenderingEngine& renderingEngine) const override;
 	void BatchRender(const RenderingEngine& renderingEngine) const override;
 
-	inline Material* GetMaterial() const { return material; }
+	static std::vector<Material*> GetMaterials() { return materials; }
+
+	inline size_t GetMaterialIndex() const { return materialIndex; }
+	inline Material* GetMaterial() const { return materials.at(materialIndex); }
 private:
-	Material* material;
+	static std::vector<Material*> materials;
+
+	size_t materialIndex;
 };
 
 #endif

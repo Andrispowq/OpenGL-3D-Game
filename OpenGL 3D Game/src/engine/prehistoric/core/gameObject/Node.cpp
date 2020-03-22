@@ -1,3 +1,4 @@
+#include "engine/prehistoric/core/util/Includes.hpp"
 #include "Node.h"
 
 Node::Node()
@@ -10,8 +11,10 @@ Node::Node()
 
 Node::~Node()
 {
-    for (unsigned int i = 0; i < children.size(); i++)
-        delete children[i];
+    for (auto child : children)
+    {
+        delete child.second;
+    }
 
     delete worldTransform;
     delete localTransform;
@@ -19,31 +22,31 @@ Node::~Node()
 
 void Node::PreInput(const float delta)
 {
-    for(unsigned int i = 0; i < children.size(); i++)
+    for (auto child : children)
     {
-        children[i]->PreInput(delta);
+        child.second->PreInput(delta);
     }
 }
 
 void Node::PreUpdate(const float delta)
 {
-    for (unsigned int i = 0; i < children.size(); i++)
+    for (auto child : children)
     {
-        children[i]->PreUpdate(delta);
+        child.second->PreUpdate(delta);
     }
 }
 
 void Node::PreRender(RenderingEngine* renderingEngine)
 {
-    for (unsigned int i = 0; i < children.size(); i++)
+    for (auto child : children)
     {
-        children[i]->PreRender(renderingEngine);
+        child.second->PreRender(renderingEngine);
     }
 }
 
-Node* Node::AddChild(Node* child)
+Node* Node::AddChild(const std::string& key, Node* child)
 {
     child->parent = this;
-    children.push_back(child);    
+    children.emplace(key, child);    
     return this;
 }

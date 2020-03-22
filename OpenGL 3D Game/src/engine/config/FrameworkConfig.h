@@ -5,6 +5,7 @@
 
 #include "engine/prehistoric/core/util/Util.h"
 #include "engine/prehistoric/core/math/Math.h"
+#include "engine/prehistoric/core/log/Log.h"
 
 /*
 	Implemented:
@@ -24,15 +25,17 @@ namespace FrameworkConfig
 	void LoadConfig(const std::string& path);
 
 	extern std::string windowName;
-	extern int windowWidth;
-	extern int windowHeight;
+	extern unsigned int windowWidth;
+	extern unsigned int windowHeight;
 	extern bool windowFullScreen;
 	extern bool windowResizable;
-	extern int windowNumSamples;
-	extern int windowMaxFPS;
+	extern bool windowVSync;
+	extern unsigned int windowNumSamples;
+	extern unsigned int windowMaxFPS;
 
 	extern API api;
 	extern Vector2i apiVersion;
+	extern bool apiVulkanUseValidationLayers;
 };
 
 #endif

@@ -1,4 +1,6 @@
+#include "engine/prehistoric/core/util/Includes.hpp"
 #include "Camera.h"
+#include "engine/config/EngineConfig.h"
 
 Camera::Camera(float moveAmt, float rotAmt, float mouseSensitivity, float fov, const Vector3f& position)
 {
@@ -57,26 +59,28 @@ Camera::~Camera()
 
 void Camera::LogStage() const
 {
-	std::cout << "Camera position: ";
+	PR_LOG_MESSAGE("Camera information:\n");
+
+	PR_LOG_MESSAGE("\tPosition: ");
 	position.print();
-	std::cout << "Camera forward: ";
+	PR_LOG_MESSAGE("\tForward: ");
 	forward.print();
-	std::cout << "Camera up-vector: ";
+	PR_LOG_MESSAGE("\tUp direction: ");
 	up.print();
-	std::cout << "Camera right-vector: ";
+	PR_LOG_MESSAGE("\tRight direction: ");
 	GetRight().print();
-	std::cout << "Camera left-vector: ";
+	PR_LOG_MESSAGE("\tLeft direction: ");
 	GetLeft().print();
 }
 
-void Camera::Input(Window* window)
+void Camera::Input(Window* window, float delta)
 {
 	this->previousPosition = position;
 	this->previousForward = forward;
 	cameraMoved = false;
 	cameraRotated = false;
 
-	movAmt += (0.04f * Input::GetInstance().GetScrollOffset());
+	movAmt += CameraInput::GetKey(speedControl) * delta * 10.0;
 	movAmt = static_cast<float>(std::fmax(0.02, movAmt));
 	
 	//Move by input systems
@@ -87,43 +91,43 @@ void Camera::Input(Window* window)
 	{
 		if (in->IsForward() != 0 && !movedForward)
 		{
-			Move(forward, movAmt * in->IsForward());
+			Move(forward, movAmt * in->IsForward() * delta);
 			movedForward = true;
 		}
 		if (in->IsBackward() != 0 && !movedBackward)
 		{
-			Move(forward, -movAmt * in->IsBackward());
+			Move(forward, -movAmt * in->IsBackward() * delta);
 			movedBackward = true;
 		}
 		if (in->IsLeft() != 0 && !movedLeft)
 		{
-			Move(GetLeft(), movAmt * in->IsLeft());
+			Move(GetLeft(), movAmt * in->IsLeft() * delta);
 			movedLeft = true;
 		}
 		if (in->IsRight() != 0 && !movedRight)
 		{
-			Move(GetLeft(), -movAmt * in->IsRight());
+			Move(GetLeft(), -movAmt * in->IsRight() * delta);
 			movedRight = true;
 		}
 
 		if (in->IsUp() != 0 && !rotUp)
 		{
-			RotateX(static_cast<float>(rotAmt / 8.0 * in->IsUp()));
+			RotateX(static_cast<float>(rotAmt / 8.0 * in->IsUp() * delta));
 			rotUp = true;
 		}
 		if (in->IsDown() != 0 && !rotDown)
 		{
-			RotateX(static_cast<float>(-rotAmt / 8.0 * in->IsDown()));
+			RotateX(static_cast<float>(-rotAmt / 8.0 * in->IsDown() * delta));
 			rotDown = true;
 		}
 		if (in->IsRightRot() != 0 && !rotRight)
 		{
-			RotateY(static_cast<float>(-rotAmt / 8.0 * in->IsRightRot()));
+			RotateY(static_cast<float>(-rotAmt / 8.0 * in->IsRightRot() * delta));
 			rotRight = true;
 		}
 		if (in->IsLeftRot() != 0 && !rotLeft)
 		{
-			RotateY(static_cast<float>(rotAmt / 8.0 * in->IsLeftRot()));
+			RotateY(static_cast<float>(rotAmt / 8.0 * in->IsLeftRot() * delta));
 			rotLeft = true;
 		}
 	}
@@ -278,5 +282,5 @@ void Camera::SetProjection(const float& fov, const float& width, const float& he
 	this->width = width;
 	this->height = height;
 
-	this->projectionMatrix = Matrix4f::PerspectiveProjection(fovY, width / height, ZNEAR, ZFAR);
+	this->projectionMatrix = Matrix4f::PerspectiveProjection(fovY, width / height, EngineConfig::rendererNearPlane, EngineConfig::rendererFarPlane);
 }

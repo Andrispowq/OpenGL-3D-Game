@@ -3,11 +3,10 @@
 
 #include <glew.h>
 #include <fstream>
-#include <unordered_map>
 
 #include "engine/prehistoric/common/rendering/shaders/Shader.h"
+#include "engine/prehistoric/component/light/Light.h"
 
-#include "engine/prehistoric/core/math/Math.h"
 #include "engine/prehistoric/core/util/Util.h"
 
 class GLShader : public Shader
@@ -28,42 +27,17 @@ public:
 	bool AddShader(const std::string& code, ShaderType type) const override;
 	bool CompileShader() const override;
 
-	virtual void UpdateUniforms(GameObject* object, Camera* camera) const override = 0;
+	virtual void UpdateUniforms(GameObject* object, Camera* camera, std::vector<Light*> lights) const override = 0;
 
-	void SetUniformi(const std::string& name, int value) const
-	{
-		glUniform1i(uniforms.at(name), value);
-	}
+	virtual void SetUniformi(const std::string& name, int value) const override { glUniform1i(uniforms.at(name), value); }
+	virtual void SetUniformf(const std::string& name, float value) const override { glUniform1f(uniforms.at(name), value); }
 
-	void SetUniformf(const std::string& name, float value) const
-	{
-		glUniform1f(uniforms.at(name), value);
-	}
+	virtual void SetUniform(const std::string& name, const Vector2f& value) const override { glUniform2f(uniforms.at(name), value.x, value.y); }
+	virtual void SetUniform(const std::string& name, const Vector3f& value) const override { glUniform3f(uniforms.at(name), value.x, value.y, value.z); }
+	virtual void SetUniform(const std::string& name, const Vector4f& value) const override { glUniform4f(uniforms.at(name), value.x, value.y, value.z, value.w); }
+	virtual void SetUniform(const std::string& name, const Matrix4f& matrix) const override { glUniformMatrix4fv(uniforms.at(name), 1, GL_FALSE, matrix.m); }
 
-	void SetUniform(const std::string& name, const Vector2f& value) const
-	{
-		glUniform2f(uniforms.at(name), value.x, value.y);
-	}
-
-	void SetUniform(const std::string& name, const Vector3f& value) const
-	{
-		glUniform3f(uniforms.at(name), value.x, value.y, value.z);
-	}
-
-	void SetUniform(const std::string& name, const Vector4f& value) const
-	{
-		glUniform4f(uniforms.at(name), value.x, value.y, value.z, value.w);
-	}
-
-	void SetUniform(const std::string& name, const Matrix4f& matrix) const
-	{
-		glUniformMatrix4fv(uniforms.at(name), 1, GL_FALSE, matrix.m);
-	}
-
-	void BindUniformBlock(const std::string& name, GLuint binding)
-	{
-		glUniformBlockBinding(program, uniforms.at(name), binding);
-	}
+	virtual void BindUniformBlock(const std::string& name, unsigned int binding) const override { glUniformBlockBinding(program, uniforms.at(name), binding); }
 
 	void BindFragDataLocation(const std::string& name, GLuint index)
 	{
@@ -74,9 +48,6 @@ private:
 private:
 	GLuint program;
 	GLuint* shaders;
-
-	std::unordered_map<std::string, GLuint> uniforms;
-	mutable unsigned int counter;
 };
 
 #endif 

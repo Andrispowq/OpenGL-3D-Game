@@ -5,9 +5,10 @@
 
 enum InputType
 {
+	NO_TYPE,
 	KEY_PRESSED, KEY_HELD, KEY_RELEASED,
-	MOUSE_PRESSED, MOUSE_HELD, MOUSE_RELEASED,
-	JOYSTICK_BUTTON_PRESSED, JOYSTICK_AXIS_MOVED
+	MOUSE_PRESSED, MOUSE_HELD, MOUSE_RELEASED, MOUSE_SCROLL,
+	JOYSTICK_BUTTON_PRESSED, JOYSTICK_AXIS_MOVED_NEGATIVE, JOYSTICK_AXIS_MOVED_POSITIVE
 };
 
 struct InputData
@@ -23,7 +24,7 @@ struct MoveData
 	float amount;
 };
 
-static InputData DefInData = { 0, KEY_HELD, 0 };
+static InputData DefInData = { 0, NO_TYPE, 0 };
 
 class CameraInput
 {
@@ -60,8 +61,8 @@ public:
 	void SetDowny(InputData down) { this->down = down; }
 	void SetRightRot(InputData rightRot) { this->rightRot = rightRot; }
 	void SetLeftRot(InputData leftRot) { this->leftRot = leftRot; }
-private:
-	float GetKey(InputData data) const
+
+	static float GetKey(InputData data)
 	{
 		switch (data.type)
 		{
@@ -78,11 +79,15 @@ private:
 			return InputInstance.IsButtonHeld(data.code);
 		case MOUSE_RELEASED:
 			return InputInstance.IsButtonReleased(data.code);
+		case MOUSE_SCROLL:
+			return InputInstance.GetScrollOffset();
 
 		case JOYSTICK_BUTTON_PRESSED:
 			return InputInstance.IsJoystickButtonPushed(data.code, data.joystickNumber);
-		case JOYSTICK_AXIS_MOVED:
+		case JOYSTICK_AXIS_MOVED_NEGATIVE:
 			return InputInstance.GetJoystickAxisOffset(data.code, data.joystickNumber);
+		case JOYSTICK_AXIS_MOVED_POSITIVE:
+			return -InputInstance.GetJoystickAxisOffset(data.code, data.joystickNumber);
 
 		default:
 			return 0;

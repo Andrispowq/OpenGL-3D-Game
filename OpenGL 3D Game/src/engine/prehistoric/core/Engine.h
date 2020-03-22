@@ -1,8 +1,10 @@
 #ifndef ENGINE_H
 #define ENGINE_H
 
+#include "engine/prehistoric/scene/Scene.h"
 #include "engine/prehistoric/common/rendering/RenderingEngine.h"
 #include "engine/prehistoric/core/gameObject/GameObject.h"
+#include "engine/config/EngineConfig.h"
 
 class Engine
 {

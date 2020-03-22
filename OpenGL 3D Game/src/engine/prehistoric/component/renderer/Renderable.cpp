@@ -1,10 +1,12 @@
+#include "engine/prehistoric/core/util/Includes.hpp"
 #include "Renderable.h"
 #include "engine/prehistoric/common/rendering/shaders/Shader.h"
+#include "engine/prehistoric/core/model/material/Material.h"
 
 std::vector<MeshVBO*> Renderable::vbos;
 std::vector<Shader*> Renderable::shaders;
 
-Renderable::Renderable(MeshVBO* vbo, Shader* shader)
+Renderable::Renderable(MeshVBO* vbo, Shader* shader, bool vboFurtherUse, bool shaderFurtherUse)
 {
 	auto vInd = std::find(vbos.begin(), vbos.end(), vbo);
 
@@ -16,7 +18,7 @@ Renderable::Renderable(MeshVBO* vbo, Shader* shader)
 	else
 	{
 		this->vboIndex = std::distance(vbos.begin(), vInd);
-		delete vbo;
+		//delete vbo;
 	}
 
 	auto sInd = std::find(shaders.begin(), shaders.end(), shader);
@@ -29,7 +31,7 @@ Renderable::Renderable(MeshVBO* vbo, Shader* shader)
 	else
 	{
 		this->shaderIndex = std::distance(shaders.begin(), sInd);
-		delete shader;
+		//delete shader;
 	}
 }
 

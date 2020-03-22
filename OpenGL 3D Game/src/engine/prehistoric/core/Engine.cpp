@@ -1,5 +1,5 @@
+#include "engine/prehistoric/core/util/Includes.hpp"
 #include "Engine.h"
-#include "engine/prehistoric/scene/Scene.h"
 
 Engine::Engine()
 {
@@ -7,6 +7,7 @@ Engine::Engine()
 
 	//Config loading
 	FrameworkConfig::LoadConfig("res/config/framework.cfg");
+	EngineConfig::LoadConfig("res/config/engine.cfg");
 
 	//Rootobject init
 	root = new GameObject();

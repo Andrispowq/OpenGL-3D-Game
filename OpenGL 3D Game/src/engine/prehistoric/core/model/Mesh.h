@@ -1,7 +1,6 @@
 #ifndef MESH_H
 #define MESH_H
 
-#include <vector>
 #include "Vertex.h"
 
 class Mesh
@@ -10,12 +9,12 @@ public:
 	Mesh(const Mesh& mesh);
 
 	Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned short>& indices) : vertices(vertices), indices(indices) {}
-	Mesh() : vertices(NULL), indices(NULL) {}
+	Mesh() {}
 
 	virtual ~Mesh();
 
-	void addVertex(const Vertex& vertex) { vertices.push_back(vertex); }
-	void addIndex(const int& index) { indices.push_back(index); }
+	void AddVertex(const Vertex& vertex) { vertices.push_back(vertex); }
+	void AddIndex(const int& index) { indices.push_back(index); }
 
 	inline std::vector<Vertex> getVertices() const { return vertices; }
 	inline std::vector<unsigned short> getIndices() const { return indices; }

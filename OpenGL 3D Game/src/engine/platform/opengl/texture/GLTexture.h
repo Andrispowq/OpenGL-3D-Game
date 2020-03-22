@@ -1,6 +1,8 @@
 #ifndef GL_TEXTURE_H
 #define GL_TEXTURE_H
 
+#include "glew.h"
+
 #include "engine/prehistoric/common/model/Texture.h"
 
 class GLTexture : public Texture

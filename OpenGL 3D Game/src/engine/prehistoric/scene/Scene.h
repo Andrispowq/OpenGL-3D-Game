@@ -1,9 +1,8 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-class GameObject;
-class MeshVBO;
-class Shader;
+#include "engine/prehistoric/component/renderer/Renderer.h"
+#include "engine/prehistoric/world/WorldLoader.h"
 
 class Scene
 {

@@ -1,3 +1,4 @@
+#include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLShader.h"
 
 std::string ResourceLoader::LoadShader(const std::string& filename)
@@ -23,7 +24,7 @@ std::string ResourceLoader::LoadShader(const std::string& filename)
 			else
 			{
 				std::string includeFile = Util::Split(line, ' ')[1];
-				includeFile = includeFile.substr(1, includeFile.length() - 2);
+				includeFile = includeFile.substr(1, includeFile.size() - 2);
 
 				std::string toAppend = LoadShader(includeFile);
 				output.append(toAppend + "\n");
@@ -32,7 +33,7 @@ std::string ResourceLoader::LoadShader(const std::string& filename)
 	}
 	else
 	{
-		std::cerr << "Unable to load shader: " << filename << std::endl;
+		PR_LOG_ERROR("Unable to load shader: %s\n", filename);
 	}
 
 	return output;
@@ -47,8 +48,7 @@ GLShader::GLShader(const std::string* files, unsigned int length) : Shader()
 
 	if (program == 0)
 	{
-		std::cerr << "Program creation has failed!" << std::endl;
-		exit(-1);
+		PR_LOG_RUNTIME_ERROR("Shader program creation has failed!\n");
 	}
 
 	if (length == 1) //Compute shader
@@ -57,7 +57,7 @@ GLShader::GLShader(const std::string* files, unsigned int length) : Shader()
 			return;
 
 		if (!AddShader(files[0], COMPUTE_SHADER))
-			std::cerr << "Compute shader couldn't be added";
+			PR_LOG_RUNTIME_ERROR("Compute shader couldn't be added\n");
 	}
 	else if (length == 2) // Vertex + fragment shader
 	{
@@ -65,9 +65,9 @@ GLShader::GLShader(const std::string* files, unsigned int length) : Shader()
 			return;
 
 		if (!AddShader(files[0], VERTEX_SHADER))
-			std::cerr << "Vertex shader couldn't be added";
+			PR_LOG_RUNTIME_ERROR("Vertex shader couldn't be added!");
 		if (!AddShader(files[1], FRAGMENT_SHADER))
-			std::cerr << "Fragment shader couldn't be added";
+			PR_LOG_RUNTIME_ERROR("Fragment shader couldn't be added!");
 	}
 	else if (length == 3) //Vertex + geometry + fragment shader
 	{
@@ -75,11 +75,11 @@ GLShader::GLShader(const std::string* files, unsigned int length) : Shader()
 			return;
 
 		if (!AddShader(files[0], VERTEX_SHADER))
-			std::cerr << "Vertex shader couldn't be added";
+			PR_LOG_RUNTIME_ERROR("Vertex shader couldn't be added!");
 		if (!AddShader(files[1], GEOMETRY_SHADER))
-			std::cerr << "Geometry shader couldn't be added";
+			PR_LOG_RUNTIME_ERROR("Geometry shader couldn't be added!");
 		if (!AddShader(files[2], FRAGMENT_SHADER))
-			std::cerr << "Fragment shader couldn't be added";
+			PR_LOG_RUNTIME_ERROR("Fragment shader couldn't be added!");
 	}
 	else if (length == 5) //Vertex + tess control + tess evaluation + geomtry + fragment shader
 	{
@@ -87,15 +87,15 @@ GLShader::GLShader(const std::string* files, unsigned int length) : Shader()
 			return;
 
 		if (!AddShader(files[0], VERTEX_SHADER))
-			std::cerr << "Vertex shader couldn't be added";
+			PR_LOG_RUNTIME_ERROR("Vertex shader couldn't be added!");
 		if (!AddShader(files[1], TESSELLATION_CONTROL_SHADER))
-			std::cerr << "Tessellation control shader couldn't be added";
+			PR_LOG_RUNTIME_ERROR("Tessellation control shader couldn't be added!");
 		if (!AddShader(files[2], TESSELLATION_EVALUATION_SHADER))
-			std::cerr << "Tessellation evaluation shader couldn't be added";
+			PR_LOG_RUNTIME_ERROR("Tessellation evaluation shader couldn't be added!");
 		if (!AddShader(files[3], GEOMETRY_SHADER))
-			std::cerr << "Geometry shader couldn't be added";
+			PR_LOG_RUNTIME_ERROR("Geometry shader couldn't be added!");
 		if (!AddShader(files[4], FRAGMENT_SHADER))
-			std::cerr << "Fragment shader couldn't be added";
+			PR_LOG_RUNTIME_ERROR("Fragment shader couldn't be added!");
 	}
 }
 
@@ -108,8 +108,7 @@ GLShader::GLShader() : Shader()
 
 	if (program == 0)
 	{
-		std::cerr << "Program creation has failed!" << std::endl;
-		exit(-1);
+		PR_LOG_RUNTIME_ERROR("Shader program creation has failed!");
 	}
 }
 
@@ -140,7 +139,7 @@ bool GLShader::AddUniform(const std::string& name)
 
 	if (location == -1)
 	{
-		std::cerr << "Uniform " << name << " was not found in a shader code" << std::endl;
+		PR_LOG_ERROR("Uniform %s was not found in a shader code\n", name.c_str());
 		return false;
 	}
 
@@ -151,10 +150,10 @@ bool GLShader::AddUniform(const std::string& name)
 bool GLShader::AddUniformBlock(const std::string& name)
 {
 	GLuint location = glGetUniformBlockIndex(program, name.c_str());
-
+	
 	if (location == -1)
 	{
-		std::cerr << "Uniform block " << name << " was not found in a shader code" << std::endl;
+		PR_LOG_ERROR("Uniform block %s was not found in a shader code\n", name.c_str());
 		return false;
 	}
 
@@ -178,7 +177,7 @@ bool GLShader::CompileShader() const
 		GLchar log[1024];
 		glGetProgramInfoLog(program, 1024, NULL, log);
 
-		fprintf(stderr, "ERROR: Linking shader program: '%s'\n", log);
+		PR_LOG_RUNTIME_ERROR("Shader program linking has failed!");
 
 		return false;
 	}
@@ -191,7 +190,7 @@ bool GLShader::CompileShader() const
 		GLchar log[1024];
 		glGetProgramInfoLog(program, 1024, NULL, log);
 
-		fprintf(stderr, "ERROR: Validating shader program: '%s'\n", log);
+		PR_LOG_RUNTIME_ERROR("Shader program validation has failed!");
 
 		return false;
 	}
@@ -216,7 +215,7 @@ bool GLShader::AddShader(const std::string& code, ShaderType type) const
 	case COMPUTE_SHADER:
 		return AddProgram(code, GL_COMPUTE_SHADER);
 	default:
-		std::cerr << "Invalid shader type given: " << type << std::endl;
+		PR_LOG_ERROR("Invalid shader type given: %i\n", type);
 		return false;
 	}
 }
@@ -229,7 +228,7 @@ bool GLShader::AddProgram(const std::string& code, GLenum type) const
 
 	if (shader == 0)
 	{
-		std::cerr << "Shader creation failed!" << std::endl;
+		PR_LOG_ERROR("Shader creation failed!\n");
 
 		return false;
 	}
@@ -237,7 +236,7 @@ bool GLShader::AddProgram(const std::string& code, GLenum type) const
 	const GLchar* charCode[1];
 	charCode[0] = code.c_str();
 	GLint lengths[1];
-	lengths[0] = static_cast<GLint>(code.length());
+	lengths[0] = static_cast<GLint>(code.size());
 
 	glShaderSource(shader, 1, charCode, lengths);
 	glCompileShader(shader);
@@ -249,7 +248,7 @@ bool GLShader::AddProgram(const std::string& code, GLenum type) const
 		GLchar log[1024];
 		glGetShaderInfoLog(shader, 1024, NULL, log);
 
-		fprintf(stderr, "ERROR: Compiling shader type %d: '%s'\n", shader, log);
+		PR_LOG_RUNTIME_ERROR("Shader stage addition has failed!");
 
 		return false;
 	}

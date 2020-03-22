@@ -1,3 +1,4 @@
+#include "engine/prehistoric/core/util/Includes.hpp"
 #include "CoreEngine.h"
 
 CoreEngine::CoreEngine()
@@ -61,12 +62,12 @@ void CoreEngine::Run()
 				break;
 			}
 
-			Input();
+			Input(passedTime);
 			Update();
 
 			if (frameCounter >= 1.0)
 			{
-				std::cout << frames << " fps" << std::endl;
+				PR_LOG(CYAN, "FPS: %i\n", frames);
 				frames = 0;
 				frameCounter = 0;
 			}
@@ -80,7 +81,7 @@ void CoreEngine::Run()
 		else
 		{
 			using namespace std::chrono_literals;
-			std::this_thread::sleep_for(2ms);
+			std::this_thread::sleep_for(1ms);
 		}
 	}
 }

@@ -1,7 +1,7 @@
 #ifndef RENDERABLE_H
 #define RENDERABLE_H
 
-#include <vector>
+#include "engine/prehistoric/core/util/Includes.hpp"
 
 #include "engine/prehistoric/component/Component.h"
 #include "engine/prehistoric/common/buffer/MeshVBO.h"
@@ -12,7 +12,7 @@ class Shader;
 class Renderable : public Component
 {
 public:
-	Renderable(MeshVBO* vbo, Shader* shader);
+	Renderable(MeshVBO* vbo, Shader* shader, bool vboFurtherUse = false, bool shaderFurtherUse = false);
 	Renderable();
 	virtual ~Renderable();
 
@@ -26,6 +26,9 @@ public:
 
 	inline size_t GetVboIndex() const { return vboIndex; }
 	inline size_t GetShaderIndex() const { return shaderIndex; }
+
+	inline MeshVBO* GetVbo() const { return vbos.at(vboIndex); }
+	inline Shader* GetShader() const { return shaders.at(shaderIndex); }
 
 	Renderable(const Renderable& renderable) = delete;
 	Renderable operator=(const Renderable& renderable) = delete;

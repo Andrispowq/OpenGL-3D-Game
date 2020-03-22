@@ -1,7 +1,7 @@
+#include "engine/prehistoric/core/util/Includes.hpp"
 #include "Input.h"
-
-#include "engine/platform/windows/opengl/framework/GLInput.h"
-#include <algorithm>
+#include "engine/platform/Prehistoric.h"
+#include "engine/platform/windows/WindowsInput.h"
 
 Input* Input::instance = nullptr;
 
@@ -9,15 +9,9 @@ Input& Input::GetInstance()
 {
 	if (instance == nullptr)
 	{
-		if (FrameworkConfig::api == OpenGL)
-		{
-			instance = new GLInput();
-		}
-		else if (FrameworkConfig::api == Vulkan)
-		{
-			printf("Vulkan API is not yet supported!");
-			exit(-1);
-		}
+#if defined(PR_WINDOWS_64)
+		instance = new WindowsInput();
+#endif
 	}
 
 	return *instance;

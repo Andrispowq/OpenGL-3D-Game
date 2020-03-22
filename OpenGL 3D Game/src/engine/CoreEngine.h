@@ -1,9 +1,9 @@
-#ifndef COREENGINE_H
-#define COREENGINE_H
+#ifndef CORE_ENGINE_H
+#define CORE_ENGINE_H
 
 #include "engine/config/FrameworkConfig.h"
 #include "engine/prehistoric/core/Engine.h"
-#include "engine/prehistoric/core/util/Time.h"
+#include "engine/prehistoric/core/util/time/Time.h"
 
 #include <chrono>
 #include <thread>
@@ -20,7 +20,7 @@ private:
 
 	void Run();
 
-	void Input() { engine->Input(static_cast<float>(frameTime)); }
+	void Input(double passedTime) { engine->Input(static_cast<float>(passedTime)); }
 	void Update() { engine->Update(); }
 	void Render() { engine->Render(); }
 

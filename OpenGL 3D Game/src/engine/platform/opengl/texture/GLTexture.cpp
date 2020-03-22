@@ -1,3 +1,4 @@
+#include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLTexture.h"
 
 GLTexture::GLTexture(GLuint id, GLenum type, unsigned int width, unsigned int height)
@@ -72,18 +73,18 @@ void GLTexture::Filter(SamplerFilter filter) const
 
 		if (GL_EXT_texture_filter_anisotropic)
 		{
-			GLfloat success;
-			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &success);
-			glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, success);
+			GLfloat maxAnisotropyLevel;
+			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropyLevel);
+			glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropyLevel);
 		}
 		else
 		{
-			fprintf(stderr, "Anisotropic filtering is not supported!");
+			PR_LOG_ERROR("Anisotropic filtering is not supported!");
 		}
 
 		break;
 	default:
-		fprintf(stderr, "This filtering type does not exist for textures! Type: " + filter);
+		PR_LOG_ERROR("This filtering type does not exist for textures! Type: " + filter);
 		break;
 	}
 }
@@ -117,7 +118,7 @@ void GLTexture::WrapMode(TextureWrapMode wrapMode) const
 			glTexParameteri(type, GL_TEXTURE_WRAP_R, GL_MIRRORED_REPEAT);
 		break;
 	default:
-		fprintf(stderr, "This type of texture wrapping does not exist! Type: " + wrapMode);
+		PR_LOG_ERROR("This type of texture wrapping does not exist! Type: " + wrapMode);
 		break;
 	}
 }
@@ -131,7 +132,7 @@ GLenum GLTexture::getType(ImageType type) const
 	else if (type == TEXTURE_CUBE_MAP)
 		return GL_TEXTURE_CUBE_MAP;
 
-	fprintf(stderr, "Unsupported texture type: " + type);
+	PR_LOG_ERROR("Unsupported texture type: " + type);
 
 	return -1;
 }

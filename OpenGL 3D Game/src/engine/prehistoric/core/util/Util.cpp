@@ -1,3 +1,4 @@
+#include "engine/prehistoric/core/util/Includes.hpp"
 #include "Util.h"
 
 namespace Util
@@ -7,7 +8,7 @@ namespace Util
 		std::vector<std::string> elems;
 
 		const char* cstr = s.c_str();
-		unsigned int strLength = static_cast<unsigned int>(s.length());
+		unsigned int strLength = static_cast<unsigned int>(s.size());
 		unsigned int start = 0;
 		unsigned int end = 0;
 
@@ -27,5 +28,24 @@ namespace Util
 		}
 
 		return elems;
+	}
+
+	std::vector<std::string> Util::RemoveEmptyStrings(const std::vector<std::string>& vec)
+	{
+		std::vector<std::string> res;
+
+		for (const auto& str : vec)
+		{
+			if (str == "")
+			{
+				continue;
+			}
+			else
+			{
+				res.push_back(str);
+			}
+		}
+
+		return res;
 	}
 }

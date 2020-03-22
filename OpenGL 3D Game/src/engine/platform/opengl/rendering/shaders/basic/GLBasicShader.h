@@ -1,5 +1,5 @@
-#ifndef BASIC_SHADER_H
-#define BASIC_SHADER_H
+#ifndef GL_BASIC_SHADER_H
+#define GL_BASIC_SHADER_H
 
 #include "engine/platform/opengl/rendering/shaders/GLShader.h"
 
@@ -9,7 +9,7 @@ public:
 	GLBasicShader();
 	virtual ~GLBasicShader() {}
 
-	virtual void UpdateUniforms(GameObject* object, Camera* camera) const override;
+	virtual void UpdateUniforms(GameObject* object, Camera* camera, std::vector<Light*> lights) const override;
 };
 
 #endif

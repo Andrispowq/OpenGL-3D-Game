@@ -1,64 +1,53 @@
+#include "engine/prehistoric/core/util/Includes.hpp"
 #include "Scene.h"
-#include "engine/prehistoric/component/renderer/Renderer.h"
-#include "engine/prehistoric/core/gameObject/GameObject.h"
-#include "engine/platform/opengl/rendering/shaders/basic/GLBasicShader.h"
-#include "engine/prehistoric/core/model/material/Material.h"
-#include "engine/platform/opengl/buffer/GLMeshVBO.h"
 
-MeshVBO* Scene::vbo;
-Shader* Scene::shader;
+MeshVBO* Scene::vbo = nullptr;
+Shader* Scene::shader = nullptr;
 
 void Scene::CreateScene(GameObject* root)
 {
-	if (FrameworkConfig::api == OpenGL)
-	{
-		vbo = new GLMeshVBO();
-	}
+	WorldLoader loader;
+	//loader.LoadWorld("res/world/testLevel.wrld", root);
 
-	Mesh mesh;
-
-	Vertex v0(Vector3f(-1, -1, 1), Vector2f(0, 0), Vector3f(0, 0, -1));
-	Vertex v1(Vector3f(-1, 1, 1), Vector2f(0, 1), Vector3f(0, 0, -1));
-	Vertex v2(Vector3f(1, 1, 1), Vector2f(1, 1), Vector3f(0, 0, -1));
-	Vertex v3(Vector3f(1, -1, 1), Vector2f(1, 0), Vector3f(0, 0, -1));
-
-	std::vector<Vertex> vertices;
-	std::vector<unsigned short> indices;
-
-	vertices.push_back(v0);
-	vertices.push_back(v1);
-	vertices.push_back(v2);
-	vertices.push_back(v3);
-
-	indices.push_back(0);
-	indices.push_back(1);
-	indices.push_back(2);
-	indices.push_back(2);
-	indices.push_back(3);
-	indices.push_back(0);
-
-	mesh.setVertices(vertices);
-	mesh.setIndices(indices);
-
-	vbo->Store(mesh);
+	/*vbo = ModelFabricator::CreateQuad();
 
 	if (FrameworkConfig::api == OpenGL)
 	{
-		shader = new GLBasicShader();
+		shader = new GLPBRShader();
 	}
 
-	GameObject* child = new GameObject();
+	Material* matN = new Material;
+	matN->AddTexture("albedoMap", TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_DIF.png"));
+	matN->AddTexture("normalMap", TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_NRM.png"));
+	matN->AddTexture("roughnessMap", TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_RGH.png"));
+	matN->AddTexture("metallicMap", TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_MET.png"));
 
 	Material* mat = new Material;
-	mat->AddTexture("diffuse", TextureLoader::LoadTexture("res/textures/brick/brick_DIF.jpg"));
+	mat->AddTexture("albedoMap", TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_DIF.png"));
+	mat->AddTexture("roughnessMap", TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_RGH.png"));
+	mat->AddTexture("metallicMap", TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_MET.png"));
 
-	child->AddComponent("renderer", new Renderer(vbo, shader, mat));
-	child->SetScale(0.5f);
+	GameObject* child = new GameObject();
+	child->AddComponent("renderer", new Renderer(vbo, shader, matN));
+	child->SetRotation({90, 0, 0});
 
-	root->AddChild(child);
+	GameObject* child2 = new GameObject();
+	child2->AddComponent("renderer", new Renderer(vbo, shader, mat));
+	child2->Move({ -2, 0, 0 });
+	child2->SetRotation({ 90, 0, 0 });
+
+	root->AddChild("plane-normalmap", child);
+	root->AddChild("plane", child2);
+
+	GameObject* light = new GameObject;
+	light->AddComponent("light", new Light({ 1 }, { 100 }));
+	light->Move({0, 4, 2});
+
+	root->AddChild(light);*/
 }
 
 void Scene::DeleteData()
 {
+	Renderer::CleanUp();
 	Renderable::CleanUp();
 }

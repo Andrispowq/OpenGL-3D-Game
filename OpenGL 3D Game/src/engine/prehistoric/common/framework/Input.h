@@ -1,7 +1,7 @@
 #ifndef INPUT_H
 #define INPUT_H
 
-#include <vector>
+#include "engine/prehistoric/core/util/Includes.hpp"
 
 #include "engine/config/FrameworkConfig.h"
 #include "Window.h"

@@ -1,7 +1,7 @@
 #ifndef MATH_H
 #define MATH_H
 
-#include <iostream>
+#include "engine/prehistoric/core/util/Includes.hpp"
 
 #define PI 3.14159265358979323846264338327950288419716939
 
@@ -81,7 +81,7 @@ public:
 	Vector2<T> negate() const { return Vector2<T>(-x, -y); };
 	Vector2<T> negated() { this->x = -x; this->y = -y; };
 
-	void print() const { std::cout << "X: " << x << ", Y: " << y << std::endl; }
+	void print() const { PR_LOG_MESSAGE("[ %f, %f ]\n", x, y); }
 public:
 	T x;
 	T y;
@@ -160,7 +160,7 @@ public:
 	Vector3<T> negate() const { return Vector3<T>(-x, -y, -z); };
 	Vector3<T> negated() { this->x = -x; this->y = -y; this->z = -z; };
 
-	void print() const { std::cout << "X: " << x << ", Y: " << y << ", Z: " << z << std::endl; }
+	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f ]\n", x, y, z); }
 public:
 	T x;
 	T y;
@@ -179,7 +179,7 @@ public:
 	Vector4(const T* v)
 	{
 		if (&(v[3]) == nullptr)
-			std::cerr << "You try to create a Vector4f object from an array of float with less then 4 members. The array's memory address: " << v << std::endl;
+			PR_LOG_ERROR("You try to create a Vector4f object from an array of float with less then 4 members. The array's memory address: %i\n", v);
 
 		this->x = v[0];
 		this->y = v[1];
@@ -253,7 +253,7 @@ public:
 	Vector4<T> negate() const { return Vector4<T>(-x, -y, -z, -w); };
 	Vector4<T> negated() { this->x = -x; this->y = -y; this->z = -z; this->w = -w; };
 
-	void print() const { std::cout << "X: " << x << ", Y: " << y << ", Z: " << z << ", W: " << w << std::endl; }
+	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f, %f ]", x, y, z, w); }
 public:
 	T x;
 	T y;
@@ -271,7 +271,7 @@ public:
 	Quaternion(const T* v)
 	{
 		if (&(v[3]) == nullptr)
-			std::cerr << "You try to create a Vector4f object from an array of float with less then 4 members. The array's memory address: " << v << std::endl;
+			PR_LOG_ERROR("You try to create a Quaternion object from an array of float with less then 4 members. The array's memory address: %i\n", v);
 
 		this->x = v[0];
 		this->y = v[1];
@@ -355,7 +355,7 @@ public:
 	Quaternion<T> negate() const { return Quaternion<T>(-x, -y, -z, -w); };
 	Quaternion<T> negated() { this->x = -x; this->y = -y; this->z = -z; this->w = -w; };
 
-	void print() const { std::cout << "X: " << x << ", Y: " << y << ", Z: " << z << ", W: " << w << std::endl; }
+	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f, %f ]", x, y, z, w); }
 public:
 	T x;
 	T y;
@@ -432,14 +432,16 @@ public:
 
 	void print() const
 	{
+		PR_LOG_MESSAGE("Matrix: \n");
+		
 		for (int i = 0; i < 4; i++)
 		{
 			for (int j = 0; j < 4; j++)
 			{
-				std::cout << m[i * 4 + j] << "\t";
+				PR_LOG_MESSAGE("\t%f", m[i * 4 + j]);
 			}
 
-			std::cout << "\n";
+			PR_LOG_MESSAGE("\n");
 		}
 	}
 private:

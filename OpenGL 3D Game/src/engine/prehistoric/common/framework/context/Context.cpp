@@ -1,7 +1,8 @@
+#include "engine/prehistoric/core/util/Includes.hpp"
 #include "Context.h"
 #include "engine/config/FrameworkConfig.h"
-#include "engine/platform/windows/opengl/framework/context/GLContext.h"
-#include "engine/platform/windows/vulkan/framework/context/VkContext.h"
+#include "engine/platform/opengl/framework/context/GLContext.h"
+#include "engine/platform/vulkan/framework/context/VkContext.h"
 
 Context* Context::context = nullptr;
 
@@ -17,6 +18,10 @@ Context& Context::GetContext()
 		{
 			context = new VkContext();
 		}
+		else
+		{
+			PR_LOG_RUNTIME_ERROR("Selected rendering API under res/config/framework.cfg is not supported!");
+		}
 	}
 
 	return *context;
@@ -24,5 +29,5 @@ Context& Context::GetContext()
 
 Context::~Context()
 {
-	delete context;
+	//delete context;
 }

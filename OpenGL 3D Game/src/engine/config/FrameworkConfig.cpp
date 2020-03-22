@@ -1,17 +1,20 @@
+#include "engine/prehistoric/core/util/Includes.hpp"
 #include "FrameworkConfig.h"
 
 namespace FrameworkConfig
 {
 	std::string FrameworkConfig::windowName;
-	int FrameworkConfig::windowWidth;
-	int FrameworkConfig::windowHeight;
+	unsigned int FrameworkConfig::windowWidth;
+	unsigned int FrameworkConfig::windowHeight;
 	bool FrameworkConfig::windowFullScreen;
 	bool FrameworkConfig::windowResizable;
-	int FrameworkConfig::windowNumSamples;
-	int FrameworkConfig::windowMaxFPS;
+	bool FrameworkConfig::windowVSync;
+	unsigned int FrameworkConfig::windowNumSamples;
+	unsigned int FrameworkConfig::windowMaxFPS;
 
 	API FrameworkConfig::api;
 	Vector2i FrameworkConfig::apiVersion;
+	bool FrameworkConfig::apiVulkanUseValidationLayers;
 
 	void FrameworkConfig::LoadConfig(const std::string& path)
 	{
@@ -57,6 +60,10 @@ namespace FrameworkConfig
 					{
 						windowResizable = std::atoi(tokens[1].c_str()) != 0;
 					}
+					if (nameTokens[1] == "vSync")
+					{
+						windowVSync = std::atoi(tokens[1].c_str()) != 0;
+					}
 					if (nameTokens[1] == "numSamples")
 					{
 						windowNumSamples = std::atoi(tokens[1].c_str());
@@ -80,13 +87,20 @@ namespace FrameworkConfig
 						}
 						else
 						{
-							printf("Specify a valid API (OpenGL or Vulkan) under res/config/framework.cfg!");
+							PR_LOG_ERROR("Specify a valid API (OpenGL or Vulkan) under res/config/framework.cfg!\n");
 							api = NO_API;
 						}
 					}
 					if (nameTokens[1] == "version")
 					{
 						apiVersion = { std::atoi(tokens[1].c_str()), std::atoi(tokens[2].c_str()) };
+					}
+					if (nameTokens[1] == "vulkan")
+					{
+						if (nameTokens[2] == "useValidationLayers")
+						{
+							apiVulkanUseValidationLayers = std::atoi(tokens[1].c_str()) != 0;
+						}
 					}
 				}
 			}
@@ -95,7 +109,7 @@ namespace FrameworkConfig
 		}
 		else
 		{
-			fprintf(stderr, "File %s cannot be opened!", path.c_str());
+			PR_LOG_ERROR("File %s cannot be opened!\n", path.c_str());
 		}
 	}
 }

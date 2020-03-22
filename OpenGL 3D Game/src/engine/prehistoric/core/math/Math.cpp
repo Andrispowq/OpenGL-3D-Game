@@ -1,3 +1,4 @@
+#include "engine/prehistoric/core/util/Includes.hpp"
 #include "Math.h"
 
 Matrix4f::Matrix4f(const Matrix4f& v)
@@ -356,7 +357,7 @@ Matrix4f Matrix4f::Transformation(const Vector3f& translation, const Vector3f& r
 	Matrix4f Rotation = Matrix4f::Rotation(rotation);
 	Matrix4f Scaling = Matrix4f::Scaling(scaling);
 
-	return Scaling * Rotation * Translation;
+	return Translation * Rotation * Scaling;
 }
 
 Matrix4f Matrix4f::PerspectiveProjection(const float& fov, const float& aspectRatio, const float& nearPlane, const float& farPlane)

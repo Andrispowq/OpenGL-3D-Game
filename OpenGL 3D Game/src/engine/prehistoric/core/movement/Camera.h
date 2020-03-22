@@ -18,7 +18,7 @@ public:
 
     void AddCameraInput(CameraInput* input) { inputs.push_back(input); }
 
-	void Input(Window* window);
+	void Input(Window* window, float delta);
 	void Move(const Vector3f& dir, const float& amount);
 	void RotateX(const float& angle);
 	void RotateY(const float& angle);
@@ -33,8 +33,11 @@ public:
 	inline Matrix4f GetViewMatrix() const { return viewMatrix; }
 	inline Matrix4f GetProjectionMatrix() const { return projectionMatrix; }
 	inline Matrix4f GetViewProjectionMatrix() const { return viewProjectionMatrix; }
+
+    inline void SetSpeedControl(InputData data) { this->speedControl = data; }
 private:
     std::vector<CameraInput*> inputs;
+    InputData speedControl;
 
 	Vector3f position;
 	Vector3f previousPosition;

@@ -1,3 +1,4 @@
+#include "engine/prehistoric/core/util/Includes.hpp"
 #include "GameObject.h"
 
 GameObject::~GameObject()

@@ -1,3 +1,4 @@
+#include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLMeshVBO.h"
 
 GLMeshVBO::GLMeshVBO(const Mesh& mesh) : MeshVBO()
