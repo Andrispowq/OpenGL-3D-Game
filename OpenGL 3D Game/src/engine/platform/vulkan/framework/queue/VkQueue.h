@@ -3,7 +3,7 @@
 
 #include "vulkan/vulkan.h"
 
-class VkQueueManager
+class VKQueue
 {
 public:
 	void SetupQueue(VkDevice device, uint32_t family);

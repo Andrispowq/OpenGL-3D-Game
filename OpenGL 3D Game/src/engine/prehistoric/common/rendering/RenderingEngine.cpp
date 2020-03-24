@@ -3,11 +3,14 @@
 #include "engine/prehistoric/component/renderer/Renderable.h"
 #include "engine/prehistoric/core/gameObject/GameObject.h"
 #include "engine/prehistoric/common/util/DeviceProperties.h"
+#include "engine/platform/vulkan/framework/context/VkContext.h"
 
 RenderingEngine::RenderingEngine()
 {
 #if defined(PR_WINDOWS_64)
 	window = new WindowsWindow(FrameworkConfig::windowWidth, FrameworkConfig::windowHeight, FrameworkConfig::windowName.c_str(), FrameworkConfig::windowFullScreen);
+#elif
+	PR_LOG_RUNTIME_ERROR("Unsupported platform is being used!\n");
 #endif
 
 	if (!window->Create())
@@ -17,9 +20,15 @@ RenderingEngine::RenderingEngine()
 		exit(-1);
 	}
 
-	//TODO
-	if(FrameworkConfig::api == OpenGL) 
+	if (FrameworkConfig::api == OpenGL)
+	{
 		DeviceProperties::GetInstance().ListProperties(nullptr);
+	}
+	else if (FrameworkConfig::api == Vulkan)
+	{
+		DeviceProperties::GetInstance().ListProperties(window->GetContext()->GetPhysicalDevice());
+	}
+
 
 	window->SetClearColor(0.23f, 0.78f, 0.88f, 1.0f);
 

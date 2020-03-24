@@ -4,6 +4,8 @@
 #include "engine/config/FrameworkConfig.h"
 #include "engine/platform/opengl/framework/swapchain/GLSwapChain.h"
 #include "engine/platform/vulkan/framework/swapchain/VkSwapChain.h"
+#include "engine/platform/opengl/framework/context/GLContext.h"
+#include "engine/platform/vulkan/framework/context/VKContext.h"
 
 Window::Window(const int& width, const int& height, const char* title, const bool& fullscreen)
 {
@@ -15,16 +17,21 @@ Window::Window(const int& width, const int& height, const char* title, const boo
 
 	if (FrameworkConfig::api == OpenGL)
 	{
-		swapChain = new GLSwapChain();
+		swapchain = new GLSwapChain();
+		context = new GLContext();
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
-		swapChain = new VkSwapChain();
+		swapchain = new VKSwapchain();
+		context = new VKContext();
 	}
 	else
 	{
 		PR_LOG_RUNTIME_ERROR("An invalid API has been specified under res/config/framework.cfg!\n");
 	}
+
+	context->InitContext(this);
+	swapchain->SetupSwapchain(context->GetPhysicalDevice(), context->GetDevice());
 }
 
 Window::Window()
@@ -37,20 +44,28 @@ Window::Window()
 
 	if (FrameworkConfig::api == OpenGL)
 	{
-		swapChain = new GLSwapChain();
+		swapchain = new GLSwapChain();
+		context = new GLContext();
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
-		swapChain = new VkSwapChain();
+		swapchain = new VKSwapchain();
+		context = new VKContext();
 	}
 	else
 	{
 		PR_LOG_RUNTIME_ERROR("An invalid API has been specified under res/config/framework.cfg!\n");
 	}
+
+	context->InitContext(this);
+	swapchain->SetupSwapchain(context->GetPhysicalDevice(), context->GetDevice());
 }
 
 Window::~Window()
 {
-	Context::GetContext().DeleteContext(this);
-	delete swapChain;
+	swapchain->DeleteSwapchain(context->GetDevice());
+	context->DeleteContext(this);
+
+	delete swapchain;
+	delete context;
 }

@@ -3,7 +3,8 @@
 
 #include "engine/prehistoric/core/util/Constants.h"
 
-#include "engine/prehistoric/common/framework/swapchain/SwapChain.h"
+#include "engine/prehistoric/common/framework/swapchain/Swapchain.h"
+#include "engine/prehistoric/common/framework/context/Context.h"
 
 class Window
 {
@@ -13,13 +14,13 @@ public:
 	
 	virtual ~Window() = 0;
 
-	void SetClearColor(const float& red, const float& green, const float& blue, const float& alpha) const { swapChain->SetClearColor(red, green, blue, alpha); }
-	void ClearScreen() const { swapChain->ClearScreen(); }
+	void SetClearColor(const float& red, const float& green, const float& blue, const float& alpha) const { swapchain->SetClearColor(red, green, blue, alpha); }
+	void ClearScreen() const { swapchain->ClearScreen(); }
 
-	void SetFullscreen(bool fullscreen) { swapChain->SetFullscreen(GetWindowHandle(), fullscreen); };
-	void SetVSync(bool vsync) const { swapChain->SetVSync(vsync); }
+	void SetFullscreen(bool fullscreen) { swapchain->SetFullscreen(this, fullscreen); };
+	void SetVSync(bool vsync) const { swapchain->SetVSync(vsync); }
 
-	void DeleteSwapChain(void* device) { swapChain->DeleteSwapChain(device); }
+	void DeleteSwapChain(void* device) { swapchain->DeleteSwapchain(device); }
 
 	virtual bool Create() = 0;
 	virtual bool ShouldClose() const = 0; 
@@ -29,7 +30,8 @@ public:
 	inline bool GetClosed() const { return closed; }
 	inline void SetClosed(const bool& closed) { this->closed = closed; }
 
-	inline SwapChain* GetSwapChain() const { return swapChain; }
+	inline Swapchain* GetSwapchain() const { return swapchain; }
+	inline Context* GetContext() const { return context; }
 
 	virtual void* GetWindowHandle() const = 0;
 protected:
@@ -39,7 +41,8 @@ protected:
 	bool fullscreen;
 	bool closed;
 
-	SwapChain* swapChain;
+	Swapchain* swapchain;
+	Context* context;
 };
 
 #endif

@@ -9,9 +9,9 @@
 
 GLPBRShader::GLPBRShader() : GLShader()
 {
-	AddShader(ResourceLoader::LoadShader("pbr/pbr_VS.glsl"), VERTEX_SHADER);
-	AddShader(ResourceLoader::LoadShader("pbr/pbr_GS.glsl"), GEOMETRY_SHADER);
-	AddShader(ResourceLoader::LoadShader("pbr/pbr_FS.glsl"), FRAGMENT_SHADER);
+	AddShader(ResourceLoader::LoadShaderGL("pbr/pbr_VS.glsl"), VERTEX_SHADER);
+	AddShader(ResourceLoader::LoadShaderGL("pbr/pbr_GS.glsl"), GEOMETRY_SHADER);
+	AddShader(ResourceLoader::LoadShaderGL("pbr/pbr_FS.glsl"), FRAGMENT_SHADER);
 	CompileShader();
 
 	AddUniform("m_transform");

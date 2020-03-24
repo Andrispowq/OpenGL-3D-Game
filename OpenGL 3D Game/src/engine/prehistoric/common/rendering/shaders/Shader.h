@@ -17,7 +17,8 @@ enum ShaderType
 
 namespace ResourceLoader
 {
-	std::string LoadShader(const std::string& filename);
+	std::string LoadShaderGL(const std::string& filename);
+	std::string LoadShaderVK(const std::string& filename);
 };
 
 class GameObject;

@@ -99,22 +99,10 @@
     <ClCompile Include="src\engine\prehistoric\common\framework\context\Context.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\platform\vulkan\framework\device\VkPhysicalDeviceSelector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\platform\vulkan\framework\device\VkDeviceSelector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\prehistoric\common\util\DeviceProperties.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\platform\opengl\util\GLDeviceProperties.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\platform\vulkan\buffer\VkMeshVBO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\platform\vulkan\framework\queue\VkQueueManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\prehistoric\core\util\ModelFabricator.cpp">
@@ -159,22 +147,64 @@
     <ClCompile Include="src\engine\platform\opengl\framework\context\GLContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\platform\vulkan\framework\context\VkContext.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\platform\vulkan\framework\context\VkDebugMessenger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\platform\windows\WindowsInput.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\prehistoric\common\framework\swapchain\SwapChain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\engine\platform\opengl\framework\swapchain\GLSwapChain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\platform\vulkan\framework\swapchain\VkSwapChain.cpp">
+    <ClCompile Include="src\engine\platform\vulkan\texture\VkTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\vulkan\rendering\shaders\VkShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\Pipeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\vulkan\rendering\pipeline\VkPipeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\opengl\rendering\pipeline\GLPipeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\vulkan\framework\device\VKDevice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\vulkan\framework\device\VKPhysicalDevice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\vulkan\framework\context\VKDebugMessenger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\vulkan\framework\context\VKContext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\vulkan\framework\queue\VKQueue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\vulkan\framework\swapchain\VKSwapchain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\vulkan\buffer\VKMeshVBO.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\prehistoric\common\framework\swapchain\Swapchain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\vulkan\util\VKUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\vulkan\rendering\command\VKCommandBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\vulkan\rendering\command\VKCommandPool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\vulkan\framework\surface\VKSurface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\vulkan\framework\context\VKInstance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -281,12 +311,6 @@
     <ClInclude Include="src\engine\prehistoric\common\framework\context\Context.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\platform\vulkan\framework\device\VkPhysicalDeviceSelector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\platform\vulkan\framework\device\VkDeviceSelector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\prehistoric\core\util\Includes.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -294,12 +318,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\platform\opengl\util\GLDeviceProperties.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\platform\vulkan\buffer\VkMeshVBO.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\platform\vulkan\framework\queue\VkQueueManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\prehistoric\core\util\ModelFabricator.h">
@@ -347,22 +365,64 @@
     <ClInclude Include="src\engine\platform\opengl\framework\context\GLContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\platform\vulkan\framework\context\VkContext.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\platform\vulkan\framework\context\VkDebugMessenger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\platform\windows\WindowsInput.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\platform\opengl\framework\swapchain\GLSwapChain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\prehistoric\common\framework\swapchain\SwapChain.h">
+    <ClInclude Include="src\engine\platform\vulkan\texture\VkTexture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\platform\vulkan\framework\swapchain\VkSwapChain.h">
+    <ClInclude Include="src\engine\platform\vulkan\rendering\shaders\VkShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\prehistoric\common\rendering\pipeline\Pipeline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLPipeline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\vulkan\rendering\pipeline\VkPipeline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\vulkan\framework\device\VKDevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\vulkan\framework\device\VKPhysicalDevice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\vulkan\framework\context\VKDebugMessenger.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\vulkan\framework\context\VKContext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\vulkan\framework\queue\VkQueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\vulkan\framework\swapchain\VKSwapchain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\vulkan\buffer\VKMeshVBO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\prehistoric\common\framework\swapchain\Swapchain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\vulkan\util\VKUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\vulkan\rendering\command\VKCommandBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\vulkan\rendering\command\VKCommandPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\vulkan\framework\surface\VKSurface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\vulkan\framework\context\VKInstance.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

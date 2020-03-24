@@ -80,7 +80,7 @@ void Camera::Input(Window* window, float delta)
 	cameraMoved = false;
 	cameraRotated = false;
 
-	movAmt += CameraInput::GetKey(speedControl) * delta * 10.0;
+	movAmt += CameraInput::GetKey(speedControl) * delta * 10.0f;
 	movAmt = static_cast<float>(std::fmax(0.02, movAmt));
 	
 	//Move by input systems

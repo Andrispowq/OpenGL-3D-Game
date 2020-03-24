@@ -1,28 +1,28 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
-#include "VkSwapChain.h"
-#include "engine/platform/vulkan/framework/device/VkPhysicalDeviceSelector.h"
+#include "VKSwapchain.h"
+#include "engine/platform/vulkan/framework/device/VKDevice.h"
 
-void VkSwapChain::SetupSwapChain(void* window, void* physicalDevice, void* device)
+void VKSwapchain::SetupSwapchain(void* physicalDevice, void* device)
 {
-    VkPhysicalDevice physicalDev = *(reinterpret_cast<VkPhysicalDevice*>(physicalDevice));
-    VkDevice dev = *(reinterpret_cast<VkDevice*>(device));
+    VKPhysicalDevice* physicalDev = reinterpret_cast<VKPhysicalDevice*>(physicalDevice);
+    VKDevice* dev = reinterpret_cast<VKDevice*>(device);
 
-    SwapChainSupportDetails swapChainSupport = VkPhysicalDeviceSelector::QuerySwapChainSupport(*surface, physicalDev);
+    SwapChainSupportDetails swapChainSupport = VKUtil::QuerySwapChainSupport(surface, *physicalDev);
 
-    VkSurfaceFormatKHR surfaceFormat = VkPhysicalDeviceSelector::ChooseSwapSurfaceFormat(swapChainSupport.formats);
-    VkPresentModeKHR presentMode = VkPhysicalDeviceSelector::ChooseSwapPresentMode(swapChainSupport.presentModes);
-    VkExtent2D extent = VkPhysicalDeviceSelector::ChooseSwapExtent(swapChainSupport.capabilities);
+    VkSurfaceFormatKHR surfaceFormat = VKUtil::ChooseSwapSurfaceFormat(swapChainSupport.formats);
+    VkPresentModeKHR presentMode = VKUtil::ChooseSwapPresentMode(swapChainSupport.presentModes);
+    VkExtent2D extent = VKUtil::ChooseSwapExtent(swapChainSupport.capabilities);
 
     uint32_t imageCount = swapChainSupport.capabilities.minImageCount + 1;
 
-    if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount) 
+    if (swapChainSupport.capabilities.maxImageCount > 0 && imageCount > swapChainSupport.capabilities.maxImageCount)
     {
         imageCount = swapChainSupport.capabilities.maxImageCount;
     }
 
     VkSwapchainCreateInfoKHR createInfo = {};
     createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-    createInfo.surface = *surface;
+    createInfo.surface = surface->GetSurface();
     createInfo.minImageCount = imageCount;
     createInfo.imageFormat = surfaceFormat.format;
     createInfo.imageColorSpace = surfaceFormat.colorSpace;
@@ -30,7 +30,7 @@ void VkSwapChain::SetupSwapChain(void* window, void* physicalDevice, void* devic
     createInfo.imageArrayLayers = 1;
     createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-    QueueFamilyIndices indices = VkPhysicalDeviceSelector::FindQueueFamilies(*surface, physicalDev);
+    QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface, *physicalDev);
     uint32_t queueFamilyIndices[] = { indices.graphicsFamily, indices.presentFamily };
 
     if (indices.graphicsFamily != indices.presentFamily)
@@ -39,7 +39,7 @@ void VkSwapChain::SetupSwapChain(void* window, void* physicalDevice, void* devic
         createInfo.queueFamilyIndexCount = 2;
         createInfo.pQueueFamilyIndices = queueFamilyIndices;
     }
-    else 
+    else
     {
         createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
         createInfo.queueFamilyIndexCount = 0; // Optional
@@ -52,40 +52,81 @@ void VkSwapChain::SetupSwapChain(void* window, void* physicalDevice, void* devic
     createInfo.clipped = VK_TRUE;
     createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-    if (vkCreateSwapchainKHR(dev, &createInfo, nullptr, &swapChain) != VK_SUCCESS) 
+    if (vkCreateSwapchainKHR(dev->GetDevice(), &createInfo, nullptr, &swapchain) != VK_SUCCESS)
     {
         PR_LOG_RUNTIME_ERROR("Failed to create swap chain!\n");
     }
+
+    //Create images and image views
+    vkGetSwapchainImagesKHR(dev->GetDevice(), swapchain, &imageCount, nullptr);
+
+    swapchainImages.resize(imageCount);
+    vkGetSwapchainImagesKHR(dev->GetDevice(), swapchain, &imageCount, swapchainImages.data());
+
+    swapchainImageFormat = surfaceFormat.format;
+    swapchainExtent = extent;
+
+    swapChainImageViews.resize(swapchainImages.size());
+
+    for (size_t i = 0; i < swapchainImages.size(); i++)
+    {
+        VkImageViewCreateInfo createInfo = {};
+        createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        createInfo.image = swapchainImages[i];
+        createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        createInfo.format = swapchainImageFormat;
+
+        createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+        createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        createInfo.subresourceRange.baseMipLevel = 0;
+        createInfo.subresourceRange.levelCount = 1;
+        createInfo.subresourceRange.baseArrayLayer = 0;
+        createInfo.subresourceRange.layerCount = 1;
+
+        if (vkCreateImageView(dev->GetDevice(), &createInfo, nullptr, &swapChainImageViews[i]) != VK_SUCCESS)
+        {
+            PR_LOG_RUNTIME_ERROR("Failed to create image views!\n");
+        }
+    }
 }
 
-void VkSwapChain::SwapBuffers(void* window) const
+void VKSwapchain::SwapBuffers(Window* window) const
+{
+    
+}
+
+void VKSwapchain::SetVSync(bool vSync) const
+{
+    
+}
+
+void VKSwapchain::SetFullscreen(Window* window, bool fullscreen) const
 {
 
 }
 
-void VkSwapChain::SetVSync(bool vSync) const
+void VKSwapchain::SetClearColor(const float& red, const float& green, const float& blue, const float& alpha)
 {
 
 }
 
-void VkSwapChain::SetFullscreen(void* window, bool fullscreen) const
+void VKSwapchain::ClearScreen()
 {
 
 }
 
-void VkSwapChain::SetClearColor(const float& red, const float& green, const float& blue, const float& alpha)
-{
-
-}
-
-void VkSwapChain::ClearScreen()
-{
-
-}
-
-void VkSwapChain::DeleteSwapChain(void* device)
+void VKSwapchain::DeleteSwapchain(void* device)
 {
     VkDevice dev = *(reinterpret_cast<VkDevice*>(device));
 
-    vkDestroySwapchainKHR(dev, swapChain, nullptr);
+    for (auto imageView : swapChainImageViews)
+    {
+        vkDestroyImageView(dev, imageView, nullptr);
+    }
+
+    vkDestroySwapchainKHR(dev, swapchain, nullptr);
 }

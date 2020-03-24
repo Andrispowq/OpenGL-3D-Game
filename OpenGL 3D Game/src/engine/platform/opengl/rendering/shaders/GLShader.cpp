@@ -1,7 +1,7 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLShader.h"
 
-std::string ResourceLoader::LoadShader(const std::string& filename)
+std::string ResourceLoader::LoadShaderGL(const std::string& filename)
 {
 	const std::string SHADER_LOC = "res/shaders/";
 
@@ -26,7 +26,7 @@ std::string ResourceLoader::LoadShader(const std::string& filename)
 				std::string includeFile = Util::Split(line, ' ')[1];
 				includeFile = includeFile.substr(1, includeFile.size() - 2);
 
-				std::string toAppend = LoadShader(includeFile);
+				std::string toAppend = LoadShaderGL(includeFile);
 				output.append(toAppend + "\n");
 			}
 		}

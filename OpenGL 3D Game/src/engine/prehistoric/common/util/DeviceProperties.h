@@ -7,7 +7,7 @@ public:
 	static DeviceProperties& GetInstance();
 	static void DeleteInstance();
 
-	virtual void ListProperties(const void* device) const = 0;
+	virtual void ListProperties(void* device) const = 0;
 protected:
 	DeviceProperties() {}
 	virtual ~DeviceProperties() {}

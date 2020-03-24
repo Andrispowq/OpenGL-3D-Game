@@ -19,7 +19,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
 void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
 
-void VkDebugMessenger::CreateMessenger(VkInstance instance)
+void VKDebugMessenger::CreateMessenger(VkInstance instance)
 {
 	debugMessenger = VK_NULL_HANDLE;
 	VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
@@ -35,7 +35,7 @@ void VkDebugMessenger::CreateMessenger(VkInstance instance)
 	}
 }
 
-void VkDebugMessenger::CreateMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& messengerCreateInfo)
+void VKDebugMessenger::CreateMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& messengerCreateInfo)
 {
 	messengerCreateInfo = {};
 	messengerCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -45,28 +45,28 @@ void VkDebugMessenger::CreateMessengerCreateInfo(VkDebugUtilsMessengerCreateInfo
 	//messengerCreateInfo.pUserData = nullptr;
 }
 
-void VkDebugMessenger::DeleteMessenger(VkInstance instance)
+void VKDebugMessenger::DeleteMessenger(VkInstance instance)
 {
 	DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
 }
 
 VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
 {
-	auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+	auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
 
-	if (func != nullptr) 
+	if (func != nullptr)
 	{
 		return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
 	}
-	else 
+	else
 	{
 		return VK_ERROR_EXTENSION_NOT_PRESENT;
 	}
 }
 
-void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) 
+void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
 {
-	auto func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+	auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
 
 	if (func != nullptr)
 	{

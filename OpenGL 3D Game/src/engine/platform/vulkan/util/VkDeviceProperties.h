@@ -5,10 +5,10 @@
 
 #include "engine/prehistoric/common/util/DeviceProperties.h"
 
-class VkDeviceProperties : public DeviceProperties
+class VKDeviceProperties : public DeviceProperties
 {
 public:
-	virtual void ListProperties(const void* device) const override;
+	virtual void ListProperties(void* device) const override;
 };
 
 #endif

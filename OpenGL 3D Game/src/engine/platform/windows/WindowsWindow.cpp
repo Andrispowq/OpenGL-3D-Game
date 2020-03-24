@@ -53,25 +53,10 @@ bool WindowsWindow::Create()
 	}
 
 	//Initialisation of GLEW
-	if (!Context::GetContext().InitContext(this))
+	if (!context->InitContext(this))
 	{
 		glfwTerminate();
 		return false;
-	}
-
-	if (FrameworkConfig::api == OpenGL)
-	{
-		swapChain->SetupSwapChain(window, nullptr, nullptr);
-	}
-	else if (FrameworkConfig::api == Vulkan)
-	{
-		VkPhysicalDevice physicalDevice = dynamic_cast<VkContext&>(Context::GetContext()).GetPhysicalDeviceSelector().GetPhysicalDevice();
-		VkDevice device = dynamic_cast<VkContext&>(Context::GetContext()).GetLogicalDeviceSelector().GetDevice();
-		swapChain->SetupSwapChain(window, &physicalDevice, &device);
-	}
-	else
-	{
-		PR_LOG_RUNTIME_ERROR("Specified API is not valid!\n");
 	}
 
 	ImageData data = TextureLoader::LoadTextureData("res/textures/logo.png");
@@ -107,7 +92,7 @@ void WindowsWindow::Input()
 
 void WindowsWindow::Render() const
 {
-	swapChain->SwapBuffers(window);
+	manager->GetSwapchain()->SwapBuffers((Window*) this);
 }
 
 bool WindowsWindow::ShouldClose() const

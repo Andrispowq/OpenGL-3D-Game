@@ -208,6 +208,8 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root)
 						Material* material = materials[compTokens[2]];
 						Shader* shader = nullptr;
 
+						Pipeline* pipeline = nullptr;
+
 						//Checking for shader types
 						if (compTokens[1] == "basic")
 						{
@@ -232,13 +234,18 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root)
 							}
 						}
 
-						Renderer* renderer = new Renderer(vbo, shader, material);
+						if (FrameworkConfig::api == OpenGL)
+						{
+							pipeline = new GLPipeline();
+							pipeline->SetShader(shader);
+						}
+
+						Renderer* renderer = new Renderer(vbo, pipeline, material);
 
 						obj->AddComponent(tokens[1], renderer);
 					}
 					if (tokens[1] == "Light")
 					{
-						PR_LOG_MESSAGE("hello");
 						std::vector<std::string> compTokens = Util::Split(tokens[2], ';');
 
 						Light* light = new Light();
@@ -282,6 +289,8 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root)
 								Material* material = materials[compTokens[2]];
 								Shader* shader = nullptr;
 
+								Pipeline* pipeline = nullptr;
+
 								//Checking for shader types
 								if (compTokens[1] == "basic")
 								{
@@ -306,7 +315,13 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root)
 									}
 								}
 
-								Renderer* renderer = new Renderer(vbo, shader, material);
+								if (FrameworkConfig::api == OpenGL)
+								{
+									pipeline = new GLPipeline();
+									pipeline->SetShader(shader);
+								}
+
+								Renderer* renderer = new Renderer(vbo, pipeline, material);
 
 								obj->AddComponent(tokens[1], renderer);
 

@@ -2,6 +2,7 @@
 #include "DeviceProperties.h"
 #include "engine/config/FrameworkConfig.h"
 #include "engine/platform/opengl/util/GLDeviceProperties.h"
+#include "engine/platform/vulkan/util/VkDeviceProperties.h"
 
 DeviceProperties* DeviceProperties::instance = nullptr;
 
@@ -15,7 +16,7 @@ DeviceProperties& DeviceProperties::GetInstance()
 		}
 		else if (FrameworkConfig::api == Vulkan)
 		{
-			PR_LOG_WARNING("CREATE VULKAN DEVICE PROPERTIES!!!!!!!!!");
+			instance = new VkDeviceProperties();
 		}
 	}
 

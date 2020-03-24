@@ -11,6 +11,7 @@
 
 #include "engine/platform/opengl/rendering/shaders/basic/GLBasicShader.h"
 #include "engine/platform/opengl/rendering/shaders/pbr/GLPBRShader.h"
+#include "engine/platform/opengl/rendering/pipeline/GLPipeline.h"
 #include "engine/prehistoric/core/util/loader/obj/OBJLoader.h"
 
 #include "engine/prehistoric/core/util/Includes.hpp"

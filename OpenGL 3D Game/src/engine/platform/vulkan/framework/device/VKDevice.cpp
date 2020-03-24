@@ -1,20 +1,20 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
-#include "VkDeviceSelector.h"
+#include "VKDevice.h"
 #include "engine/config/FrameworkConfig.h"
 
-VkDeviceSelector::VkDeviceSelector()
+VKDevice::VKDevice()
 {
 	device = VK_NULL_HANDLE;
 }
 
-VkDeviceSelector::~VkDeviceSelector()
+VKDevice::~VKDevice()
 {
 	device = VK_NULL_HANDLE;
 }
 
-void VkDeviceSelector::CreateLogicalDevice(VkSurfaceKHR surface, const VkPhysicalDevice& physicalDevice, const std::vector<const char*>& validationLayers, const std::vector<const char*>& deviceExtensions)
+void VKDevice::CreateLogicalDevice(VKSurface* surface, VKPhysicalDevice* physicalDevice, const std::vector<const char*>& validationLayers, const std::vector<const char*>& deviceExtensions)
 {
-	QueueFamilyIndices indices = VkPhysicalDeviceSelector::FindQueueFamilies(surface, physicalDevice);
+	QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface, physicalDevice->GetPhysicalDevice());
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 	std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily, indices.presentFamily };
@@ -53,7 +53,7 @@ void VkDeviceSelector::CreateLogicalDevice(VkSurfaceKHR surface, const VkPhysica
 		createInfo.enabledLayerCount = 0;
 	}
 
-	if (vkCreateDevice(physicalDevice, &createInfo, nullptr, &device) != VK_SUCCESS) 
+	if (vkCreateDevice(physicalDevice->GetPhysicalDevice(), &createInfo, nullptr, &device) != VK_SUCCESS) 
 	{
 		PR_LOG_RUNTIME_ERROR("Failed to create logical device!");
 	}
@@ -62,7 +62,7 @@ void VkDeviceSelector::CreateLogicalDevice(VkSurfaceKHR surface, const VkPhysica
 	presentQueue.SetupQueue(device, indices.presentFamily);
 }
 
-void VkDeviceSelector::DestroyLogicalDevice()
+void VKDevice::DestroyLogicalDevice()
 {
 	vkDestroyDevice(device, nullptr);
 }

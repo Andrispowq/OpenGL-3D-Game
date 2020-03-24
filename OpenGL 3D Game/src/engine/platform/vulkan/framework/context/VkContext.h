@@ -1,39 +1,32 @@
 #ifndef VK_CONTEXT_H
 #define VK_CONTEXT_H
 
-#include "glew.h"
-#define GLFW_INCLUDE_VULKAN
-#include "vulkan/vulkan.h"
-
-#include "VkDebugMessenger.h"
-#include "engine/platform/vulkan/framework/device/VkDeviceSelector.h"
 #include "engine/prehistoric/common/framework/context/Context.h"
-#include "engine/platform/vulkan/framework/queue/VkQueueManager.h"
-#include "engine/platform/vulkan/framework/swapchain/VkSwapChain.h"
-#include "engine/config/FrameworkConfig.h"
-#include "engine/platform/windows/WindowsWindow.h"
 
-class VkContext : public Context
+#include "VKInstance.h"
+#include "engine/platform/vulkan/framework/device/VKPhysicalDevice.h"
+#include "engine/platform/vulkan/framework/device/VKDevice.h"
+#include "engine/platform/vulkan/framework/surface/VKSurface.h"
+
+class VKContext : public Context
 {
 public:
-	bool InitContext(Window* window) override; 
+	bool InitContext(Window* window) override;
 	bool DeleteContext(Window* window) override;
 
-	VkPhysicalDeviceSelector GetPhysicalDeviceSelector() const { return physicalDeviceSelector; }
-	VkDeviceSelector GetLogicalDeviceSelector() const { return logicalDeviceSelector; }
+	VKInstance GetInstance() const { return instance; }
+
+	void* GetPhysicalDevice() override { return &physicalDevice; }
+	void* GetDevice() override { return &logicalDevice; }
+
+	VKSurface GetSurface() const { return surface; }
 private:
-	bool CheckValidationLayerSupport() const;
-	std::vector<const char*> GetRequiredExtensions() const;
-private:
-	VkInstance instance;
-	VkDebugMessenger messenger;
+	VKInstance instance;
 
-	VkPhysicalDeviceSelector physicalDeviceSelector;
-	VkDeviceSelector logicalDeviceSelector;
+	VKPhysicalDevice physicalDevice;
+	VKDevice logicalDevice;
 
-	VkSurfaceKHR surface;
-
-	std::vector<const char*> validationLayers;
+	VKSurface surface;
 };
 
 #endif

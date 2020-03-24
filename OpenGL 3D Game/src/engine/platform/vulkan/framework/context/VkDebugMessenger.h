@@ -3,7 +3,7 @@
 
 #include "vulkan/vulkan.h"
 
-class VkDebugMessenger
+class VKDebugMessenger
 {
 public:
 	void CreateMessenger(VkInstance instance);
@@ -11,7 +11,7 @@ public:
 
 	static void CreateMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& messengerCreateInfo);
 
-	inline VkDebugUtilsMessengerEXT& GetDebugMessenger() { return debugMessenger; }
+	VkDebugUtilsMessengerEXT GetDebugMessenger() const { return debugMessenger; }
 private:
 	VkDebugUtilsMessengerEXT debugMessenger;
 };
