@@ -1,3 +1,5 @@
 This file contains the list of known bugs, and things what I want to implement.
 Errors that need fix:
-	-Vulkan validation layers dont seem to work
+	-OBJ Loader is not working properly.
+	-WorldLoader does not work well with objects that are added to child objects of root
+	-Vulkan classes will probably be completly rewritten soon
