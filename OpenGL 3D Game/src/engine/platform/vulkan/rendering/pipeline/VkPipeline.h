@@ -5,40 +5,55 @@
 
 #include "engine/prehistoric/common/rendering/pipeline/Pipeline.h"
 
+#include "engine/platform/vulkan/rendering/command/VKCommandPool.h"
+#include "engine/platform/vulkan/rendering/renderpass/VKRenderpass.h"
+#include "engine/platform/vulkan/rendering/framebuffer/VKFramebuffer.h"
+#include "engine/platform/vulkan/rendering/synchronization/VKSemaphore.h"
+#include "VKGraphicsPipeline.h"
+
+#include "engine/platform/vulkan/framework/surface/VKSurface.h"
+#include "engine/platform/vulkan/framework/device/VKDevice.h"
+#include "engine/platform/vulkan/framework/swapchain/VKSwapchain.h"
+
 class VKPipeline : public Pipeline
 {
 public:
-	~VKPipeline();
+	VKPipeline(Shader* shader);
+	virtual ~VKPipeline();
 
-	void CreatePipeline() override;
+	virtual void CreatePipeline(Window* window, MeshVBO* vbo) override;
 
-	void BindPipeline() const override;
-	void UnbindPipeline() const override;
+	virtual void BindPipeline() override;
+	virtual void UnbindPipeline() const override;
 
-	void DestroyPipeline() override;
+	virtual void DestroyPipeline() override;
 
-	void SetImageFormat(VkFormat* imageFormat) { this->imageFormat = imageFormat; }
-	void SetSurface(VkSurfaceKHR* surface) { this->surface = surface; }
-	void SetPhysicalDevice(VkPhysicalDevice* physicalDevice) { this->physicalDevice = physicalDevice; }
-	void SetLogicalDevice(VkDevice* device) { this->logicalDevice = logicalDevice; }
-	void SetShaderStageCreateInfos(VkPipelineShaderStageCreateInfo** shaderStageCreateInfos) { this->shaderStageCreateInfos = shaderStageCreateInfos; }
-	void SetSwapChainImageViews(std::vector<VkImageView>* swapChainImageViews) { this->swapChainImageViews = swapChainImageViews; }
-	void SetSwapChainExtent(VkExtent2D* swapChainExtent) { this->swapChainExtent = swapChainExtent; }
+	virtual void RecreatePipeline();
+
+	virtual void* GetDrawCommandBuffer() const override { return drawCommandBuffer; }
+	virtual void* GetGraphicsPipeline() const override { return &graphicsPipeline->GetGraphicsPipeline(); }
 private:
-	VkFormat* imageFormat;
-	VkSurfaceKHR* surface;
-	VkPhysicalDevice* physicalDevice;
-	VkDevice* logicalDevice;
 	VkPipelineShaderStageCreateInfo** shaderStageCreateInfos;
-	std::vector<VkImageView>* swapChainImageViews;
-	VkExtent2D* swapChainExtent;
 
-	VkRenderPass renderPass;
-	VkPipelineLayout pipelineLayout;
-	VkPipeline graphicsPipeline;
-	std::vector<VkFramebuffer> swapChainFramebuffers;
-	VkCommandPool commandPool;
-	std::vector<> commandBuffers;
+	VKSurface* surface;
+	VKPhysicalDevice* physicalDevice;
+	VKDevice* device;
+
+	VKSwapchain* swapchain;
+	VkFormat* imageFormat;
+	VkExtent2D* swapchainExtent;
+	std::vector<VkImageView> swapchainImageViews;
+
+	VKCommandPool* commandPool;
+
+	VKMeshVBO* vbo;
+
+	Window* window;
+
+	VKRenderpass* renderpass;
+	VKGraphicsPipeline* graphicsPipeline;
+	std::vector<VKFramebuffer*> swapchainFramebuffers;
+	VkCommandBuffer* drawCommandBuffer;
 };
 
 #endif

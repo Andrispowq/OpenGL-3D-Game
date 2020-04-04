@@ -1,7 +1,7 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLShader.h"
 
-std::string ResourceLoader::LoadShaderGL(const std::string& filename)
+std::vector<char> ResourceLoader::LoadShaderGL(const std::string& filename)
 {
 	const std::string SHADER_LOC = "res/shaders/";
 
@@ -26,8 +26,9 @@ std::string ResourceLoader::LoadShaderGL(const std::string& filename)
 				std::string includeFile = Util::Split(line, ' ')[1];
 				includeFile = includeFile.substr(1, includeFile.size() - 2);
 
-				std::string toAppend = LoadShaderGL(includeFile);
-				output.append(toAppend + "\n");
+				std::vector<char> toAppend = LoadShaderGL(includeFile);
+				output.append(toAppend.data());
+				output.append("\n");
 			}
 		}
 	}
@@ -36,10 +37,17 @@ std::string ResourceLoader::LoadShaderGL(const std::string& filename)
 		PR_LOG_ERROR("Unable to load shader: %s\n", filename);
 	}
 
-	return output;
+	std::vector<char> out;
+
+	for (size_t i = 0; i < output.length(); i++)
+	{
+		out.push_back(output[i]);
+	}
+
+	return out;
 }
 
-GLShader::GLShader(const std::string* files, unsigned int length) : Shader()
+GLShader::GLShader(const std::vector<char>* files, uint32_t length) : Shader()
 {
 	program = glCreateProgram();
 
@@ -53,17 +61,11 @@ GLShader::GLShader(const std::string* files, unsigned int length) : Shader()
 
 	if (length == 1) //Compute shader
 	{
-		if (&files[0] == nullptr)
-			return;
-
 		if (!AddShader(files[0], COMPUTE_SHADER))
 			PR_LOG_RUNTIME_ERROR("Compute shader couldn't be added\n");
 	}
 	else if (length == 2) // Vertex + fragment shader
 	{
-		if (&files[0] == nullptr || &files[1] == nullptr)
-			return;
-
 		if (!AddShader(files[0], VERTEX_SHADER))
 			PR_LOG_RUNTIME_ERROR("Vertex shader couldn't be added!");
 		if (!AddShader(files[1], FRAGMENT_SHADER))
@@ -71,9 +73,6 @@ GLShader::GLShader(const std::string* files, unsigned int length) : Shader()
 	}
 	else if (length == 3) //Vertex + geometry + fragment shader
 	{
-		if (&files[0] == nullptr || &files[1] == nullptr || &files[2] == nullptr)
-			return;
-
 		if (!AddShader(files[0], VERTEX_SHADER))
 			PR_LOG_RUNTIME_ERROR("Vertex shader couldn't be added!");
 		if (!AddShader(files[1], GEOMETRY_SHADER))
@@ -83,9 +82,6 @@ GLShader::GLShader(const std::string* files, unsigned int length) : Shader()
 	}
 	else if (length == 5) //Vertex + tess control + tess evaluation + geomtry + fragment shader
 	{
-		if (&files[0] == nullptr || &files[1] == nullptr || &files[2] == nullptr || &files[3] == nullptr || &files[4] == nullptr)
-			return;
-
 		if (!AddShader(files[0], VERTEX_SHADER))
 			PR_LOG_RUNTIME_ERROR("Vertex shader couldn't be added!");
 		if (!AddShader(files[1], TESSELLATION_CONTROL_SHADER))
@@ -114,7 +110,7 @@ GLShader::GLShader() : Shader()
 
 GLShader::~GLShader()
 {
-	for (unsigned int i = 0; i < counter; i++)
+	for (uint32_t i = 0; i < counter; i++)
 	{
 		glDetachShader(program, shaders[i]);
 		glDeleteShader(shaders[i]);
@@ -123,7 +119,7 @@ GLShader::~GLShader()
 	glDeleteProgram(program);
 }
 
-void GLShader::Bind() const
+void GLShader::Bind(void* commandBuffer) const
 {
 	glUseProgram(program);
 }
@@ -198,7 +194,7 @@ bool GLShader::CompileShader() const
 	return true;
 }
 
-bool GLShader::AddShader(const std::string& code, ShaderType type) const
+bool GLShader::AddShader(const std::vector<char>& code, ShaderType type)
 {
 	switch (type)
 	{
@@ -220,7 +216,7 @@ bool GLShader::AddShader(const std::string& code, ShaderType type) const
 	}
 }
 
-bool GLShader::AddProgram(const std::string& code, GLenum type) const
+bool GLShader::AddProgram(const std::vector<char>& code, GLenum type) const
 {
 	GLuint shader = glCreateShader(type);
 
@@ -234,7 +230,7 @@ bool GLShader::AddProgram(const std::string& code, GLenum type) const
 	}
 
 	const GLchar* charCode[1];
-	charCode[0] = code.c_str();
+	charCode[0] = code.data();
 	GLint lengths[1];
 	lengths[0] = static_cast<GLint>(code.size());
 

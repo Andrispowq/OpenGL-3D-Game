@@ -1,6 +1,8 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "VKInstance.h"
 
+#include "engine/platform/Prehistoric.h"
+
 void VKInstance::CreateInstance()
 {
 	//Check for validation layer support, but we only use it in debug mode
@@ -96,6 +98,7 @@ void VKInstance::ListExtensions() const
 	{
 		PR_LOG_MESSAGE("\t%s\n", extension.extensionName);
 	}
+	PR_LOG_MESSAGE("\n");
 }
 
 bool VKInstance::CheckValidationLayerSupport() const

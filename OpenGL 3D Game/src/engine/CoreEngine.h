@@ -1,12 +1,13 @@
 #ifndef CORE_ENGINE_H
 #define CORE_ENGINE_H
 
-#include "engine/config/FrameworkConfig.h"
-#include "engine/prehistoric/core/Engine.h"
-#include "engine/prehistoric/core/util/time/Time.h"
-
 #include <chrono>
 #include <thread>
+
+#include "engine/prehistoric/core/Engine.h"
+
+#include "engine/config/FrameworkConfig.h"
+#include "engine/prehistoric/core/util/time/Time.h"
 
 class CoreEngine
 {

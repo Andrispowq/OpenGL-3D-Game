@@ -12,6 +12,9 @@ public:
 	virtual bool InitContext(Window* window) = 0;
 	virtual bool DeleteContext(Window* window) = 0;
 
+	virtual void* GetNativePhysicalDevice() { return nullptr; };
+	virtual void* GetNativeDevice() { return nullptr; };
+
 	virtual void* GetPhysicalDevice() { return nullptr; };
 	virtual void* GetDevice() { return nullptr; };
 };

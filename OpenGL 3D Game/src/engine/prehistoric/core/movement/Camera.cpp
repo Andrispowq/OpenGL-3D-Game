@@ -48,7 +48,7 @@ Camera::Camera(const Vector3f& position, float fov)
 
 Camera::~Camera()
 {
-	for (unsigned int i = 0; i < inputs.size(); i++)
+	for (uint32_t i = 0; i < inputs.size(); i++)
 	{
 		delete inputs[i];
 	}
@@ -75,14 +75,16 @@ void Camera::LogStage() const
 
 void Camera::Input(Window* window, float delta)
 {
+	PR_LOG_MESSAGE("Speed: %f\n", movAmt);
+
 	this->previousPosition = position;
 	this->previousForward = forward;
 	cameraMoved = false;
 	cameraRotated = false;
 
-	movAmt += CameraInput::GetKey(speedControl) * delta * 10.0f;
+	movAmt += CameraInput::GetKey(speedControl) * delta * 35.0f;
 	movAmt = static_cast<float>(std::fmax(0.02, movAmt));
-	
+
 	//Move by input systems
 	bool movedForward = false, movedBackward = false, movedRight = false, movedLeft = false,
 		rotUp = false, rotDown = false, rotRight = false, rotLeft = false;
@@ -112,22 +114,22 @@ void Camera::Input(Window* window, float delta)
 
 		if (in->IsUp() != 0 && !rotUp)
 		{
-			RotateX(static_cast<float>(rotAmt / 8.0 * in->IsUp() * delta));
+			RotateX(static_cast<float>(rotAmt * 2.0 * in->IsUp() * delta));
 			rotUp = true;
 		}
 		if (in->IsDown() != 0 && !rotDown)
 		{
-			RotateX(static_cast<float>(-rotAmt / 8.0 * in->IsDown() * delta));
+			RotateX(static_cast<float>(-rotAmt * 2.0 * in->IsDown() * delta));
 			rotDown = true;
 		}
 		if (in->IsRightRot() != 0 && !rotRight)
 		{
-			RotateY(static_cast<float>(-rotAmt / 8.0 * in->IsRightRot() * delta));
+			RotateY(static_cast<float>(-rotAmt * 2.0 * in->IsRightRot() * delta));
 			rotRight = true;
 		}
 		if (in->IsLeftRot() != 0 && !rotLeft)
 		{
-			RotateY(static_cast<float>(rotAmt / 8.0 * in->IsLeftRot() * delta));
+			RotateY(static_cast<float>(rotAmt * 2.0 * in->IsLeftRot() * delta));
 			rotLeft = true;
 		}
 	}
@@ -150,7 +152,7 @@ void Camera::Input(Window* window, float delta)
 	if (InputInstance.IsKeyHeld(GLFW_KEY_RIGHT))
 		RotateY(rotAmt / 8.0);*/
 
-	//Free mouse rotation
+		//Free mouse rotation
 	if (InputInstance.IsButtonHeld(2))
 	{
 		float dy = InputInstance.GetLockedCursorPosition().y - InputInstance.GetCursorPosition().y;
@@ -172,7 +174,10 @@ void Camera::Input(Window* window, float delta)
 			{
 				if (rotYcounter > rotYamt)
 				{
-					RotateX(-rotYstride * mouseSensitivity);
+					if(FrameworkConfig::api == Vulkan)
+						RotateX(rotYstride * mouseSensitivity);
+					else if (FrameworkConfig::api == OpenGL)
+						RotateX(-rotYstride * mouseSensitivity);
 					rotYcounter -= rotYstride;
 					rotYstride *= 0.98f;
 				}
@@ -186,7 +191,10 @@ void Camera::Input(Window* window, float delta)
 			{
 				if (rotYcounter < rotYamt)
 				{
-					RotateX(rotYstride * mouseSensitivity);
+					if (FrameworkConfig::api == Vulkan)
+						RotateX(-rotYstride * mouseSensitivity);
+					else if (FrameworkConfig::api == OpenGL)
+						RotateX(rotYstride * mouseSensitivity);
 					rotYcounter += rotYstride;
 					rotYstride *= 0.98f;
 				}
@@ -254,6 +262,7 @@ void Camera::Input(Window* window, float delta)
 	this->previousViewMatrix = viewMatrix;
 
 	viewMatrix = Matrix4f::View(forward, up) * Matrix4f::Translation(position * -1);
+
 	viewProjectionMatrix = projectionMatrix * viewMatrix;
 }
 

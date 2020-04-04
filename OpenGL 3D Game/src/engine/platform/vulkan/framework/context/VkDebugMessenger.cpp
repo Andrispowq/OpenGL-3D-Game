@@ -1,5 +1,8 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "VkDebugMessenger.h"
+#include "engine/platform/Prehistoric.h"
+
+#if defined(PR_ENABLE_DEBUGGING) && defined(PR_VK_ENABLE_VALIDATION_LAYERS)
 
 //Validation layer callbacks:
 static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
@@ -8,18 +11,137 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 	const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
 	void* pUserData)
 {
-	if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
+	std::string message;
+
+	message.append("Vulkan validation layer:\n");
+	message.append("\tMessage severity: %s\n");
+	message.append("\tMessage type: %s\n");
+	message.append("\tID: %u\n");
+	message.append("\tMessage: %s\n");
+	
+	std::string sSeverity;
+	bool hasSeverityBegan = false;
+
+	if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT)
 	{
-		PR_LOG_ERROR("Validation layer: %s\n", pCallbackData->pMessage);
+		if (!hasSeverityBegan)
+		{
+			hasSeverityBegan = true;
+		}
+		else
+		{
+			sSeverity.append("and ");
+		}
+
+		sSeverity.append("INFO");
+	}
+	if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT)
+	{
+		if (!hasSeverityBegan)
+		{
+			hasSeverityBegan = true;
+		}
+		else
+		{
+			sSeverity.append("and ");
+		}
+
+		sSeverity.append("VERBOSE");
+	}
+	if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
+	{
+		if (!hasSeverityBegan)
+		{
+			hasSeverityBegan = true;
+		}
+		else
+		{
+			sSeverity.append("and ");
+		}
+
+		sSeverity.append("WARNING");
+	}
+	if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
+	{
+		if (!hasSeverityBegan)
+		{
+			hasSeverityBegan = true;
+		}
+		else
+		{
+			sSeverity.append("and ");
+		}
+
+		sSeverity.append("ERROR");
+	}
+
+	std::string sType;
+	bool hasTypeBegan = false;
+
+	if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT)
+	{
+		if (!hasTypeBegan)
+		{
+			hasTypeBegan = true;
+		}
+		else
+		{
+			sType.append("and ");
+		}
+
+		sType.append("PERFORMANCE");
+	}
+	if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT)
+	{
+		if (!hasTypeBegan)
+		{
+			hasTypeBegan = true;
+		}
+		else
+		{
+			sType.append("and ");
+		}
+
+		sType.append("VALIDATION");
+	}
+	if (messageType & VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT)
+	{
+		if (!hasTypeBegan)
+		{
+			hasTypeBegan = true;
+		}
+		else
+		{
+			sType.append("and ");
+		}
+
+		sType.append("GENERAL");
+	}
+
+	if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
+	{
+		PR_LOG_ERROR(message, sSeverity.c_str(), sType.c_str(), pCallbackData->messageIdNumber, pCallbackData->pMessage);
+	}
+	else if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
+	{
+		PR_LOG_WARNING(message, sSeverity.c_str(), sType.c_str(), pCallbackData->messageIdNumber, pCallbackData->pMessage);
+	}
+	else if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT)
+	{
+		PR_LOG_MESSAGE(message, sSeverity.c_str(), sType.c_str(), pCallbackData->messageIdNumber, pCallbackData->pMessage);
+	}
+	else if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT)
+	{
+		PR_LOG_MESSAGE(message, sSeverity.c_str(), sType.c_str(), pCallbackData->messageIdNumber, pCallbackData->pMessage);
 	}
 
 	return VK_FALSE;
 }
 
-VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
-void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
+VkResult CreateDebugUtilsMessengerEXT(VkInstance& instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
+void DestroyDebugUtilsMessengerEXT(VkInstance& instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
 
-void VKDebugMessenger::CreateMessenger(VkInstance instance)
+void VKDebugMessenger::CreateMessenger(VkInstance& instance)
 {
 	debugMessenger = VK_NULL_HANDLE;
 	VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
@@ -45,12 +167,12 @@ void VKDebugMessenger::CreateMessengerCreateInfo(VkDebugUtilsMessengerCreateInfo
 	//messengerCreateInfo.pUserData = nullptr;
 }
 
-void VKDebugMessenger::DeleteMessenger(VkInstance instance)
+void VKDebugMessenger::DeleteMessenger(VkInstance& instance)
 {
 	DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
 }
 
-VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
+VkResult CreateDebugUtilsMessengerEXT(VkInstance& instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)
 {
 	auto func = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
 
@@ -64,7 +186,7 @@ VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMes
 	}
 }
 
-void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
+void DestroyDebugUtilsMessengerEXT(VkInstance& instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator)
 {
 	auto func = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
 
@@ -73,3 +195,5 @@ void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT
 		func(instance, debugMessenger, pAllocator);
 	}
 }
+
+#endif

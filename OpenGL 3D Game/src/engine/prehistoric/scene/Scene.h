@@ -7,14 +7,14 @@
 class Scene
 {
 public:
-	static void CreateScene(GameObject* root);
+	static void CreateScene(GameObject* root, Window* window);
 	static void DeleteData();
 private:
 	Scene() {}
 	virtual ~Scene() {}
 private:
 	static MeshVBO* vbo;
-	static Shader* shader;
+	static Pipeline* pipeline;
 };
 
 #endif

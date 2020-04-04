@@ -3,14 +3,15 @@
 #include "engine/config/FrameworkConfig.h"
 #include "engine/prehistoric/common/framework/Window.h"
 
-void GLSwapChain::SetupSwapchain(void* physicalDevice, void* device)
+void GLSwapChain::SetupSwapchain(void* physicalDevice)
 {
-	glEnable(GL_TEXTURE_2D);
+	//Enabling GL_TEXTURE_2D is deprecated, in debug mode, it will cause the program to break
+	//glEnable(GL_TEXTURE_2D);
 
 	glEnable(GL_DEPTH_TEST);
 }
 
-void GLSwapChain::SwapBuffers(Window* window) const
+void GLSwapChain::SwapBuffers(Window* window)
 {
 	glfwSwapBuffers((GLFWwindow*)window->GetWindowHandle());
 }
@@ -20,9 +21,11 @@ void GLSwapChain::SetVSync(bool vSync) const
 	glfwSwapInterval(vSync ? 1 : 0);
 }
 
-void GLSwapChain::SetFullscreen(Window* window, bool fullscreen) const
+void GLSwapChain::SetWindowSize(Window* window, uint32_t width, uint32_t height)
 {
-	glfwSetWindowMonitor((GLFWwindow*) window->GetWindowHandle(), fullscreen ? glfwGetPrimaryMonitor() : 0, 0, 0, FrameworkConfig::windowWidth, FrameworkConfig::windowHeight, 0);
+	glViewport(0, 0, width, height);
+	FrameworkConfig::windowWidth = width;
+	FrameworkConfig::windowHeight = height;
 }
 
 void GLSwapChain::SetClearColor(const float& red, const float& green, const float& blue, const float& alpha)

@@ -27,7 +27,7 @@ public:
 	Vector2(const T& v) : x(v), y(v) {}
 	Vector2() : x(0), y(0) {}
 
-	virtual ~Vector2() {}
+	~Vector2() {}
 
 	inline Vector2<T> operator+(const Vector2<T>& v) const { return Vector2<T>(x + v.x, y + v.y); }
 	inline Vector2<T> operator-(const Vector2<T>& v) const { return Vector2<T>(x - v.x, y - v.y); }
@@ -81,7 +81,7 @@ public:
 	Vector2<T> negate() const { return Vector2<T>(-x, -y); };
 	Vector2<T> negated() { this->x = -x; this->y = -y; };
 
-	void print() const { PR_LOG_MESSAGE("[ %f, %f ]\n", x, y); }
+	void print() const { PR_LOG_MESSAGE("[ %f, %f ]\n", (float) x, (float) y); }
 public:
 	T x;
 	T y;
@@ -99,7 +99,7 @@ public:
 	Vector3(const T& v) : x(v), y(v), z(v) {}
 	Vector3() : x(0), y(0), z(0) {}
 
-	virtual ~Vector3() {}
+	~Vector3() {}
 
 	inline Vector3<T> operator+(const Vector3<T>& v) const { return Vector3<T>(x + v.x, y + v.y, z + v.z); }
 	inline Vector3<T> operator-(const Vector3<T>& v) const { return Vector3<T>(x - v.x, y - v.y, z - v.z); }
@@ -160,7 +160,7 @@ public:
 	Vector3<T> negate() const { return Vector3<T>(-x, -y, -z); };
 	Vector3<T> negated() { this->x = -x; this->y = -y; this->z = -z; };
 
-	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f ]\n", x, y, z); }
+	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f ]\n", (float) x, (float) y, (float) z); }
 public:
 	T x;
 	T y;
@@ -197,7 +197,7 @@ public:
 	Vector4(const T& v) : x(v), y(v), z(v), w(v) {}
 	Vector4() : x(0), y(0), z(0), w(0) {}
 
-	virtual ~Vector4() {}
+	~Vector4() {}
 
 	inline Vector4<T> operator+(const Vector4<T>& v) const { return Vector4<T>(x + v.x, y + v.y, z + v.z, w + w); }
 	inline Vector4<T> operator-(const Vector4<T>& v) const { return Vector4<T>(x - v.x, y - v.y, z - v.z, w - w); }
@@ -253,7 +253,7 @@ public:
 	Vector4<T> negate() const { return Vector4<T>(-x, -y, -z, -w); };
 	Vector4<T> negated() { this->x = -x; this->y = -y; this->z = -z; this->w = -w; };
 
-	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f, %f ]", x, y, z, w); }
+	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f, %f ]", (float) x, (float) y, (float) z, (float) w); }
 public:
 	T x;
 	T y;
@@ -289,7 +289,7 @@ public:
 	Quaternion(const T& v) : x(v), y(v), z(v), w(v) {}
 	Quaternion() : x(0), y(0), z(0), w(0) {}
 
-	virtual ~Quaternion() {}
+	~Quaternion() {}
 
 	inline Quaternion<T> operator+(const Vector4<T>& v) const { return Quaternion<T>(x + v.x, y + v.y, z + v.z, w + w); }
 	inline Quaternion<T> operator-(const Vector4<T>& v) const { return Quaternion<T>(x - v.x, y - v.y, z - v.z, w - w); }
@@ -355,7 +355,7 @@ public:
 	Quaternion<T> negate() const { return Quaternion<T>(-x, -y, -z, -w); };
 	Quaternion<T> negated() { this->x = -x; this->y = -y; this->z = -z; this->w = -w; };
 
-	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f, %f ]", x, y, z, w); }
+	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f, %f ]", (float) x, (float) y, (float) z, (float) w); }
 public:
 	T x;
 	T y;
@@ -367,6 +367,11 @@ typedef Vector2<int> Vector2i;
 typedef Vector3<int> Vector3i;
 typedef Vector4<int> Vector4i;
 typedef Quaternion<int> Quaternioni;
+
+typedef Vector2<uint32_t> Vector2u;
+typedef Vector3<uint32_t> Vector3u;
+typedef Vector4<uint32_t> Vector4u;
+typedef Quaternion<uint32_t> Quaternionu;
 
 typedef Vector2<float> Vector2f;
 typedef Vector3<float> Vector3f;
@@ -386,7 +391,7 @@ public:
 	Matrix4f(const Vector4f& v);
 	Matrix4f();
 
-	virtual ~Matrix4f();
+	~Matrix4f();
 
 	Matrix4f operator=(const Matrix4f& v);
 
@@ -428,7 +433,9 @@ public:
 	static Matrix4f PerspectiveProjection(const float& fov, const float& aspectRatio, const float& nearPlane, const float& farPlane);
 	static Matrix4f View(const Vector3f& forward, const Vector3f& up);
 
-	float * const getRow(const int i) const;
+	float* const getRow(const int i) const;
+
+	float* GetData() const;
 
 	void print() const
 	{
@@ -438,7 +445,7 @@ public:
 		{
 			for (int j = 0; j < 4; j++)
 			{
-				PR_LOG_MESSAGE("\t%f", m[i * 4 + j]);
+				PR_LOG_MESSAGE("\t%f", m[j * 4 + i]);
 			}
 
 			PR_LOG_MESSAGE("\n");

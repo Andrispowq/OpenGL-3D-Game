@@ -53,12 +53,12 @@ void Renderer::Render(const RenderingEngine& renderingEngine) const
 {
 	MeshVBO* vbo = vbos[vboIndex];
 	Pipeline* pipeline = pipelines[pipelineIndex];
-	
+
 	pipeline->BindPipeline();
 	pipeline->GetShader()->UpdateUniforms(parent, renderingEngine.GetCamera(), renderingEngine.GetLights());
 
-	vbo->Bind();
-	vbo->Draw();
+	vbo->Bind(pipeline->GetDrawCommandBuffer(), pipeline->GetGraphicsPipeline());
+	vbo->Draw(pipeline->GetDrawCommandBuffer());
 	vbo->Unbind();
 
 	pipeline->UnbindPipeline();
@@ -71,5 +71,5 @@ void Renderer::BatchRender(const RenderingEngine& renderingEngine) const
 
 	pipeline->GetShader()->UpdateUniforms(parent, renderingEngine.GetCamera(), renderingEngine.GetLights());
 
-	vbo->Draw();
+	vbo->Draw(pipeline->GetDrawCommandBuffer());
 }

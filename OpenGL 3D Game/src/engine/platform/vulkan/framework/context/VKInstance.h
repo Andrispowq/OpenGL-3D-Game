@@ -9,8 +9,6 @@
 #include "VKDebugMessenger.h"
 #include "engine/config/FrameworkConfig.h"
 
-#include "engine/platform/Prehistoric.h"
-
 class VKInstance
 {
 public:

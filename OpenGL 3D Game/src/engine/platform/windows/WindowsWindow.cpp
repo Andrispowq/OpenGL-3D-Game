@@ -1,7 +1,5 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "WindowsWindow.h"
-#include "engine/platform/vulkan/framework/context/VkContext.h"
-#include "engine/platform/vulkan/framework/swapchain/VkSwapChain.h"
 
 WindowsWindow::~WindowsWindow()
 {
@@ -34,6 +32,7 @@ bool WindowsWindow::Create()
 	{
 		glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 	}
+
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, FrameworkConfig::apiVersion.x);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, FrameworkConfig::apiVersion.y);
 	glfwWindowHint(GLFW_RESIZABLE, FrameworkConfig::windowResizable);
@@ -52,12 +51,14 @@ bool WindowsWindow::Create()
 		return false;
 	}
 
-	//Initialisation of GLEW
+	//Initialisation of the API
 	if (!context->InitContext(this))
 	{
 		glfwTerminate();
 		return false;
 	}
+
+	swapchain->SetupSwapchain(context->GetPhysicalDevice());
 
 	ImageData data = TextureLoader::LoadTextureData("res/textures/logo.png");
 
@@ -92,7 +93,7 @@ void WindowsWindow::Input()
 
 void WindowsWindow::Render() const
 {
-	manager->GetSwapchain()->SwapBuffers((Window*) this);
+	swapchain->SwapBuffers((Window*) this);
 }
 
 bool WindowsWindow::ShouldClose() const

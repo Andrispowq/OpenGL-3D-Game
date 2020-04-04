@@ -1,18 +1,12 @@
 #ifndef DEVICE_PROPERTIES
 #define DEVICE_PROPERTIES
 
+#include "engine/prehistoric/common/capabilities/Capabilities.h"
+
 class DeviceProperties
 {
 public:
-	static DeviceProperties& GetInstance();
-	static void DeleteInstance();
-
-	virtual void ListProperties(void* device) const = 0;
-protected:
-	DeviceProperties() {}
-	virtual ~DeviceProperties() {}
-private:
-	static DeviceProperties* instance;
+	void ListProperties(Capabilities& capabilities) const;
 };
 
 #endif

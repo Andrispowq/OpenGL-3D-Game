@@ -7,17 +7,21 @@
 class Vertex
 {
 public:
-	Vertex(const Vector3f& position, const Vector2f& texture, const Vector3f& normal) : position(position), texture(texture), normal(normal), textureIndex(-1), normalIndex(-1) {}
+	Vertex(const Vector3f& position, const Vector2f& texture, const Vector3f& normal, const Vector3f& colour) : position(position), texture(texture), normal(normal), colour(colour), textureIndex(-1), normalIndex(-1) {}
 	Vertex(const Vector3f& position) : position(position), texture(Vector2f(0)), normal(Vector3f(0)), textureIndex(-1), normalIndex(-1) {}
 	Vertex() : position(Vector3f(0)), texture(Vector2f(0)), normal(Vector3f(0)), textureIndex(-1), normalIndex(-1) {}
 
-	Vertex(unsigned short index, Vector3f position) : index(index), position(position), length(position.length()) {}
+	Vertex(uint16_t index, Vector3f position) : index(index), position(position), length(position.length()) {}
 
-	virtual ~Vertex() { /*delete duplicateVertex;*/ }
+	~Vertex() { /*delete duplicateVertex;*/ }
+
+	static size_t GetNumberOfFloats() { return 11; }
+	static size_t GetSize() { return GetNumberOfFloats() * sizeof(float); }
 
 	inline Vector3f getPosition() const { return position; }
 	inline Vector2f getTexture() const { return texture; }
 	inline Vector3f getNormal() const { return normal; }
+	inline Vector3f getColour() const { return colour; }
 
 	inline int getTextureIndex() const { return textureIndex; }
 	inline int getNormalIndex() const { return normalIndex; }
@@ -27,7 +31,7 @@ public:
 
 	inline Vertex* getDuplicateVertex() const { return duplicateVertex; }
 
-	inline unsigned short getIndex() const { return index; }
+	inline uint16_t getIndex() const { return index; }
 
 	inline void setPosition(const Vector3f& position) { this->position = position; }
 	inline void setTexture(const Vector2f& texture) { this->texture = texture; }
@@ -39,17 +43,18 @@ public:
 	inline void setDuplicateVertex(Vertex* vertex) { this->duplicateVertex = vertex; }
 
 	inline void setIndex(int index) { this->index = index; }
-private:
+public:
 	Vector3f position;
 	Vector2f texture;
 	Vector3f normal;
+	Vector3f colour;
 
 	//Data for loading obj files
 	Vertex* duplicateVertex = nullptr;
 
 	int textureIndex;
 	int normalIndex;
-	unsigned short index = -1;
+	uint16_t index = -1;
 
 	float length = 0;
 };

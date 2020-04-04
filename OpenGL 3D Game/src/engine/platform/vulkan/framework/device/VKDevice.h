@@ -1,8 +1,9 @@
 #ifndef VK_DEVICE_SELECTOR
 #define VK_DEVICE_SELECTOR
 
-#include "VKPhysicalDevice.h"
+#include <vulkan/vulkan.h>
 
+#include "VKPhysicalDevice.h"
 #include "engine/platform/vulkan/framework/surface/VKSurface.h"
 #include "engine/platform/vulkan/framework/queue/VKQueue.h"
 
@@ -15,7 +16,10 @@ public:
 	void CreateLogicalDevice(VKSurface* surface, VKPhysicalDevice* physicalDevice, const std::vector<const char*>& validationLayers, const std::vector<const char*>& deviceExtensions);
 	void DestroyLogicalDevice();
 
-	VkDevice GetDevice() const { return device; }
+	VkDevice& GetDevice() { return device; }
+
+	VKQueue& GetGraphicsQueue() { return graphicsQueue; }
+	VKQueue& GetPresentQueue() { return presentQueue; }
 private:
 	VkDevice device;
 

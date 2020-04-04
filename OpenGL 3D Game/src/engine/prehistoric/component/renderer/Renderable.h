@@ -12,11 +12,13 @@ class Pipeline;
 class Renderable : public Component
 {
 public:
-	Renderable(MeshVBO* vbo, Pipeline* shader, bool vboFurtherUse = false, bool shaderFurtherUse = false);
+	Renderable(MeshVBO* vbo, Pipeline* pipeline);
 	Renderable();
 	virtual ~Renderable();
 
 	static void CleanUp();
+
+	static void RecreatePipelines();
 
 	virtual void Render(const RenderingEngine& renderingEngine) const = 0;
 	virtual void BatchRender(const RenderingEngine& renderingEngine) const = 0;
@@ -35,6 +37,8 @@ public:
 protected:
 	static std::vector<MeshVBO*> vbos;
 	static std::vector<Pipeline*> pipelines;
+
+	static Window* window;
 
 	size_t vboIndex;
 	size_t pipelineIndex;

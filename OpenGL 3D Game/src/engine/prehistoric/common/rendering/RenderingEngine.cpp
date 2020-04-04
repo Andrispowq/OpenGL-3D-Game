@@ -3,7 +3,7 @@
 #include "engine/prehistoric/component/renderer/Renderable.h"
 #include "engine/prehistoric/core/gameObject/GameObject.h"
 #include "engine/prehistoric/common/util/DeviceProperties.h"
-#include "engine/platform/vulkan/framework/context/VkContext.h"
+#include "engine/platform/vulkan/framework/context/VKContext.h"
 
 RenderingEngine::RenderingEngine()
 {
@@ -16,23 +16,15 @@ RenderingEngine::RenderingEngine()
 	if (!window->Create())
 	{
 		PR_LOG_RUNTIME_ERROR("The creation of the window has failed!\n");
-		system("PAUSE");
-		exit(-1);
 	}
 
-	if (FrameworkConfig::api == OpenGL)
-	{
-		DeviceProperties::GetInstance().ListProperties(nullptr);
-	}
-	else if (FrameworkConfig::api == Vulkan)
-	{
-		DeviceProperties::GetInstance().ListProperties(window->GetContext()->GetPhysicalDevice());
-	}
-
+	Capabilities::GetInstance()->QueryCapabilities(window->GetContext()->GetPhysicalDevice());
+	DeviceProperties properties;
+	properties.ListProperties(*Capabilities::GetInstance());
 
 	window->SetClearColor(0.23f, 0.78f, 0.88f, 1.0f);
 
-	camera = new Camera(2.0f, 8.0f, 0.8f, 75.0f, Vector3f(0, 2, -3));
+	camera = new Camera(5.0f, 50.0f, 0.8f, 80.0f, Vector3f(0, 2, -3));
 	camera->RotateX(20);
 	camera->LogStage();
 
@@ -41,8 +33,6 @@ RenderingEngine::RenderingEngine()
 
 RenderingEngine::~RenderingEngine()
 {
-	DeviceProperties::DeleteInstance();
-
 	delete window;
 	delete camera;
 }
@@ -70,6 +60,12 @@ void RenderingEngine::Update(const float delta)
 	if (InputInstance.IsKeyPushed(GLFW_KEY_ESCAPE))
 	{
 		window->SetClosed(true);
+	}
+
+	if (window->GetResized())
+	{
+		Renderable::RecreatePipelines();
+		window->SetResized(false);
 	}
 
 	camera->Input(window, delta);

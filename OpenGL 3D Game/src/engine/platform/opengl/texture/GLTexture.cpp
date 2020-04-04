@@ -1,7 +1,7 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLTexture.h"
 
-GLTexture::GLTexture(GLuint id, GLenum type, unsigned int width, unsigned int height)
+GLTexture::GLTexture(GLuint id, GLenum type, uint32_t width, uint32_t height)
 	: id(id), type(type)
 {
 	this->width = width;
@@ -10,7 +10,7 @@ GLTexture::GLTexture(GLuint id, GLenum type, unsigned int width, unsigned int he
 	Filter(Nearest);
 }
 
-GLTexture::GLTexture(GLuint id, ImageType type, unsigned int width, unsigned int height)
+GLTexture::GLTexture(GLuint id, ImageType type, uint32_t width, uint32_t height)
 	: id(id), type(getType(type))
 {
 	this->width = width;
@@ -33,7 +33,7 @@ GLTexture::~GLTexture()
 	glDeleteTextures(1, &id);
 }
 
-void GLTexture::Bind(unsigned int slot) const
+void GLTexture::Bind(uint32_t slot) const
 {
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(type, id);

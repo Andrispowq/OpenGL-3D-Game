@@ -10,7 +10,7 @@ namespace EngineConfig
 {
     void LoadConfig(const std::string& path);
 
-    extern unsigned int lightsMaxNumber;
+    extern uint32_t lightsMaxNumber;
     extern float rendererGamma;
     extern int rendererHighDetailRange;
     extern float rendererNearPlane;

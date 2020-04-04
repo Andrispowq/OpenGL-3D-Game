@@ -1,13 +1,18 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLPipeline.h"
 
-void GLPipeline::CreatePipeline()
+GLPipeline::GLPipeline(Shader* shader)
+{
+	this->shader = shader;
+}
+
+void GLPipeline::CreatePipeline(Window* window, MeshVBO* vbo)
 {
 }
 
-void GLPipeline::BindPipeline() const
+void GLPipeline::BindPipeline()
 {
-	shader->Bind();
+	shader->Bind(nullptr);
 }
 
 void GLPipeline::UnbindPipeline() const

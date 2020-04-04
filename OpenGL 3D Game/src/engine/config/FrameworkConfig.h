@@ -9,9 +9,9 @@
 
 /*
 	Implemented:
-		OpenGL
+		-
 	Under development:
-		Vulkan
+		OpenGL, Vulkan
 	Planned:
 		Vulkan_RTX, DirectX_11, DirectX_12, DirectX_RTX
 */
@@ -25,13 +25,13 @@ namespace FrameworkConfig
 	void LoadConfig(const std::string& path);
 
 	extern std::string windowName;
-	extern unsigned int windowWidth;
-	extern unsigned int windowHeight;
+	extern uint32_t windowWidth;
+	extern uint32_t windowHeight;
 	extern bool windowFullScreen;
 	extern bool windowResizable;
 	extern bool windowVSync;
-	extern unsigned int windowNumSamples;
-	extern unsigned int windowMaxFPS;
+	extern uint32_t windowNumSamples;
+	extern uint32_t windowMaxFPS;
 
 	extern API api;
 	extern Vector2i apiVersion;

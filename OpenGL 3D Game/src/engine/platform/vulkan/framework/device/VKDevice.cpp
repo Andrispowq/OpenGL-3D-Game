@@ -14,7 +14,7 @@ VKDevice::~VKDevice()
 
 void VKDevice::CreateLogicalDevice(VKSurface* surface, VKPhysicalDevice* physicalDevice, const std::vector<const char*>& validationLayers, const std::vector<const char*>& deviceExtensions)
 {
-	QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface, physicalDevice->GetPhysicalDevice());
+	QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface->GetSurface(), physicalDevice->GetPhysicalDevice());
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 	std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily, indices.presentFamily };

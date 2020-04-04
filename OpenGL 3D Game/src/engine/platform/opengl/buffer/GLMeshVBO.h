@@ -15,8 +15,8 @@ public:
 
 	void Store(const Mesh& mesh) override;
 
-	void Bind() const override;
-	void Draw() const override;
+	void Bind(void* commandBuffer, void* graphicsPipeline) const override;
+	void Draw(void* commandBuffer) const override;
 	void Unbind() const override;
 private:
 	GLuint vao;

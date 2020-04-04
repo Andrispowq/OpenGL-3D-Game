@@ -4,13 +4,13 @@
 namespace FrameworkConfig
 {
 	std::string FrameworkConfig::windowName;
-	unsigned int FrameworkConfig::windowWidth;
-	unsigned int FrameworkConfig::windowHeight;
+	uint32_t FrameworkConfig::windowWidth;
+	uint32_t FrameworkConfig::windowHeight;
 	bool FrameworkConfig::windowFullScreen;
 	bool FrameworkConfig::windowResizable;
 	bool FrameworkConfig::windowVSync;
-	unsigned int FrameworkConfig::windowNumSamples;
-	unsigned int FrameworkConfig::windowMaxFPS;
+	uint32_t FrameworkConfig::windowNumSamples;
+	uint32_t FrameworkConfig::windowMaxFPS;
 
 	API FrameworkConfig::api;
 	Vector2i FrameworkConfig::apiVersion;
@@ -37,7 +37,7 @@ namespace FrameworkConfig
 					{
 						std::string name;
 
-						for (unsigned int i = 1; i < tokens.size(); i++)
+						for (uint32_t i = 1; i < tokens.size(); i++)
 						{
 							name += tokens[i];
 						}
@@ -46,11 +46,11 @@ namespace FrameworkConfig
 					}
 					if (nameTokens[1] == "width")
 					{
-						windowWidth = std::atoi(tokens[1].c_str());
+						windowWidth = (uint32_t) std::atoi(tokens[1].c_str());
 					}
 					if (nameTokens[1] == "height")
 					{
-						windowHeight = std::atoi(tokens[1].c_str());
+						windowHeight = (uint32_t) std::atoi(tokens[1].c_str());
 					}
 					if (nameTokens[1] == "fullScreen")
 					{

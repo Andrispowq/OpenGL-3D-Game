@@ -1,17 +1,11 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLPBRShader.h"
-#include "engine/prehistoric/core/gameObject/GameObject.h"
-#include "engine/prehistoric/core/movement/Camera.h"
-#include "engine/prehistoric/component/renderer/Renderer.h"
-#include "engine/prehistoric/core/model/material/Material.h"
-#include "engine/platform/opengl/texture/GLTexture.h"
-#include "engine/config/EngineConfig.h"
 
 GLPBRShader::GLPBRShader() : GLShader()
 {
-	AddShader(ResourceLoader::LoadShaderGL("pbr/pbr_VS.glsl"), VERTEX_SHADER);
-	AddShader(ResourceLoader::LoadShaderGL("pbr/pbr_GS.glsl"), GEOMETRY_SHADER);
-	AddShader(ResourceLoader::LoadShaderGL("pbr/pbr_FS.glsl"), FRAGMENT_SHADER);
+	AddShader(ResourceLoader::LoadShaderGL("opengl/pbr/pbr_VS.glsl"), VERTEX_SHADER);
+	AddShader(ResourceLoader::LoadShaderGL("opengl/pbr/pbr_GS.glsl"), GEOMETRY_SHADER);
+	AddShader(ResourceLoader::LoadShaderGL("opengl/pbr/pbr_FS.glsl"), FRAGMENT_SHADER);
 	CompileShader();
 
 	AddUniform("m_transform");
@@ -37,7 +31,7 @@ GLPBRShader::GLPBRShader() : GLShader()
 	AddUniform("material.ambientOcclusion");
 	AddUniform("material.emission");
 
-	for (unsigned int i = 0; i < EngineConfig::lightsMaxNumber; i++)
+	for (uint32_t i = 0; i < EngineConfig::lightsMaxNumber; i++)
 	{
 		std::string name;
 		name += "lights[";
@@ -62,7 +56,7 @@ void GLPBRShader::UpdateUniforms(GameObject* object, Camera* camera, std::vector
 
 	SetUniform("cameraPosition", camera->GetPosition());
 
-	for (unsigned int i = 0; i < EngineConfig::lightsMaxNumber; i++)
+	for (uint32_t i = 0; i < EngineConfig::lightsMaxNumber; i++)
 	{
 		std::string name;
 		name += "lights[";

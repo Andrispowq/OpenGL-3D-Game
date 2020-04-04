@@ -28,7 +28,7 @@ public:
 
 	virtual ~Texture() = 0;
 
-	virtual void Bind(unsigned int slot = 0) const = 0;
+	virtual void Bind(uint32_t slot = 0) const = 0;
 	virtual void Unbind() const = 0;
 
 	virtual void Generate() = 0;
@@ -36,13 +36,13 @@ public:
 	virtual void Filter(SamplerFilter filter) const = 0;
 	virtual void WrapMode(TextureWrapMode wrapMode) const = 0;
 
-	inline unsigned int getWidth() const { return width; }
-	inline unsigned int getHeight() const { return height; }
+	inline uint32_t getWidth() const { return width; }
+	inline uint32_t getHeight() const { return height; }
 
-	inline void setWidth(unsigned int width) { this->width = width; }
-	inline void setHeight(unsigned int height) { this->height = height; }
+	inline void setWidth(uint32_t width) { this->width = width; }
+	inline void setHeight(uint32_t height) { this->height = height; }
 protected:
-	unsigned int width, height;
+	uint32_t width, height;
 };
 
 #endif

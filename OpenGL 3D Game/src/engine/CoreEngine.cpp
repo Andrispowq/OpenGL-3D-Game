@@ -33,7 +33,7 @@ void CoreEngine::Stop()
 
 void CoreEngine::Run()
 {
-	unsigned int frames = 0;
+	uint32_t frames = 0;
 	double frameCounter = 0;
 
 	double lastTime = Time::getTime();

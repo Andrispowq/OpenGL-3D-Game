@@ -413,6 +413,18 @@ float* const Matrix4f::getRow(const int i) const
 	return ptr;
 }
 
+float* Matrix4f::GetData() const
+{
+	float* data = new float[16];
+
+	for (size_t i = 0; i < 16; i++)
+	{
+		data[i] = m[i];
+	}
+
+	return data;
+}
+
 void Matrix4f::clear()
 {
 	delete[] m;

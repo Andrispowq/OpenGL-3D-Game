@@ -1,7 +1,7 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "WorldLoader.h"
 
-void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root)
+void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Window* window)
 {
 	std::ifstream file;
 	file.open(worldFile.c_str());
@@ -55,7 +55,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root)
 			{
 				if (nameTokens[1] == "add")
 				{
-					Material* material = new Material;
+					Material* material = new Material();
 					materials.emplace(tokens[1], material);
 				}
 				else
@@ -236,8 +236,13 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root)
 
 						if (FrameworkConfig::api == OpenGL)
 						{
-							pipeline = new GLPipeline();
-							pipeline->SetShader(shader);
+							pipeline = new GLPipeline(shader);
+							pipeline->CreatePipeline(window, vbo);
+						}
+						else if (FrameworkConfig::api == Vulkan)
+						{
+							pipeline = new VKPipeline(shader);
+							pipeline->CreatePipeline(window, vbo);
 						}
 
 						Renderer* renderer = new Renderer(vbo, pipeline, material);
@@ -317,8 +322,13 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root)
 
 								if (FrameworkConfig::api == OpenGL)
 								{
-									pipeline = new GLPipeline();
-									pipeline->SetShader(shader);
+									pipeline = new GLPipeline(shader);
+									pipeline->CreatePipeline(window, vbo);
+								}
+								else if (FrameworkConfig::api == Vulkan)
+								{
+									pipeline = new VKPipeline(shader);
+									pipeline->CreatePipeline(window, vbo);
 								}
 
 								Renderer* renderer = new Renderer(vbo, pipeline, material);

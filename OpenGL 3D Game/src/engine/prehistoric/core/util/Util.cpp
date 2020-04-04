@@ -8,9 +8,9 @@ namespace Util
 		std::vector<std::string> elems;
 
 		const char* cstr = s.c_str();
-		unsigned int strLength = static_cast<unsigned int>(s.size());
-		unsigned int start = 0;
-		unsigned int end = 0;
+		uint32_t strLength = static_cast<uint32_t>(s.size());
+		uint32_t start = 0;
+		uint32_t end = 0;
 
 		while (end <= strLength)
 		{

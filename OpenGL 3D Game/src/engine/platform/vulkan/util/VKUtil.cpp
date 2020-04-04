@@ -1,18 +1,20 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
+#include <glew.h>
 #include "VKUtil.h"
 #include "engine/platform/vulkan/framework/device/VKPhysicalDevice.h"
+#include "engine/platform/vulkan/rendering/pipeline/VKPipeline.h"
 
 namespace VKUtil
 {
-	QueueFamilyIndices VKUtil::FindQueueFamilies(VKSurface* surface, const VKPhysicalDevice& device)
+	QueueFamilyIndices VKUtil::FindQueueFamilies(VkSurfaceKHR& surface, VkPhysicalDevice& device)
 	{
 		QueueFamilyIndices indices = { 0, false };
 
 		uint32_t queueFamilyCount = 0;
-		vkGetPhysicalDeviceQueueFamilyProperties(device.GetPhysicalDevice(), &queueFamilyCount, nullptr);
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, nullptr);
 
 		std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-		vkGetPhysicalDeviceQueueFamilyProperties(device.GetPhysicalDevice(), &queueFamilyCount, queueFamilies.data());
+		vkGetPhysicalDeviceQueueFamilyProperties(device, &queueFamilyCount, queueFamilies.data());
 
 		int i = 0;
 
@@ -25,7 +27,7 @@ namespace VKUtil
 			}
 
 			VkBool32 presentSupport = false;
-			vkGetPhysicalDeviceSurfaceSupportKHR(device.GetPhysicalDevice(), i, surface->GetSurface(), &presentSupport);
+			vkGetPhysicalDeviceSurfaceSupportKHR(device, i, surface, &presentSupport);
 
 			if (presentSupport)
 			{
@@ -44,27 +46,27 @@ namespace VKUtil
 		return indices;
 	}
 
-	SwapChainSupportDetails VKUtil::QuerySwapChainSupport(VKSurface* surface, const VKPhysicalDevice& device)
+	SwapChainSupportDetails VKUtil::QuerySwapChainSupport(VkSurfaceKHR& surface, VkPhysicalDevice& device)
 	{
 		SwapChainSupportDetails details;
-		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device.GetPhysicalDevice(), surface->GetSurface(), &details.capabilities);
+		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);
 
 		uint32_t formatCount = 0;
-		vkGetPhysicalDeviceSurfaceFormatsKHR(device.GetPhysicalDevice(), surface->GetSurface(), &formatCount, nullptr);
+		vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, nullptr);
 
 		if (formatCount != 0)
 		{
 			details.formats.resize(formatCount);
-			vkGetPhysicalDeviceSurfaceFormatsKHR(device.GetPhysicalDevice(), surface->GetSurface(), &formatCount, details.formats.data());
+			vkGetPhysicalDeviceSurfaceFormatsKHR(device, surface, &formatCount, details.formats.data());
 		}
 
 		uint32_t presentModeCount;
-		vkGetPhysicalDeviceSurfacePresentModesKHR(device.GetPhysicalDevice(), surface->GetSurface(), &presentModeCount, nullptr);
+		vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, nullptr);
 
 		if (presentModeCount != 0)
 		{
 			details.presentModes.resize(presentModeCount);
-			vkGetPhysicalDeviceSurfacePresentModesKHR(device.GetPhysicalDevice(), surface->GetSurface(), &presentModeCount, details.presentModes.data());
+			vkGetPhysicalDeviceSurfacePresentModesKHR(device, surface, &presentModeCount, details.presentModes.data());
 		}
 
 		return details;
@@ -111,5 +113,22 @@ namespace VKUtil
 
 			return actualExtent;
 		}
+	}
+
+	uint32_t VKUtil::FindMemoryType(uint32_t typeFilter, VkPhysicalDevice& physicalDevice, VkMemoryPropertyFlags properties)
+	{
+		VkPhysicalDeviceMemoryProperties memProperties;
+		vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
+
+		for (uint32_t i = 0; i < memProperties.memoryTypeCount; i++) 
+		{
+			if (typeFilter & (1 << i) && (memProperties.memoryTypes[i].propertyFlags & properties) == properties)
+			{
+				return i;
+			}
+		}
+
+		PR_LOG_RUNTIME_ERROR("Failed to find suitable memory type!\n");
+		return 0;
 	}
 };

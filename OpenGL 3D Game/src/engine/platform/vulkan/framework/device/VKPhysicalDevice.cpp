@@ -21,7 +21,7 @@ void VKPhysicalDevice::PickPhysicalDevice(VKSurface* surface, VKInstance* instan
 
 	if (deviceCount == 0) 
 	{
-		PR_LOG_RUNTIME_ERROR("Failed to find GPUs with Vulkan support!");
+		PR_LOG_RUNTIME_ERROR("Failed to find GPUs with Vulkan support!\n");
 	}
 
 	std::vector<VkPhysicalDevice> devices(deviceCount);
@@ -38,7 +38,7 @@ void VKPhysicalDevice::PickPhysicalDevice(VKSurface* surface, VKInstance* instan
 
 	if (physicalDevice == VK_NULL_HANDLE) 
 	{
-		PR_LOG_RUNTIME_ERROR("Failed to find a suitable GPU!");
+		PR_LOG_RUNTIME_ERROR("Failed to find a suitable GPU!\n");
 	}
 }
 
@@ -52,14 +52,14 @@ bool VKPhysicalDevice::IsDeviceSuitable(VKSurface* surface, VkPhysicalDevice dev
 
 	if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
 	{
-		QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface, device);
+		QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface->GetSurface(), device);
 
 		bool extensionsSupported = CheckDeviceExtensionSupport(device);
 
 		bool swapChainAdequate = false;
 		if (extensionsSupported) 
 		{
-			SwapChainSupportDetails swapChainSupport = VKUtil::QuerySwapChainSupport(surface, device);
+			SwapChainSupportDetails swapChainSupport = VKUtil::QuerySwapChainSupport(surface->GetSurface(), device);
 			swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
 		}
 

@@ -13,7 +13,7 @@ enum InputType
 
 struct InputData
 {
-	unsigned int code;
+	uint32_t code;
 	InputType type;
 	int joystickNumber;
 };

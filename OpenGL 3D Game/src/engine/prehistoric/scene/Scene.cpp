@@ -1,49 +1,68 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "Scene.h"
+#include "engine/platform/vulkan/rendering/pipeline/VKPipeline.h"
+#include "engine/platform/vulkan/rendering/shaders/VkShader.h"
+#include "engine/platform/vulkan/framework/swapchain/VKSwapchain.h"
+#include "engine/platform/vulkan/buffer/VKMeshVBO.h"
+#include "engine/platform/vulkan/framework/context/VKContext.h"
 
 MeshVBO* Scene::vbo = nullptr;
-Shader* Scene::shader = nullptr;
+Pipeline* Scene::pipeline = nullptr;
 
-void Scene::CreateScene(GameObject* root)
+void Scene::CreateScene(GameObject* root, Window* window)
 {
 	WorldLoader loader;
-	//loader.LoadWorld("res/world/testLevel.wrld", root);
-
-	/*vbo = ModelFabricator::CreateQuad();
-
+	
 	if (FrameworkConfig::api == OpenGL)
 	{
-		shader = new GLPBRShader();
+		loader.LoadWorld("res/world/testLevel.wrld", root, window);
 	}
+	else
+	{
+		vbo = new VKMeshVBO(window->GetContext()->GetPhysicalDevice(), window->GetContext()->GetDevice());
 
-	Material* matN = new Material;
-	matN->AddTexture("albedoMap", TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_DIF.png"));
-	matN->AddTexture("normalMap", TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_NRM.png"));
-	matN->AddTexture("roughnessMap", TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_RGH.png"));
-	matN->AddTexture("metallicMap", TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_MET.png"));
+		Mesh mesh;
 
-	Material* mat = new Material;
-	mat->AddTexture("albedoMap", TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_DIF.png"));
-	mat->AddTexture("roughnessMap", TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_RGH.png"));
-	mat->AddTexture("metallicMap", TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_MET.png"));
+		mesh.AddVertex(Vertex({ -0.5f, -0.5f, 0.0f }, { 1.0, 0.0 }, -1, { 1.0f, 0.0f, 0.0f }));
+		mesh.AddVertex(Vertex({ -0.5f,  0.5f, 0.0f }, { 0.0, 0.0 }, -1, { 0.0f, 1.0f, 0.0f }));
+		mesh.AddVertex(Vertex({  0.5f,  0.5f, 0.0f }, { 1.0, 0.0 }, -1, { 0.0f, 0.0f, 1.0f }));
+		mesh.AddVertex(Vertex({  0.5f, -0.5f, 0.0f }, { 0.0, 1.0 }, -1, { 1.0f, 1.0f, 1.0f }));
 
-	GameObject* child = new GameObject();
-	child->AddComponent("renderer", new Renderer(vbo, shader, matN));
-	child->SetRotation({90, 0, 0});
+		mesh.AddIndex(0);
+		mesh.AddIndex(1);
+		mesh.AddIndex(2);
+		mesh.AddIndex(2);
+		mesh.AddIndex(3);
+		mesh.AddIndex(0);
 
-	GameObject* child2 = new GameObject();
-	child2->AddComponent("renderer", new Renderer(vbo, shader, mat));
-	child2->Move({ -2, 0, 0 });
-	child2->SetRotation({ 90, 0, 0 });
+		vbo->Store(mesh);
 
-	root->AddChild("plane-normalmap", child);
-	root->AddChild("plane", child2);
+		Shader* shader = new VKShader(window->GetContext());
+
+		shader->AddShader(ResourceLoader::LoadShaderVK("vulkan/basic_VS.spv"), VERTEX_SHADER);
+		shader->AddShader(ResourceLoader::LoadShaderVK("vulkan/basic_FS.spv"), FRAGMENT_SHADER);
+		shader->CompileShader();
+
+		pipeline = new VKPipeline(shader);
+		pipeline->SetViewportStart({ 0, 0 });
+		pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
+		pipeline->SetScissorStart({ 0, 0 });
+		pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
+
+		pipeline->CreatePipeline(window, vbo);
+
+		GameObject* obj = new GameObject();
+		obj->AddComponent("Renderer", new Renderer(vbo, pipeline, new Material()));
+		obj->Move({ 0, 0, 0 });
+
+		root->AddChild("VKOBJ", obj);
+	}
 
 	GameObject* light = new GameObject;
 	light->AddComponent("light", new Light({ 1 }, { 100 }));
 	light->Move({0, 4, 2});
 
-	root->AddChild(light);*/
+	root->AddChild("Light", light);
 }
 
 void Scene::DeleteData()

@@ -6,7 +6,7 @@
 std::vector<MeshVBO*> Renderable::vbos;
 std::vector<Pipeline*> Renderable::pipelines;
 
-Renderable::Renderable(MeshVBO* vbo, Pipeline* pipeline, bool vboFurtherUse, bool shaderFurtherUse)
+Renderable::Renderable(MeshVBO* vbo, Pipeline* pipeline)
 {
 	auto vInd = std::find(vbos.begin(), vbos.end(), vbo);
 
@@ -31,8 +31,13 @@ Renderable::Renderable(MeshVBO* vbo, Pipeline* pipeline, bool vboFurtherUse, boo
 	else
 	{
 		this->pipelineIndex = std::distance(pipelines.begin(), pInd);
-		//delete shader;
+		//delete pipeline;
 	}
+
+	pipeline->SetViewportStart(0);
+	pipeline->SetViewportSize({ (float) FrameworkConfig::windowWidth, (float) FrameworkConfig::windowHeight });
+	pipeline->SetScissorStart(0);
+	pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
 }
 
 Renderable::Renderable()
@@ -43,6 +48,14 @@ Renderable::Renderable()
 
 Renderable::~Renderable()
 {
+}
+
+void Renderable::RecreatePipelines()
+{
+	for (Pipeline* pipeline : pipelines)
+	{
+		pipeline->RecreatePipeline();
+	}
 }
 
 void Renderable::CleanUp()

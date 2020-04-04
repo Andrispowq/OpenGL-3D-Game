@@ -16,7 +16,8 @@
 #elif defined(__APPLE__) || defined(__MACH__)
 	#error "Mac OS is currently not supported!" 
 #elif defined(__ANDROID__)
-	#error "Android is currently not supported!"
+	#define PR_ANDROID
+	//#error "Android is currently not supported!"
 #else
 	#error "This OS is currently not supported!"
 #endif

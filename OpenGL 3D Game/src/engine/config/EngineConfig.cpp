@@ -3,7 +3,7 @@
 
 namespace EngineConfig
 {
-	unsigned int EngineConfig::lightsMaxNumber;
+	uint32_t EngineConfig::lightsMaxNumber;
 	float EngineConfig::rendererGamma;
 	int EngineConfig::rendererHighDetailRange;
 	float EngineConfig::rendererNearPlane;

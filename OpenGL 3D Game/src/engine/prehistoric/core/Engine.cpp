@@ -17,14 +17,14 @@ Engine::Engine()
 	InputInstance.Init(renderingEngine->GetWindow());
 	renderingEngine->Init();
 
-	Scene::CreateScene(root);
+	Scene::CreateScene(root, renderingEngine->GetWindow());
 }
 
 Engine::~Engine()
 {
-	delete renderingEngine;
 	Scene::DeleteData();
 	Input::DeleteInstance();
+	delete renderingEngine;
 
 	delete root;
 }

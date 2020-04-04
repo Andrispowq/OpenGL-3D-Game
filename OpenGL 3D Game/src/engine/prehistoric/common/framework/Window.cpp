@@ -29,9 +29,6 @@ Window::Window(const int& width, const int& height, const char* title, const boo
 	{
 		PR_LOG_RUNTIME_ERROR("An invalid API has been specified under res/config/framework.cfg!\n");
 	}
-
-	context->InitContext(this);
-	swapchain->SetupSwapchain(context->GetPhysicalDevice(), context->GetDevice());
 }
 
 Window::Window()
@@ -56,9 +53,6 @@ Window::Window()
 	{
 		PR_LOG_RUNTIME_ERROR("An invalid API has been specified under res/config/framework.cfg!\n");
 	}
-
-	context->InitContext(this);
-	swapchain->SetupSwapchain(context->GetPhysicalDevice(), context->GetDevice());
 }
 
 Window::~Window()

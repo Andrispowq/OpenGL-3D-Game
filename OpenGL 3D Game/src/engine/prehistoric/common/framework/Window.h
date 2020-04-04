@@ -17,7 +17,6 @@ public:
 	void SetClearColor(const float& red, const float& green, const float& blue, const float& alpha) const { swapchain->SetClearColor(red, green, blue, alpha); }
 	void ClearScreen() const { swapchain->ClearScreen(); }
 
-	void SetFullscreen(bool fullscreen) { swapchain->SetFullscreen(this, fullscreen); };
 	void SetVSync(bool vsync) const { swapchain->SetVSync(vsync); }
 
 	void DeleteSwapChain(void* device) { swapchain->DeleteSwapchain(device); }
@@ -30,16 +29,27 @@ public:
 	inline bool GetClosed() const { return closed; }
 	inline void SetClosed(const bool& closed) { this->closed = closed; }
 
+	int GetWidth() const { return width; }
+	int GetHeight() const { return height; }
+
+	void SetWidth(int width) { this->width = width; }
+	void SetHeight(int height) { this->height = height; }
+
 	inline Swapchain* GetSwapchain() const { return swapchain; }
 	inline Context* GetContext() const { return context; }
 
 	virtual void* GetWindowHandle() const = 0;
+
+	bool& GetResized() { return resized; }
+	void SetResized(bool resized) { this->resized = resized; }
 protected:
 	int width;
 	int height;
 	const char* title;
 	bool fullscreen;
 	bool closed;
+
+	bool resized;
 
 	Swapchain* swapchain;
 	Context* context;

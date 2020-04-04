@@ -1,7 +1,10 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "TextureLoader.h"
-#include "engine/platform/opengl/texture/GLTexture.h"
 #include "engine/prehistoric/core/util/Util.h"
+#include "engine/config/FrameworkConfig.h"
+
+#include "engine/platform/opengl/texture/GLTexture.h"
+#include "engine/platform/vulkan/texture/VKTexture.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -20,10 +23,19 @@ namespace TextureLoader
 			PR_LOG_ERROR("Failed to load texture %s!\n", path.c_str());
 		}
 
-		Texture* texture = new GLTexture();
+		Texture* texture = nullptr;
 
-		texture->setWidth(static_cast<unsigned int>(width));
-		texture->setHeight(static_cast<unsigned int>(height));
+		if (FrameworkConfig::api == OpenGL)
+		{
+			texture = new GLTexture();
+		}
+		else if (FrameworkConfig::api == Vulkan)
+		{
+			texture = new VKTexture();
+		}
+
+		texture->setWidth(static_cast<uint32_t>(width));
+		texture->setHeight(static_cast<uint32_t>(height));
 
 		texture->Generate();
 		texture->Bind();

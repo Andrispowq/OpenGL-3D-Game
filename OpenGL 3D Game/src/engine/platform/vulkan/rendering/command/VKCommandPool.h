@@ -9,22 +9,32 @@
 class VKCommandPool
 {
 public:
-	VKCommandPool();
+	VKCommandPool(VKSurface& surface, VkPhysicalDevice& physicalDevice, VkDevice& device);
 	virtual ~VKCommandPool();
 
-	void AddCommandBuffer(const VKCommandBuffer& buffer);
+	void AddCommandBuffer(VKCommandBuffer& buffer);
+	void AddCommandBuffer();
+
+	void DeleteCommandBuffer(int index);
+	void DeleteCommandBuffers();
 
 	void BindCommandBuffer(int index) const;
 	void BindCommandPool() const;
 
 	void UnbindCommandBuffer(int index) const;
-	void UnbindCommandPool();
+	void UnbindCommandPool() const;
 
-	VKCommandBuffer& GetCommandBuffer(int index) { return buffers[index]; }
-	std::vector<VKCommandBuffer>& GetCommandBuffers(int index) { return buffers; }
+	VkCommandPool GetCommandPool() const { return commandPool; }
+
+	VKCommandBuffer* GetCommandBuffer(int index) const { return buffers[index]; }
+	std::vector<VKCommandBuffer*> GetCommandBuffers() const { return buffers; }
 private:
-	VkCommandPool pool;
-	std::vector<VKCommandBuffer> buffers;
+	VKSurface* surface;
+	VkPhysicalDevice* physicalDevice;
+	VkDevice* device;
+
+	VkCommandPool commandPool;
+	std::vector<VKCommandBuffer*> buffers;
 };
 
 #endif

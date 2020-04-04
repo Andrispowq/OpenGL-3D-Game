@@ -1,20 +1,20 @@
 #ifndef GL_TEXTURE_H
 #define GL_TEXTURE_H
 
-#include "glew.h"
-
 #include "engine/prehistoric/common/model/Texture.h"
+
+#include <glew.h>
 
 class GLTexture : public Texture
 {
 public:
-	GLTexture(GLuint id = 0, GLenum type = GL_TEXTURE_2D, unsigned int width = 0, unsigned int height = 0);
-	GLTexture(GLuint id, ImageType type = TEXTURE_2D, unsigned int width = 0, unsigned int height = 0);
+	GLTexture(GLuint id = 0, GLenum type = GL_TEXTURE_2D, uint32_t width = 0, uint32_t height = 0);
+	GLTexture(GLuint id, ImageType type = TEXTURE_2D, uint32_t width = 0, uint32_t height = 0);
 	GLTexture(GLuint id);
 
 	virtual ~GLTexture() override;
 
-	virtual void Bind(unsigned int slot = 0) const override;
+	virtual void Bind(uint32_t slot = 0) const override;
 	virtual void Unbind() const override;
 
 	virtual void Generate() override;

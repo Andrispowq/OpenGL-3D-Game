@@ -12,12 +12,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\engine\config\EngineConfig.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\capabilities\GLCapabilities.cpp" />
     <ClCompile Include="src\engine\platform\opengl\framework\swapchain\GLSwapChain.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\pipeline\GLPipeline.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\pbr\GLPBRShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\texture\GLTexture.cpp" />
-    <ClCompile Include="src\engine\platform\opengl\util\GLDeviceProperties.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\buffer\VKMeshVBO.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\capabilities\VKCapabilities.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\framework\context\VKContext.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\framework\context\VKDebugMessenger.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\framework\context\VKInstance.cpp" />
@@ -29,14 +30,19 @@
     <ClCompile Include="src\engine\platform\vulkan\framework\swapchain\VKSwapchain.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\command\VKCommandBuffer.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\command\VKCommandPool.cpp" />
-    <ClCompile Include="src\engine\platform\vulkan\rendering\pipeline\VkPipeline.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\rendering\framebuffer\VKFramebuffer.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\rendering\pipeline\VKGraphicsPipeline.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\rendering\pipeline\VKPipeline.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\rendering\renderpass\VKRenderpass.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\rendering\synchronization\VKFence.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\rendering\synchronization\VKSemaphore.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\shaders\VkShader.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\texture\VkTexture.cpp" />
-    <ClCompile Include="src\engine\platform\vulkan\util\VkDeviceProperties.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\util\VKUtil.cpp" />
     <ClCompile Include="src\engine\platform\windows\WindowsInput.cpp" />
     <ClCompile Include="src\engine\platform\windows\WindowsWindow.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\buffer\MeshVBO.cpp" />
+    <ClCompile Include="src\engine\prehistoric\common\capabilities\Capabilities.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\framework\context\Context.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\framework\Input.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\framework\swapchain\Swapchain.cpp" />
@@ -83,13 +89,14 @@
     <ClCompile Include="src\game\Application.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\platform\opengl\capabilities\GLCapabilities.h" />
     <ClInclude Include="src\engine\platform\opengl\framework\swapchain\GLSwapChain.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLPipeline.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\pbr\GLPBRShader.h" />
     <ClInclude Include="src\engine\platform\opengl\texture\GLTexture.h" />
-    <ClInclude Include="src\engine\platform\opengl\util\GLDeviceProperties.h" />
     <ClInclude Include="src\engine\platform\Prehistoric.h" />
     <ClInclude Include="src\engine\platform\vulkan\buffer\VKMeshVBO.h" />
+    <ClInclude Include="src\engine\platform\vulkan\capabilities\VKCapabilities.h" />
     <ClInclude Include="src\engine\platform\vulkan\framework\context\VKContext.h" />
     <ClInclude Include="src\engine\platform\vulkan\framework\context\VKDebugMessenger.h" />
     <ClInclude Include="src\engine\platform\vulkan\framework\context\VKInstance.h" />
@@ -101,14 +108,19 @@
     <ClInclude Include="src\engine\platform\vulkan\framework\swapchain\VKSwapchain.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\command\VKCommandBuffer.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\command\VKCommandPool.h" />
-    <ClInclude Include="src\engine\platform\vulkan\rendering\pipeline\VkPipeline.h" />
+    <ClInclude Include="src\engine\platform\vulkan\rendering\framebuffer\VKFramebuffer.h" />
+    <ClInclude Include="src\engine\platform\vulkan\rendering\pipeline\VKGraphicsPipeline.h" />
+    <ClInclude Include="src\engine\platform\vulkan\rendering\pipeline\VKPipeline.h" />
+    <ClInclude Include="src\engine\platform\vulkan\rendering\renderpass\VKRenderpass.h" />
+    <ClInclude Include="src\engine\platform\vulkan\rendering\synchronization\VKFence.h" />
+    <ClInclude Include="src\engine\platform\vulkan\rendering\synchronization\VKSemaphore.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\shaders\VkShader.h" />
     <ClInclude Include="src\engine\platform\vulkan\texture\VkTexture.h" />
-    <ClInclude Include="src\engine\platform\vulkan\util\VkDeviceProperties.h" />
     <ClInclude Include="src\engine\platform\vulkan\util\VKUtil.h" />
     <ClInclude Include="src\engine\platform\windows\WindowsInput.h" />
     <ClInclude Include="src\engine\platform\windows\WindowsWindow.h" />
     <ClInclude Include="src\engine\prehistoric\common\buffer\MeshVBO.h" />
+    <ClInclude Include="src\engine\prehistoric\common\capabilities\Capabilities.h" />
     <ClInclude Include="src\engine\prehistoric\common\framework\CameraInput.h" />
     <ClInclude Include="src\engine\prehistoric\common\framework\context\Context.h" />
     <ClInclude Include="src\engine\prehistoric\common\framework\Input.h" />
@@ -178,6 +190,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -212,7 +225,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\lib\GL\64 bit;$(SolutionDir)Dependencies\lib\GLFW;$(SolutionDir)Dependencies\lib\Vulkan;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;glfw3.lib;opengl32.lib;glew32s.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -242,5 +255,6 @@
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
   </ImportGroup>
 </Project>

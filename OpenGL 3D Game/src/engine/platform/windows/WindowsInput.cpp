@@ -3,7 +3,14 @@
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-	glViewport(0, 0, width, height);
+	if (width == 0 || height == 0)
+	{
+		PR_LOG_RUNTIME_ERROR("Window minimalization is not supported!\n");
+	}
+
+	Window* wnd = (Window*) glfwGetWindowUserPointer(window);
+	wnd->SetResized(true);
+	wnd->GetSwapchain()->SetWindowSize(wnd, (uint32_t)width, (uint32_t)height);
 }
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -118,6 +125,9 @@ bool WindowsInput::Init(Window* window) const
 {
 	auto id = static_cast<GLFWwindow*>(window->GetWindowHandle());
 
+	//Input is static so we can use it in the callbacks, but window is not, so we need a way to get it
+	glfwSetWindowUserPointer(id, (void*) window);
+
 	glfwSetFramebufferSizeCallback(id, framebuffer_size_callback);
 	glfwSetKeyCallback(id, key_callback);
 	glfwSetMouseButtonCallback(id, mouse_callback);
@@ -140,7 +150,7 @@ bool WindowsInput::Update()
 	releasedButtons.clear();
 
 	//Set up joystick/gamepad
-	for (unsigned int i = 0; i < MAX_NUM_JOYSTICKS; i++)
+	for (uint32_t i = 0; i < MAX_NUM_JOYSTICKS; i++)
 	{
 		joystickButtons[i].clear();
 		joystickAxes[i].clear();
@@ -157,12 +167,12 @@ bool WindowsInput::Update()
 				GLFWgamepadstate state;
 				glfwGetGamepadState(GLFW_JOYSTICK_1 + i, &state);
 
-				for (unsigned int j = 0; j < sizeof(state.buttons) / sizeof(state.buttons[0]); j++)
+				for (uint32_t j = 0; j < sizeof(state.buttons) / sizeof(state.buttons[0]); j++)
 				{
 					joystickButtons[i].push_back(state.buttons[j]);
 				}
 
-				for (unsigned int j = 0; j < sizeof(state.axes) / sizeof(state.axes[0]); j++)
+				for (uint32_t j = 0; j < sizeof(state.axes) / sizeof(state.axes[0]); j++)
 				{
 					joystickAxes[i].push_back(state.axes[j]);
 				}

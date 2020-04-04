@@ -1,15 +1,14 @@
 #ifndef WINDOWS_WINDOW_H
 #define WINDOWS_WINDOW_H
 
-#include "glew.h"
-#include "glfw3.h"
-
 #include "engine/prehistoric/common/framework/Window.h"
-#include "engine/platform/Prehistoric.h"
 
-#include "engine/platform/opengl/framework/context/GLContext.h"
+#include <glew.h>
+#include <glfw3.h>
+
 #include "engine/prehistoric/core/util/loader/TextureLoader.h"
 #include "engine/config/FrameworkConfig.h"
+#include "engine/platform/Prehistoric.h"
 
 class WindowsWindow : public Window
 {
