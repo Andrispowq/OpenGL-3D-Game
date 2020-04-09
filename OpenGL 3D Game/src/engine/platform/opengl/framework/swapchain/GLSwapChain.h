@@ -6,7 +6,7 @@
 #include <glew.h>
 #include <glfw3.h>
 
-class GLSwapChain : public Swapchain
+class GLSwapchain : public Swapchain
 {
 public:
 	virtual void SetupSwapchain(void* physicalDevice) override;

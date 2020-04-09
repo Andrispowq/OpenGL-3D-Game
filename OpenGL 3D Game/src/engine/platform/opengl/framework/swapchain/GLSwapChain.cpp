@@ -3,43 +3,47 @@
 #include "engine/config/FrameworkConfig.h"
 #include "engine/prehistoric/common/framework/Window.h"
 
-void GLSwapChain::SetupSwapchain(void* physicalDevice)
+void GLSwapchain::SetupSwapchain(void* physicalDevice)
 {
 	//Enabling GL_TEXTURE_2D is deprecated, in debug mode, it will cause the program to break
 	//glEnable(GL_TEXTURE_2D);
 
 	glEnable(GL_DEPTH_TEST);
+	glFrontFace(GL_CCW);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
 }
 
-void GLSwapChain::SwapBuffers(Window* window)
+void GLSwapchain::SwapBuffers(Window* window)
 {
 	glfwSwapBuffers((GLFWwindow*)window->GetWindowHandle());
 }
 
-void GLSwapChain::SetVSync(bool vSync) const
+void GLSwapchain::SetVSync(bool vSync) const
 {
 	glfwSwapInterval(vSync ? 1 : 0);
 }
 
-void GLSwapChain::SetWindowSize(Window* window, uint32_t width, uint32_t height)
+void GLSwapchain::SetWindowSize(Window* window, uint32_t width, uint32_t height)
 {
 	glViewport(0, 0, width, height);
 	FrameworkConfig::windowWidth = width;
 	FrameworkConfig::windowHeight = height;
 }
 
-void GLSwapChain::SetClearColor(const float& red, const float& green, const float& blue, const float& alpha)
+void GLSwapchain::SetClearColor(const float& red, const float& green, const float& blue, const float& alpha)
 {
 	glClearColor(red, green, blue, alpha);
 }
 
-void GLSwapChain::ClearScreen()
+void GLSwapchain::ClearScreen()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearDepth(1.0);
 }
 
-void GLSwapChain::DeleteSwapchain(void* device)
+void GLSwapchain::DeleteSwapchain(void* device)
 {
 
 }

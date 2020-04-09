@@ -17,7 +17,7 @@ Window::Window(const int& width, const int& height, const char* title, const boo
 
 	if (FrameworkConfig::api == OpenGL)
 	{
-		swapchain = new GLSwapChain();
+		swapchain = new GLSwapchain();
 		context = new GLContext();
 	}
 	else if (FrameworkConfig::api == Vulkan)
@@ -41,7 +41,7 @@ Window::Window()
 
 	if (FrameworkConfig::api == OpenGL)
 	{
-		swapchain = new GLSwapChain();
+		swapchain = new GLSwapchain();
 		context = new GLContext();
 	}
 	else if (FrameworkConfig::api == Vulkan)
