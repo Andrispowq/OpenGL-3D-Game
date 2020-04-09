@@ -205,7 +205,7 @@ bool VKShader::AddUniform(const std::string& name, ShaderType stages, uint32_t b
 		_DescriptorSets = descriptorSets.at((uint32_t) set);
 
 		vkDestroyDescriptorSetLayout(device->GetDevice(), _DescriptorSetLayout, nullptr);
-		//vkFreeDescriptorSets(device->GetDevice(), descriptorPool, numBuffers, _DescriptorSets.data());
+		vkFreeDescriptorSets(device->GetDevice(), descriptorPool, numBuffers, _DescriptorSets.data());
 
 		descriptorSets.erase(descriptorSets.find((uint32_t) set));
 		descriptorSetLayouts.erase(descriptorSetLayouts.find((uint32_t)set));
@@ -222,7 +222,7 @@ bool VKShader::AddUniform(const std::string& name, ShaderType stages, uint32_t b
 	//Recreate the descriptor pool
 	VkDescriptorPoolSize poolSize = {};
 	poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	poolSize.descriptorCount = numDescriptors * numBuffers; //We create numBuffer sets for each set we utilise
+	poolSize.descriptorCount = numDescriptors * numBuffers; //We create numBuffer descriptors for each set we utilise
 
 	VkDescriptorPoolCreateInfo poolInfo = {};
 	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
@@ -371,25 +371,38 @@ bool VKShader::AddUniform(const std::string& name, ShaderType stages, uint32_t b
 
 	descriptorSets.insert(std::make_pair(set, _DescriptorSets));
 
-	for (size_t i = 0; i < numBuffers; i++)
-	{
-		VkDescriptorBufferInfo bufferInfo = {};
-		bufferInfo.buffer = uniformBuffers[name].second[i];
-		bufferInfo.offset = 0;
-		bufferInfo.range = bufferSize;
-		
-		VkWriteDescriptorSet descriptorWrite = {};
-		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrite.dstSet = descriptorSets[(uint32_t) set][i];
-		descriptorWrite.dstBinding = (uint32_t) binding;
-		descriptorWrite.dstArrayElement = 0;
-		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descriptorWrite.descriptorCount = 1;
-		descriptorWrite.pBufferInfo = &bufferInfo;
-		descriptorWrite.pImageInfo = nullptr; // Optional
-		descriptorWrite.pTexelBufferView = nullptr; // Optional
+	std::unordered_map<uint32_t, std::vector<VkBuffer>> uBuffers;
 
-		vkUpdateDescriptorSets(device->GetDevice(), 1, &descriptorWrite, 0, nullptr);
+	for (const auto& buffer : uniformBuffers)
+	{
+		if (buffer.second.first == set)
+		{
+			uBuffers.insert(std::make_pair(bindings.at(buffer.first).second.binding, buffer.second.second));
+		}
+	}
+
+	for (const auto& buffer : uBuffers)
+	{
+		for (size_t i = 0; i < numBuffers; i++)
+		{
+			VkDescriptorBufferInfo bufferInfo = {};
+			bufferInfo.buffer = buffer.second[i];
+			bufferInfo.offset = 0;
+			bufferInfo.range = bufferSize;
+
+			VkWriteDescriptorSet descriptorWrite = {};
+			descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+			descriptorWrite.dstSet = descriptorSets[(uint32_t)set][i];
+			descriptorWrite.dstBinding = buffer.first;
+			descriptorWrite.dstArrayElement = 0;
+			descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			descriptorWrite.descriptorCount = 1;
+			descriptorWrite.pBufferInfo = &bufferInfo;
+			descriptorWrite.pImageInfo = nullptr; // Optional
+			descriptorWrite.pTexelBufferView = nullptr; // Optional
+
+			vkUpdateDescriptorSets(device->GetDevice(), 1, &descriptorWrite, 0, nullptr);
+		}
 	}
 
 	for (size_t i = 0; i < numBuffers; i++)
@@ -555,8 +568,6 @@ void VKShader::SetUniform(const std::string& name, const Matrix4f& value) const
 	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).second[swapchain->GetAquiredImageIndex()];
 
 	float* dataF = value.GetData();
-
-	value.print();
 
 	vkMapMemory(device->GetDevice(), mem, 0, sizeof(float) * 16, 0, &data);
 	memcpy(data, dataF, sizeof(float) * 16);

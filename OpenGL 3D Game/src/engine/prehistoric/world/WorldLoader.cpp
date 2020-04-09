@@ -64,7 +64,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 					if (index == materials.end())
 					{
-						PR_LOG_ERROR("Material (name: %s) does not exist, or haven't been created in the world file!\n", nameTokens[1]);
+						PR_LOG_ERROR("Material (name: %s) does not exist, or haven't been created in the world file!\n", nameTokens[1].c_str());
 						continue;
 					}
 
@@ -76,7 +76,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 						if (index == textures.end())
 						{
-							PR_LOG_ERROR("Texture (name: %s) does not exist, or haven't been created in the world file!\n", tokens[1]);
+							PR_LOG_ERROR("Texture (name: %s) does not exist, or haven't been created in the world file!\n", tokens[1].c_str());
 							continue;
 						}
 
@@ -192,7 +192,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 				if (index == list.end())
 				{
-					PR_LOG_ERROR("GameObject (name: %s) does not exist, or haven't been created in the world file!\n", nameTokens[1]);
+					PR_LOG_ERROR("GameObject (name: %s) does not exist, or haven't been created in the world file!\n", nameTokens[1].c_str());
 					continue;
 				}
 
@@ -275,7 +275,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 						if (index == list.end())
 						{
-							PR_LOG_ERROR("GameObject (name: %s) does not exist, or haven't been created in the world file!\n", nameTokens[i]);
+							PR_LOG_ERROR("GameObject (name: %s) does not exist, or haven't been created in the world file!\n", nameTokens[i].c_str());
 							continue;
 						}
 

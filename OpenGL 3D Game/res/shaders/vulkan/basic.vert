@@ -21,7 +21,7 @@ layout(set = 0, binding = 2) uniform UBO3 { mat4 proj; } ubo3;
 
 void main() 
 {
-    gl_Position = ubo3.proj * /*ubo2.view * ubo1.model **/ vec4(position_VS, 1.0);
+    gl_Position = ubo3.proj * ubo2.view * ubo1.model * vec4(position_VS, 1.0);
 
     colour_FS = colour_VS;
 }

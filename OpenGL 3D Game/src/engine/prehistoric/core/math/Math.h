@@ -2,7 +2,7 @@
 #define MATH_H
 
 #include "engine/prehistoric/core/util/Includes.hpp"
-#include <xmmintrin.h>
+#include "engine/platform/Prehistoric.h"
 
 #define PI 3.14159265358979323846264338327950288419716939
 
@@ -17,6 +17,30 @@ static T ToRadians(T x)
 {
 	return static_cast<T>((x * PI) / 180.0);
 }
+
+//On x64 Windows we use SIMD to offer faster math
+/*#ifdef PR_WINDOWS_64
+#include <xmmintrin.h>
+
+class Vector2f
+{
+public:
+	Vector2f(const Vector2f& v) { this->x = v.x; this->y = v.y; }
+
+	Vector2f(const float& x, const float& y) : x(x), y(y) {}
+	Vector2f(const float& v) : x(v), y(v) {}
+	Vector2f() : x(0), y(0) {}
+	
+	inline Vector2f operator+(const Vector2f& v) const
+	{
+		__m128 vector = { x, y };
+	}
+
+public:
+	float x, y;
+};
+
+#endif*/
 
 template<typename T>
 class Vector2
@@ -374,10 +398,12 @@ typedef Vector3<uint32_t> Vector3u;
 typedef Vector4<uint32_t> Vector4u;
 typedef Quaternion<uint32_t> Quaternionu;
 
+//#ifndef PR_WINDOWS_64
 typedef Vector2<float> Vector2f;
 typedef Vector3<float> Vector3f;
 typedef Vector4<float> Vector4f;
 typedef Quaternion<float> Quaternionf;
+//#endif
 
 typedef Vector2<double> Vector2d;
 typedef Vector3<double> Vector3d;
@@ -458,4 +484,4 @@ public:
 	float* m;
 };
 
-#endif 
+#endif

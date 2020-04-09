@@ -57,7 +57,7 @@ void Scene::CreateScene(GameObject* root, Window* window)
 
 		GameObject* obj = new GameObject();
 		obj->AddComponent("Renderer", new Renderer(vbo, pipeline, new Material()));
-		obj->Move({ 0, 0, -4 });
+		obj->Move({ 0, 0, 4 });
 
 		root->AddChild("VKOBJ", obj);
 	}

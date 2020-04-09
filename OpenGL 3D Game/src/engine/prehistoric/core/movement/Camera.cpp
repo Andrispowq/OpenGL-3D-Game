@@ -121,12 +121,18 @@ void Camera::Input(Window* window, float delta)
 		}
 		if (in->IsRightRot() != 0 && !rotRight)
 		{
-			RotateY(static_cast<float>(-rotAmt * 2.0 * in->IsRightRot() * delta));
+			if (FrameworkConfig::api == Vulkan)
+				RotateY(static_cast<float>(rotAmt * 2.0 * in->IsRightRot() * delta));
+			else if(FrameworkConfig::api == OpenGL)
+				RotateY(static_cast<float>(-rotAmt * 2.0 * in->IsRightRot() * delta));
 			rotRight = true;
 		}
 		if (in->IsLeftRot() != 0 && !rotLeft)
 		{
-			RotateY(static_cast<float>(rotAmt * 2.0 * in->IsLeftRot() * delta));
+			if (FrameworkConfig::api == Vulkan)
+				RotateY(static_cast<float>(-rotAmt * 2.0 * in->IsLeftRot() * delta));
+			else if (FrameworkConfig::api == OpenGL)
+				RotateY(static_cast<float>(rotAmt * 2.0 * in->IsLeftRot() * delta));
 			rotLeft = true;
 		}
 	}
