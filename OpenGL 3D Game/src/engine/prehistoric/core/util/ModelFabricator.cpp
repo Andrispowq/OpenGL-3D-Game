@@ -1,6 +1,7 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "ModelFabricator.h"
 #include "engine/platform/opengl/buffer/GLMeshVBO.h"
+#include "engine/platform/vulkan/buffer/VKMeshVBO.h"
 
 namespace ModelFabricator
 {
@@ -14,7 +15,7 @@ namespace ModelFabricator
 		}
 		else if (FrameworkConfig::api == Vulkan)
 		{
-			PR_LOG_RUNTIME_ERROR("Vulkan API does not currently support VBOs! Switch to OpenGL (version 3.3 at least)!");
+			//TODO: Vulkan VBOs
 		}
 
 		Mesh mesh;

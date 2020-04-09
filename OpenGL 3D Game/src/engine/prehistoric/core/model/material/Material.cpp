@@ -1,6 +1,5 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "Material.h"
-#include "engine/prehistoric/common/model/Texture.h"
 
 Texture* Material::DEF_TEXTURE;
 

@@ -54,6 +54,8 @@ private:
 	VKGraphicsPipeline* graphicsPipeline;
 	std::vector<VKFramebuffer*> swapchainFramebuffers;
 	VkCommandBuffer* drawCommandBuffer;
+
+	bool exist = false;
 };
 
 #endif

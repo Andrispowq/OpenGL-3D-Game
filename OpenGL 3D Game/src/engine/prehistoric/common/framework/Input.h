@@ -19,16 +19,16 @@ public:
 	virtual bool Init(Window* window) const = 0;
 	virtual bool Update() = 0;
 
-	bool IsKeyPushed(const int& key) const { return std::find(pushedKeys.begin(), pushedKeys.end(), key) != pushedKeys.end(); }
-	bool IsKeyHeld(const int& key) const { return std::find(keysHolding.begin(), keysHolding.end(), key) != keysHolding.end(); }
-	bool IsKeyReleased(const int& key) const { return std::find(releasedKeys.begin(), releasedKeys.end(), key) != releasedKeys.end(); }
+	bool IsKeyPushed(const InputCode& key) const { return std::find(pushedKeys.begin(), pushedKeys.end(), (uint32_t)key) != pushedKeys.end(); }
+	bool IsKeyHeld(const InputCode& key) const { return std::find(keysHolding.begin(), keysHolding.end(), (uint32_t)key) != keysHolding.end(); }
+	bool IsKeyReleased(const InputCode& key) const { return std::find(releasedKeys.begin(), releasedKeys.end(), (uint32_t)key) != releasedKeys.end(); }
 
-	bool IsButtonPushed(const int& button) const { return std::find(pushedButtons.begin(), pushedButtons.end(), button) != pushedButtons.end(); }
-	bool IsButtonHeld(const int& button) const { return std::find(buttonsHolding.begin(), buttonsHolding.end(), button) != buttonsHolding.end(); }
-	bool IsButtonReleased(const int& button) const { return std::find(releasedButtons.begin(), releasedButtons.end(), button) != releasedButtons.end(); }
+	bool IsButtonPushed(const InputCode& button) const { return std::find(pushedButtons.begin(), pushedButtons.end(), (uint32_t)button) != pushedButtons.end(); }
+	bool IsButtonHeld(const InputCode& button) const { return std::find(buttonsHolding.begin(), buttonsHolding.end(), (uint32_t)button) != buttonsHolding.end(); }
+	bool IsButtonReleased(const InputCode& button) const { return std::find(releasedButtons.begin(), releasedButtons.end(), (uint32_t)button) != releasedButtons.end(); }
 
-	bool IsJoystickButtonPushed(const int& key, const int& joystick) const;
-	float GetJoystickAxisOffset(const int& axis, const int& joystick) const;
+	bool IsJoystickButtonPushed(const InputCode& key, const JoystickID& joystick) const;
+	float GetJoystickAxisOffset(const InputCode& axis, const JoystickID& joystick) const;
 
 	bool IsPause() const { return pause; }
 	void SetPause(bool pause) { Input::pause = pause; }

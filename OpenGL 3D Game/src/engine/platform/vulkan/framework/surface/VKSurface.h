@@ -2,7 +2,7 @@
 #define VK_SURFACE_H
 
 #include <vulkan/vulkan.h>
-#define GLFW_INCLUDE_VULKAN
+#define PR_INCLUDE_VULKAN
 #include <glfw3.h>
 
 #include "engine/prehistoric/common/framework/Window.h"

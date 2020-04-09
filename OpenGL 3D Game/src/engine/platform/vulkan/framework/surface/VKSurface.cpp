@@ -1,5 +1,6 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "VKSurface.h"
+#include <memory>
 
 void VKSurface::CreateSurface(Window* window, VKInstance* instance)
 {

@@ -37,11 +37,15 @@ void Scene::CreateScene(GameObject* root, Window* window)
 
 		vbo->Store(mesh);
 
-		Shader* shader = new VKShader(window->GetContext());
+		Shader* shader = new VKShader(window->GetContext(), window->GetSwapchain());
 
 		shader->AddShader(ResourceLoader::LoadShaderVK("vulkan/basic_VS.spv"), VERTEX_SHADER);
 		shader->AddShader(ResourceLoader::LoadShaderVK("vulkan/basic_FS.spv"), FRAGMENT_SHADER);
 		shader->CompileShader();
+
+		shader->AddUniform("ubo1.model", VERTEX_SHADER, 0, 0, 16 * sizeof(float));
+		shader->AddUniform("ubo2.view", VERTEX_SHADER , 1, 0, 16 * sizeof(float));
+		shader->AddUniform("ubo3.proj", VERTEX_SHADER, 2, 0, 16 * sizeof(float));
 
 		pipeline = new VKPipeline(shader);
 		pipeline->SetViewportStart({ 0, 0 });
@@ -53,7 +57,7 @@ void Scene::CreateScene(GameObject* root, Window* window)
 
 		GameObject* obj = new GameObject();
 		obj->AddComponent("Renderer", new Renderer(vbo, pipeline, new Material()));
-		obj->Move({ 0, 0, 0 });
+		obj->Move({ 0, 0, -4 });
 
 		root->AddChild("VKOBJ", obj);
 	}

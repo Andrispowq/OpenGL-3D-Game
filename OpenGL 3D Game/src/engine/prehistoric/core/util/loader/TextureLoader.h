@@ -1,9 +1,11 @@
 #ifndef TEXTURE_LOADER_H
 #define TEXTURE_LOADER_H
 
-#include "engine/prehistoric/core/util/Includes.hpp"
+#include "engine/platform/opengl/texture/GLTexture.h"
+#include "engine/platform/vulkan/texture/VKTexture.h"
 
-class Texture;
+#include "engine/prehistoric/core/util/Util.h"
+#include "engine/config/FrameworkConfig.h"
 
 struct ImageData
 {

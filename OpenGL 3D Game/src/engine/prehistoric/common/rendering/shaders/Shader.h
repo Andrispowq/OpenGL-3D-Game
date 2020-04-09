@@ -14,15 +14,15 @@ enum ShaderType
 	FRAGMENT_SHADER = 0x00000010,
 	COMPUTE_SHADER = 0x00000020,
 	GRAPHICS_PIPELINE = 0x0000001F,
-	RAY_GENERATION_SHADER_NV = 0x00000040,
-	RAY_HIT_SHADER_NV = 0x00000080,
-	RAY_CLOSEST_HIT_SHADER_NV = 0x00000100,
-	RAY_INTERSECTION_SHADER_NV = 0x00000200,
-	RAY_CALLABLE_SHADER_NV = 0x00000400,
+	TASK_SHADER_NV = 0x00000040,
+	MESH_SHADER_NV = 0x00000080,
+	MESH_SHADING_PIPELINE_NV = 0x000000c0,
+	RAY_GENERATION_SHADER_NV = 0x00000100,
+	RAY_HIT_SHADER_NV = 0x00000200,
+	RAY_CLOSEST_HIT_SHADER_NV = 0x00000400,
 	RAY_MISS_SHADER_NV = 0x00000800,
-	TASK_SHADER_NV = 0x00001000,
-	MESH_SHADER_NV = 0x00002000,
-	MESH_SHADING_PIPELINE_NV = 0x00003000,
+	RAY_INTERSECTION_SHADER_NV = 0x00001000,
+	RAY_CALLABLE_SHADER_NV = 0x00002000,
 	UNKNOWN = 0xFFFFFFFF
 };
 
@@ -53,8 +53,8 @@ public:
 	virtual void Bind(void* commandBuffer) const = 0;
 	virtual void Unbind() const = 0;
 
-	virtual bool AddUniform(const std::string& name) = 0;
-	virtual bool AddUniformBlock(const std::string& name) = 0;
+	virtual bool AddUniform(const std::string& name, ShaderType stages = GRAPHICS_PIPELINE, uint32_t binding = 0, uint32_t set = 0, size_t size = 0) = 0;
+	virtual bool AddUniformBlock(const std::string& name, ShaderType stages = GRAPHICS_PIPELINE, uint32_t binding = 0, uint32_t set = 0, size_t size = 0) = 0;
 
 	virtual bool AddShader(const std::vector<char>& code, ShaderType type) = 0;
 	virtual bool CompileShader() const = 0;
@@ -73,10 +73,9 @@ public:
 	virtual void UpdateUniforms(GameObject* object, Camera* camera, std::vector<Light*> lights) const = 0;
 	
 	//Shaders cannot be copied, they are stored as pointers in the Renderer component, and referenced with a shaderIndex
-	//Shader(const Shader&) = delete;
-	//Shader operator=(const Shader&) = delete;
+	Shader(const Shader&) = delete;
+	Shader operator=(const Shader&) = delete;
 protected:
-	std::unordered_map<std::string, uint32_t> uniforms;
 	mutable uint32_t counter;
 };
 

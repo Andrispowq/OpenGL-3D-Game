@@ -261,8 +261,6 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 						light->SetIntensity((float) std::atof(compTokens[1].c_str()));
 
 						obj->AddComponent("Light", light);
-
-						break;
 					}
 				}
 				else

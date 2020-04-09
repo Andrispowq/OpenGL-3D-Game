@@ -9,12 +9,16 @@ VKPipeline::VKPipeline(Shader* shader) : Pipeline(shader)
 {
 	auto stages = static_cast<VKShader*>(shader)->GetShaderStages();
 	shaderStageCreateInfos = &stages;
+	
+	reinterpret_cast<VKShader*>(shader)->RegisterPipeline(this);
 
-	this->shader = shader;
+	exist = true;
 }
 
 VKPipeline::~VKPipeline()
 {
+	if(exist) DestroyPipeline();
+	exist = false;
 }
 
 void VKPipeline::CreatePipeline(Window* window, MeshVBO* vbo)
@@ -40,8 +44,6 @@ void VKPipeline::CreatePipeline(Window* window, MeshVBO* vbo)
 	this->window = window;
 
 	this->vbo = (VKMeshVBO*) vbo;
-
-	((VKShader*) shader)->CreateShader(swapchain);
 
 	renderpass = new VKRenderpass(device->GetDevice(), *imageFormat);
 	graphicsPipeline = new VKGraphicsPipeline(*device, (VKShader*)shader, *renderpass, viewportStart, viewportSize, scissorStart, scissorSize, backfaceCulling, *this->vbo);
@@ -134,4 +136,6 @@ void VKPipeline::DestroyPipeline()
 
 	delete graphicsPipeline;
 	delete renderpass;
+
+	exist = false;
 }

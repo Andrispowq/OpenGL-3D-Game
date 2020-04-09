@@ -129,7 +129,7 @@ void GLShader::Unbind() const
 	glUseProgram(0);
 }
 
-bool GLShader::AddUniform(const std::string& name)
+bool GLShader::AddUniform(const std::string& name, ShaderType stages, uint32_t binding, uint32_t set, size_t size)
 {
 	GLuint location = glGetUniformLocation(program, name.c_str());
 
@@ -143,7 +143,7 @@ bool GLShader::AddUniform(const std::string& name)
 	return true;
 }
 
-bool GLShader::AddUniformBlock(const std::string& name)
+bool GLShader::AddUniformBlock(const std::string& name, ShaderType stages, uint32_t binding, uint32_t set, size_t size)
 {
 	GLuint location = glGetUniformBlockIndex(program, name.c_str());
 	

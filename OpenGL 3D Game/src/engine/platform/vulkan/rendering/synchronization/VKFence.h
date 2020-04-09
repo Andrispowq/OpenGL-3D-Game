@@ -1,4 +1,4 @@
-#ifndef VK_FENCE
+#ifndef VK_FENCE_H
 #define VK_FENCE_H
 
 #include <vulkan/vulkan.h>

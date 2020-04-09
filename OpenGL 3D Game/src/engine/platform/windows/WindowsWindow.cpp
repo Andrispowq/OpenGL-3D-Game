@@ -1,12 +1,6 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "WindowsWindow.h"
 
-WindowsWindow::~WindowsWindow()
-{
-	glfwDestroyWindow(window);
-	glfwTerminate();
-}
-
 static void error_callback(int error, const char* description)
 {
 	PR_LOG_ERROR("Error: %s\n", description);
@@ -73,6 +67,12 @@ bool WindowsWindow::Create()
 	SetVSync(FrameworkConfig::windowVSync);
 
 	return true;
+}
+
+WindowsWindow::~WindowsWindow()
+{
+	glfwDestroyWindow(window);
+	glfwTerminate();
 }
 
 bool WindowsWindow::initGLFW() const

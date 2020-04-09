@@ -1,10 +1,5 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "TextureLoader.h"
-#include "engine/prehistoric/core/util/Util.h"
-#include "engine/config/FrameworkConfig.h"
-
-#include "engine/platform/opengl/texture/GLTexture.h"
-#include "engine/platform/vulkan/texture/VKTexture.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>

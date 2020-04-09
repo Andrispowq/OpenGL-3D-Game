@@ -1,6 +1,5 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "Camera.h"
-#include "engine/config/EngineConfig.h"
 
 Camera::Camera(float moveAmt, float rotAmt, float mouseSensitivity, float fov, const Vector3f& position)
 {
@@ -75,8 +74,6 @@ void Camera::LogStage() const
 
 void Camera::Input(Window* window, float delta)
 {
-	PR_LOG_MESSAGE("Speed: %f\n", movAmt);
-
 	this->previousPosition = position;
 	this->previousForward = forward;
 	cameraMoved = false;
@@ -134,26 +131,26 @@ void Camera::Input(Window* window, float delta)
 		}
 	}
 
-	/*if (InputInstance.IsKeyHeld(GLFW_KEY_W))
+	/*if (InputInstance.IsKeyHeld(PR_KEY_W))
 		Move(forward, movAmt);
-	if (InputInstance.IsKeyHeld(GLFW_KEY_S))
+	if (InputInstance.IsKeyHeld(PR_KEY_S))
 		Move(forward, -movAmt);
-	if (InputInstance.IsKeyHeld(GLFW_KEY_A))
+	if (InputInstance.IsKeyHeld(PR_KEY_A))
 		Move(GetLeft(), movAmt);
-	if (InputInstance.IsKeyHeld(GLFW_KEY_D))
+	if (InputInstance.IsKeyHeld(PR_KEY_D))
 		Move(GetLeft(), -movAmt);
 
-	if (InputInstance.IsKeyHeld(GLFW_KEY_UP))
+	if (InputInstance.IsKeyHeld(PR_KEY_UP))
 		RotateX(-rotAmt / 8.0);
-	if (InputInstance.IsKeyHeld(GLFW_KEY_DOWN))
+	if (InputInstance.IsKeyHeld(PR_KEY_DOWN))
 		RotateX(rotAmt / 8.0);
-	if (InputInstance.IsKeyHeld(GLFW_KEY_LEFT))
+	if (InputInstance.IsKeyHeld(PR_KEY_LEFT))
 		RotateY(-rotAmt / 8.0);
-	if (InputInstance.IsKeyHeld(GLFW_KEY_RIGHT))
+	if (InputInstance.IsKeyHeld(PR_KEY_RIGHT))
 		RotateY(rotAmt / 8.0);*/
 
-		//Free mouse rotation
-	if (InputInstance.IsButtonHeld(2))
+	//Free mouse rotation
+	if (InputInstance.IsButtonHeld((InputCode) 2))
 	{
 		float dy = InputInstance.GetLockedCursorPosition().y - InputInstance.GetCursorPosition().y;
 		float dx = InputInstance.GetLockedCursorPosition().x - InputInstance.GetCursorPosition().x;

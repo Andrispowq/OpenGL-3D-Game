@@ -5,7 +5,7 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 
 #include <glfw3.h>
-#define GLFW_INCLUDE_VULKAN
+#define PR_INCLUDE_VULKAN
 #include <vulkan/vulkan.h>
 
 #include "engine/platform/vulkan/framework/device/VKDevice.h"

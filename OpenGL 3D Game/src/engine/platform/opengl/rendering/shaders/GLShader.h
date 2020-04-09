@@ -22,8 +22,8 @@ public:
 	void Bind(void* commandBuffer) const override;
 	void Unbind() const override;
 
-	bool AddUniform(const std::string& name) override;
-	bool AddUniformBlock(const std::string& name) override;
+	bool AddUniform(const std::string& name, ShaderType stages = GRAPHICS_PIPELINE, uint32_t binding = 0, uint32_t set = 0, size_t size = 0) override;
+	bool AddUniformBlock(const std::string& name, ShaderType stages = GRAPHICS_PIPELINE, uint32_t binding = 0, uint32_t set = 0, size_t size = 0) override;
 	void BindAttribute(const std::string& name, GLuint location) const;
 
 	bool AddShader(const std::vector<char>& code, ShaderType type) override;
@@ -48,6 +48,8 @@ public:
 private:
 	bool AddProgram(const std::vector<char>& code, GLenum type) const;
 private:
+	std::unordered_map<std::string, uint32_t> uniforms;
+
 	GLuint program;
 	GLuint* shaders;
 };

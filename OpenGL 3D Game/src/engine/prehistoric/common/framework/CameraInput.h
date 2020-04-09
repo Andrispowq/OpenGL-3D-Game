@@ -13,9 +13,9 @@ enum InputType
 
 struct InputData
 {
-	uint32_t code;
+	InputCode code;
 	InputType type;
-	int joystickNumber;
+	JoystickID joystickNumber;
 };
 
 struct MoveData
@@ -24,7 +24,7 @@ struct MoveData
 	float amount;
 };
 
-static InputData DefInData = { 0, NO_TYPE, 0 };
+static InputData DefInData = { PR_KEY_UNKNOWN, NO_TYPE, PR_JOYSTICK_1 };
 
 class CameraInput
 {
@@ -34,8 +34,7 @@ public:
 		: forward(forward), backward(backward), right(right), left(left),
 		up(up), down(down), rightRot(rightRot), leftRot(leftRot) {}
 
-	CameraInput()
-		: forward(DefInData), backward(DefInData), right(DefInData), left(DefInData),
+	CameraInput() : forward(DefInData), backward(DefInData), right(DefInData), left(DefInData),
 		up(DefInData), down(DefInData), rightRot(DefInData), leftRot(DefInData) {}
 
 	virtual ~CameraInput() {}

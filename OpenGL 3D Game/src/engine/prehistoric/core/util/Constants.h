@@ -2,7 +2,7 @@
 
 #define DEFAULT_WIDTH 1280
 #define DEFAULT_HEIGHT 720
-#define DEFAULT_TITLE "OpenGL Game Engine by András Kmeczó, 2019"
+#define DEFAULT_TITLE "OpenGL Game Engine by András Kmeczó, 2020"
 #define DEFAULT_FULLSCREEN false
 
 #define FS_WINDOW_WIDTH 1920

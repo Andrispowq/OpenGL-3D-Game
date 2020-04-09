@@ -2,6 +2,7 @@
 #define MATH_H
 
 #include "engine/prehistoric/core/util/Includes.hpp"
+#include <xmmintrin.h>
 
 #define PI 3.14159265358979323846264338327950288419716939
 
