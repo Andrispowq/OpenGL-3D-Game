@@ -33,10 +33,10 @@ Window::Window(const int& width, const int& height, const char* title, const boo
 
 Window::Window()
 {
-	this->width = DEFAULT_WIDTH;
-	this->height = DEFAULT_HEIGHT;
-	this->title = DEFAULT_TITLE;
-	this->fullscreen = DEFAULT_FULLSCREEN;
+	this->width = FrameworkConfig::windowWidth;
+	this->height = FrameworkConfig::windowHeight;
+	this->title = FrameworkConfig::windowName.c_str();
+	this->fullscreen = FrameworkConfig::windowFullScreen;
 	this->closed = true;
 
 	if (FrameworkConfig::api == OpenGL)

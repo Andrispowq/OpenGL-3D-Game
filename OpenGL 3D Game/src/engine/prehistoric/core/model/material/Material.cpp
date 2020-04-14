@@ -8,11 +8,11 @@ std::vector<Vector2f*> Material::listOfVector2s;
 std::vector<float*> Material::listOfFloats;
 std::vector<int*> Material::listOfInts;
 
-Material::Material()
+Material::Material(Window* window)
 {
 	if (listOfTextures.size() == 0)
 	{
-		listOfTextures.push_back(TextureLoader::LoadTexture("res/textures/default.png"));
+		listOfTextures.push_back(TextureLoader::LoadTexture("res/textures/default.png", window));
 	}
 	if (listOfVector4s.size() == 0)
 	{

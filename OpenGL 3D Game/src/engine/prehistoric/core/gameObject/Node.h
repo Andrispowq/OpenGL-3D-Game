@@ -18,6 +18,7 @@ public:
     Node* AddChild(const std::string& key, Node* child);
 
     inline Transform* GetWorldTransform() const { return worldTransform; }
+    inline Transform* GetLocalTransform() const { return localTransform; }
 
     inline std::unordered_map<std::string, Node*> GetChildren() const { return children; }
 

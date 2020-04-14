@@ -17,7 +17,9 @@ Engine::Engine()
 	InputInstance.Init(renderingEngine->GetWindow());
 	renderingEngine->Init();
 
-	Scene::CreateScene(root, renderingEngine->GetWindow());
+	TerrainConfig::LoadConfig("res/config/terrain.cfg", renderingEngine->GetWindow());
+
+	Scene::CreateScene(root, renderingEngine->GetWindow(), renderingEngine->GetCamera());
 }
 
 Engine::~Engine()

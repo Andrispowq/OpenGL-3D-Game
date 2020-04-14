@@ -20,7 +20,7 @@ public:
 	std::vector<const char*> GetDeviceExtensions() const { return deviceExtensions; }
 private:
 	//Utility functions for picking GPU
-	bool IsDeviceSuitable(VKSurface* surface, VkPhysicalDevice device) const;
+	bool IsDeviceSuitable(VKSurface* surface, VkPhysicalDevice device, VkPhysicalDeviceFeatures features) const;
 	bool CheckDeviceExtensionSupport(VkPhysicalDevice device) const;
 private:
 	VkPhysicalDevice physicalDevice;

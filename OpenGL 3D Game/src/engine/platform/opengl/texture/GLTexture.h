@@ -19,8 +19,7 @@ public:
 
 	virtual void Generate() override;
 
-	virtual void Filter(SamplerFilter filter) const override;
-	virtual void WrapMode(TextureWrapMode wrapMode) const override;
+	virtual void SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode) override;
 
 	inline GLuint getID() const { return id; }
 	inline void setID(GLuint id) { this->id = id; }

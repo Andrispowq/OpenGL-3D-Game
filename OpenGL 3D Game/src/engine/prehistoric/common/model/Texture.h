@@ -33,8 +33,7 @@ public:
 
 	virtual void Generate() = 0;
 
-	virtual void Filter(SamplerFilter filter) const = 0;
-	virtual void WrapMode(TextureWrapMode wrapMode) const = 0;
+	virtual void SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode) = 0;
 
 	inline uint32_t getWidth() const { return width; }
 	inline uint32_t getHeight() const { return height; }

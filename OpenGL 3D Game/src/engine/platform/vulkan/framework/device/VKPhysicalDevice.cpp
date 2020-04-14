@@ -27,9 +27,12 @@ void VKPhysicalDevice::PickPhysicalDevice(VKSurface* surface, VKInstance* instan
 	std::vector<VkPhysicalDevice> devices(deviceCount);
 	vkEnumeratePhysicalDevices(instance->GetInstance(), &deviceCount, devices.data());
 
+	VkPhysicalDeviceFeatures deviceFeatures = {};
+	deviceFeatures.samplerAnisotropy = VK_TRUE;
+
 	for (const auto& device : devices) 
 	{
-		if (IsDeviceSuitable(surface, device))
+		if (IsDeviceSuitable(surface, device, deviceFeatures))
 		{
 			physicalDevice = device;
 			break;
@@ -42,8 +45,9 @@ void VKPhysicalDevice::PickPhysicalDevice(VKSurface* surface, VKInstance* instan
 	}
 }
 
-bool VKPhysicalDevice::IsDeviceSuitable(VKSurface* surface, VkPhysicalDevice device) const
+bool VKPhysicalDevice::IsDeviceSuitable(VKSurface* surface, VkPhysicalDevice device, VkPhysicalDeviceFeatures features) const
 {
+	//TODO: features check
 	VkPhysicalDeviceProperties deviceProperties;
 	VkPhysicalDeviceFeatures deviceFeatures;
 
@@ -63,7 +67,9 @@ bool VKPhysicalDevice::IsDeviceSuitable(VKSurface* surface, VkPhysicalDevice dev
 			swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
 		}
 
-		return indices.hasGraphicsFamily && indices.hasPresentFamily && extensionsSupported && swapChainAdequate;
+		PR_LOG_MESSAGE("Anisotropic sampling: %u\n", deviceFeatures.samplerAnisotropy);
+		
+		return indices.hasGraphicsFamily && indices.hasPresentFamily && extensionsSupported && swapChainAdequate && deviceFeatures.samplerAnisotropy;
 	}
 	else
 	{

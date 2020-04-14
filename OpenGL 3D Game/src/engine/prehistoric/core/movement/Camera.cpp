@@ -11,7 +11,7 @@ Camera::Camera(float moveAmt, float rotAmt, float mouseSensitivity, float fov, c
 	this->forward = Vector3f(0, 0, 1);
 	this->up = yAxis;
 
-	SetProjection(fov, WINDOW_WIDTH, WINDOW_HEIGHT);
+	SetProjection(fov, (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight);
 
 	this->viewMatrix = Matrix4f::View(forward, up) * Matrix4f::Translation(position * -1);
 	this->viewProjectionMatrix = Matrix4f::Zero();
@@ -33,7 +33,7 @@ Camera::Camera(const Vector3f& position, float fov)
 	this->forward = Vector3f(0, 0, 1);
 	this->up = yAxis;
 
-	SetProjection(fov, WINDOW_WIDTH, WINDOW_HEIGHT);
+	SetProjection(fov, (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight);
 
 	this->viewMatrix = Matrix4f::View(forward, up) * Matrix4f::Translation(position * -1);
 	this->viewProjectionMatrix = Matrix4f::Zero();
@@ -256,16 +256,13 @@ void Camera::Input(Window* window, float delta)
 	{
 		cameraMoved = true;
 	}
-
 	if (forward != previousForward)
 	{
 		cameraRotated = true;
 	}
 
 	this->previousViewMatrix = viewMatrix;
-
 	viewMatrix = Matrix4f::View(forward, up) * Matrix4f::Translation(position * -1);
-
 	viewProjectionMatrix = projectionMatrix * viewMatrix;
 }
 

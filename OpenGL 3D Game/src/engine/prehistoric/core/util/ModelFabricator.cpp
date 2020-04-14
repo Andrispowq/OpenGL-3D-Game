@@ -5,7 +5,7 @@
 
 namespace ModelFabricator
 {
-	MeshVBO* ModelFabricator::CreateQuad()
+	MeshVBO* ModelFabricator::CreateQuad(Window* window)
 	{
 		MeshVBO* vbo = nullptr;
 
@@ -15,7 +15,7 @@ namespace ModelFabricator
 		}
 		else if (FrameworkConfig::api == Vulkan)
 		{
-			//TODO: Vulkan VBOs
+			vbo = new VKMeshVBO(window->GetContext()->GetPhysicalDevice(), window->GetContext()->GetDevice());
 		}
 
 		Mesh mesh;

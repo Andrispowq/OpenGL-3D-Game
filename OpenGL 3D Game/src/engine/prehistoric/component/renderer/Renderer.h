@@ -10,8 +10,8 @@ class Material;
 class Renderer : public Renderable
 {
 public:
-	Renderer(MeshVBO* vbo, Pipeline* pipeline, Material* material);
-	Renderer();
+	Renderer(VBO* vbo, Pipeline* pipeline, Material* material, Window* window);
+	Renderer(Window* window);
 
 	virtual ~Renderer();
 

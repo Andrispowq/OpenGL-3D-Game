@@ -51,10 +51,10 @@ void GLPBRShader::UpdateUniforms(GameObject* object, Camera* camera, std::vector
 	Material* material = dynamic_cast<Renderer*>(object->GetComponent("Renderer"))->GetMaterial();
 
 	SetUniform("m_transform", object->GetWorldTransform()->getTransformationMatrix());
-	SetUniform("m_view", camera->GetViewMatrix());
-	SetUniform("m_projection", camera->GetProjectionMatrix());
+	SetUniform("m_view", camera->getViewMatrix());
+	SetUniform("m_projection", camera->getProjectionMatrix());
 
-	SetUniform("cameraPosition", camera->GetPosition());
+	SetUniform("cameraPosition", camera->getPosition());
 
 	for (uint32_t i = 0; i < EngineConfig::lightsMaxNumber; i++)
 	{

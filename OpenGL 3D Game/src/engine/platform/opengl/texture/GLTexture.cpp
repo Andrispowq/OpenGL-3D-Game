@@ -7,7 +7,7 @@ GLTexture::GLTexture(GLuint id, GLenum type, uint32_t width, uint32_t height)
 	this->width = width;
 	this->height = height;
 
-	Filter(Nearest);
+	SamplerProperties(Nearest, Repeat);
 }
 
 GLTexture::GLTexture(GLuint id, ImageType type, uint32_t width, uint32_t height)
@@ -16,7 +16,7 @@ GLTexture::GLTexture(GLuint id, ImageType type, uint32_t width, uint32_t height)
 	this->width = width;
 	this->height = height;
 
-	Filter(Nearest);
+	SamplerProperties(Nearest, Repeat);
 }
 
 GLTexture::GLTexture(GLuint id)
@@ -25,7 +25,7 @@ GLTexture::GLTexture(GLuint id)
 	this->width = 0;
 	this->height = 0;
 
-	Filter(Nearest);
+	SamplerProperties(Nearest, Repeat);
 }
 
 GLTexture::~GLTexture()
@@ -49,7 +49,7 @@ void GLTexture::Generate()
 	glGenTextures(1, &id);
 }
 
-void GLTexture::Filter(SamplerFilter filter) const
+void GLTexture::SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode)
 {
 	switch (filter)
 	{
@@ -79,18 +79,15 @@ void GLTexture::Filter(SamplerFilter filter) const
 		}
 		else
 		{
-			PR_LOG_ERROR("Anisotropic filtering is not supported!");
+			PR_LOG_ERROR("Anisotropic filtering is not supported!\n");
 		}
 
 		break;
 	default:
-		PR_LOG_ERROR("This filtering type does not exist for textures! Type: " + filter);
+		PR_LOG_ERROR("This filtering type does not exist for textures! Type: %u\n", filter);
 		break;
 	}
-}
 
-void GLTexture::WrapMode(TextureWrapMode wrapMode) const
-{
 	switch (wrapMode)
 	{
 	case ClampToEdge:
@@ -118,7 +115,7 @@ void GLTexture::WrapMode(TextureWrapMode wrapMode) const
 			glTexParameteri(type, GL_TEXTURE_WRAP_R, GL_MIRRORED_REPEAT);
 		break;
 	default:
-		PR_LOG_ERROR("This type of texture wrapping does not exist! Type: " + wrapMode);
+		PR_LOG_ERROR("This type of texture wrapping does not exist! Type: %u\n", wrapMode);
 		break;
 	}
 }

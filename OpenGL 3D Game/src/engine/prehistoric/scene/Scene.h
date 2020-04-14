@@ -4,17 +4,18 @@
 #include "engine/prehistoric/component/renderer/Renderer.h"
 #include "engine/prehistoric/world/WorldLoader.h"
 
+#include "engine/prehistoric/modules/terrain/Terrain.h"
+
 class Scene
 {
 public:
-	static void CreateScene(GameObject* root, Window* window);
+	static void CreateScene(GameObject* root, Window* window, Camera* camera);
 	static void DeleteData();
 private:
 	Scene() {}
 	virtual ~Scene() {}
-private:
-	static MeshVBO* vbo;
-	static Pipeline* pipeline;
+
+	static Terrain* terrain;
 };
 
 #endif

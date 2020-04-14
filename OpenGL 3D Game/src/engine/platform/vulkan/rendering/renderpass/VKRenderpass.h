@@ -10,7 +10,7 @@
 class VKRenderpass
 {
 public:
-	VKRenderpass(VkDevice& device, VkFormat& imageFormat);
+	VKRenderpass(VkPhysicalDevice& physicalDevice, VkDevice& device, VkFormat& imageFormat);
 	virtual ~VKRenderpass();
 
 	void BeginRenderpass(VKCommandBuffer& commandBuffer, VkExtent2D& swapchainExtent, VKFramebuffer& framebuffer);

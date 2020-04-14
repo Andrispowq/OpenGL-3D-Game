@@ -4,6 +4,8 @@
 #include "engine/platform/opengl/texture/GLTexture.h"
 #include "engine/platform/vulkan/texture/VKTexture.h"
 
+#include "engine/prehistoric/common/framework/Window.h"
+
 #include "engine/prehistoric/core/util/Util.h"
 #include "engine/config/FrameworkConfig.h"
 
@@ -15,7 +17,7 @@ struct ImageData
 
 namespace TextureLoader
 {
-	Texture* LoadTexture(const std::string& path);
+	Texture* LoadTexture(const std::string& path, Window* window);
 	ImageData LoadTextureData(const std::string& path);
 };
 

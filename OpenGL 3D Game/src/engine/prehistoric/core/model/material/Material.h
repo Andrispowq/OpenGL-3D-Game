@@ -8,7 +8,7 @@
 class Material
 {
 public:
-	Material();
+	Material(Window* window);
 	virtual ~Material();
 
 	static void CleanUp();

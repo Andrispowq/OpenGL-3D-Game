@@ -28,15 +28,17 @@ public:
 	Vector3f GetLeft() const { return forward.cross(up).normalize(); }
 	Vector3f GetRight() const { return up.cross(forward).normalize(); }
 
-	inline Vector3f GetPosition() const { return position; }
-	inline Vector3f GetForward() const { return forward; }
-	inline Vector3f GetUp() const { return up; }
+	inline Vector3f getPosition() const { return position; }
+	inline Vector3f getForward() const { return forward; }
+	inline Vector3f getUp() const { return up; }
 
-	inline Matrix4f GetViewMatrix() const { return viewMatrix; }
-	inline Matrix4f GetProjectionMatrix() const { return projectionMatrix; }
-	inline Matrix4f GetViewProjectionMatrix() const { return viewProjectionMatrix; }
+	inline Matrix4f getViewMatrix() const { return viewMatrix; }
+	inline Matrix4f getProjectionMatrix() const { return projectionMatrix; }
+	inline Matrix4f getViewProjectionMatrix() const { return viewProjectionMatrix; }
 
-    inline void SetSpeedControl(InputData data) { this->speedControl = data; }
+    inline void setSpeedControl(InputData data) { this->speedControl = data; }
+
+    bool isChanged() const { return cameraMoved || cameraRotated; }
 private:
     std::vector<CameraInput*> inputs;
     InputData speedControl;

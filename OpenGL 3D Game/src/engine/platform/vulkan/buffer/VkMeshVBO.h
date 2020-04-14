@@ -26,11 +26,8 @@ public:
 
 	void RegisterBuffer(VKCommandBuffer* buffer) { this->buffer = buffer; }
 
-	VkVertexInputBindingDescription GetBindingDescription() const;
+	VkVertexInputBindingDescription* GetBindingDescription() const;
 	std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions() const;
-private:
-	void CreateBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
-	void CopyBuffer(VkBuffer& srcBuffer, VkBuffer& dstBuffer, VkDeviceSize& size);
 private:
 	VkBuffer vertexBuffer;
 	VkDeviceMemory vertexBufferMemory;

@@ -8,7 +8,7 @@ Matrix4f Transform::getTransformationMatrix() const
 
 Matrix4f Transform::getModelViewProjectionMatrix(const Camera& camera) const
 {
-	return camera.GetViewProjectionMatrix() * getTransformationMatrix();
+	return camera.getViewProjectionMatrix() * getTransformationMatrix();
 }
 
 Matrix4f Transform::getTransformationMatrix(const Vector3f& position, const Vector3f& rotation, const Vector3f& scaling)

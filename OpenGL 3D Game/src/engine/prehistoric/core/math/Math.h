@@ -106,6 +106,12 @@ public:
 	Vector2<T> negate() const { return Vector2<T>(-x, -y); };
 	Vector2<T> negated() { this->x = -x; this->y = -y; };
 
+	Vector2<T>& xx() { return this(x, x); }
+	Vector2<T>& yy() { return this(y, y); }
+
+	Vector2<T>& xy() { return this(x, y); }
+	Vector2<T>& yx() { return this(y, x); }
+
 	void print() const { PR_LOG_MESSAGE("[ %f, %f ]\n", (float) x, (float) y); }
 public:
 	T x;
@@ -184,6 +190,29 @@ public:
 
 	Vector3<T> negate() const { return Vector3<T>(-x, -y, -z); };
 	Vector3<T> negated() { this->x = -x; this->y = -y; this->z = -z; };
+
+	Vector3<T>& xzy() { return this(x, z, y); }
+	Vector3<T>& yxz() { return this(y, x, z); }
+	Vector3<T>& yzx() { return this(y, x, y); }
+	Vector3<T>& zxy() { return this(z, x, y); }
+	Vector3<T>& zyx() { return this(z, y, x); }
+
+	Vector3<T>& xxy() { return this(x, x, y); }
+	Vector3<T>& xyx() { return this(x, y, x); }
+	Vector3<T>& yxx() { return this(y, x, x); }
+	Vector3<T>& xyy() { return this(x, y, y); }
+	Vector3<T>& yxy() { return this(y, x, y); }
+	Vector3<T>& yyx() { return this(y, y, x); }
+
+	Vector3<T>& xxz() { return this(x, x, z); }
+	Vector3<T>& xzx() { return this(x, z, x); }
+	Vector3<T>& zxx() { return this(z, x, x); }
+	Vector3<T>& xzz() { return this(x, z, z); }
+	Vector3<T>& zxz() { return this(z, x, z); }
+	Vector3<T>& zzx() { return this(z, z, x); }
+	//TODO
+
+	Vector2<T> xy() { return Vector2<T>(x, y); }
 
 	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f ]\n", (float) x, (float) y, (float) z); }
 public:

@@ -92,6 +92,75 @@ void VKSwapchain::SetupSwapchain(void* physicalDevice)
         }
     }
 
+    //Create depth buffer
+    VkFormat depthFormat = VKUtil::FindSupportedFormat(
+        physicalDev->GetPhysicalDevice(),
+        { VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
+        VK_IMAGE_TILING_OPTIMAL,
+        VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
+        );
+
+    VkImageCreateInfo imageInfo = {};
+    imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    imageInfo.imageType = VK_IMAGE_TYPE_2D;
+    imageInfo.extent.width = swapchainExtent.width;
+    imageInfo.extent.height = swapchainExtent.height;
+    imageInfo.extent.depth = 1;
+    imageInfo.mipLevels = 1;
+    imageInfo.arrayLayers = 1;
+    imageInfo.format = depthFormat;
+    imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+    imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+    imageInfo.flags = 0; // Optional
+
+    if (vkCreateImage(device->GetDevice(), &imageInfo, nullptr, &depthImage) != VK_SUCCESS)
+    {
+        PR_LOG_RUNTIME_ERROR("Failed to create image!\n");
+    }
+
+    VkMemoryRequirements memRequirements;
+    vkGetImageMemoryRequirements(device->GetDevice(), depthImage, &memRequirements);
+
+    VkMemoryAllocateInfo allocInfo = {};
+    allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    allocInfo.allocationSize = memRequirements.size;
+    allocInfo.memoryTypeIndex = VKUtil::FindMemoryType(memRequirements.memoryTypeBits, physicalDev->GetPhysicalDevice(), VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+    if (vkAllocateMemory(device->GetDevice(), &allocInfo, nullptr, &depthImageMemory) != VK_SUCCESS)
+    {
+        PR_LOG_RUNTIME_ERROR("Failed to allocate image memory!\n");
+    }
+
+    vkBindImageMemory(device->GetDevice(), depthImage, depthImageMemory, 0);
+
+    VkImageViewCreateInfo depthImageViewCreateInfo = {};
+    depthImageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    depthImageViewCreateInfo.image = depthImage;
+    depthImageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    depthImageViewCreateInfo.format = depthFormat;
+
+    depthImageViewCreateInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    depthImageViewCreateInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    depthImageViewCreateInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    depthImageViewCreateInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+    depthImageViewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+    depthImageViewCreateInfo.subresourceRange.baseMipLevel = 0;
+    depthImageViewCreateInfo.subresourceRange.levelCount = 1;
+    depthImageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
+    depthImageViewCreateInfo.subresourceRange.layerCount = 1;
+
+    if (vkCreateImageView(device->GetDevice(), &depthImageViewCreateInfo, nullptr, &depthImageView) != VK_SUCCESS)
+    {
+        PR_LOG_RUNTIME_ERROR("Failed to create image views!\n");
+    }
+
+    VKUtil::TransitionImageLayout(*device, depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
+    //Create command pool
     commandPool = new VKCommandPool(*surface, physicalDev->GetPhysicalDevice(), device->GetDevice());
 
     for (size_t i = 0; i < NumImages; i++)
@@ -196,6 +265,10 @@ void VKSwapchain::SetWindowSize(Window* window, uint32_t width, uint32_t height)
     //We destroy some objects that should be destroyed
     commandPool->DeleteCommandBuffers();
 
+    vkDestroyImageView(device->GetDevice(), depthImageView, nullptr);
+    vkDestroyImage(device->GetDevice(), depthImage, nullptr);
+    vkFreeMemory(device->GetDevice(), depthImageMemory, nullptr);
+
     for (size_t i = 0; i < NumImages; i++)
     {
         vkDestroyImageView(device->GetDevice(), swapchainImageViews[i], nullptr);
@@ -289,6 +362,74 @@ void VKSwapchain::SetWindowSize(Window* window, uint32_t width, uint32_t height)
             PR_LOG_RUNTIME_ERROR("Failed to create image views!\n");
         }
     }
+
+    //Create depth buffer
+    VkFormat depthFormat = VKUtil::FindSupportedFormat(
+        physicalDev->GetPhysicalDevice(),
+        { VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
+        VK_IMAGE_TILING_OPTIMAL,
+        VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
+        );
+
+    VkImageCreateInfo imageInfo = {};
+    imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+    imageInfo.imageType = VK_IMAGE_TYPE_2D;
+    imageInfo.extent.width = swapchainExtent.width;
+    imageInfo.extent.height = swapchainExtent.height;
+    imageInfo.extent.depth = 1;
+    imageInfo.mipLevels = 1;
+    imageInfo.arrayLayers = 1;
+    imageInfo.format = depthFormat;
+    imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
+    imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+    imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+    imageInfo.flags = 0; // Optional
+
+    if (vkCreateImage(device->GetDevice(), &imageInfo, nullptr, &depthImage) != VK_SUCCESS)
+    {
+        PR_LOG_RUNTIME_ERROR("Failed to create image!\n");
+    }
+
+    VkMemoryRequirements memRequirements;
+    vkGetImageMemoryRequirements(device->GetDevice(), depthImage, &memRequirements);
+
+    VkMemoryAllocateInfo allocInfo = {};
+    allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+    allocInfo.allocationSize = memRequirements.size;
+    allocInfo.memoryTypeIndex = VKUtil::FindMemoryType(memRequirements.memoryTypeBits, physicalDev->GetPhysicalDevice(), VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
+
+    if (vkAllocateMemory(device->GetDevice(), &allocInfo, nullptr, &depthImageMemory) != VK_SUCCESS)
+    {
+        PR_LOG_RUNTIME_ERROR("Failed to allocate image memory!\n");
+    }
+
+    vkBindImageMemory(device->GetDevice(), depthImage, depthImageMemory, 0);
+
+    VkImageViewCreateInfo depthImageViewCreateInfo = {};
+    depthImageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    depthImageViewCreateInfo.image = depthImage;
+    depthImageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    depthImageViewCreateInfo.format = depthFormat;
+
+    depthImageViewCreateInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    depthImageViewCreateInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    depthImageViewCreateInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    depthImageViewCreateInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+    depthImageViewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
+    depthImageViewCreateInfo.subresourceRange.baseMipLevel = 0;
+    depthImageViewCreateInfo.subresourceRange.levelCount = 1;
+    depthImageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
+    depthImageViewCreateInfo.subresourceRange.layerCount = 1;
+
+    if (vkCreateImageView(device->GetDevice(), &depthImageViewCreateInfo, nullptr, &depthImageView) != VK_SUCCESS)
+    {
+        PR_LOG_RUNTIME_ERROR("Failed to create image views!\n");
+    }
+
+    VKUtil::TransitionImageLayout(*device, depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
     for (size_t i = 0; i < NumImages; i++)
     {

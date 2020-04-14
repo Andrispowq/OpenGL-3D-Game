@@ -36,6 +36,7 @@ public:
 	VkSwapchainKHR GetSwapchain() const { return swapchain; }
 	std::vector<VkImage> GetSwapchainImages() const { return swapchainImages; }
 	std::vector<VkImageView> GetSwapchainImageViews() const { return swapchainImageViews; }
+	VkImageView& GetDepthImageView() { return depthImageView; }
 	VkFormat GetSwapchainImageFormat() const { return swapchainImageFormat; }
 	VkExtent2D& GetSwapchainExtent() { return swapchainExtent; }
 
@@ -49,13 +50,18 @@ private:
 	VKSurface* surface;
 
 	VkSwapchainKHR swapchain;
-	std::vector<VkImage> swapchainImages;
 	VkFormat swapchainImageFormat;
 	VkExtent2D swapchainExtent;
 
 	Vector4f clearColor;
 
+	std::vector<VkImage> swapchainImages;
 	std::vector<VkImageView> swapchainImageViews;
+
+	VkImage depthImage;
+	VkDeviceMemory depthImageMemory;
+	VkImageView depthImageView;
+
 	std::vector<VKSemaphore*> imageAvailableSemaphores;
 	std::vector<VKSemaphore*> renderFinishedSemaphores;
 	std::vector<VKFence*> inFlightFences;

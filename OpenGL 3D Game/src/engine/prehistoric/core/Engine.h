@@ -7,6 +7,8 @@
 #include "engine/prehistoric/core/gameObject/GameObject.h"
 
 #include "engine/config/EngineConfig.h"
+#include "engine/config/FrameworkConfig.h"
+#include "engine/config/TerrainConfig.h"
 
 class Engine
 {

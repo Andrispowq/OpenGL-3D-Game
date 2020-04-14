@@ -12,10 +12,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\engine\config\EngineConfig.cpp" />
+    <ClCompile Include="src\engine\config\TerrainConfig.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\buffer\GLPatchVBO.cpp" />
     <ClCompile Include="src\engine\platform\opengl\capabilities\GLCapabilities.cpp" />
     <ClCompile Include="src\engine\platform\opengl\framework\swapchain\GLSwapChain.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\pipeline\GLPipeline.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\gui\GLGUIShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\pbr\GLPBRShader.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\terrain\GLTerrainShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\texture\GLTexture.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\buffer\VKMeshVBO.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\capabilities\VKCapabilities.cpp" />
@@ -42,6 +46,8 @@
     <ClCompile Include="src\engine\platform\windows\WindowsInput.cpp" />
     <ClCompile Include="src\engine\platform\windows\WindowsWindow.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\buffer\MeshVBO.cpp" />
+    <ClCompile Include="src\engine\prehistoric\common\buffer\PatchVBO.cpp" />
+    <ClCompile Include="src\engine\prehistoric\common\buffer\VBO.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\capabilities\Capabilities.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\framework\context\Context.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\framework\Input.cpp" />
@@ -51,6 +57,8 @@
     <ClCompile Include="src\engine\prehistoric\common\rendering\shaders\Shader.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\util\DeviceProperties.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\util\InitDevice.cpp" />
+    <ClCompile Include="src\engine\prehistoric\component\gui\button\GUIButton.cpp" />
+    <ClCompile Include="src\engine\prehistoric\component\gui\GUIElement.cpp" />
     <ClCompile Include="src\engine\prehistoric\component\light\Light.cpp" />
     <ClCompile Include="src\engine\prehistoric\component\renderer\Renderable.cpp" />
     <ClCompile Include="src\engine\prehistoric\component\renderer\Renderer.cpp" />
@@ -81,6 +89,10 @@
     <ClCompile Include="src\engine\prehistoric\core\model\Transform.cpp" />
     <ClCompile Include="src\engine\prehistoric\core\model\Vertex.cpp" />
     <ClCompile Include="src\engine\prehistoric\core\movement\Camera.cpp" />
+    <ClCompile Include="src\engine\prehistoric\modules\terrain\Terrain.cpp" />
+    <ClCompile Include="src\engine\prehistoric\modules\terrain\TerrainMaps.cpp" />
+    <ClCompile Include="src\engine\prehistoric\modules\terrain\TerrainNode.cpp" />
+    <ClCompile Include="src\engine\prehistoric\modules\terrain\TerrainQuadtree.cpp" />
     <ClCompile Include="src\engine\prehistoric\scene\Scene.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">engine/prehistoric/core/util/Includes.hpp</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">engine/prehistoric/core/util/Includes.hpp</PrecompiledHeaderFile>
@@ -89,10 +101,14 @@
     <ClCompile Include="src\game\Application.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\config\TerrainConfig.h" />
+    <ClInclude Include="src\engine\platform\opengl\buffer\GLPatchVBO.h" />
     <ClInclude Include="src\engine\platform\opengl\capabilities\GLCapabilities.h" />
     <ClInclude Include="src\engine\platform\opengl\framework\swapchain\GLSwapChain.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLPipeline.h" />
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\gui\GLGUIShader.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\pbr\GLPBRShader.h" />
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\terrain\GLTerrainShader.h" />
     <ClInclude Include="src\engine\platform\opengl\texture\GLTexture.h" />
     <ClInclude Include="src\engine\platform\Prehistoric.h" />
     <ClInclude Include="src\engine\platform\vulkan\buffer\VKMeshVBO.h" />
@@ -120,6 +136,8 @@
     <ClInclude Include="src\engine\platform\windows\WindowsInput.h" />
     <ClInclude Include="src\engine\platform\windows\WindowsWindow.h" />
     <ClInclude Include="src\engine\prehistoric\common\buffer\MeshVBO.h" />
+    <ClInclude Include="src\engine\prehistoric\common\buffer\PatchVBO.h" />
+    <ClInclude Include="src\engine\prehistoric\common\buffer\VBO.h" />
     <ClInclude Include="src\engine\prehistoric\common\capabilities\Capabilities.h" />
     <ClInclude Include="src\engine\prehistoric\common\framework\CameraInput.h" />
     <ClInclude Include="src\engine\prehistoric\common\framework\context\Context.h" />
@@ -131,6 +149,8 @@
     <ClInclude Include="src\engine\prehistoric\common\util\DeviceProperties.h" />
     <ClInclude Include="src\engine\prehistoric\common\util\InitDevice.h" />
     <ClInclude Include="src\engine\prehistoric\component\Component.h" />
+    <ClInclude Include="src\engine\prehistoric\component\gui\button\GUIButton.h" />
+    <ClInclude Include="src\engine\prehistoric\component\gui\GUIElement.h" />
     <ClInclude Include="src\engine\prehistoric\component\light\Light.h" />
     <ClInclude Include="src\engine\prehistoric\component\renderer\Renderable.h" />
     <ClInclude Include="src\engine\prehistoric\component\renderer\Renderer.h" />
@@ -151,6 +171,10 @@
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\GLShader.h" />
     <ClInclude Include="src\engine\prehistoric\core\util\time\Time.h" />
     <ClInclude Include="src\engine\prehistoric\core\util\time\Timer.h" />
+    <ClInclude Include="src\engine\prehistoric\modules\terrain\Terrain.h" />
+    <ClInclude Include="src\engine\prehistoric\modules\terrain\TerrainMaps.h" />
+    <ClInclude Include="src\engine\prehistoric\modules\terrain\TerrainNode.h" />
+    <ClInclude Include="src\engine\prehistoric\modules\terrain\TerrainQuadtree.h" />
     <ClInclude Include="src\engine\prehistoric\world\WorldLoader.h" />
     <ClInclude Include="src\engine\rendering\RenderingEngine.h" />
     <ClInclude Include="src\engine\prehistoric\core\gameObject\Node.h" />

@@ -5,6 +5,8 @@
 #include "engine/prehistoric/common/util/DeviceProperties.h"
 #include "engine/platform/vulkan/framework/context/VKContext.h"
 
+#include "engine/prehistoric/component/gui/button/GUIButton.h"
+
 RenderingEngine::RenderingEngine()
 {
 #if defined(PR_WINDOWS_64)
@@ -28,7 +30,7 @@ RenderingEngine::RenderingEngine()
 	camera->RotateX(20);
 	camera->LogStage();
 
-	camera->SetSpeedControl({ PR_KEY_UNKNOWN, MOUSE_SCROLL, PR_JOYSTICK_1 });
+	camera->setSpeedControl({ PR_KEY_UNKNOWN, MOUSE_SCROLL, PR_JOYSTICK_1 });
 }
 
 RenderingEngine::~RenderingEngine()
@@ -73,7 +75,7 @@ void RenderingEngine::Update(const float delta)
 
 void RenderingEngine::Render(GameObject* root)
 {
-	root->PreRender(this);
+	root->PreRender(this); 
 
 	for (Renderable* model : models)
 	{

@@ -332,6 +332,9 @@ enum class JoystickID : uint16_t
 #define PR_MOUSE_BUTTON_1				InputCode::MOUSE_BUTTON_1
 #define PR_MOUSE_BUTTON_2				InputCode::MOUSE_BUTTON_2
 #define PR_MOUSE_BUTTON_3				InputCode::MOUSE_BUTTON_3
+#define PR_MOUSE_LEFT_BUTTON			InputCode::MOUSE_BUTTON_1
+#define PR_MOUSE_RIGHT_BUTTON			InputCode::MOUSE_BUTTON_2
+#define PR_MOUSE_MIDDLE_BUTTON			InputCode::MOUSE_BUTTON_3
 #define PR_MOUSE_BUTTON_4				InputCode::MOUSE_BUTTON_4
 #define PR_MOUSE_BUTTON_5				InputCode::MOUSE_BUTTON_5
 #define PR_MOUSE_BUTTON_6				InputCode::MOUSE_BUTTON_6

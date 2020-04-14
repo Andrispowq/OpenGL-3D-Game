@@ -3,6 +3,8 @@
 
 #include "engine/prehistoric/core/util/Includes.hpp"
 
+#include "engine/prehistoric/common/model/Texture.h"
+
 #include "engine/prehistoric/core/math/Math.h"
 
 enum ShaderType
@@ -34,6 +36,24 @@ enum ShaderCodeType
 	SPIR_V_ASSEMBLY
 };
 
+enum UniformType
+{
+	Sampler = 0,
+	CombinedImageSampler = 1,
+	SampledImage = 2,
+	StorageImage = 3,
+	UniformTexelBuffer = 4,
+	StorageTexelBuffer = 5,
+	UniformBuffer = 6,
+	StorageBuffer = 7,
+	UniformBufferDynamic = 8,
+	StorageBufferDynamic = 9,
+	InputAttachment = 10,
+	InlineUniformBlock_EXT = 1000138000,
+	AccelerationStructure_NV = 1000165000,
+};
+
+
 namespace ResourceLoader
 {
 	std::vector<char> LoadShaderGL(const std::string& filename);
@@ -53,25 +73,29 @@ public:
 	virtual void Bind(void* commandBuffer) const = 0;
 	virtual void Unbind() const = 0;
 
-	virtual bool AddUniform(const std::string& name, ShaderType stages = GRAPHICS_PIPELINE, uint32_t binding = 0, uint32_t set = 0, size_t size = 0) = 0;
-	virtual bool AddUniformBlock(const std::string& name, ShaderType stages = GRAPHICS_PIPELINE, uint32_t binding = 0, uint32_t set = 0, size_t size = 0) = 0;
+	virtual bool AddUniform(const std::string& name, ShaderType stages = GRAPHICS_PIPELINE, UniformType type = UniformBuffer, uint32_t binding = 0, uint32_t set = 0, size_t size = 0, Texture* texture = nullptr) = 0;
+	virtual bool AddUniformBlock(const std::string& name, ShaderType stages = GRAPHICS_PIPELINE, UniformType type = UniformBuffer, uint32_t binding = 0, uint32_t set = 0, size_t size = 0, Texture* texture = nullptr) = 0;
 
 	virtual bool AddShader(const std::vector<char>& code, ShaderType type) = 0;
 	virtual bool CompileShader() const = 0;
 
 	//Uniform handling
-	virtual void SetUniformi(const std::string& name, int value) const = 0;
-	virtual void SetUniformf(const std::string& name, float value) const = 0;
+	virtual void SetUniformi(const std::string& name, int value, size_t offset = 0) const = 0;
+	virtual void SetUniformf(const std::string& name, float value, size_t offset = 0) const = 0;
 
-	virtual void SetUniform(const std::string& name, const Vector2f& value) const = 0;
-	virtual void SetUniform(const std::string& name, const Vector3f& value) const = 0;
-	virtual void SetUniform(const std::string& name, const Vector4f& value) const = 0;
-	virtual void SetUniform(const std::string& name, const Matrix4f& value) const = 0;
+	virtual void SetUniform(const std::string& name, const Vector2f& value, size_t offset = 0) const = 0;
+	virtual void SetUniform(const std::string& name, const Vector3f& value, size_t offset = 0) const = 0;
+	virtual void SetUniform(const std::string& name, const Vector4f& value, size_t offset = 0) const = 0;
+	virtual void SetUniform(const std::string& name, const Matrix4f& value, size_t offset = 0) const = 0;
+
+	//General SetUniform method for Uniform Buffer Objects, like uploading view and projection matrix to the same uniform binding
+	virtual void SetUniform(const std::string& name, const void* value, size_t size, size_t offset = 0) const = 0;
 
 	virtual void BindUniformBlock(const std::string& name, uint32_t binding) const = 0;
 
-	virtual void UpdateUniforms(GameObject* object, Camera* camera, std::vector<Light*> lights) const = 0;
-	
+	virtual void UpdateUniforms(GameObject* object, Camera* camera, std::vector<Light*> lights) const {}
+	virtual void UpdateUniforms(GameObject* object) const {}
+
 	//Shaders cannot be copied, they are stored as pointers in the Renderer component, and referenced with a shaderIndex
 	Shader(const Shader&) = delete;
 	Shader operator=(const Shader&) = delete;

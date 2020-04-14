@@ -43,6 +43,7 @@ private:
 	VkFormat* imageFormat;
 	VkExtent2D* swapchainExtent;
 	std::vector<VkImageView> swapchainImageViews;
+	VkImageView* depthBuffer;
 
 	VKCommandPool* commandPool;
 

@@ -38,6 +38,7 @@ void VKPipeline::CreatePipeline(Window* window, MeshVBO* vbo)
 	this->imageFormat = &format;
 	this->swapchainExtent = &swapchain->GetSwapchainExtent();
 	this->swapchainImageViews = swapchain->GetSwapchainImageViews();
+	this->depthBuffer = &swapchain->GetDepthImageView();
 
 	this->commandPool = &swapchain->GetCommandPool();
 
@@ -45,13 +46,13 @@ void VKPipeline::CreatePipeline(Window* window, MeshVBO* vbo)
 
 	this->vbo = (VKMeshVBO*) vbo;
 
-	renderpass = new VKRenderpass(device->GetDevice(), *imageFormat);
+	renderpass = new VKRenderpass(physicalDevice->GetPhysicalDevice(), device->GetDevice(), *imageFormat);
 	graphicsPipeline = new VKGraphicsPipeline(*device, (VKShader*)shader, *renderpass, viewportStart, viewportSize, scissorStart, scissorSize, backfaceCulling, *this->vbo);
 
 	swapchainFramebuffers.resize(swapchainImageViews.size());
 	for (size_t i = 0; i < swapchainImageViews.size(); i++)
 	{
-		swapchainFramebuffers[i] = new VKFramebuffer(*renderpass, *swapchainExtent, swapchainImageViews[i], device->GetDevice());
+		swapchainFramebuffers[i] = new VKFramebuffer(*renderpass, *swapchainExtent, swapchainImageViews[i], *depthBuffer, device->GetDevice());
 	}
 }
 
@@ -91,13 +92,13 @@ void VKPipeline::RecreatePipeline()
 	this->commandPool = &swapchain->GetCommandPool();
 	
 	//Create new objects
-	renderpass = new VKRenderpass(device->GetDevice(), *imageFormat);
+	renderpass = new VKRenderpass(physicalDevice->GetPhysicalDevice(), device->GetDevice(), *imageFormat);
 	graphicsPipeline = new VKGraphicsPipeline(*device, (VKShader*) shader, *renderpass, viewportStart, viewportSize, scissorStart, scissorSize, backfaceCulling, *this->vbo);
 
 	swapchainFramebuffers.resize(swapchainImageViews.size());
 	for (size_t i = 0; i < swapchainImageViews.size(); i++)
 	{
-		swapchainFramebuffers[i] = new VKFramebuffer(*renderpass, *swapchainExtent, swapchainImageViews[i], device->GetDevice());
+		swapchainFramebuffers[i] = new VKFramebuffer(*renderpass, *swapchainExtent, swapchainImageViews[i], *depthBuffer, device->GetDevice());
 	}
 }
 

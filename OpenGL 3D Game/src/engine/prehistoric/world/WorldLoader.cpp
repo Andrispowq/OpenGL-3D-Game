@@ -37,7 +37,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 			{
 				if (nameTokens[1] == "load")
 				{
-					MeshVBO* vbo = OBJLoader::LoadModel(directoryModels, tokens[2], "");
+					MeshVBO* vbo = OBJLoader::LoadModel(directoryModels, tokens[2], "", window);
 					models.emplace(tokens[1], vbo);
 				}
 			}
@@ -45,7 +45,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 			{
 				if (nameTokens[1] == "load")
 				{
-					Texture* texture = TextureLoader::LoadTexture(directoryTextures + tokens[2]);
+					Texture* texture = TextureLoader::LoadTexture(directoryTextures + tokens[2], window);
 					textures.emplace(tokens[1], texture);
 				}
 			}
@@ -55,7 +55,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 			{
 				if (nameTokens[1] == "add")
 				{
-					Material* material = new Material();
+					Material* material = new Material(window);
 					materials.emplace(tokens[1], material);
 				}
 				else
@@ -245,7 +245,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 							pipeline->CreatePipeline(window, vbo);
 						}
 
-						Renderer* renderer = new Renderer(vbo, pipeline, material);
+						Renderer* renderer = new Renderer(vbo, pipeline, material, window);
 
 						obj->AddComponent(tokens[1], renderer);
 					}
@@ -329,7 +329,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 									pipeline->CreatePipeline(window, vbo);
 								}
 
-								Renderer* renderer = new Renderer(vbo, pipeline, material);
+								Renderer* renderer = new Renderer(vbo, pipeline, material, window);
 
 								obj->AddComponent(tokens[1], renderer);
 

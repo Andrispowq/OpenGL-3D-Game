@@ -4,9 +4,11 @@
 layout(location = 0) out vec4 colour_Out;
 
 layout(location = 0) in vec3 colour_FS;
+layout(location = 1) in vec2 texture_FS;
 
+layout(set = 0, binding = 1) uniform sampler2D texSampler;
 
 void main() 
 {
-    colour_Out = vec4(colour_FS, 1.0);
+    colour_Out = texture(texSampler, texture_FS);
 }

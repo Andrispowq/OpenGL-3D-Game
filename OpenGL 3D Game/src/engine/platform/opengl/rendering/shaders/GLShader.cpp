@@ -11,6 +11,7 @@ std::vector<char> ResourceLoader::LoadShaderGL(const std::string& filename)
 	std::string output;
 	std::string line;
 
+	PR_LOG_MESSAGE("file to be opened\n");
 	if (file.is_open())
 	{
 		while (file.good())
@@ -34,15 +35,18 @@ std::vector<char> ResourceLoader::LoadShaderGL(const std::string& filename)
 	}
 	else
 	{
-		PR_LOG_ERROR("Unable to load shader: %s\n", filename);
+		PR_LOG_ERROR("Unable to load shader: %s\n", filename.c_str());
 	}
 
+	PR_LOG_MESSAGE("file loaded\n");
 	std::vector<char> out;
+	out.reserve(output.length());
 
 	for (size_t i = 0; i < output.length(); i++)
 	{
 		out.push_back(output[i]);
 	}
+	PR_LOG_MESSAGE("file written\n");
 
 	return out;
 }
@@ -129,7 +133,7 @@ void GLShader::Unbind() const
 	glUseProgram(0);
 }
 
-bool GLShader::AddUniform(const std::string& name, ShaderType stages, uint32_t binding, uint32_t set, size_t size)
+bool GLShader::AddUniform(const std::string& name, ShaderType stages, UniformType type, uint32_t binding, uint32_t set, size_t size, Texture* texture)
 {
 	GLuint location = glGetUniformLocation(program, name.c_str());
 
@@ -143,7 +147,7 @@ bool GLShader::AddUniform(const std::string& name, ShaderType stages, uint32_t b
 	return true;
 }
 
-bool GLShader::AddUniformBlock(const std::string& name, ShaderType stages, uint32_t binding, uint32_t set, size_t size)
+bool GLShader::AddUniformBlock(const std::string& name, ShaderType stages, UniformType type, uint32_t binding, uint32_t set, size_t size, Texture* texture)
 {
 	GLuint location = glGetUniformBlockIndex(program, name.c_str());
 	
@@ -244,7 +248,7 @@ bool GLShader::AddProgram(const std::vector<char>& code, GLenum type) const
 		GLchar log[1024];
 		glGetShaderInfoLog(shader, 1024, NULL, log);
 
-		PR_LOG_RUNTIME_ERROR("Shader stage addition has failed!");
+		PR_LOG_RUNTIME_ERROR("Shader stage addition has failed! Error: %s", log);
 
 		return false;
 	}

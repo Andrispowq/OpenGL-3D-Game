@@ -5,7 +5,7 @@
 #include "engine/prehistoric/core/util/time/Timer.h"
 
 int main()
-{	
+{
 	CoreEngine engine;
 	engine.Start();
 

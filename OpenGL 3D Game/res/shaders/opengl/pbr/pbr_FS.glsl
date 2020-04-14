@@ -43,6 +43,7 @@ uniform Material material;
 uniform vec3 cameraPosition;
 uniform float gamma;
 uniform int highDetailRange;
+uniform int numberOfLights;
 
 float DistributionGGX(vec3 N, vec3 H, float roughness);
 float GeometrySchlickGGX(float NdotV, float roughness);
@@ -105,7 +106,12 @@ void main()
     vec3 Lo = vec3(0);
 	
     // reflectance equation
-	for(int i = 0; i < max_lights; ++i) 
+	int num;
+
+	if (numberOfLights < max_lights) num = numberOfLights;
+	else num = max_lights;
+
+	for(int i = 0; i < num; ++i)
     {
         // calculate per-light radiance
         vec3 L = normalize(lights[i].position - position_FS);

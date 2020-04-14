@@ -7,7 +7,7 @@
 
 std::vector<Material*> Renderer::materials;
 
-Renderer::Renderer(MeshVBO* vbo, Pipeline* pipeline, Material* material) : Renderable(vbo, pipeline)
+Renderer::Renderer(VBO* vbo, Pipeline* pipeline, Material* material, Window* window) : Renderable(vbo, pipeline, window)
 {
 	auto mInd = std::find(materials.begin(), materials.end(), material);
 
@@ -23,9 +23,9 @@ Renderer::Renderer(MeshVBO* vbo, Pipeline* pipeline, Material* material) : Rende
 	}
 }
 
-Renderer::Renderer() : Renderable()
+Renderer::Renderer(Window* window) : Renderable(window)
 {
-	materials.push_back(new Material());
+	materials.push_back(new Material(window));
 	this->materialIndex = materials.size() - 1;
 }
 
@@ -51,7 +51,7 @@ void Renderer::PreRender(RenderingEngine* renderingEngine)
 
 void Renderer::Render(const RenderingEngine& renderingEngine) const
 {
-	MeshVBO* vbo = vbos[vboIndex];
+	VBO* vbo = vbos[vboIndex];
 	Pipeline* pipeline = pipelines[pipelineIndex];
 
 	pipeline->BindPipeline();
@@ -66,7 +66,7 @@ void Renderer::Render(const RenderingEngine& renderingEngine) const
 
 void Renderer::BatchRender(const RenderingEngine& renderingEngine) const
 {
-	MeshVBO* vbo = vbos[vboIndex];
+	VBO* vbo = vbos[vboIndex];
 	Pipeline* pipeline = pipelines[pipelineIndex];
 
 	pipeline->GetShader()->UpdateUniforms(parent, renderingEngine.GetCamera(), renderingEngine.GetLights());

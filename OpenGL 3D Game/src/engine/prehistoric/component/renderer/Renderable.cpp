@@ -3,11 +3,13 @@
 #include "engine/prehistoric/core/model/material/Material.h"
 #include "engine/prehistoric/common/rendering/pipeline/Pipeline.h"
 
-std::vector<MeshVBO*> Renderable::vbos;
+std::vector<VBO*> Renderable::vbos;
 std::vector<Pipeline*> Renderable::pipelines;
 
-Renderable::Renderable(MeshVBO* vbo, Pipeline* pipeline)
+Renderable::Renderable(VBO* vbo, Pipeline* pipeline, Window* window)
 {
+	this->window = window;
+
 	auto vInd = std::find(vbos.begin(), vbos.end(), vbo);
 
 	if (vInd == vbos.end())
@@ -40,10 +42,12 @@ Renderable::Renderable(MeshVBO* vbo, Pipeline* pipeline)
 	pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
 }
 
-Renderable::Renderable()
+Renderable::Renderable(Window* window)
 {
 	vboIndex = -1;
 	pipelineIndex = -1;
+
+	this->window = window;
 }
 
 Renderable::~Renderable()
@@ -60,7 +64,7 @@ void Renderable::RecreatePipelines()
 
 void Renderable::CleanUp()
 {
-	for (MeshVBO* vbo : vbos)
+	for (VBO* vbo : vbos)
 	{
 		delete vbo;
 	}

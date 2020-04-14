@@ -1,22 +1,22 @@
 #ifndef MESH_VBO_H
 #define MESH_VBO_H
 
+#include "VBO.h"
+
 #include "engine/prehistoric/core/model/Mesh.h"
 
-class MeshVBO
+class MeshVBO : public VBO
 {
 public:
-	MeshVBO() : size(0) {}
+	MeshVBO() {}
 	
-	virtual ~MeshVBO() = 0;
+	virtual ~MeshVBO() override = 0;
 
-	virtual void Store(const Mesh& mesh) = 0;
+	virtual void Store(const Mesh& mesh) override = 0;
 
-	virtual void Bind(void* commandBuffer, void* graphicsPipeline) const = 0;
+	virtual void Bind(void* commandBuffer, void* graphicsPipeline) const override  = 0;
 	virtual void Draw(void* commandBuffer) const = 0;
-	virtual void Unbind() const = 0;
-protected:
-	uint32_t size;
+	virtual void Unbind() const override = 0;
 };
 
 #endif

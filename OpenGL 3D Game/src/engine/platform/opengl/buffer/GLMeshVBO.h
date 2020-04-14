@@ -1,5 +1,5 @@
-#ifndef VBO_H
-#define VBO_H
+#ifndef GL_MESH_VBO_H
+#define GL_MESH_VBO_H
 
 #include <glew.h>
 

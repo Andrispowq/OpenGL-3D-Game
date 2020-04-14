@@ -39,13 +39,18 @@ void VKInstance::CreateInstance()
 #if defined(PR_ENABLE_DEBUGGING) && defined(PR_VK_ENABLE_VALIDATION_LAYERS)
 	//This validation layer is only used for the instance creation and destruction
 	VkDebugUtilsMessengerCreateInfoEXT createMessenger;
+#endif
 	if (FrameworkConfig::apiVulkanUseValidationLayers)
 	{
 		createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
 		createInfo.ppEnabledLayerNames = validationLayers.data();
 
+#if defined(PR_ENABLE_DEBUGGING) && defined(PR_VK_ENABLE_VALIDATION_LAYERS)
 		VKDebugMessenger::CreateMessengerCreateInfo(createMessenger);
 		createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &createMessenger;
+#else
+		createInfo.pNext = nullptr;
+#endif
 	}
 	else
 	{
@@ -53,9 +58,6 @@ void VKInstance::CreateInstance()
 	}
 
 	ListExtensions();
-#else
-	createInfo.enabledLayerCount = 0;
-#endif
 
 	//The instance creation
 	if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS)

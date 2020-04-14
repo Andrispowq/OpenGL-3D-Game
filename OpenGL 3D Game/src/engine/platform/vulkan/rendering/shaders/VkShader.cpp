@@ -192,8 +192,11 @@ VKShader::~VKShader()
 	delete[] shaderStages;
 }
 
-bool VKShader::AddUniform(const std::string& name, ShaderType stages, uint32_t binding, uint32_t set, size_t size)
+bool VKShader::AddUniform(const std::string& name, ShaderType stages, UniformType type, uint32_t binding, uint32_t set, size_t size, Texture* texture)
 {
+	uint32_t flags = GetShaderStages(stages);
+	VkDescriptorType bindingType = GetDescriptorType(type);
+
 	VkDescriptorSetLayout _DescriptorSetLayout;
 	std::vector<VkDescriptorSet> _DescriptorSets;
 
@@ -220,15 +223,33 @@ bool VKShader::AddUniform(const std::string& name, ShaderType stages, uint32_t b
 	numDescriptors++;
 
 	//Recreate the descriptor pool
-	VkDescriptorPoolSize poolSize = {};
-	poolSize.type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-	poolSize.descriptorCount = numDescriptors * numBuffers; //We create numBuffer descriptors for each set we utilise
+	if (descriptorSizes.size() == 0 || descriptorSizes.find(type) == descriptorSizes.end())
+	{
+		VkDescriptorPoolSize poolSize = {};
+		poolSize.type = bindingType;
+		poolSize.descriptorCount = 0; //We create numBuffer descriptors for each set we utilise
+
+		descriptorSizes.insert(std::make_pair(type, poolSize));
+	}
+
+	std::vector<VkDescriptorPoolSize> poolSizes;
+	poolSizes.reserve(descriptorSizes.size());
+
+	for (auto& plSize : descriptorSizes)
+	{
+		if (plSize.first == type)
+		{
+			plSize.second.descriptorCount += numBuffers; //We create numBuffer descriptors for each set we utilise
+		}
+
+		poolSizes.push_back(plSize.second);
+	}
 
 	VkDescriptorPoolCreateInfo poolInfo = {};
 	poolInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 	poolInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
-	poolInfo.poolSizeCount = 1;
-	poolInfo.pPoolSizes = &poolSize;
+	poolInfo.poolSizeCount = (uint32_t) poolSizes.size();
+	poolInfo.pPoolSizes = poolSizes.data();
 	poolInfo.maxSets = numSets * numBuffers;
 
 	if (vkCreateDescriptorPool(device->GetDevice(), &poolInfo, nullptr, &descriptorPool) != VK_SUCCESS)
@@ -237,24 +258,8 @@ bool VKShader::AddUniform(const std::string& name, ShaderType stages, uint32_t b
 	}
 
 	//We build this UBO
-	uint32_t flags = 0;
-
-	if (stages & VERTEX_SHADER) flags = flags | VK_SHADER_STAGE_VERTEX_BIT;
-	if (stages & TESSELLATION_CONTROL_SHADER) flags = flags | VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
-	if (stages & TESSELLATION_EVALUATION_SHADER) flags = flags | VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
-	if (stages & GEOMETRY_SHADER) flags = flags | VK_SHADER_STAGE_GEOMETRY_BIT;
-	if (stages & FRAGMENT_SHADER) flags = flags | VK_SHADER_STAGE_FRAGMENT_BIT;
-	if (stages & RAY_GENERATION_SHADER_NV) flags = flags | VK_SHADER_STAGE_RAYGEN_BIT_NV;
-	if (stages & RAY_HIT_SHADER_NV) flags = flags | VK_SHADER_STAGE_ANY_HIT_BIT_NV;
-	if (stages & RAY_CLOSEST_HIT_SHADER_NV) flags = flags | VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV;
-	if (stages & RAY_CALLABLE_SHADER_NV) flags = flags | VK_SHADER_STAGE_CALLABLE_BIT_NV;
-	if (stages & RAY_MISS_SHADER_NV) flags = flags | VK_SHADER_STAGE_MISS_BIT_NV;
-	if (stages & RAY_INTERSECTION_SHADER_NV) flags = flags | VK_SHADER_STAGE_INTERSECTION_BIT_NV;
-	if (stages & TASK_SHADER_NV) flags = flags | VK_SHADER_STAGE_TASK_BIT_NV;
-	if (stages & MESH_SHADER_NV) flags = flags | VK_SHADER_STAGE_MESH_BIT_NV;
-
 	VkDescriptorSetLayoutBinding uboLayoutBinding = {};
-	uboLayoutBinding.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	uboLayoutBinding.descriptorType = bindingType;
 	uboLayoutBinding.descriptorCount = 1;
 	uboLayoutBinding.binding = (uint32_t) binding;
 	uboLayoutBinding.stageFlags = flags;
@@ -349,9 +354,11 @@ bool VKShader::AddUniform(const std::string& name, ShaderType stages, uint32_t b
 
 	std::pair<uint32_t, std::vector<VkBuffer>> setUBO = { set, ubos };
 	std::pair<uint32_t, std::vector<VkDeviceMemory>> setUBOMems = { set, uboMemories };
+	std::pair<uint32_t, UniformType> setBindType = { set, type };
 
 	uniformBuffers.insert(std::make_pair(name, setUBO));
 	uniformBuffersMemories.insert(std::make_pair(name, setUBOMems));
+	uniformTypes.insert(std::make_pair(name, setBindType));
 
 	//Create the descriptor sets
 	std::vector<VkDescriptorSetLayout> layouts(numBuffers, _DescriptorSetLayout);
@@ -371,13 +378,13 @@ bool VKShader::AddUniform(const std::string& name, ShaderType stages, uint32_t b
 
 	descriptorSets.insert(std::make_pair(set, _DescriptorSets));
 
-	std::unordered_map<uint32_t, std::vector<VkBuffer>> uBuffers;
+	std::unordered_map<std::string, std::pair<uint32_t, std::vector<VkBuffer>>> uBuffers;
 
 	for (const auto& buffer : uniformBuffers)
 	{
 		if (buffer.second.first == set)
 		{
-			uBuffers.insert(std::make_pair(bindings.at(buffer.first).second.binding, buffer.second.second));
+			uBuffers.insert(std::make_pair(buffer.first, std::make_pair(bindings.at(buffer.first).second.binding, buffer.second.second)));
 		}
 	}
 
@@ -385,48 +392,88 @@ bool VKShader::AddUniform(const std::string& name, ShaderType stages, uint32_t b
 	{
 		for (size_t i = 0; i < numBuffers; i++)
 		{
-			VkDescriptorBufferInfo bufferInfo = {};
-			bufferInfo.buffer = buffer.second[i];
-			bufferInfo.offset = 0;
-			bufferInfo.range = bufferSize;
+			UniformType typ = uniformTypes[buffer.first].second;
 
 			VkWriteDescriptorSet descriptorWrite = {};
 			descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 			descriptorWrite.dstSet = descriptorSets[(uint32_t)set][i];
-			descriptorWrite.dstBinding = buffer.first;
+			descriptorWrite.dstBinding = buffer.second.first;
 			descriptorWrite.dstArrayElement = 0;
-			descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+			descriptorWrite.descriptorType = GetDescriptorType(typ);
 			descriptorWrite.descriptorCount = 1;
-			descriptorWrite.pBufferInfo = &bufferInfo;
-			descriptorWrite.pImageInfo = nullptr; // Optional
+
+			if (typ == CombinedImageSampler)
+			{
+				VKTexture* tex = (VKTexture*)texture;
+
+				VkDescriptorImageInfo imageInfo = {};
+				imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+				imageInfo.imageView = tex->GetTextureImageView();
+				imageInfo.sampler = tex->GetTextureSampler();
+
+				descriptorWrite.pImageInfo = &imageInfo; // Optional
+				descriptorWrite.pBufferInfo = nullptr;
+			}
+			else
+			{
+				VkDescriptorBufferInfo bufferInfo = {};
+				bufferInfo.buffer = buffer.second.second[i];
+				bufferInfo.offset = 0;
+				bufferInfo.range = bufferSize;
+
+				descriptorWrite.pImageInfo = nullptr; // Optional
+				descriptorWrite.pBufferInfo = &bufferInfo;
+			}
+
 			descriptorWrite.pTexelBufferView = nullptr; // Optional
 
 			vkUpdateDescriptorSets(device->GetDevice(), 1, &descriptorWrite, 0, nullptr);
 		}
 	}
 
-	for (size_t i = 0; i < numBuffers; i++)
-	{
-		VkDescriptorBufferInfo bufferInfo = {};
-		bufferInfo.buffer = uniformBuffers[name].second[i];
-		bufferInfo.offset = 0;
-		bufferInfo.range = bufferSize;
-
-		VkWriteDescriptorSet descriptorWrite = {};
-		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrite.dstSet = descriptorSets[(uint32_t)set][i];
-		descriptorWrite.dstBinding = (uint32_t)binding;
-		descriptorWrite.dstArrayElement = 0;
-		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-		descriptorWrite.descriptorCount = 1;
-		descriptorWrite.pBufferInfo = &bufferInfo;
-		descriptorWrite.pImageInfo = nullptr; // Optional
-		descriptorWrite.pTexelBufferView = nullptr; // Optional
-
-		vkUpdateDescriptorSets(device->GetDevice(), 1, &descriptorWrite, 0, nullptr);
-	}
-
 	return true;
+}
+
+VkDescriptorType VKShader::GetDescriptorType(UniformType type) const
+{
+	VkDescriptorType bindingType;
+
+	if (type == Sampler) bindingType = VK_DESCRIPTOR_TYPE_SAMPLER;
+	if (type == CombinedImageSampler) bindingType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+	if (type == SampledImage) bindingType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+	if (type == StorageImage) bindingType = VK_DESCRIPTOR_TYPE_STORAGE_IMAGE;
+	if (type == UniformTexelBuffer) bindingType = VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER;
+	if (type == StorageTexelBuffer) bindingType = VK_DESCRIPTOR_TYPE_STORAGE_TEXEL_BUFFER;
+	if (type == UniformBuffer) bindingType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+	if (type == StorageBuffer) bindingType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+	if (type == UniformBufferDynamic) bindingType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
+	if (type == StorageBufferDynamic) bindingType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC;
+	if (type == InputAttachment) bindingType = VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT;
+	if (type == InlineUniformBlock_EXT) bindingType = VK_DESCRIPTOR_TYPE_INLINE_UNIFORM_BLOCK_EXT;
+	if (type == AccelerationStructure_NV) bindingType = VK_DESCRIPTOR_TYPE_ACCELERATION_STRUCTURE_NV;
+
+	return bindingType;
+}
+
+uint32_t VKShader::GetShaderStages(ShaderType stages) const
+{
+	uint32_t flags = 0;
+
+	if (stages & VERTEX_SHADER) flags = flags | VK_SHADER_STAGE_VERTEX_BIT;
+	if (stages & TESSELLATION_CONTROL_SHADER) flags = flags | VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+	if (stages & TESSELLATION_EVALUATION_SHADER) flags = flags | VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+	if (stages & GEOMETRY_SHADER) flags = flags | VK_SHADER_STAGE_GEOMETRY_BIT;
+	if (stages & FRAGMENT_SHADER) flags = flags | VK_SHADER_STAGE_FRAGMENT_BIT;
+	if (stages & RAY_GENERATION_SHADER_NV) flags = flags | VK_SHADER_STAGE_RAYGEN_BIT_NV;
+	if (stages & RAY_HIT_SHADER_NV) flags = flags | VK_SHADER_STAGE_ANY_HIT_BIT_NV;
+	if (stages & RAY_CLOSEST_HIT_SHADER_NV) flags = flags | VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV;
+	if (stages & RAY_CALLABLE_SHADER_NV) flags = flags | VK_SHADER_STAGE_CALLABLE_BIT_NV;
+	if (stages & RAY_MISS_SHADER_NV) flags = flags | VK_SHADER_STAGE_MISS_BIT_NV;
+	if (stages & RAY_INTERSECTION_SHADER_NV) flags = flags | VK_SHADER_STAGE_INTERSECTION_BIT_NV;
+	if (stages & TASK_SHADER_NV) flags = flags | VK_SHADER_STAGE_TASK_BIT_NV;
+	if (stages & MESH_SHADER_NV) flags = flags | VK_SHADER_STAGE_MESH_BIT_NV;
+
+	return flags;
 }
 
 bool VKShader::AddShader(const std::vector<char>& code, ShaderType type)
@@ -512,73 +559,83 @@ void VKShader::Bind(void* commandBuffer) const
 	vkCmdBindDescriptorSets(vkcmdbuff->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, count, sets.data(), 0, nullptr);
 }
 
-void VKShader::SetUniformi(const std::string& name, int value) const
+void VKShader::SetUniformi(const std::string& name, int value, size_t offset) const
 {
 	void* data;
 	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).second[swapchain->GetAquiredImageIndex()];
 
-	vkMapMemory(device->GetDevice(), mem, 0, sizeof(int), 0, &data);
+	vkMapMemory(device->GetDevice(), mem, offset, sizeof(int), 0, &data);
 	memcpy(data, &value, sizeof(int));
 	vkUnmapMemory(device->GetDevice(), mem);
 }
 
-void VKShader::SetUniformf(const std::string& name, float value) const
+void VKShader::SetUniformf(const std::string& name, float value, size_t offset) const
 {
 	void* data;
 	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).second[swapchain->GetAquiredImageIndex()];
 
-	vkMapMemory(device->GetDevice(), mem, 0, sizeof(float), 0, &data);
+	vkMapMemory(device->GetDevice(), mem, offset, sizeof(float), 0, &data);
 	memcpy(data, &value, sizeof(float));
 	vkUnmapMemory(device->GetDevice(), mem);
 }
 
-void VKShader::SetUniform(const std::string& name, const Vector2f& value) const
+void VKShader::SetUniform(const std::string& name, const Vector2f& value, size_t offset) const
 {
 	void* data;
 	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).second[swapchain->GetAquiredImageIndex()];
 
-	vkMapMemory(device->GetDevice(), mem, 0, sizeof(Vector2f), 0, &data);
+	vkMapMemory(device->GetDevice(), mem, offset, sizeof(Vector2f), 0, &data);
 	memcpy(data, &value, sizeof(Vector2f));
 	vkUnmapMemory(device->GetDevice(), mem);
 }
 
-void VKShader::SetUniform(const std::string& name, const Vector3f& value) const
+void VKShader::SetUniform(const std::string& name, const Vector3f& value, size_t offset) const
 {
 	void* data;
 	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).second[swapchain->GetAquiredImageIndex()];
 
-	vkMapMemory(device->GetDevice(), mem, 0, sizeof(Vector3f), 0, &data);
+	vkMapMemory(device->GetDevice(), mem, offset, sizeof(Vector3f), 0, &data);
 	memcpy(data, &value, sizeof(Vector3f));
 	vkUnmapMemory(device->GetDevice(), mem);
 }
 
-void VKShader::SetUniform(const std::string& name, const Vector4f& value) const
+void VKShader::SetUniform(const std::string& name, const Vector4f& value, size_t offset) const
 {
 	void* data;
 	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).second[swapchain->GetAquiredImageIndex()];
 
-	vkMapMemory(device->GetDevice(), mem, 0, sizeof(Vector4f), 0, &data);
+	vkMapMemory(device->GetDevice(), mem, offset, sizeof(Vector4f), 0, &data);
 	memcpy(data, &value, sizeof(Vector4f));
 	vkUnmapMemory(device->GetDevice(), mem);
 }
 
-void VKShader::SetUniform(const std::string& name, const Matrix4f& value) const
+void VKShader::SetUniform(const std::string& name, const Matrix4f& value, size_t offset) const
 {
 	void* data;
 	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).second[swapchain->GetAquiredImageIndex()];
 
 	float* dataF = value.GetData();
 
-	vkMapMemory(device->GetDevice(), mem, 0, sizeof(float) * 16, 0, &data);
+	vkMapMemory(device->GetDevice(), mem, offset, sizeof(float) * 16, 0, &data);
 	memcpy(data, dataF, sizeof(float) * 16);
+	vkUnmapMemory(device->GetDevice(), mem);
+}
+
+void VKShader::SetUniform(const std::string& name, const void* value, size_t size, size_t offset) const
+{
+	void* data;
+	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).second[swapchain->GetAquiredImageIndex()];
+
+	vkMapMemory(device->GetDevice(), mem, offset, size, 0, &data);
+	memcpy(data, value, size);
 	vkUnmapMemory(device->GetDevice(), mem);
 }
 
 void VKShader::UpdateUniforms(GameObject* object, Camera* camera, std::vector<Light*> lights) const
 {
-	SetUniform("ubo1.model", object->GetWorldTransform()->getTransformationMatrix());
-	SetUniform("ubo2.view", camera->GetViewMatrix());
-	SetUniform("ubo3.proj", camera->GetProjectionMatrix());
+	SetUniform("ubo", object->GetWorldTransform()->getTransformationMatrix(), 16 * sizeof(float) * 0);
+	SetUniform("ubo", camera->getViewMatrix(), 16 * sizeof(float) * 1);
+	SetUniform("ubo", camera->getProjectionMatrix(), 16 * sizeof(float) * 2);
 }
 
 VkShaderModule VKShader::CreateShaderModule(const std::vector<char>& code) const

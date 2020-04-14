@@ -4,7 +4,6 @@
 	This file contains data about the platform we're running the app on,
 	the configuration settings we are using, and potentialy the API(s) we are using
 */
-#define __ANDROID__
 #if defined(_WIN32)
 	#if defined(_WIN64)
 		#define PR_WINDOWS_64
@@ -22,7 +21,7 @@
 	#error "This OS is currently not supported!"
 #endif
 
-#if defined(PR_DEBUG)
+#if 1//defined(PR_DEBUG)
 	#define PR_ENABLE_DEBUGGING
 	#define PR_VK_ENABLE_VALIDATION_LAYERS
 	#define PR_COLOURED_LOGGING_FUNCTIONS

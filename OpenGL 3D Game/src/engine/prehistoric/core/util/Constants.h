@@ -1,22 +1,5 @@
 #pragma once
 
-#define DEFAULT_WIDTH 1280
-#define DEFAULT_HEIGHT 720
-#define DEFAULT_TITLE "OpenGL Game Engine by András Kmeczó, 2020"
-#define DEFAULT_FULLSCREEN false
-
-#define FS_WINDOW_WIDTH 1920
-#define FS_WINDOW_HEIGHT 1080
-
-#define NM_WINDOW_WIDTH 1280
-#define NM_WINDOW_HEIGHT 720
-
-#define WINDOW_FULLSCREEN false
-
-#define WINDOW_WIDTH WINDOW_FULLSCREEN ? FS_WINDOW_WIDTH : NM_WINDOW_WIDTH
-#define WINDOW_HEIGHT WINDOW_FULLSCREEN ? FS_WINDOW_HEIGHT : NM_WINDOW_HEIGHT
-#define WINDOW_TITLE "Game"
-
 //Material texture names
 #define ALBEDO_MAP "albedoMap"
 #define NORMAL_MAP "normalMap"
@@ -41,8 +24,16 @@
 #define COLOUR "colour"
 #define USES_NORMAL_MAP "usesNormalMap"
 #define HEIGHT_SCALE "heightScale"
+#define HORIZONTAL_SCALE "horizontalScale"
 #define METALLIC "metallic"
 #define ROUGHNESS "roughness"
 #define OCCLUSION "occlusion"
 #define EMISSION "emission"
 #define ALPHA "alpha"
+
+//Component names:
+#define RENDERER_COMPONENT "Renderer"
+#define LIGHT_COMPONENT "Light"
+
+#define GUI_ELEMENT_COMPONENT "GUIElement"
+#define GUI_BUTTON_COMPONENT "GUIButton"
