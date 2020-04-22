@@ -3,8 +3,8 @@
 
 GLBasicShader::GLBasicShader() : GLShader()
 {
-	AddShader(ResourceLoader::LoadShaderGL("opengl/basic_VS.glsl"), VERTEX_SHADER);
-	AddShader(ResourceLoader::LoadShaderGL("opengl/basic_FS.glsl"), FRAGMENT_SHADER);
+	AddShader(ResourceLoader::LoadShaderGL("opengl/basic/basic_VS.glsl"), VERTEX_SHADER);
+	AddShader(ResourceLoader::LoadShaderGL("opengl/basic/basic_FS.glsl"), FRAGMENT_SHADER);
 	CompileShader();
 
 	AddUniform("m_transform");

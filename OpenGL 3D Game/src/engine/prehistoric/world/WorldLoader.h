@@ -11,10 +11,10 @@
 #include "engine/prehistoric/core/util/loader/obj/OBJLoader.h"
 
 #include "engine/platform/opengl/rendering/shaders/basic/GLBasicShader.h"
-//#include "engine/platform/vulkan/rendering/shaders/basic/VKBasicShader.h"
+#include "engine/platform/vulkan/rendering/shaders/basic/VKBasicShader.h"
 
 #include "engine/platform/opengl/rendering/shaders/pbr/GLPBRShader.h"
-//#include "engine/platform/vulkan/rendering/shaders/pbr/VKPBRShader.h"
+#include "engine/platform/vulkan/rendering/shaders/pbr/VKPBRShader.h"
 
 #include "engine/platform/opengl/rendering/pipeline/GLPipeline.h"
 #include "engine/platform/vulkan/rendering/pipeline/VKPipeline.h"

@@ -12,7 +12,7 @@ namespace TextureLoader
 			stbi_set_flip_vertically_on_load(0);
 
 		int width, height, channels;
-		unsigned char* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+		unsigned char* data = stbi_load(path.c_str(), &width, &height, &channels, STBI_rgb_alpha);
 
 		if (data == nullptr)
 		{
@@ -53,7 +53,7 @@ namespace TextureLoader
 		{
 			texture = new VKTexture(*((VKPhysicalDevice*)window->GetContext()->GetPhysicalDevice()), *((VKDevice*)window->GetContext()->GetDevice()), width, height);
 
-			static_cast<VKTexture*>(texture)->UpdateStagingBuffer(size_t(width * height * channels), data);
+			static_cast<VKTexture*>(texture)->UpdateStagingBuffer(size_t(width * height * 4), data, RGBA32FLOAT);
 			texture->Generate();
 		}
 

@@ -3,7 +3,8 @@
 #include "VKGraphicsPipeline.h"
 
 VKGraphicsPipeline::VKGraphicsPipeline(VKDevice& device, VKShader* shader, VKRenderpass& renderpass,
-	const Vector2f& viewportStart, const Vector2f& viewportSize, const Vector2u& scissorStart, const Vector2u& scissorSize, const bool& backfaceCulling, VKMeshVBO& vbo)
+	const Vector2f& viewportStart, const Vector2f& viewportSize, const Vector2u& scissorStart, const Vector2u& scissorSize, const bool& backfaceCulling, 
+	VKMeshVBO& vbo, VkSampleCountFlagBits samples)
 {
 	this->device = &device;
 
@@ -55,7 +56,7 @@ VKGraphicsPipeline::VKGraphicsPipeline(VKDevice& device, VKShader* shader, VKRen
 	rasterizer.polygonMode = VK_POLYGON_MODE_FILL;// wireframe ? VK_POLYGON_MODE_LINE : VK_POLYGON_MODE_FILL;
 	rasterizer.lineWidth = 1.0f;
 	rasterizer.cullMode = backfaceCulling ? VK_CULL_MODE_BACK_BIT : VK_CULL_MODE_NONE;
-	rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+	rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE; //TODO: Front-face can be a renderer config mode
 	rasterizer.depthBiasEnable = VK_FALSE;
 	rasterizer.depthBiasConstantFactor = 0.0f; // Optional
 	rasterizer.depthBiasClamp = 0.0f; // Optional
@@ -63,9 +64,9 @@ VKGraphicsPipeline::VKGraphicsPipeline(VKDevice& device, VKShader* shader, VKRen
 
 	VkPipelineMultisampleStateCreateInfo multisampling = {};
 	multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-	multisampling.sampleShadingEnable = VK_FALSE;
-	multisampling.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
-	multisampling.minSampleShading = 1.0f; // Optional
+	multisampling.sampleShadingEnable = VK_TRUE;
+	multisampling.rasterizationSamples = samples;
+	multisampling.minSampleShading = 0.2f; // Optional
 	multisampling.pSampleMask = nullptr; // Optional
 	multisampling.alphaToCoverageEnable = VK_FALSE; // Optional
 	multisampling.alphaToOneEnable = VK_FALSE; // Optional
@@ -105,7 +106,7 @@ VKGraphicsPipeline::VKGraphicsPipeline(VKDevice& device, VKShader* shader, VKRen
 
 	VkGraphicsPipelineCreateInfo pipelineInfo = {};
 	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-	pipelineInfo.stageCount = 2;
+	pipelineInfo.stageCount = shader->getModuleCount();
 	pipelineInfo.pStages = shader->GetShaderStages();
 	pipelineInfo.pVertexInputState = &vertexInputInfo;
 	pipelineInfo.pInputAssemblyState = &inputAssembly;

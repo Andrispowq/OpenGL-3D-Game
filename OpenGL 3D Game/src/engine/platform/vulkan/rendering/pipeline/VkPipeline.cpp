@@ -5,24 +5,21 @@
 #include "engine/platform/vulkan/rendering/shaders/VkShader.h"
 #include "engine/platform/vulkan/framework/context/VKContext.h"
 
-VKPipeline::VKPipeline(Shader* shader) : Pipeline(shader)
+VKPipeline::VKPipeline(Shader* shader, VBO* vbo)
+	: Pipeline(shader, vbo)
 {
-	auto stages = static_cast<VKShader*>(shader)->GetShaderStages();
-	shaderStageCreateInfos = &stages;
-	
-	reinterpret_cast<VKShader*>(shader)->RegisterPipeline(this);
-
-	exist = true;
 }
 
 VKPipeline::~VKPipeline()
 {
-	if(exist) DestroyPipeline();
-	exist = false;
+	if(exists)
+		DestroyPipeline();
 }
 
-void VKPipeline::CreatePipeline(Window* window, MeshVBO* vbo)
+void VKPipeline::CreatePipeline(Window* window)
 {
+	exists = true;
+
 	VKSwapchain* swapchain = static_cast<VKSwapchain*>(window->GetSwapchain());
 	VKContext* context = static_cast<VKContext*>(window->GetContext());
 
@@ -30,113 +27,56 @@ void VKPipeline::CreatePipeline(Window* window, MeshVBO* vbo)
 	this->physicalDevice = (VKPhysicalDevice*) context->GetPhysicalDevice();
 	this->device = (VKDevice*) context->GetDevice();
 
-	auto stages = static_cast<VKShader*>(shader)->GetShaderStages();
-	this->shaderStageCreateInfos = &stages;
-
-	this->swapchain = swapchain;
-	auto format = swapchain->GetSwapchainImageFormat();
-	this->imageFormat = &format;
-	this->swapchainExtent = &swapchain->GetSwapchainExtent();
-	this->swapchainImageViews = swapchain->GetSwapchainImageViews();
-	this->depthBuffer = &swapchain->GetDepthImageView();
-
-	this->commandPool = &swapchain->GetCommandPool();
-
 	this->window = window;
+	this->swapchain = swapchain;
 
-	this->vbo = (VKMeshVBO*) vbo;
-
-	renderpass = new VKRenderpass(physicalDevice->GetPhysicalDevice(), device->GetDevice(), *imageFormat);
-	graphicsPipeline = new VKGraphicsPipeline(*device, (VKShader*)shader, *renderpass, viewportStart, viewportSize, scissorStart, scissorSize, backfaceCulling, *this->vbo);
-
-	swapchainFramebuffers.resize(swapchainImageViews.size());
-	for (size_t i = 0; i < swapchainImageViews.size(); i++)
-	{
-		swapchainFramebuffers[i] = new VKFramebuffer(*renderpass, *swapchainExtent, swapchainImageViews[i], *depthBuffer, device->GetDevice());
-	}
+	graphicsPipeline = new VKGraphicsPipeline(*device, (VKShader*)shader, swapchain->getRenderpass(), viewportStart, viewportSize, scissorStart, scissorSize, 
+		backfaceCulling, *((VKMeshVBO*)vbo), physicalDevice->getSampleCount());
 }
 
 void VKPipeline::RecreatePipeline()
 {
 	//We delete the old objects
-	for (auto framebuffer : swapchainFramebuffers)
-	{
-		delete framebuffer;
-	}
-
 	delete graphicsPipeline;
-	delete renderpass;
 
-	this->viewportStart = { 0, 0 };
-	this->viewportSize = { (float) FrameworkConfig::windowWidth, (float) FrameworkConfig::windowHeight };
-	this->scissorStart = { 0, 0 };
-	this->scissorSize = { FrameworkConfig::windowWidth, FrameworkConfig::windowHeight };
-
-	//We need some new values
-	VKSwapchain* swapchain = static_cast<VKSwapchain*>(window->GetSwapchain());
-	VKContext* context = static_cast<VKContext*>(window->GetContext());
-
-	this->surface = &context->GetSurface();
-	this->physicalDevice = (VKPhysicalDevice*) context->GetPhysicalDevice();
-	this->device = (VKDevice*) context->GetDevice();
-
-	auto stages = static_cast<VKShader*>(shader)->GetShaderStages();
-	this->shaderStageCreateInfos = &stages;
-
-	this->swapchain = swapchain;
-	auto format = swapchain->GetSwapchainImageFormat();
-	this->imageFormat = &format;
-	this->swapchainExtent = &swapchain->GetSwapchainExtent();
-	this->swapchainImageViews = swapchain->GetSwapchainImageViews();
-
-	this->commandPool = &swapchain->GetCommandPool();
-	
 	//Create new objects
-	renderpass = new VKRenderpass(physicalDevice->GetPhysicalDevice(), device->GetDevice(), *imageFormat);
-	graphicsPipeline = new VKGraphicsPipeline(*device, (VKShader*) shader, *renderpass, viewportStart, viewportSize, scissorStart, scissorSize, backfaceCulling, *this->vbo);
-
-	swapchainFramebuffers.resize(swapchainImageViews.size());
-	for (size_t i = 0; i < swapchainImageViews.size(); i++)
-	{
-		swapchainFramebuffers[i] = new VKFramebuffer(*renderpass, *swapchainExtent, swapchainImageViews[i], *depthBuffer, device->GetDevice());
-	}
+	graphicsPipeline = new VKGraphicsPipeline(*device, (VKShader*)shader, swapchain->getRenderpass(), viewportStart, viewportSize, scissorStart, scissorSize,
+		backfaceCulling, *((VKMeshVBO*)vbo), physicalDevice->getSampleCount());
 }
 
-void VKPipeline::BindPipeline()
+void VKPipeline::BindPipeline() const
 {
-	uint32_t index = window->GetSwapchain()->GetAquiredImageIndex();
-	VKCommandBuffer* buff = commandPool->GetCommandBuffer(index);
+	VKCommandBuffer* buff = (VKCommandBuffer*) swapchain->GetDrawCommandBuffer();
 
-	this->drawCommandBuffer = &buff->GetCommandBuffer();
+	buff->BindBuffer();
 
-	commandPool->BindCommandBuffer(index);
-
+	vbo->Bind(buff);
 	shader->Bind(buff);
 
-	renderpass->BeginRenderpass(*buff, *swapchainExtent, *(swapchainFramebuffers[index]));
+	swapchain->BeginRenderpass();
 	graphicsPipeline->BindGraphicsPipeline(*buff);
+}
+
+void VKPipeline::RenderPipeline() const
+{
+	vbo->Draw(swapchain->GetDrawCommandBuffer());
 }
 
 void VKPipeline::UnbindPipeline() const
 {
-	uint32_t index = window->GetSwapchain()->GetAquiredImageIndex();
-	VKCommandBuffer* buff = commandPool->GetCommandBuffer(index);
+	VKCommandBuffer* buff = (VKCommandBuffer*)swapchain->GetDrawCommandBuffer();
+
+	swapchain->EndRenderpass();
 
 	shader->Unbind();
+	vbo->Unbind();
 
-	renderpass->EndRenderpass(*buff);
-	commandPool->UnbindCommandBuffer(index);
+	buff->UnbindBuffer();
 }
 
 void VKPipeline::DestroyPipeline()
 {
-	for (auto framebuffer : swapchainFramebuffers)
-	{
-		delete framebuffer;
-	}
-
 	delete graphicsPipeline;
-	delete renderpass;
 
-	exist = false;
+	exists = false;
 }

@@ -13,7 +13,7 @@ public:
 	VKTexture(VKPhysicalDevice& physicalDevice, VKDevice& device, uint32_t width, uint32_t height);
 	virtual ~VKTexture();
 
-	void UpdateStagingBuffer(size_t size, unsigned char* pixels);
+	void UpdateStagingBuffer(size_t size, unsigned char* pixels, ImageFormat format);
 
 	virtual void Bind(uint32_t slot = 0) const override;
 	virtual void Unbind() const override;
@@ -24,6 +24,8 @@ public:
 
 	VkImageView& GetTextureImageView() { return textureImageView; }
 	VkSampler& GetTextureSampler() { return textureSampler; }
+private:
+	VkFormat GetFormat(ImageFormat format) const;
 private:
 	VKDevice* device;
 	VKPhysicalDevice* physicalDevice;
@@ -36,6 +38,9 @@ private:
 
 	VkImageView textureImageView;
 	VkSampler textureSampler;
+
+	ImageFormat format;
+	uint32_t mipLevels;
 };
 
 #endif

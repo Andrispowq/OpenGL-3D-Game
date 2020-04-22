@@ -3,18 +3,20 @@
 #include "VKMeshVBO.h"
 #include "engine/platform/vulkan/rendering/pipeline/VKGraphicsPipeline.h"
 
-VKMeshVBO::VKMeshVBO(const Mesh& mesh, void* physicalDevice, void* device)
+VKMeshVBO::VKMeshVBO(const Mesh& mesh, Window* window)
 {
-	this->physicalDevice = reinterpret_cast<VKPhysicalDevice*>(physicalDevice);
-	this->device = reinterpret_cast<VKDevice*>(device);
+	this->physicalDevice = reinterpret_cast<VKPhysicalDevice*>(window->GetContext()->GetPhysicalDevice());
+	this->device = reinterpret_cast<VKDevice*>(window->GetContext()->GetDevice());
+
+	this->swapchain = (VKSwapchain*) window->GetSwapchain();
 
 	Store(mesh);
 }
 
-VKMeshVBO::VKMeshVBO(void* physicalDevice, void* device)
+VKMeshVBO::VKMeshVBO(Window* window)
 {
-	this->physicalDevice = reinterpret_cast<VKPhysicalDevice*>(physicalDevice);
-	this->device = reinterpret_cast<VKDevice*>(device);
+	this->physicalDevice = reinterpret_cast<VKPhysicalDevice*>(window->GetContext()->GetPhysicalDevice());
+	this->device = reinterpret_cast<VKDevice*>(window->GetContext()->GetDevice());
 }
 
 VKMeshVBO::~VKMeshVBO()
@@ -28,11 +30,11 @@ VKMeshVBO::~VKMeshVBO()
 
 void VKMeshVBO::Store(const Mesh& mesh)
 {
-	this->size = (uint8_t) mesh.getIndices().size();
+	this->size = (uint32_t) mesh.getIndices().size();
 
 	//Building mesh data
 	VkDeviceSize vBufferSize = mesh.getVertices().size() * Vertex::GetSize();
-	VkDeviceSize iBufferSize = mesh.getIndices().size() * Vertex::GetSize();
+	VkDeviceSize iBufferSize = mesh.getIndices().size() * sizeof(uint16_t);
 	void* data;
 
 	float* dataF = mesh.GetVertexData();
@@ -42,49 +44,52 @@ void VKMeshVBO::Store(const Mesh& mesh)
 	VkBuffer stagingBuffer;
 	VkDeviceMemory stagingBufferMemory;
 
-	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), vBufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), vBufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
+		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
 	vkMapMemory(device->GetDevice(), stagingBufferMemory, 0, vBufferSize, 0, &data);
 	memcpy(data, dataF, (size_t) vBufferSize);
 	vkUnmapMemory(device->GetDevice(), stagingBufferMemory);
 
-	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), vBufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, vertexBuffer, vertexBufferMemory);
-
+	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), vBufferSize,
+		VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, 
+		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, vertexBuffer, vertexBufferMemory);
 	VKUtil::CopyBuffer(*device, stagingBuffer, vertexBuffer, vBufferSize);
 
 	vkDestroyBuffer(device->GetDevice(), stagingBuffer, nullptr);
 	vkFreeMemory(device->GetDevice(), stagingBufferMemory, nullptr);
-
+	 
 	//Creation of index buffer
-	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), iBufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), iBufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
+		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
 	vkMapMemory(device->GetDevice(), stagingBufferMemory, 0, iBufferSize, 0, &data);
 	memcpy(data, dataS, (size_t) iBufferSize);
 	vkUnmapMemory(device->GetDevice(), stagingBufferMemory);
 
-	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), iBufferSize, VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, indexBuffer, indexBufferMemory);
-
+	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), iBufferSize, 
+		VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, 
+		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, indexBuffer, indexBufferMemory);
 	VKUtil::CopyBuffer(*device, stagingBuffer, indexBuffer, iBufferSize);
 
 	vkDestroyBuffer(device->GetDevice(), stagingBuffer, nullptr);
 	vkFreeMemory(device->GetDevice(), stagingBufferMemory, nullptr);
 }
 
-void VKMeshVBO::Bind(void* commandBuffer, void* graphicsPipeline) const
+void VKMeshVBO::Bind(void* commandBuffer) const
 {
-	VkCommandBuffer* buffer = reinterpret_cast<VkCommandBuffer*>(commandBuffer);
-	vkCmdBindPipeline(*buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, *reinterpret_cast<VkPipeline*>(graphicsPipeline));
+	VKCommandBuffer* buffer = (VKCommandBuffer*)commandBuffer;
 
-	VkBuffer vertexBuffers[] = { vertexBuffer };
+	//VkBuffer vertexBuffers[] = { vertexBuffer };
 	VkDeviceSize offsets[] = { 0 };
 
-	vkCmdBindVertexBuffers(*buffer, 0, 1, vertexBuffers, offsets);
-	vkCmdBindIndexBuffer(*buffer, indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+	vkCmdBindVertexBuffers(buffer->GetCommandBuffer(), 0, 1, &vertexBuffer, offsets);
+	vkCmdBindIndexBuffer(buffer->GetCommandBuffer(), indexBuffer, 0, VK_INDEX_TYPE_UINT16);
 }
 
 void VKMeshVBO::Draw(void* commandBuffer) const
 {
-	vkCmdDrawIndexed(*reinterpret_cast<VkCommandBuffer*>(commandBuffer), size, 1, 0, 0, 0);
+	vkCmdDrawIndexed(((VKCommandBuffer*) commandBuffer)->GetCommandBuffer(), size, 1, 0, 0, 0);
 }
 
 void VKMeshVBO::Unbind() const
@@ -104,7 +109,7 @@ VkVertexInputBindingDescription* VKMeshVBO::GetBindingDescription() const
 
 std::vector<VkVertexInputAttributeDescription> VKMeshVBO::GetAttributeDescriptions() const
 {
-	std::vector<VkVertexInputAttributeDescription> attributeDescriptions(4);
+	std::vector<VkVertexInputAttributeDescription> attributeDescriptions(3);
 
 	attributeDescriptions[0].binding = 0;
 	attributeDescriptions[0].location = 0;
@@ -120,11 +125,6 @@ std::vector<VkVertexInputAttributeDescription> VKMeshVBO::GetAttributeDescriptio
 	attributeDescriptions[2].location = 2;
 	attributeDescriptions[2].format = VK_FORMAT_R32G32B32_SFLOAT;
 	attributeDescriptions[2].offset = offsetof(Vertex, normal);
-
-	attributeDescriptions[3].binding = 0;
-	attributeDescriptions[3].location = 3;
-	attributeDescriptions[3].format = VK_FORMAT_R32G32B32_SFLOAT;
-	attributeDescriptions[3].offset = offsetof(Vertex, colour);
 
 	return attributeDescriptions;
 }

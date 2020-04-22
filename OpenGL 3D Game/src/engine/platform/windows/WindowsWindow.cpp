@@ -52,7 +52,7 @@ bool WindowsWindow::Create()
 		return false;
 	}
 
-	swapchain->SetupSwapchain(context->GetPhysicalDevice());
+	swapchain->SetupSwapchain(this);
 
 	ImageData data = TextureLoader::LoadTextureData("res/textures/logo.png");
 
@@ -93,7 +93,7 @@ void WindowsWindow::Input()
 
 void WindowsWindow::Render() const
 {
-	swapchain->SwapBuffers((Window*) this);
+	swapchain->SwapBuffers();
 }
 
 bool WindowsWindow::ShouldClose() const

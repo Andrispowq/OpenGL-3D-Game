@@ -13,55 +13,71 @@
 #include "engine/platform/vulkan/rendering/command/VKCommandPool.h"
 #include "engine/platform/vulkan/rendering/synchronization/VKSemaphore.h"
 #include "engine/platform/vulkan/rendering/synchronization/VKFence.h"
+#include "engine/platform/vulkan/rendering/renderpass/VKRenderpass.h"
 
 const static uint32_t MAX_FRAMES_IN_FLIGHT = 3;
 
 class VKSwapchain : public Swapchain
 {
 public:
-	void SetupSwapchain(void* physicalDevice);
+	virtual void SetupSwapchain(Window* window);
 
-	void SwapBuffers(Window* window) override;
+	virtual void SwapBuffers() override;
 
-	void SetVSync(bool vSync) const override;
-	void SetWindowSize(Window* window, uint32_t width, uint32_t height) override;
+	virtual void SetVSync(bool vSync) const override;
+	virtual void SetWindowSize(uint32_t width, uint32_t height) override;
 
-	void SetClearColor(const float& red, const float& green, const float& blue, const float& alpha) override;
-	void ClearScreen() override;
+	virtual void SetClearColor(const float& red, const float& green, const float& blue, const float& alpha) override;
+	virtual void ClearScreen() override;
 
-	void DeleteSwapchain(void* device) override;
+	virtual void DeleteSwapchain(void* device) override;
 
 	virtual uint32_t GetAquiredImageIndex() const override { return aquiredImageIndex; }
+	virtual void* GetDrawCommandBuffer() const override { return commandPool->GetCommandBuffer(aquiredImageIndex); }
 
-	VkSwapchainKHR GetSwapchain() const { return swapchain; }
-	std::vector<VkImage> GetSwapchainImages() const { return swapchainImages; }
-	std::vector<VkImageView> GetSwapchainImageViews() const { return swapchainImageViews; }
-	VkImageView& GetDepthImageView() { return depthImageView; }
-	VkFormat GetSwapchainImageFormat() const { return swapchainImageFormat; }
-	VkExtent2D& GetSwapchainExtent() { return swapchainExtent; }
+	void BeginRenderpass() { renderpass->BeginRenderpass(*commandPool->GetCommandBuffer(aquiredImageIndex), swapchainExtent, *swapchainFramebuffers[aquiredImageIndex], clearColor); }
+	void EndRenderpass() { renderpass->EndRenderpass(*commandPool->GetCommandBuffer(aquiredImageIndex)); }
 
-	VKCommandPool& GetCommandPool() { return *commandPool; }
+	VkSwapchainKHR getSwapchain() const { return swapchain; }
+	std::vector<VkImage> getSwapchainImages() const { return swapchainImages; }
+	std::vector<VkImageView> getSwapchainImageViews() const { return swapchainImageViews; }
+	VkImageView& getDepthImageView() { return depthImageView; }
+	VkFormat getSwapchainImageFormat() const { return swapchainImageFormat; }
+	VkExtent2D& getSwapchainExtent() { return swapchainExtent; }
 
-	void RegisterSurface(VKSurface* surface) { this->surface = surface; }
-	void RegisterDevice(VKDevice* device) { this->device = device; }
+	VKCommandPool& getCommandPool() { return *commandPool; }
+
+	VKRenderpass& getRenderpass() { return *renderpass; }
+
+	void RegisterSurface(VKSurface& surface) { this->surface = &surface; }
 private:
+	//External
+	VKPhysicalDevice* physicalDevice;
 	VKDevice* device;
-	VKPhysicalDevice* physicalDev;
 	VKSurface* surface;
 
+	//Clearing
+	Vector4f clearColor;
+
+	//Swapchain imageviews and images
 	VkSwapchainKHR swapchain;
 	VkFormat swapchainImageFormat;
 	VkExtent2D swapchainExtent;
 
-	Vector4f clearColor;
-
 	std::vector<VkImage> swapchainImages;
 	std::vector<VkImageView> swapchainImageViews;
 
+	//For multisampling
+	VkImage colorImage;
+	VkDeviceMemory colorImageMemory;
+	VkImageView colorImageView;
+	
+	//Depth buffer
 	VkImage depthImage;
 	VkDeviceMemory depthImageMemory;
 	VkImageView depthImageView;
 
+	//Synchronization
 	std::vector<VKSemaphore*> imageAvailableSemaphores;
 	std::vector<VKSemaphore*> renderFinishedSemaphores;
 	std::vector<VKFence*> inFlightFences;
@@ -71,7 +87,10 @@ private:
 	uint32_t aquiredImageIndex;
 	uint32_t NumImages;
 
+	//Rendering
 	VKCommandPool* commandPool;
+	VKRenderpass* renderpass;
+	std::vector<VKFramebuffer*> swapchainFramebuffers;
 };
 
 #endif

@@ -32,9 +32,6 @@ float* Mesh::GetVertexData() const
 		data[i * numFloats + counter++] = vertices[i].getNormal().x;
 		data[i * numFloats + counter++] = vertices[i].getNormal().y;
 		data[i * numFloats + counter++] = vertices[i].getNormal().z;
-		data[i * numFloats + counter++] = vertices[i].getColour().x;
-		data[i * numFloats + counter++] = vertices[i].getColour().y;
-		data[i * numFloats + counter++] = vertices[i].getColour().z;
 	}
 	
 	return data;

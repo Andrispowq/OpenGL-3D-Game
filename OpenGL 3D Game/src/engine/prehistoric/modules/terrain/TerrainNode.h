@@ -3,29 +3,25 @@
 
 #include "engine/prehistoric/core/gameObject/GameObject.h"
 
-#include "TerrainMaps.h"
-
-#include "engine/prehistoric/component/renderer/Renderer.h"
-#include "engine/prehistoric/common/framework/Window.h"
-#include "engine/prehistoric/core/movement/Camera.h"
-
-#include "engine/platform/opengl/buffer/GLPatchVBO.h"
-//#include "engine/platform/vulkan/buffer/VKPatchVBO.h"
-
 #include "engine/platform/opengl/rendering/pipeline/GLPipeline.h"
 #include "engine/platform/vulkan/rendering/pipeline/VKPipeline.h"
 
 #include "engine/platform/opengl/rendering/shaders/terrain/GLTerrainShader.h"
 //#include "engine/platform/vulkan/rendering/shaders/terrain/VKTerrainShader.h"
 
+#include "engine/platform/opengl/rendering/shaders/terrain/GLTerrainWireframeShader.h"
+//#include "engine/platform/vulkan/rendering/shaders/terrain/VKTerrainWireframeShader.h"
+
 #include "engine/prehistoric/common/rendering/RenderingEngine.h"
 
 #include "engine/config/FrameworkConfig.h"
 
+#include "TerrainQuadtree.h"
+
 class TerrainNode : public GameObject
 {
 public:
-	TerrainNode(TerrainMaps& maps, Window* window, Camera* camera, const std::vector<Vector2f>& vertices, Vector2f location, Vector2f index, int lod);
+	TerrainNode(TerrainQuadtree* quatree, Vector2f location, Vector2f index, int lod);
 	virtual ~TerrainNode();
 
 	virtual void PreRender(RenderingEngine* renderingEngine) override;
@@ -37,7 +33,7 @@ public:
 
 	void ComputeWorldPosition();
 
-	TerrainMaps* getMaps() const { return maps; }
+	TerrainMaps* getMaps() const { return quadtree->getTerrainMaps(); }
 
 	Vector3f getWorldPosition() const { return worldPosition; }
 	Vector2f getLocation() const { return location; }
@@ -47,12 +43,7 @@ public:
 	int getLod() const { return lod; }
 	bool isLeaf() const { return leaf; }
 private:
-	TerrainMaps* maps; //Per-terrain data, stored in Terrain class and also deleted there
-	Window* window;
-	Camera* camera;
-
-	PatchVBO* mesh;
-	std::vector<Vector2f> vertices;
+	TerrainQuadtree* quadtree;
 
 	Vector3f worldPosition;
 	Vector2f location;
@@ -61,9 +52,6 @@ private:
 	float gap;
 	int lod;
 	bool leaf;
-
-	static Material* material;
-	static Pipeline* pipeline;
 };
 
 #endif

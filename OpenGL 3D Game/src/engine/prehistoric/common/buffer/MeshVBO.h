@@ -14,7 +14,7 @@ public:
 
 	virtual void Store(const Mesh& mesh) override = 0;
 
-	virtual void Bind(void* commandBuffer, void* graphicsPipeline) const override  = 0;
+	virtual void Bind(void* commandBuffer) const override  = 0;
 	virtual void Draw(void* commandBuffer) const = 0;
 	virtual void Unbind() const override = 0;
 };

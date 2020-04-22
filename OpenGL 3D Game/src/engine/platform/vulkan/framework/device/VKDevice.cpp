@@ -32,6 +32,9 @@ void VKDevice::CreateLogicalDevice(VKSurface* surface, VKPhysicalDevice* physica
 	}
 
 	VkPhysicalDeviceFeatures deviceFeatures = {};
+	deviceFeatures.samplerAnisotropy = VK_TRUE;
+	deviceFeatures.sampleRateShading = VK_TRUE;
+	deviceFeatures.geometryShader = VK_TRUE;
 
 	VkDeviceCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
@@ -43,6 +46,7 @@ void VKDevice::CreateLogicalDevice(VKSurface* surface, VKPhysicalDevice* physica
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
 	createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 
+#if defined(PR_VK_ENABLE_VALIDATION_LAYERS)
 	if (FrameworkConfig::apiVulkanUseValidationLayers) 
 	{
 		createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
@@ -52,6 +56,9 @@ void VKDevice::CreateLogicalDevice(VKSurface* surface, VKPhysicalDevice* physica
 	{
 		createInfo.enabledLayerCount = 0;
 	}
+#else
+	createInfo.enabledLayerCount = 0;
+#endif
 
 	if (vkCreateDevice(physicalDevice->GetPhysicalDevice(), &createInfo, nullptr, &device) != VK_SUCCESS) 
 	{

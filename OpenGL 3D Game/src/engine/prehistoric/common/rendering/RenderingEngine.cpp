@@ -75,11 +75,19 @@ void RenderingEngine::Update(const float delta)
 
 void RenderingEngine::Render(GameObject* root)
 {
-	root->PreRender(this); 
+	root->PreRender(this);
 
-	for (Renderable* model : models)
+	for (auto pipeline : models)
 	{
-		model->Render(*this);
+		pipeline.first->BindPipeline();
+
+		for (auto renderer : pipeline.second)
+		{
+			//pipeline.first->getShader()->UpdateUniforms(renderer->GetParent(), camera, lights);
+			renderer->BatchRender(*this);
+		}
+
+		pipeline.first->UnbindPipeline();
 	}
 
 	window->Render();
@@ -87,9 +95,34 @@ void RenderingEngine::Render(GameObject* root)
 	lights.clear();
 }
 
+//TODO: Convert it to template
+static bool FindElement(Pipeline* pipeline, std::unordered_map<Pipeline*, std::vector<Renderable*>> pipelines)
+{
+	for (const auto element : pipelines)
+	{
+		if ((*pipeline) == (*element.first))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void RenderingEngine::AddModel(Renderable* renderable)
 {
-	models.push_back(renderable);
+	Pipeline* pipeline = renderable->GetPipeline();
+
+	if(FindElement(pipeline, models))//if (models.find(pipeline) != models.end())
+	{
+		auto& renderables = models[pipeline];
+		renderables.push_back(renderable);
+	}
+	else
+	{
+		std::vector<Renderable*> renderers = { renderable };
+		models.insert(std::make_pair(pipeline, renderers));
+	}
 }
 
 void RenderingEngine::AddLight(Light* light)

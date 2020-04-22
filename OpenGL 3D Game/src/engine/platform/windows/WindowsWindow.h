@@ -18,12 +18,12 @@ public:
 
 	virtual ~WindowsWindow();
 
-	bool Create() override;
-	bool ShouldClose() const override;	
-	void Input() override;
-	void Render() const override;
+	virtual bool Create() override;
+	virtual bool ShouldClose() const override;
+	virtual void Input() override;
+	virtual void Render() const override;
 
-	void* GetWindowHandle() const override { return window; }
+	virtual void* GetWindowHandle() const override { return window; }
 private:
 	bool initGLFW() const;
 private:

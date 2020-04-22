@@ -22,6 +22,7 @@ struct SwapChainSupportDetails
 };
 
 class VKDevice;
+class VKPhysicalDevice;
 
 static VkCommandPool copyCommandPool;
 
@@ -45,6 +46,12 @@ namespace VKUtil
 	void CopyBuffer(VKDevice& device, VkBuffer& srcBuffer, VkBuffer& dstBuffer, VkDeviceSize& size, VkCommandBuffer& buff);
 	void CopyBuffer(VKDevice& device, VkBuffer& srcBuffer, VkBuffer& dstBuffer, VkDeviceSize& size);
 
-	void TransitionImageLayout(VKDevice& device, VkImage& image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
+	void TransitionImageLayout(VKDevice& device, VkImage& image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels);
 	void CopyBufferToImage(VKDevice& device, VkBuffer& buffer, VkImage& image, uint32_t width, uint32_t height);
+	void GenerateMipmaps(VkPhysicalDevice& physicalDevice, VKDevice& device, VkImage& image, VkFormat format, uint32_t width, uint32_t height, uint32_t mipLevels);
+	std::vector<VkFormat> GetAvailableFormats(const VkPhysicalDevice& physicalDevice);
+
+	void CreateImage(VKPhysicalDevice& physicalDevice, VKDevice& device, uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits samples,
+		VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags memoryFlags, VkImage& image, VkDeviceMemory& memory);
+	void CreateImageView(VKDevice& device, VkImage& image, VkFormat format, VkImageAspectFlagBits aspect, uint32_t mipLevels, VkImageView& imageView);
 };

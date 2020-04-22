@@ -10,7 +10,7 @@ class VKCommandPool;
 class VKCommandBuffer
 {
 public:
-	VKCommandBuffer(VkDevice device, VKCommandPool& commandPool);
+	VKCommandBuffer(VkDevice& device, VKCommandPool& commandPool);
 	virtual ~VKCommandBuffer();
 
 	void BindBuffer() const;

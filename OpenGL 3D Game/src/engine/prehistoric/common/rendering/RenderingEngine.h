@@ -5,6 +5,9 @@
 #include "engine/prehistoric/core/movement/Camera.h"
 #include "engine/config/FrameworkConfig.h"
 
+#include "engine/prehistoric/common/buffer/VBO.h"
+#include "engine/prehistoric/common/rendering/pipeline/Pipeline.h"
+
 class GameObject;
 class Renderable;
 class Light;
@@ -31,7 +34,7 @@ public:
 	RenderingEngine(const RenderingEngine& engine) = delete;
 	RenderingEngine operator=(const RenderingEngine& engine) = delete;
 private:
-	std::vector<Renderable*> models;
+	std::unordered_map<Pipeline*, std::vector<Renderable*>> models;
 	std::vector<Light*> lights;
 
 	Window* window;

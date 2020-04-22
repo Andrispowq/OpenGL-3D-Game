@@ -3,7 +3,7 @@
 //Material texture names
 #define ALBEDO_MAP "albedoMap"
 #define NORMAL_MAP "normalMap"
-#define DISPLACEMENT_MAP "displacementMAp"
+#define DISPLACEMENT_MAP "displacementMap"
 #define METALLIC_MAP "metallicMap"
 #define ROUGHNESS_MAP "roughnessMap"
 #define OCCLUSION_MAP "occlusionMap"

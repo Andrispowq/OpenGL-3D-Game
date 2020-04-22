@@ -15,7 +15,7 @@ public:
 
 	void Store(const Mesh& mesh) override;
 
-	void Bind(void* commandBuffer, void* graphicsPipeline) const override;
+	void Bind(void* commandBuffer) const override;
 	void Draw(void* commandBuffer) const override;
 	void Unbind() const override;
 private:

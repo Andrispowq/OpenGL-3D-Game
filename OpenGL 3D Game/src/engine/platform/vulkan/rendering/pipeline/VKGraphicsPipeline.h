@@ -14,7 +14,8 @@ class VKGraphicsPipeline
 {
 public:
 	VKGraphicsPipeline(VKDevice& device, VKShader* shader, VKRenderpass& renderpass,
-		const Vector2f& viewportStart, const Vector2f& viewportSize, const Vector2u& scissorStart, const Vector2u& scissorSize, const bool& backfaceCulling, VKMeshVBO& vbo);
+		const Vector2f& viewportStart, const Vector2f& viewportSize, const Vector2u& scissorStart, const Vector2u& scissorSize, const bool& backfaceCulling, 
+		VKMeshVBO& vbo, VkSampleCountFlagBits samples);
 	virtual ~VKGraphicsPipeline();
 
 	void BindGraphicsPipeline(VKCommandBuffer& commandBuffer) const;

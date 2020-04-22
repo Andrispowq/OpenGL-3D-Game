@@ -219,7 +219,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 							}
 							else
 							{
-								PR_LOG_RUNTIME_ERROR("Shader type 'basic' is currently only supported on the OpenGL API!\n");
+								shader = new VKBasicShader(window);
 							}
 						}
 						if (compTokens[1] == "pbr")
@@ -230,22 +230,29 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 							}
 							else
 							{
-								PR_LOG_RUNTIME_ERROR("Shader type 'pbr' is currently only supported on the OpenGL API!\n");
+								shader = new VKPBRShader(window);
 							}
 						}
 
 						if (FrameworkConfig::api == OpenGL)
 						{
-							pipeline = new GLPipeline(shader);
-							pipeline->CreatePipeline(window, vbo);
+							pipeline = new GLPipeline(shader, vbo);
 						}
 						else if (FrameworkConfig::api == Vulkan)
 						{
-							pipeline = new VKPipeline(shader);
-							pipeline->CreatePipeline(window, vbo);
+							pipeline = new VKPipeline(shader, vbo);
 						}
 
-						Renderer* renderer = new Renderer(vbo, pipeline, material, window);
+						pipeline->SetBackfaceCulling(true);
+
+						pipeline->SetViewportStart({ 0, 0 });
+						pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
+						pipeline->SetScissorStart({ 0, 0 });
+						pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
+
+						pipeline->CreatePipeline(window);
+
+						Renderer* renderer = new Renderer(pipeline, material, window);
 
 						obj->AddComponent(tokens[1], renderer);
 					}
@@ -303,7 +310,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 									}
 									else
 									{
-										PR_LOG_RUNTIME_ERROR("Shader type 'basic' is currently only supported on the OpenGL API!\n");
+										shader = new VKBasicShader(window);
 									}
 								}
 								if (compTokens[1] == "pbr")
@@ -314,22 +321,29 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 									}
 									else
 									{
-										PR_LOG_RUNTIME_ERROR("Shader type 'pbr' is currently only supported on the OpenGL API!\n");
+										shader = new VKPBRShader(window);
 									}
 								}
 
 								if (FrameworkConfig::api == OpenGL)
 								{
-									pipeline = new GLPipeline(shader);
-									pipeline->CreatePipeline(window, vbo);
+									pipeline = new GLPipeline(shader, vbo);
 								}
 								else if (FrameworkConfig::api == Vulkan)
 								{
-									pipeline = new VKPipeline(shader);
-									pipeline->CreatePipeline(window, vbo);
+									pipeline = new VKPipeline(shader, vbo);
 								}
 
-								Renderer* renderer = new Renderer(vbo, pipeline, material, window);
+								pipeline->SetBackfaceCulling(true);
+
+								pipeline->SetViewportStart({ 0, 0 });
+								pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
+								pipeline->SetScissorStart({ 0, 0 });
+								pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
+
+								pipeline->CreatePipeline(window);
+
+								Renderer* renderer = new Renderer(pipeline, material, window);
 
 								obj->AddComponent(tokens[1], renderer);
 

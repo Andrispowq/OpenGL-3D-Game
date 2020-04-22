@@ -7,7 +7,8 @@
 class Vertex
 {
 public:
-	Vertex(const Vector3f& position, const Vector2f& texture, const Vector3f& normal, const Vector3f& colour) : position(position), texture(texture), normal(normal), colour(colour), textureIndex(-1), normalIndex(-1) {}
+	Vertex(const Vector3f& position, const Vector2f& texture, const Vector3f& normal) : position(position), texture(texture), normal(normal), textureIndex(-1), normalIndex(-1) {}
+	Vertex(const Vector3f& position, const Vector2f& texture) : position(position), texture(texture), normal(Vector3f(0)), textureIndex(-1), normalIndex(-1) {}
 	Vertex(const Vector3f& position) : position(position), texture(Vector2f(0)), normal(Vector3f(0)), textureIndex(-1), normalIndex(-1) {}
 	Vertex() : position(Vector3f(0)), texture(Vector2f(0)), normal(Vector3f(0)), textureIndex(-1), normalIndex(-1) {}
 
@@ -15,13 +16,12 @@ public:
 
 	~Vertex() { /*delete duplicateVertex;*/ }
 
-	static size_t GetNumberOfFloats() { return 11; }
+	static size_t GetNumberOfFloats() { return 8; }
 	static size_t GetSize() { return GetNumberOfFloats() * sizeof(float); }
 
 	inline Vector3f getPosition() const { return position; }
 	inline Vector2f getTexture() const { return texture; }
 	inline Vector3f getNormal() const { return normal; }
-	inline Vector3f getColour() const { return colour; }
 
 	inline int getTextureIndex() const { return textureIndex; }
 	inline int getNormalIndex() const { return normalIndex; }
@@ -47,7 +47,6 @@ public:
 	Vector3f position;
 	Vector2f texture;
 	Vector3f normal;
-	Vector3f colour;
 
 	//Data for loading obj files
 	Vertex* duplicateVertex = nullptr;

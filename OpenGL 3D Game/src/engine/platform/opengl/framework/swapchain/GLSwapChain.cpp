@@ -3,7 +3,7 @@
 #include "engine/config/FrameworkConfig.h"
 #include "engine/prehistoric/common/framework/Window.h"
 
-void GLSwapchain::SetupSwapchain(void* physicalDevice)
+void GLSwapchain::SetupSwapchain(Window* window)
 {
 	//Enabling GL_TEXTURE_2D is deprecated, in debug mode, it will cause the program to break
 	//glEnable(GL_TEXTURE_2D);
@@ -15,7 +15,7 @@ void GLSwapchain::SetupSwapchain(void* physicalDevice)
 	//glCullFace(GL_BACK);
 }
 
-void GLSwapchain::SwapBuffers(Window* window)
+void GLSwapchain::SwapBuffers()
 {
 	glfwSwapBuffers((GLFWwindow*)window->GetWindowHandle());
 }
@@ -25,7 +25,7 @@ void GLSwapchain::SetVSync(bool vSync) const
 	glfwSwapInterval(vSync ? 1 : 0);
 }
 
-void GLSwapchain::SetWindowSize(Window* window, uint32_t width, uint32_t height)
+void GLSwapchain::SetWindowSize(uint32_t width, uint32_t height)
 {
 	glViewport(0, 0, width, height);
 	FrameworkConfig::windowWidth = width;

@@ -49,13 +49,13 @@ GLTerrainShader::GLTerrainShader()
 		AddUniform(uniformName + DISPLACEMENT_MAP);
 		AddUniform(uniformName + METALLIC_MAP);
 		AddUniform(uniformName + ROUGHNESS_MAP);
-		AddUniform(uniformName + OCCLUSION_MAP);
+		//AddUniform(uniformName + OCCLUSION_MAP);
 
 		AddUniform(uniformName + HEIGHT_SCALE);
 		AddUniform(uniformName + HORIZONTAL_SCALE);
 		AddUniform(uniformName + METALLIC);
 		AddUniform(uniformName + ROUGHNESS);
-		AddUniform(uniformName + OCCLUSION);
+		//AddUniform(uniformName + OCCLUSION);
 	}
 
 	for (unsigned int i = 0; i < EngineConfig::lightsMaxNumber; i++)
@@ -140,7 +140,7 @@ void GLTerrainShader::UpdateUniforms(GameObject* object, Camera* camera, std::ve
 		SetUniformf(uName + HORIZONTAL_SCALE, TerrainConfig::materials[i]->GetFloat(HORIZONTAL_SCALE));
 		SetUniformf(uName + METALLIC, TerrainConfig::materials[i]->GetFloat(METALLIC));
 		SetUniformf(uName + ROUGHNESS, TerrainConfig::materials[i]->GetFloat(ROUGHNESS));
-		SetUniformf(uName + OCCLUSION, TerrainConfig::materials[i]->GetFloat(OCCLUSION));
+		//SetUniformf(uName + OCCLUSION, TerrainConfig::materials[i]->GetFloat(OCCLUSION));
 	}
 
 	for (unsigned int i = 0; i < EngineConfig::lightsMaxNumber; i++)

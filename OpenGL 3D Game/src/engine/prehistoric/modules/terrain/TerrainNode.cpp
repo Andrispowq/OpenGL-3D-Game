@@ -1,33 +1,16 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "TerrainNode.h"
 
-#include "TerrainQuadtree.h"
 #include "engine/prehistoric/core/util/Constants.h"
 
-Material* TerrainNode::material = nullptr;
-Pipeline* TerrainNode::pipeline = nullptr;
-
-TerrainNode::TerrainNode(TerrainMaps& maps, Window* window, Camera* camera, const std::vector<Vector2f>& vertices, Vector2f location, Vector2f index, int lod)
+TerrainNode::TerrainNode(TerrainQuadtree* quadtree, Vector2f location, Vector2f index, int lod)
 {
-	this->maps = &maps;
-	this->window = window;
-	this->camera = camera;
+	this->quadtree = quadtree;
 
 	this->location = location;
 	this->index = index;
 	this->lod = lod;
 	this->gap = float(1 / (TerrainQuadtree::rootNodes * pow(2, lod)));
-
-	if (FrameworkConfig::api == OpenGL)
-	{
-		mesh = new GLPatchVBO();
-	}
-	else if (FrameworkConfig::api == Vulkan)
-	{
-		PR_LOG_RUNTIME_ERROR("ERROR: Create VKPatchVBO!!!!! Source: TerrainNode.\n");
-	}
-
-	mesh->Store(vertices);
 
 	Vector3f localScaling = { gap, 0, gap };
 	Vector3f localPosition = { location.x, 0, location.y };
@@ -38,37 +21,15 @@ TerrainNode::TerrainNode(TerrainMaps& maps, Window* window, Camera* camera, cons
 	worldTransform->SetScaling({ TerrainConfig::scaleXZ, TerrainConfig::scaleY, TerrainConfig::scaleXZ });
 	worldTransform->SetPosition({ -TerrainConfig::scaleXZ / 2, 0, -TerrainConfig::scaleXZ / 2 });
 
-	//TODO: material is per-terrain, it will not be static
-	if (material == nullptr)
-	{
-		material = new Material(window);
-	}
-
-	PR_LOG_MESSAGE("hello\n");
-	if (pipeline == nullptr)
-	{
-		Shader* shader = nullptr;
-
-		if (FrameworkConfig::api == OpenGL)
-		{
-			shader = new GLTerrainShader();
-			pipeline = new GLPipeline(shader);
-		}
-		else if (FrameworkConfig::api == Vulkan)
-		{
-
-			pipeline = new VKPipeline(shader);
-		}
-	}
-	PR_LOG_MESSAGE("hello\n");
-
-	Renderer* renderer = new Renderer(mesh, pipeline, material, window);
+	Renderer* renderer = new Renderer(quadtree->getPipeline(), quadtree->getMaterial(), quadtree->getWindow());
 	AddComponent(RENDERER_COMPONENT, renderer);
+
+	ComputeWorldPosition();
+	UpdateQuadtree();
 }
 
 TerrainNode::~TerrainNode()
 {
-	delete mesh;
 }
 
 void TerrainNode::PreRender(RenderingEngine* renderingEngine)
@@ -79,24 +40,22 @@ void TerrainNode::PreRender(RenderingEngine* renderingEngine)
 	{
 		GetComponent(RENDERER_COMPONENT)->PreRender(renderingEngine);
 	}
-	else
+
+	for (auto child : children)
 	{
-		for (auto child : children)
-		{
-			child.second->PreRender(renderingEngine);
-		}
+		child.second->PreRender(renderingEngine);
 	}
 }
 
 void TerrainNode::UpdateQuadtree()
 {
-	if (camera->getPosition().y > TerrainConfig::scaleY)
+	if (quadtree->getCamera()->getPosition().y > TerrainConfig::scaleY)
 	{
 		worldPosition.y = TerrainConfig::scaleY;
 	}
 	else
 	{
-		worldPosition.y = camera->getPosition().y;
+		worldPosition.y = quadtree->getCamera()->getPosition().y;
 	}
 
 	UpdateChildNodes();
@@ -109,20 +68,28 @@ void TerrainNode::UpdateQuadtree()
 
 void TerrainNode::AddChildNodes(int lod)
 {
+	/*if (lod >= TerrainConfig::lodRanges.size())
+		return;*/
+
 	if (leaf)
 		leaf = false;
 
 	if (children.size() == 0)
 	{
-		for (unsigned char i = 0; i < 2; i++)
+		for (unsigned int i = 0; i < 2; i++)
 		{
-			for (unsigned char j = 0; j < 2; j++)
+			for (unsigned int j = 0; j < 2; j++)
 			{
 				std::string name = "Child ";
 				name.append(std::to_string(i));
 				name.append(", ");
 				name.append(std::to_string(j));
-				AddChild(name, new TerrainNode(*maps, window, camera, vertices, { (float) i * gap / 2, (float) j * gap / 2 }, { (float) i, (float) j }, lod));
+				name.append(", ");
+				name.append(std::to_string(lod));
+
+				AddChild(name, new TerrainNode(quadtree, { (float) i * gap / 2, (float) j * gap / 2 }, { (float) i, (float) j }, lod));
+			
+				PR_LOG_MESSAGE(name + "\n");
 			}
 		}
 	}
@@ -133,12 +100,20 @@ void TerrainNode::RemoveChildNodes()
 	if (!leaf)
 		leaf = true;
 
-	children.clear();
+	if (children.size() != 0)
+	{
+		for (auto& child : children)
+		{
+			delete child.second;
+		}
+
+		children.clear();
+	}
 }
 
 void TerrainNode::UpdateChildNodes()
 {
-	float dist = (camera->getPosition() - worldPosition).length();
+	float dist = (quadtree->getCamera()->getPosition() - worldPosition).length();
 
 	if (dist < TerrainConfig::lodRanges[lod])
 	{

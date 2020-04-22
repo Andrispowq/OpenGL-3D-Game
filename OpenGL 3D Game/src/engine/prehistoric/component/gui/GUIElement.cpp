@@ -4,6 +4,7 @@
 #include "engine/prehistoric/core/util/ModelFabricator.h"
 
 #include "engine/platform/opengl/rendering/shaders/gui/GLGUIShader.h"
+#include "engine/platform/vulkan/rendering/shaders/basic/VKBasicShader.h"
 
 VBO* GUIElement::guiVbo = nullptr;
 Pipeline* GUIElement::pipeline = nullptr;
@@ -29,15 +30,15 @@ GUIElement::GUIElement(Window* window, Texture* texture, void* data, size_t data
 		if (FrameworkConfig::api == OpenGL)
 		{
 			shader = new GLGUIShader();
-			pipeline = new GLPipeline(shader);
+			pipeline = new GLPipeline(shader, guiVbo);
 		}
 		else if (FrameworkConfig::api == Vulkan)
 		{
-			shader = new VKShader(window->GetContext(), window->GetSwapchain());
-			pipeline = new VKPipeline(shader);
+			shader = new VKBasicShader(window);
+			pipeline = new VKPipeline(shader, guiVbo);
 		}
 
-		pipeline->CreatePipeline(window, (MeshVBO*)guiVbo);
+		pipeline->CreatePipeline(window);
 	}
 }
 
@@ -51,10 +52,10 @@ void GUIElement::PreRender(RenderingEngine* renderingEngine)
 		return;
 
 	pipeline->BindPipeline();
-	pipeline->GetShader()->UpdateUniforms(parent);
+	pipeline->getShader()->UpdateUniforms(parent);
 
-	guiVbo->Bind(pipeline->GetDrawCommandBuffer(), pipeline->GetGraphicsPipeline());
-	guiVbo->Draw(pipeline->GetDrawCommandBuffer());
+	guiVbo->Bind(renderingEngine->GetWindow()->GetSwapchain()->GetDrawCommandBuffer());
+	guiVbo->Draw(renderingEngine->GetWindow()->GetSwapchain()->GetDrawCommandBuffer());
 	guiVbo->Unbind();
 	
 	pipeline->UnbindPipeline();

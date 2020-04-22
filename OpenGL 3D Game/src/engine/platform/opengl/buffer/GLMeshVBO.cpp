@@ -47,7 +47,7 @@ void GLMeshVBO::Store(const Mesh& mesh)
 	glBindVertexArray(0);
 }
 
-void GLMeshVBO::Bind(void* commandBuffer, void* graphicsPipeline) const
+void GLMeshVBO::Bind(void* commandBuffer) const
 {
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);

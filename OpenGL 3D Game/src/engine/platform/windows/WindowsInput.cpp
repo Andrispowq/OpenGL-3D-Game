@@ -8,9 +8,12 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 		PR_LOG_RUNTIME_ERROR("Window minimalization is not supported!\n");
 	}
 
+	FrameworkConfig::windowWidth = width;
+	FrameworkConfig::windowHeight = height;
+
 	Window* wnd = (Window*) glfwGetWindowUserPointer(window);
 	wnd->SetResized(true);
-	wnd->GetSwapchain()->SetWindowSize(wnd, (uint32_t)width, (uint32_t)height);
+	wnd->GetSwapchain()->SetWindowSize((uint32_t)width, (uint32_t)height);
 }
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)

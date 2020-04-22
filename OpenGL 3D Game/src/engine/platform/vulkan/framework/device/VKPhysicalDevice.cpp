@@ -43,6 +43,19 @@ void VKPhysicalDevice::PickPhysicalDevice(VKSurface* surface, VKInstance* instan
 	{
 		PR_LOG_RUNTIME_ERROR("Failed to find a suitable GPU!\n");
 	}
+
+	VkPhysicalDeviceProperties physicalDeviceProperties;
+	vkGetPhysicalDeviceProperties(physicalDevice, &physicalDeviceProperties);
+
+	VkSampleCountFlags counts = physicalDeviceProperties.limits.framebufferColorSampleCounts & physicalDeviceProperties.limits.framebufferDepthSampleCounts;
+
+	if (counts & VK_SAMPLE_COUNT_1_BIT) msaaSamples = VK_SAMPLE_COUNT_1_BIT;
+	if (counts & VK_SAMPLE_COUNT_2_BIT) msaaSamples = VK_SAMPLE_COUNT_2_BIT;
+	if (counts & VK_SAMPLE_COUNT_4_BIT) msaaSamples = VK_SAMPLE_COUNT_4_BIT;
+	if (counts & VK_SAMPLE_COUNT_8_BIT) msaaSamples = VK_SAMPLE_COUNT_8_BIT;
+	if (counts & VK_SAMPLE_COUNT_16_BIT) msaaSamples = VK_SAMPLE_COUNT_16_BIT;
+	if (counts & VK_SAMPLE_COUNT_32_BIT) msaaSamples = VK_SAMPLE_COUNT_32_BIT;
+	if (counts & VK_SAMPLE_COUNT_64_BIT) msaaSamples = VK_SAMPLE_COUNT_64_BIT;
 }
 
 bool VKPhysicalDevice::IsDeviceSuitable(VKSurface* surface, VkPhysicalDevice device, VkPhysicalDeviceFeatures features) const
@@ -66,8 +79,6 @@ bool VKPhysicalDevice::IsDeviceSuitable(VKSurface* surface, VkPhysicalDevice dev
 			SwapChainSupportDetails swapChainSupport = VKUtil::QuerySwapChainSupport(surface->GetSurface(), device);
 			swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
 		}
-
-		PR_LOG_MESSAGE("Anisotropic sampling: %u\n", deviceFeatures.samplerAnisotropy);
 		
 		return indices.hasGraphicsFamily && indices.hasPresentFamily && extensionsSupported && swapChainAdequate && deviceFeatures.samplerAnisotropy;
 	}

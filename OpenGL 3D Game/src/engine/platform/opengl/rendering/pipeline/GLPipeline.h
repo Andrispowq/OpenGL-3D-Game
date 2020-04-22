@@ -9,13 +9,14 @@
 class GLPipeline : public Pipeline
 {
 public:
-	GLPipeline(Shader* shader);
+	GLPipeline(Shader* shader, VBO* vbo);
 	virtual ~GLPipeline() {}
 
-	void CreatePipeline(Window* window, MeshVBO* vbo) override;
+	void CreatePipeline(Window* window) override;
 
-	void BindPipeline() override;
-	void UnbindPipeline() const override;
+	virtual void BindPipeline() const override;
+	virtual void RenderPipeline() const override;
+	virtual void UnbindPipeline() const override;
 
 	void DestroyPipeline() override;
 private:

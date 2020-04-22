@@ -2,7 +2,7 @@
 #define VK_SURFACE_H
 
 #include <vulkan/vulkan.h>
-#define PR_INCLUDE_VULKAN
+#define GLFW_INCLUDE_VULKAN
 #include <glfw3.h>
 
 #include "engine/prehistoric/common/framework/Window.h"
@@ -12,10 +12,12 @@ class VKSurface
 {
 public:
 	void CreateSurface(Window* window, VKInstance* instance);
-	void DeleteSurface(VKInstance* instance);
+	void DeleteSurface();
 
 	VkSurfaceKHR& GetSurface() { return surface; }
 private:
+	VKInstance* instance;
+
 	VkSurfaceKHR surface;
 };
 

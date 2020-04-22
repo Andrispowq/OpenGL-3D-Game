@@ -29,6 +29,90 @@ public:
 	float GetFloat(const std::string& key) const;
 	int GetInt(const std::string& key) const;
 
+	virtual bool operator==(const Material& other)
+	{
+		if (textures.size() != other.textures.size() || vector4s.size() != other.vector4s.size() || vector3s.size() != other.vector3s.size()
+			|| vector2s.size() != other.vector2s.size() || floats.size() != other.floats.size() || ints.size() != other.ints.size())
+			return false;
+
+		for (const auto& tex : textures)
+		{
+			if (other.textures.find(tex.first) == textures.end())
+			{
+				return false;
+			}
+
+			if (other.textures.at(tex.first) != tex.second)
+			{
+				return false;
+			}
+		}
+
+		for (const auto& vec4 : vector4s)
+		{
+			if (other.vector4s.find(vec4.first) == vector4s.end())
+			{
+				return false;
+			}
+
+			if (other.vector4s.at(vec4.first) != vec4.second)
+			{
+				return false;
+			}
+		}
+		for (const auto& vec3 : vector3s)
+		{
+			if (other.vector3s.find(vec3.first) == vector3s.end())
+			{
+				return false;
+			}
+
+			if (other.vector3s.at(vec3.first) != vec3.second)
+			{
+				return false;
+			}
+		}
+		for (const auto& vec2 : vector2s)
+		{
+			if (other.vector2s.find(vec2.first) == vector2s.end())
+			{
+				return false;
+			}
+
+			if (other.vector2s.at(vec2.first) != vec2.second)
+			{
+				return false;
+			}
+		}
+
+		for (const auto& fl : floats)
+		{
+			if (other.floats.find(fl.first) == floats.end())
+			{
+				return false;
+			}
+
+			if (other.floats.at(fl.first) != fl.second)
+			{
+				return false;
+			}
+		}
+		for (const auto& in : ints)
+		{
+			if (other.ints.find(in.first) == ints.end())
+			{
+				return false;
+			}
+
+			if (other.ints.at(in.first) != in.second)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	static Texture* GetDefaultTexture() { return listOfTextures[0]; }
 	static Vector4f* GetDefaultVector4f() { return listOfVector4s[0]; }
 	static Vector3f* GetDefaultVector3f() { return listOfVector3s[0]; }

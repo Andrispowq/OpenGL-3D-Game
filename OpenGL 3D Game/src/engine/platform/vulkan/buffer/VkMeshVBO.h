@@ -9,22 +9,21 @@
 
 #include "engine/platform/vulkan/rendering/command/VKCommandBuffer.h"
 #include "engine/platform/vulkan/framework/device/VKDevice.h"
+#include "engine/platform/vulkan/framework/swapchain/VKSwapchain.h"
 
 class VKMeshVBO : public MeshVBO
 {
 public:
-	VKMeshVBO(const Mesh& mesh, void* physicalDevice, void* device);
-	VKMeshVBO(void* physicalDevice, void* device);
+	VKMeshVBO(const Mesh& mesh, Window* window);
+	VKMeshVBO(Window* window);
 
 	virtual ~VKMeshVBO() override;
 
 	void Store(const Mesh& mesh) override;
 
-	void Bind(void* commandBuffer, void* graphicsPipeline) const override;
+	void Bind(void* commandBuffer) const override;
 	void Draw(void* commandBuffer) const override;
 	void Unbind() const override;
-
-	void RegisterBuffer(VKCommandBuffer* buffer) { this->buffer = buffer; }
 
 	VkVertexInputBindingDescription* GetBindingDescription() const;
 	std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions() const;
@@ -36,11 +35,9 @@ private:
 
 	VkCommandPool copyCommandPool;
 
-	uint8_t size;
-
-	VKCommandBuffer* buffer;
-	VKDevice* device;
 	VKPhysicalDevice* physicalDevice;
+	VKDevice* device;
+	VKSwapchain* swapchain;
 };
 
 #endif

@@ -2,7 +2,7 @@
 #include "VKCommandBuffer.h"
 #include "VKCommandPool.h"
 
-VKCommandBuffer::VKCommandBuffer(VkDevice device, VKCommandPool& commandPool)
+VKCommandBuffer::VKCommandBuffer(VkDevice& device, VKCommandPool& commandPool)
 {
 	this->commandPool = &commandPool;
 	this->device = &device;

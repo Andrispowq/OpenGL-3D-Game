@@ -1,6 +1,5 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include <glew.h>
-#include "engine/platform/vulkan/rendering/pipeline/VKPipeline.h"
 #include "VkShader.h"
 
 namespace ResourceLoader
@@ -25,7 +24,7 @@ namespace ResourceLoader
 		}
 		else
 		{
-			PR_LOG_ERROR("Unable to load shader: %s\n", path);
+			PR_LOG_ERROR("Unable to load shader: %s\n", path.c_str());
 		}
 
 		return { -1 };
@@ -78,7 +77,7 @@ VKShader::VKShader(Context* context, Swapchain* swapchain, const std::vector<cha
 
 	VKSwapchain* vkSwapchain = (VKSwapchain*)swapchain;
 
-	this->numBuffers = (uint32_t)vkSwapchain->GetSwapchainImages().size();
+	this->numBuffers = (uint32_t)vkSwapchain->getSwapchainImages().size();
 
 	this->swapchain = vkSwapchain;
 
@@ -122,7 +121,7 @@ VKShader::VKShader(Context* context, Swapchain* swapchain)
 
 	VKSwapchain* vkSwapchain = (VKSwapchain*)swapchain;
 
-	this->numBuffers = (uint32_t) vkSwapchain->GetSwapchainImages().size();
+	this->numBuffers = (uint32_t) vkSwapchain->getSwapchainImages().size();
 
 	this->swapchain = vkSwapchain;
 
@@ -169,7 +168,7 @@ VKShader::~VKShader()
 	{
 		for (size_t i = 0; i < numBuffers; i++)
 		{
-			vkDestroyBuffer(device->GetDevice(), buffer.second.second[i], nullptr);
+			vkDestroyBuffer(device->GetDevice(), buffer.second.first[i], nullptr);
 		}
 	}
 	
@@ -177,7 +176,7 @@ VKShader::~VKShader()
 	{
 		for (size_t i = 0; i < numBuffers; i++)
 		{
-			vkFreeMemory(device->GetDevice(), memory.second.second[i], nullptr);
+			vkFreeMemory(device->GetDevice(), memory.second.first[i], nullptr);
 		}
 	}
 
@@ -192,7 +191,7 @@ VKShader::~VKShader()
 	delete[] shaderStages;
 }
 
-bool VKShader::AddUniform(const std::string& name, ShaderType stages, UniformType type, uint32_t binding, uint32_t set, size_t size, Texture* texture)
+bool VKShader::AddUniform(const std::string& name, uint32_t stages, UniformType type, uint32_t set, uint32_t binding, size_t size, Texture* texture)
 {
 	uint32_t flags = GetShaderStages(stages);
 	VkDescriptorType bindingType = GetDescriptorType(type);
@@ -204,14 +203,14 @@ bool VKShader::AddUniform(const std::string& name, ShaderType stages, UniformTyp
 	auto layoutIndex = descriptorSetLayouts.find(set);
 	if  (setIndex != descriptorSets.end() && layoutIndex != descriptorSetLayouts.end())
 	{
-		_DescriptorSetLayout = descriptorSetLayouts.at((uint32_t) set);
-		_DescriptorSets = descriptorSets.at((uint32_t) set);
+		_DescriptorSetLayout = descriptorSetLayouts.at(set);
+		_DescriptorSets = descriptorSets.at(set);
 
 		vkDestroyDescriptorSetLayout(device->GetDevice(), _DescriptorSetLayout, nullptr);
 		vkFreeDescriptorSets(device->GetDevice(), descriptorPool, numBuffers, _DescriptorSets.data());
 
-		descriptorSets.erase(descriptorSets.find((uint32_t) set));
-		descriptorSetLayouts.erase(descriptorSetLayouts.find((uint32_t)set));
+		descriptorSets.erase(descriptorSets.find(set));
+		descriptorSetLayouts.erase(descriptorSetLayouts.find(set));
 	}
 	else
 	{
@@ -258,32 +257,34 @@ bool VKShader::AddUniform(const std::string& name, ShaderType stages, UniformTyp
 	}
 
 	//We build this UBO
-	VkDescriptorSetLayoutBinding uboLayoutBinding = {};
-	uboLayoutBinding.descriptorType = bindingType;
-	uboLayoutBinding.descriptorCount = 1;
-	uboLayoutBinding.binding = (uint32_t) binding;
-	uboLayoutBinding.stageFlags = flags;
-	uboLayoutBinding.pImmutableSamplers = nullptr; // Optional
+	VkDescriptorSetLayoutBinding layoutBinding = {};
+	layoutBinding.descriptorType = bindingType;
+	layoutBinding.descriptorCount = 1;
+	layoutBinding.binding = (uint32_t) binding;
+	layoutBinding.stageFlags = flags;
+	layoutBinding.pImmutableSamplers = nullptr; // Optional
 
-	std::pair<uint32_t, VkDescriptorSetLayoutBinding> bind = { set, uboLayoutBinding };
-
-	bindings.insert(std::make_pair(name, bind));
+	std::pair<uint32_t, VkDescriptorSetLayoutBinding> bind = { binding, layoutBinding };
+	setBindings.insert(std::make_pair(name, std::make_pair(set, binding)));
+	
+	auto& listOfSetBindings = bindings[set];
+	listOfSetBindings.insert(bind);
 
 	//We create the descriptor set layout
 	std::vector<VkDescriptorSetLayoutBinding> listOfBindings;
-
-	for (const auto& binding : bindings)
+	listOfBindings.reserve(listOfSetBindings.size());
+	
+	for (auto& element : listOfSetBindings)
 	{
-		if(binding.second.first == set)
-			listOfBindings.push_back(binding.second.second);
+		listOfBindings.push_back(element.second);
 	}
 
-	VkDescriptorSetLayoutCreateInfo layoutInfo = {};
-	layoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-	layoutInfo.bindingCount = (uint32_t) listOfBindings.size();
-	layoutInfo.pBindings = listOfBindings.data();
+	VkDescriptorSetLayoutCreateInfo setLayoutInfo = {};
+	setLayoutInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+	setLayoutInfo.bindingCount = (uint32_t) listOfBindings.size();
+	setLayoutInfo.pBindings = listOfBindings.data();
 
-	if (vkCreateDescriptorSetLayout(device->GetDevice(), &layoutInfo, nullptr, &_DescriptorSetLayout) != VK_SUCCESS)
+	if (vkCreateDescriptorSetLayout(device->GetDevice(), &setLayoutInfo, nullptr, &_DescriptorSetLayout) != VK_SUCCESS)
 	{
 		PR_LOG_RUNTIME_ERROR("Failed to create descriptor set layout!\n");
 		return false;
@@ -312,53 +313,23 @@ bool VKShader::AddUniform(const std::string& name, ShaderType stages, UniformTyp
 		PR_LOG_RUNTIME_ERROR("Failed to create pipeline layout!\n");
 	}
 
-	//We have to recreate the pipeline because an important component has changed
-	//pipeline->RecreatePipeline();
-
-	//Allocate uniform buffers
-	VkDeviceSize bufferSize = size;
-
-	std::vector<VkBuffer> ubos(numBuffers);
-	std::vector<VkDeviceMemory> uboMemories(numBuffers);
-
-	for (size_t i = 0; i < numBuffers; i++)
+	//Allocation
+	if (type == UniformBuffer)
 	{
-		VkBufferCreateInfo bufferInfo = {};
-		bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
-		bufferInfo.size = bufferSize;
-		bufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
-		bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-
-		if (vkCreateBuffer(device->GetDevice(), &bufferInfo, nullptr, &ubos[i]) != VK_SUCCESS)
-		{
-			PR_LOG_RUNTIME_ERROR("Failed to create buffer!\n");
-			return false;
-		}
-
-		VkMemoryRequirements memRequirements;
-		vkGetBufferMemoryRequirements(device->GetDevice(), ubos[i], &memRequirements);
-
-		VkMemoryAllocateInfo allocInfo = {};
-		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-		allocInfo.allocationSize = memRequirements.size;
-		allocInfo.memoryTypeIndex = VKUtil::FindMemoryType(memRequirements.memoryTypeBits, physicalDevice->GetPhysicalDevice(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-
-		if (vkAllocateMemory(device->GetDevice(), &allocInfo, nullptr, &uboMemories[i]) != VK_SUCCESS)
-		{
-			PR_LOG_RUNTIME_ERROR("Failed to allocate buffer memory!\n");
-			return false;
-		}
-
-		vkBindBufferMemory(device->GetDevice(), ubos[i], uboMemories[i], 0);
+		CreateUniformBuffer(size, name);
 	}
+	else if (type == CombinedImageSampler && texture != nullptr)
+	{
+		VKTexture* tex = (VKTexture*)texture;
 
-	std::pair<uint32_t, std::vector<VkBuffer>> setUBO = { set, ubos };
-	std::pair<uint32_t, std::vector<VkDeviceMemory>> setUBOMems = { set, uboMemories };
-	std::pair<uint32_t, UniformType> setBindType = { set, type };
+		std::vector<VkImageView> views(numBuffers, tex->GetTextureImageView());
+		imageViews.insert(std::make_pair(name, views));
 
-	uniformBuffers.insert(std::make_pair(name, setUBO));
-	uniformBuffersMemories.insert(std::make_pair(name, setUBOMems));
-	uniformTypes.insert(std::make_pair(name, setBindType));
+		std::vector<VkSampler> sampler(numBuffers, tex->GetTextureSampler());
+		samplers.insert(std::make_pair(name, sampler));
+	}
+	
+	uniformTypes.insert(std::make_pair(name, type));
 
 	//Create the descriptor sets
 	std::vector<VkDescriptorSetLayout> layouts(numBuffers, _DescriptorSetLayout);
@@ -378,13 +349,20 @@ bool VKShader::AddUniform(const std::string& name, ShaderType stages, UniformTyp
 
 	descriptorSets.insert(std::make_pair(set, _DescriptorSets));
 
-	std::unordered_map<std::string, std::pair<uint32_t, std::vector<VkBuffer>>> uBuffers;
-
-	for (const auto& buffer : uniformBuffers)
+	/*for (const auto& _set : descriptorSets)
 	{
-		if (buffer.second.first == set)
+		PR_LOG_MESSAGE("Descriptor set %u, ID: %p\n", _set.first, _set.second[0]);
+		PR_LOG_MESSAGE("Descriptor set %u, ID: %p\n", _set.first, _set.second[1]);
+		PR_LOG_MESSAGE("Descriptor set %u, ID: %p\n", _set.first, _set.second[2]);
+	}*/
+
+	std::unordered_map<uint32_t, std::pair<std::vector<VkBuffer>, size_t>> uBuffers;
+
+	for (const auto& buff : uniformBuffers)
+	{
+		if (setBindings[buff.first].first == set)
 		{
-			uBuffers.insert(std::make_pair(buffer.first, std::make_pair(bindings.at(buffer.first).second.binding, buffer.second.second)));
+			uBuffers.insert(std::make_pair(setBindings[buff.first].second, buff.second));
 		}
 	}
 
@@ -392,39 +370,20 @@ bool VKShader::AddUniform(const std::string& name, ShaderType stages, UniformTyp
 	{
 		for (size_t i = 0; i < numBuffers; i++)
 		{
-			UniformType typ = uniformTypes[buffer.first].second;
+			VkDescriptorBufferInfo bufferInfo = {};
+			bufferInfo.buffer = buffer.second.first[i];
+			bufferInfo.offset = 0;
+			bufferInfo.range = buffer.second.second;
 
 			VkWriteDescriptorSet descriptorWrite = {};
 			descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			descriptorWrite.dstSet = descriptorSets[(uint32_t)set][i];
-			descriptorWrite.dstBinding = buffer.second.first;
+			descriptorWrite.dstSet = descriptorSets[set][i];
+			descriptorWrite.dstBinding = buffer.first;
 			descriptorWrite.dstArrayElement = 0;
-			descriptorWrite.descriptorType = GetDescriptorType(typ);
+			descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
 			descriptorWrite.descriptorCount = 1;
-
-			if (typ == CombinedImageSampler)
-			{
-				VKTexture* tex = (VKTexture*)texture;
-
-				VkDescriptorImageInfo imageInfo = {};
-				imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-				imageInfo.imageView = tex->GetTextureImageView();
-				imageInfo.sampler = tex->GetTextureSampler();
-
-				descriptorWrite.pImageInfo = &imageInfo; // Optional
-				descriptorWrite.pBufferInfo = nullptr;
-			}
-			else
-			{
-				VkDescriptorBufferInfo bufferInfo = {};
-				bufferInfo.buffer = buffer.second.second[i];
-				bufferInfo.offset = 0;
-				bufferInfo.range = bufferSize;
-
-				descriptorWrite.pImageInfo = nullptr; // Optional
-				descriptorWrite.pBufferInfo = &bufferInfo;
-			}
-
+			descriptorWrite.pImageInfo = nullptr; // Optional
+			descriptorWrite.pBufferInfo = &bufferInfo;
 			descriptorWrite.pTexelBufferView = nullptr; // Optional
 
 			vkUpdateDescriptorSets(device->GetDevice(), 1, &descriptorWrite, 0, nullptr);
@@ -455,7 +414,7 @@ VkDescriptorType VKShader::GetDescriptorType(UniformType type) const
 	return bindingType;
 }
 
-uint32_t VKShader::GetShaderStages(ShaderType stages) const
+uint32_t VKShader::GetShaderStages(uint32_t stages) const
 {
 	uint32_t flags = 0;
 
@@ -555,14 +514,14 @@ void VKShader::Bind(void* commandBuffer) const
 		return;
 
 	VKCommandBuffer* vkcmdbuff = reinterpret_cast<VKCommandBuffer*>(commandBuffer);
-
+	
 	vkCmdBindDescriptorSets(vkcmdbuff->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, count, sets.data(), 0, nullptr);
 }
 
 void VKShader::SetUniformi(const std::string& name, int value, size_t offset) const
 {
 	void* data;
-	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).second[swapchain->GetAquiredImageIndex()];
+	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
 
 	vkMapMemory(device->GetDevice(), mem, offset, sizeof(int), 0, &data);
 	memcpy(data, &value, sizeof(int));
@@ -572,7 +531,7 @@ void VKShader::SetUniformi(const std::string& name, int value, size_t offset) co
 void VKShader::SetUniformf(const std::string& name, float value, size_t offset) const
 {
 	void* data;
-	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).second[swapchain->GetAquiredImageIndex()];
+	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
 
 	vkMapMemory(device->GetDevice(), mem, offset, sizeof(float), 0, &data);
 	memcpy(data, &value, sizeof(float));
@@ -582,7 +541,7 @@ void VKShader::SetUniformf(const std::string& name, float value, size_t offset) 
 void VKShader::SetUniform(const std::string& name, const Vector2f& value, size_t offset) const
 {
 	void* data;
-	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).second[swapchain->GetAquiredImageIndex()];
+	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
 
 	vkMapMemory(device->GetDevice(), mem, offset, sizeof(Vector2f), 0, &data);
 	memcpy(data, &value, sizeof(Vector2f));
@@ -592,7 +551,7 @@ void VKShader::SetUniform(const std::string& name, const Vector2f& value, size_t
 void VKShader::SetUniform(const std::string& name, const Vector3f& value, size_t offset) const
 {
 	void* data;
-	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).second[swapchain->GetAquiredImageIndex()];
+	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
 
 	vkMapMemory(device->GetDevice(), mem, offset, sizeof(Vector3f), 0, &data);
 	memcpy(data, &value, sizeof(Vector3f));
@@ -602,7 +561,7 @@ void VKShader::SetUniform(const std::string& name, const Vector3f& value, size_t
 void VKShader::SetUniform(const std::string& name, const Vector4f& value, size_t offset) const
 {
 	void* data;
-	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).second[swapchain->GetAquiredImageIndex()];
+	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
 
 	vkMapMemory(device->GetDevice(), mem, offset, sizeof(Vector4f), 0, &data);
 	memcpy(data, &value, sizeof(Vector4f));
@@ -612,7 +571,7 @@ void VKShader::SetUniform(const std::string& name, const Vector4f& value, size_t
 void VKShader::SetUniform(const std::string& name, const Matrix4f& value, size_t offset) const
 {
 	void* data;
-	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).second[swapchain->GetAquiredImageIndex()];
+	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
 
 	float* dataF = value.GetData();
 
@@ -621,21 +580,48 @@ void VKShader::SetUniform(const std::string& name, const Matrix4f& value, size_t
 	vkUnmapMemory(device->GetDevice(), mem);
 }
 
+void VKShader::SetTexture(const std::string& name, Texture* value) const
+{
+	std::pair<uint32_t, uint32_t> setBind = setBindings.at(name);
+
+	VKTexture* tex = (VKTexture*)value;
+
+	/*std::vector<VkImageView> views(numBuffers, tex->GetTextureImageView());
+	imageViews.insert(std::make_pair(name, views));
+
+	std::vector<VkSampler> sampler(numBuffers, tex->GetTextureSampler());
+	samplers.insert(std::make_pair(name, sampler));*/
+
+	for (size_t i = 0; i < numBuffers; i++)
+	{
+		VkDescriptorImageInfo imageInfo = {};
+		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+		imageInfo.imageView = tex->GetTextureImageView();
+		imageInfo.sampler = tex->GetTextureSampler();
+
+		VkWriteDescriptorSet descriptorWrite = {};
+		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+		descriptorWrite.dstSet = descriptorSets.at(setBind.first)[i];
+		descriptorWrite.dstBinding = setBind.second;
+		descriptorWrite.dstArrayElement = 0;
+		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+		descriptorWrite.descriptorCount = 1;
+		descriptorWrite.pImageInfo = &imageInfo;
+		descriptorWrite.pBufferInfo = nullptr;
+		descriptorWrite.pTexelBufferView = nullptr;
+
+		vkUpdateDescriptorSets(device->GetDevice(), 1, &descriptorWrite, 0, nullptr);
+	}
+}
+
 void VKShader::SetUniform(const std::string& name, const void* value, size_t size, size_t offset) const
 {
 	void* data;
-	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).second[swapchain->GetAquiredImageIndex()];
+	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
 
 	vkMapMemory(device->GetDevice(), mem, offset, size, 0, &data);
 	memcpy(data, value, size);
 	vkUnmapMemory(device->GetDevice(), mem);
-}
-
-void VKShader::UpdateUniforms(GameObject* object, Camera* camera, std::vector<Light*> lights) const
-{
-	SetUniform("ubo", object->GetWorldTransform()->getTransformationMatrix(), 16 * sizeof(float) * 0);
-	SetUniform("ubo", camera->getViewMatrix(), 16 * sizeof(float) * 1);
-	SetUniform("ubo", camera->getProjectionMatrix(), 16 * sizeof(float) * 2);
 }
 
 VkShaderModule VKShader::CreateShaderModule(const std::vector<char>& code) const
@@ -661,4 +647,42 @@ void VKShader::CreateStageInfo(VkPipelineShaderStageCreateInfo& info, VkShaderMo
 	info.stage = type;
 	info.module = module;
 	info.pName = main;
+}
+
+void VKShader::CreateUniformBuffer(VkDeviceSize bufferSize, const std::string& name)
+{
+	std::vector<VkBuffer> ubos(numBuffers);
+	std::vector<VkDeviceMemory> uboMemories(numBuffers);
+
+	for (size_t i = 0; i < numBuffers; i++)
+	{
+		VkBufferCreateInfo bufferInfo = {};
+		bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
+		bufferInfo.size = bufferSize;
+		bufferInfo.usage = VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT;
+		bufferInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+		if (vkCreateBuffer(device->GetDevice(), &bufferInfo, nullptr, &ubos[i]) != VK_SUCCESS)
+		{
+			PR_LOG_RUNTIME_ERROR("Failed to create buffer!\n");
+		}
+
+		VkMemoryRequirements memRequirements;
+		vkGetBufferMemoryRequirements(device->GetDevice(), ubos[i], &memRequirements);
+
+		VkMemoryAllocateInfo allocInfo = {};
+		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+		allocInfo.allocationSize = memRequirements.size;
+		allocInfo.memoryTypeIndex = VKUtil::FindMemoryType(memRequirements.memoryTypeBits, physicalDevice->GetPhysicalDevice(), VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+
+		if (vkAllocateMemory(device->GetDevice(), &allocInfo, nullptr, &uboMemories[i]) != VK_SUCCESS)
+		{
+			PR_LOG_RUNTIME_ERROR("Failed to allocate buffer memory!\n");
+		}
+
+		vkBindBufferMemory(device->GetDevice(), ubos[i], uboMemories[i], 0);
+	}
+
+	uniformBuffers.insert(std::make_pair(name, std::make_pair(ubos, bufferSize)));
+	uniformBuffersMemories.insert(std::make_pair(name, std::make_pair(uboMemories, bufferSize)));
 }

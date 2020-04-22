@@ -14,6 +14,18 @@ void VKCapabilities::QueryCapabilities(void* physicalDevice)
 	vkGetPhysicalDeviceFeatures(physicalDev->GetPhysicalDevice(), &deviceFeatures);
 	vkGetPhysicalDeviceMemoryProperties(physicalDev->GetPhysicalDevice(), &memoryProps);
 
+	//Getting extension features:
+	/*VkPhysicalDeviceRayTracingPropertiesNV rtProps;
+	rtProps.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV;
+
+	VkPhysicalDeviceProperties2 props;
+	props.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
+	props.pNext = &rtProps;
+
+	vkGetPhysicalDeviceProperties2(physicalDev->GetPhysicalDevice(), &props);
+
+	PR_LOG_MESSAGE("Recursion depth: %u\n", rtProps.maxRecursionDepth);*/
+
 	physicalDeviceCaps.name = properties.deviceName;
 	physicalDeviceCaps.discrete = properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
 	
@@ -25,16 +37,16 @@ void VKCapabilities::QueryCapabilities(void* physicalDevice)
 	driverCaps.apiVersionMinor = VK_VERSION_MINOR(properties.apiVersion);
 	driverCaps.apiVersionPatch = VK_VERSION_PATCH(properties.apiVersion);
 	
-	memoryCaps.vramSize = (uint32_t) memoryProps.memoryHeaps[0].size;
+	memoryCaps.vramSize = (uint64_t) (memoryProps.memoryHeaps[0].size / 1024.0f);
 
-	VkMemoryHeap sharedSize = memoryProps.memoryHeaps[1];
+	VkDeviceSize sharedSize = 0;
 
-	for (size_t i = 2; i < memoryProps.memoryHeapCount; i++)
+	for (size_t i = 1; i < memoryProps.memoryHeapCount; i++)
 	{
-		sharedSize.size += memoryProps.memoryHeaps[i].size;
+		sharedSize += memoryProps.memoryHeaps[i].size;
 	}
 
-	memoryCaps.sharedRamSize = (uint32_t) sharedSize.size;
+	memoryCaps.sharedRamSize = (uint64_t) (sharedSize / 1024.0f);
 
 	shaderCaps.geometryShaderSupported = deviceFeatures.geometryShader;
 	shaderCaps.tessellationShaderSupported = deviceFeatures.tessellationShader;
@@ -55,6 +67,8 @@ void VKCapabilities::QueryCapabilities(void* physicalDevice)
 			break;
 		}
 	}
+
+	shaderCaps.shaderVersion = 1;
 
 	shaderCaps.rayTracingSupported = false;
 
@@ -85,5 +99,5 @@ void VKCapabilities::QueryCapabilities(void* physicalDevice)
 	}
 
 	limits.maxTextureResolution = properties.limits.maxImageDimension2D;
-	limits.maxTextureSlots = properties.limits.maxDescriptorSetSampledImages;
+	limits.maxTextureSlots = 32;
 }

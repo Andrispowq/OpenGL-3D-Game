@@ -10,7 +10,7 @@ class VKRenderpass;
 class VKFramebuffer
 {
 public:
-	VKFramebuffer(VKRenderpass& renderpass, VkExtent2D& swapchainExtent, VkImageView& colourAttachment, VkImageView& depthAttachment, VkDevice& device);
+	VKFramebuffer(VKRenderpass& renderpass, VkExtent2D& swapchainExtent, VkImageView& colourAttachment, VkImageView& depthAttachment, VkImageView& colourAttachmentResolve, VkDevice& device);
 	virtual ~VKFramebuffer();
 
 	VkFramebuffer GetFramebuffer() const { return framebuffer; }

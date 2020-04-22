@@ -15,7 +15,7 @@ struct Material
 	float horizontalScale;
 	float metallic;
 	float roughness;
-	float ambientOcclusion;
+	float occlusion;
 };
 
 struct Light
@@ -110,10 +110,10 @@ void main()
 		else
 			roughness += materials[i].roughness * blendValueArray[i];
 		
-		if(materials[i].ambientOcclusion == -1)
+		if(materials[i].occlusion == -1)
 			occlusion += texture(materials[i].occlusionMap, texCoords).r * blendValueArray[i];
 		else
-			occlusion += materials[i].ambientOcclusion * blendValueArray[i];
+			occlusion += materials[i].occlusion * blendValueArray[i];
 	}
 	
 	albedoColour = pow(albedoColour, vec3(gamma));

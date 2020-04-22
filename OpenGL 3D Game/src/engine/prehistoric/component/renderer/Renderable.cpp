@@ -3,39 +3,22 @@
 #include "engine/prehistoric/core/model/material/Material.h"
 #include "engine/prehistoric/common/rendering/pipeline/Pipeline.h"
 
-std::vector<VBO*> Renderable::vbos;
 std::vector<Pipeline*> Renderable::pipelines;
 
-Renderable::Renderable(VBO* vbo, Pipeline* pipeline, Window* window)
+Renderable::Renderable(Pipeline* pipeline, Window* window)
 {
-	this->window = window;
-
-	auto vInd = std::find(vbos.begin(), vbos.end(), vbo);
-
-	if (vInd == vbos.end())
-	{
-		vbos.push_back(vbo);
-		this->vboIndex = vbos.size() - 1;
-	}
-	else
-	{
-		this->vboIndex = std::distance(vbos.begin(), vInd);
-		//delete vbo;
-	}
-
-	auto pInd = std::find(pipelines.begin(), pipelines.end(), pipeline);
-
-	if (pInd == pipelines.end())
+	size_t index;
+	if ((index = FindElement(pipeline, pipelines)) == 0xFFFFFFFF)
 	{
 		pipelines.push_back(pipeline);
 		this->pipelineIndex = pipelines.size() - 1;
 	}
 	else
 	{
-		this->pipelineIndex = std::distance(pipelines.begin(), pInd);
-		//delete pipeline;
+		this->pipelineIndex = index;
 	}
 
+	//Just in case, but this might be added as optional because it resets the viewport and the scissor
 	pipeline->SetViewportStart(0);
 	pipeline->SetViewportSize({ (float) FrameworkConfig::windowWidth, (float) FrameworkConfig::windowHeight });
 	pipeline->SetScissorStart(0);
@@ -44,7 +27,6 @@ Renderable::Renderable(VBO* vbo, Pipeline* pipeline, Window* window)
 
 Renderable::Renderable(Window* window)
 {
-	vboIndex = -1;
 	pipelineIndex = -1;
 
 	this->window = window;
@@ -58,20 +40,23 @@ void Renderable::RecreatePipelines()
 {
 	for (Pipeline* pipeline : pipelines)
 	{
+		//TODO: Viewport and scissor configuration respecting the previous size
+		pipeline->SetViewportStart(0);
+		pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
+		pipeline->SetScissorStart(0);
+		pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
+
 		pipeline->RecreatePipeline();
 	}
 }
 
 void Renderable::CleanUp()
 {
-	for (VBO* vbo : vbos)
-	{
-		delete vbo;
-	}
-
 	for (Pipeline* pipeline : pipelines)
 	{
 		pipeline->DestroyPipeline();
 		delete pipeline;
 	}
+
+	Pipeline::CleanUp();
 }

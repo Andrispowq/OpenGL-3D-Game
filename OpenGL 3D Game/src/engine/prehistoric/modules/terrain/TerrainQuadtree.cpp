@@ -1,6 +1,8 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "TerrainQuadtree.h"
 
+#include "TerrainNode.h"
+
 int TerrainQuadtree::rootNodes = 8;
 std::vector<Vector2f> TerrainQuadtree::vertices;
 
@@ -13,7 +15,34 @@ TerrainQuadtree::TerrainQuadtree(TerrainMaps& maps, Window* window, Camera* came
 	if (vertices.size() == 0)
 	{
 		vertices = GeneratePatch();
+	
+		if (FrameworkConfig::api == OpenGL)
+		{
+			mesh = new GLPatchVBO();
+		}
+		else if (FrameworkConfig::api == Vulkan)
+		{
+			//TODO
+		}
+
+		mesh->Store(vertices);
 	}
+
+	material = new Material(window);
+
+	Shader* shader = nullptr;
+
+	if (FrameworkConfig::api == OpenGL)
+	{
+		shader = new GLTerrainWireframeShader();
+		pipeline = new GLPipeline(shader, mesh);
+	}
+	else if (FrameworkConfig::api == Vulkan)
+	{
+		pipeline = new VKPipeline(shader, mesh);
+	}
+
+	pipeline->CreatePipeline(window);
 
 	for (int x = 0; x < rootNodes; x++)
 	{
@@ -24,7 +53,7 @@ TerrainQuadtree::TerrainQuadtree(TerrainMaps& maps, Window* window, Camera* came
 			name.append(", ");
 			name.append(std::to_string(y));
 
-			AddChild(name, new TerrainNode(maps, window, camera, vertices, { (float) x / (float) rootNodes, (float) y / (float) rootNodes }, { (float) x, (float) y }, 0));
+			AddChild(name, new TerrainNode(this, { (float) x / (float) rootNodes, (float) y / (float) rootNodes }, { (float) x, (float) y }, 0));
 		}
 	}
 

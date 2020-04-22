@@ -2,22 +2,23 @@
 #include "VKFramebuffer.h"
 #include "engine/platform/vulkan/rendering/renderpass/VKRenderpass.h"
 
-VKFramebuffer::VKFramebuffer(VKRenderpass& renderpass, VkExtent2D& swapchainExtent, VkImageView& colourAttachment, VkImageView& depthAttachment, VkDevice& device)
+VKFramebuffer::VKFramebuffer(VKRenderpass& renderpass, VkExtent2D& swapchainExtent, VkImageView& colourAttachment, VkImageView& depthAttachment, VkImageView& colourAttachmentResolve, VkDevice& device)
 {
 	this->renderpass = &renderpass;
 	this->swapchainExtent = &swapchainExtent;
 	this->device = &device;
 
-	attachments = new VkImageView[2]
-	{ 
+	attachments = new VkImageView[3]
+	{
 		colourAttachment,
-		depthAttachment
+		depthAttachment,
+		colourAttachmentResolve
 	};
 
 	VkFramebufferCreateInfo framebufferInfo = {};
 	framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
 	framebufferInfo.renderPass = renderpass.GetRenderPass();
-	framebufferInfo.attachmentCount = 2;
+	framebufferInfo.attachmentCount = 3;
 	framebufferInfo.pAttachments = attachments;
 	framebufferInfo.width = swapchainExtent.width;
 	framebufferInfo.height = swapchainExtent.height;

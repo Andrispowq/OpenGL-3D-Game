@@ -18,6 +18,8 @@ public:
 
 	VkPhysicalDevice& GetPhysicalDevice() { return physicalDevice; }
 	std::vector<const char*> GetDeviceExtensions() const { return deviceExtensions; }
+
+	VkSampleCountFlagBits getSampleCount() const { return msaaSamples; }
 private:
 	//Utility functions for picking GPU
 	bool IsDeviceSuitable(VKSurface* surface, VkPhysicalDevice device, VkPhysicalDeviceFeatures features) const;
@@ -26,6 +28,8 @@ private:
 	VkPhysicalDevice physicalDevice;
 
 	std::vector<const char*> deviceExtensions;
+
+	VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
 };
 
 #endif

@@ -8,6 +8,8 @@ VKTexture::VKTexture(VKPhysicalDevice& physicalDevice, VKDevice& device, uint32_
 
 	this->width = width;
 	this->height = height;
+
+	this->mipLevels = (uint32_t) (std::floor(std::log2(std::max(width, height)))) + 1;
 }
 
 VKTexture::~VKTexture()
@@ -19,10 +21,12 @@ VKTexture::~VKTexture()
 	vkFreeMemory(device->GetDevice(), textureImageMemory, nullptr);
 }
 
-void VKTexture::UpdateStagingBuffer(size_t size, unsigned char* pixels)
+void VKTexture::UpdateStagingBuffer(size_t size, unsigned char* pixels, ImageFormat format)
 {
-	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
+ 	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+
+	this->format = format;
 
 	void* data;
 	vkMapMemory(device->GetDevice(), stagingBufferMemory, 0, size, 0, &data);
@@ -43,66 +47,21 @@ void VKTexture::Unbind() const
 void VKTexture::Generate()
 {
 	//We can create the image new based on the staging buffer's data
-	VkImageCreateInfo imageInfo = {};
-	imageInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
-	imageInfo.imageType = VK_IMAGE_TYPE_2D;
-	imageInfo.extent.width = width;
-	imageInfo.extent.height = height;
-	imageInfo.extent.depth = 1;
-	imageInfo.mipLevels = 1;
-	imageInfo.arrayLayers = 1;
-	imageInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
-	imageInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
-	imageInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-	imageInfo.usage = VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT;
-	imageInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
-	imageInfo.samples = VK_SAMPLE_COUNT_1_BIT;
-	imageInfo.flags = 0; // Optional
+	VKUtil::CreateImage(*physicalDevice, *device, width, height, mipLevels, VK_SAMPLE_COUNT_1_BIT, GetFormat(format), VK_IMAGE_TILING_OPTIMAL,
+		VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
+		textureImage, textureImageMemory);
 
-	if (vkCreateImage(device->GetDevice(), &imageInfo, nullptr, &textureImage) != VK_SUCCESS) 
-	{
-		PR_LOG_RUNTIME_ERROR("Failed to create image!\n");
-	}
-
-	VkMemoryRequirements memRequirements;
-	vkGetImageMemoryRequirements(device->GetDevice(), textureImage, &memRequirements);
-
-	VkMemoryAllocateInfo allocInfo = {};
-	allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
-	allocInfo.allocationSize = memRequirements.size;
-	allocInfo.memoryTypeIndex = VKUtil::FindMemoryType(memRequirements.memoryTypeBits, physicalDevice->GetPhysicalDevice(), VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT);
-
-	if (vkAllocateMemory(device->GetDevice(), &allocInfo, nullptr, &textureImageMemory) != VK_SUCCESS) 
-	{
-		PR_LOG_RUNTIME_ERROR("Failed to allocate image memory!\n");
-	}
-
-	vkBindImageMemory(device->GetDevice(), textureImage, textureImageMemory, 0);
-
-	VKUtil::TransitionImageLayout(*device, textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+	VKUtil::TransitionImageLayout(*device, textureImage, GetFormat(format), VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
 	VKUtil::CopyBufferToImage(*device, stagingBuffer, textureImage, width, height);
-	VKUtil::TransitionImageLayout(*device, textureImage, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+	//VKUtil::TransitionImageLayout(*device, textureImage, GetFormat(format), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, mipLevels);
+	VKUtil::GenerateMipmaps(physicalDevice->GetPhysicalDevice(), *device, textureImage, VK_FORMAT_R8G8B8A8_SRGB, width, height, mipLevels);
 
 	//We're no longer in need of the staging buffers
 	vkDestroyBuffer(device->GetDevice(), stagingBuffer, nullptr);
 	vkFreeMemory(device->GetDevice(), stagingBufferMemory, nullptr);
 
 	//We can now create the image view
-	VkImageViewCreateInfo viewInfo = {};
-	viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-	viewInfo.image = textureImage;
-	viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-	viewInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
-	viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-	viewInfo.subresourceRange.baseMipLevel = 0;
-	viewInfo.subresourceRange.levelCount = 1;
-	viewInfo.subresourceRange.baseArrayLayer = 0;
-	viewInfo.subresourceRange.layerCount = 1;
-
-	if (vkCreateImageView(device->GetDevice(), &viewInfo, nullptr, &textureImageView) != VK_SUCCESS) 
-	{
-		PR_LOG_RUNTIME_ERROR("Failed to create texture image view!\n");
-	}
+	VKUtil::CreateImageView(*device, textureImage, GetFormat(format), VK_IMAGE_ASPECT_COLOR_BIT, mipLevels, textureImageView);
 	
 	//Creating the sampler, which is based on bilinear sampling with 16x anisotropy filtering, which is a mode likely to be used, but at any time it can be
 	//recreate with the method SamplerProperties(SamplerFilter, TextureWrapMode)
@@ -120,9 +79,9 @@ void VKTexture::Generate()
 	samplerInfo.compareEnable = VK_FALSE;
 	samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
 	samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-	samplerInfo.mipLodBias = 0.0f;
-	samplerInfo.minLod = 0.0f;
-	samplerInfo.maxLod = 0.0f;
+	samplerInfo.minLod = 0;
+	samplerInfo.maxLod = (float) mipLevels;
+	samplerInfo.mipLodBias = 0;
 
 	if (vkCreateSampler(device->GetDevice(), &samplerInfo, nullptr, &textureSampler) != VK_SUCCESS) 
 	{
@@ -141,9 +100,6 @@ void VKTexture::SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode
 	samplerInfo.unnormalizedCoordinates = VK_FALSE;
 	samplerInfo.compareEnable = VK_FALSE;
 	samplerInfo.compareOp = VK_COMPARE_OP_ALWAYS;
-	samplerInfo.mipLodBias = 0.0f;
-	samplerInfo.minLod = 0.0f;
-	samplerInfo.maxLod = 0.0f;
 
 	switch (filter)
 	{
@@ -151,6 +107,9 @@ void VKTexture::SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode
 		samplerInfo.magFilter = VK_FILTER_NEAREST;
 		samplerInfo.minFilter = VK_FILTER_NEAREST;
 		samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+		samplerInfo.minLod = 0;
+		samplerInfo.maxLod = 0;
+		samplerInfo.mipLodBias = 0;
 		samplerInfo.anisotropyEnable = VK_FALSE;
 		samplerInfo.maxAnisotropy = 1;
 		break;
@@ -158,6 +117,9 @@ void VKTexture::SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode
 		samplerInfo.magFilter = VK_FILTER_LINEAR;
 		samplerInfo.minFilter = VK_FILTER_LINEAR;
 		samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_NEAREST;
+		samplerInfo.minLod = 0;
+		samplerInfo.maxLod = 0;
+		samplerInfo.mipLodBias = 0;
 		samplerInfo.anisotropyEnable = VK_FALSE;
 		samplerInfo.maxAnisotropy = 1;
 		break;
@@ -165,6 +127,9 @@ void VKTexture::SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode
 		samplerInfo.magFilter = VK_FILTER_LINEAR;
 		samplerInfo.minFilter = VK_FILTER_LINEAR;
 		samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+		samplerInfo.minLod = 0;
+		samplerInfo.maxLod = (float)mipLevels;
+		samplerInfo.mipLodBias = 0;
 		samplerInfo.anisotropyEnable = VK_FALSE;
 		samplerInfo.maxAnisotropy = 1;
 		break;
@@ -172,6 +137,9 @@ void VKTexture::SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode
 		samplerInfo.magFilter = VK_FILTER_LINEAR;
 		samplerInfo.minFilter = VK_FILTER_LINEAR;
 		samplerInfo.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
+		samplerInfo.minLod = 0;
+		samplerInfo.maxLod = (float)mipLevels;
+		samplerInfo.mipLodBias = 0;
 		samplerInfo.anisotropyEnable = VK_TRUE;
 		samplerInfo.maxAnisotropy = 16;
 		break;
@@ -208,5 +176,42 @@ void VKTexture::SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode
 	if (vkCreateSampler(device->GetDevice(), &samplerInfo, nullptr, &textureSampler) != VK_SUCCESS)
 	{
 		PR_LOG_RUNTIME_ERROR("Failed to create texture sampler!\n");
+	}
+}
+
+VkFormat VKTexture::GetFormat(ImageFormat format) const
+{
+	//TODO: Query for formats
+	switch (format)
+	{
+	case RGBA32FLOAT:
+		return VK_FORMAT_R8G8B8A8_SRGB;
+		break;
+	case RGB24FLOAT:
+		return VK_FORMAT_R8G8B8_SRGB;
+		break;
+	case RGBA16FLOAT:
+		return VK_FORMAT_R4G4B4A4_UNORM_PACK16;
+		break;
+	case DEPTH32FLOAT:
+		return VK_FORMAT_D32_SFLOAT;
+		break;
+	case R16FLOAT:
+		return VK_FORMAT_D16_UNORM;
+		break;
+	case R32FLOAT:
+		return VK_FORMAT_R32_SFLOAT;
+		break;
+	case R8FLOAT:
+		return VK_FORMAT_R8_SRGB;
+		break;
+	case RG16FLOAT:
+		return VK_FORMAT_R8G8_SRGB;
+		break;
+	case RG32FLOAT:
+		return VK_FORMAT_R16G16_SFLOAT;
+		break;
+	default:
+		return VK_FORMAT_R8G8B8A8_SRGB;
 	}
 }

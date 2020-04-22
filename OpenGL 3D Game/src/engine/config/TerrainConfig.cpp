@@ -51,11 +51,11 @@ namespace TerrainConfig
 					{
 						tessellationFactor = std::atoi(tokens[1].c_str());
 					}
-					if (nameTokens[1] == "factor")
+					if (nameTokens[1] == "slope")
 					{
 						tessellationSlope = (float) std::atof(tokens[1].c_str());
 					}
-					if (nameTokens[1] == "factor")
+					if (nameTokens[1] == "shift")
 					{
 						tessellationShift = (float) std::atof(tokens[1].c_str());
 					}
@@ -112,7 +112,7 @@ namespace TerrainConfig
 						}
 						else if (nameTokens[2] == "float")
 						{
-							material->AddFloat(tokens[1], new float(std::atof(tokens[2].c_str())));
+							material->AddFloat(tokens[1], new float((float)std::atof(tokens[2].c_str())));
 						}
 						else if (nameTokens[2] == "int")
 						{

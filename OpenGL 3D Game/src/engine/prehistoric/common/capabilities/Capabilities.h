@@ -5,8 +5,8 @@
 
 struct MemoryCapabilities
 {
-	uint32_t vramSize = -1; //in kilobytes
-	uint32_t sharedRamSize = -1; // in kilobytes
+	uint64_t vramSize = -1; //in kilobytes
+	uint64_t sharedRamSize = -1; // in kilobytes
 };
 
 struct PhysicalDeviceCapabilities

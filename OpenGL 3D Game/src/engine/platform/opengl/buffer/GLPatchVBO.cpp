@@ -10,7 +10,6 @@ GLPatchVBO::~GLPatchVBO()
 {
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &ibo);
 }
 
 void GLPatchVBO::Store(const std::vector<Vector2f>& vertices)
@@ -22,7 +21,7 @@ void GLPatchVBO::Store(const std::vector<Vector2f>& vertices)
 
 	glBindVertexArray(vao);
 
-	float* vdata = new float[vertices.size()];
+	float* vdata = new float[vertices.size() * 2];
 
 	for (size_t i = 0; i < vertices.size(); i++)
 	{
@@ -34,7 +33,7 @@ void GLPatchVBO::Store(const std::vector<Vector2f>& vertices)
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vector2f), vdata, GL_DYNAMIC_DRAW);
 
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, int(sizeof(float) * 2), 0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glPatchParameteri(GL_PATCH_VERTICES, size);
 
@@ -42,7 +41,7 @@ void GLPatchVBO::Store(const std::vector<Vector2f>& vertices)
 	glBindVertexArray(0);
 }
 
-void GLPatchVBO::Bind(void* commandBuffer, void* graphicsPipeline) const
+void GLPatchVBO::Bind(void* commandBuffer) const
 {
 	glBindVertexArray(vao);
 	glEnableVertexAttribArray(0);

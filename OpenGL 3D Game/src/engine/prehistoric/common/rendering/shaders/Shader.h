@@ -73,8 +73,8 @@ public:
 	virtual void Bind(void* commandBuffer) const = 0;
 	virtual void Unbind() const = 0;
 
-	virtual bool AddUniform(const std::string& name, ShaderType stages = GRAPHICS_PIPELINE, UniformType type = UniformBuffer, uint32_t binding = 0, uint32_t set = 0, size_t size = 0, Texture* texture = nullptr) = 0;
-	virtual bool AddUniformBlock(const std::string& name, ShaderType stages = GRAPHICS_PIPELINE, UniformType type = UniformBuffer, uint32_t binding = 0, uint32_t set = 0, size_t size = 0, Texture* texture = nullptr) = 0;
+	virtual bool AddUniform(const std::string& name, uint32_t stages = GRAPHICS_PIPELINE, UniformType type = UniformBuffer, uint32_t set = 0, uint32_t binding = 0, size_t size = 0, Texture* texture = nullptr) = 0;
+	virtual bool AddUniformBlock(const std::string& name, uint32_t stages = GRAPHICS_PIPELINE, UniformType type = UniformBuffer, uint32_t set = 0, uint32_t binding = 0, size_t size = 0, Texture* texture = nullptr) = 0;
 
 	virtual bool AddShader(const std::vector<char>& code, ShaderType type) = 0;
 	virtual bool CompileShader() const = 0;
@@ -87,6 +87,10 @@ public:
 	virtual void SetUniform(const std::string& name, const Vector3f& value, size_t offset = 0) const = 0;
 	virtual void SetUniform(const std::string& name, const Vector4f& value, size_t offset = 0) const = 0;
 	virtual void SetUniform(const std::string& name, const Matrix4f& value, size_t offset = 0) const = 0;
+
+	virtual void SetTexture(const std::string& name, Texture* value) const = 0;
+
+	virtual bool operator==(const Shader& other) = 0;
 
 	//General SetUniform method for Uniform Buffer Objects, like uploading view and projection matrix to the same uniform binding
 	virtual void SetUniform(const std::string& name, const void* value, size_t size, size_t offset = 0) const = 0;

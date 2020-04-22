@@ -12,8 +12,8 @@ void DeviceProperties::ListProperties(Capabilities& capabilities) const
 	PR_LOG_MESSAGE("\tAPI version: %u.%u.%u\n", capabilities.driverCaps.apiVersionMajor, capabilities.driverCaps.apiVersionMinor, capabilities.driverCaps.apiVersionPatch);
 	
 	PR_LOG_MESSAGE("Memory capabilities:\n");
-	PR_LOG_MESSAGE("\tAmount of VRAM: %f MB, %f GB\n", capabilities.memoryCaps.vramSize / (1024.0 * 1024.0), capabilities.memoryCaps.vramSize / (1024.0 * 1024.0 * 1024.0));
-	PR_LOG_MESSAGE("\tAmount of shared RAM: %f MB, %f GB\n", capabilities.memoryCaps.sharedRamSize / (1024.0 * 1024.0), capabilities.memoryCaps.sharedRamSize / (1024.0 * 1024.0 * 1024.0));
+	PR_LOG_MESSAGE("\tAmount of VRAM: %f MB, %f GB\n", capabilities.memoryCaps.vramSize / (1024.0), capabilities.memoryCaps.vramSize / (1024.0 * 1024.0));
+	PR_LOG_MESSAGE("\tAmount of shared RAM: %f MB, %f GB\n", capabilities.memoryCaps.sharedRamSize / (1024.0), capabilities.memoryCaps.sharedRamSize / (1024.0 * 1024.0));
 
 	PR_LOG_MESSAGE("Shader capabilities:\n");
 	PR_LOG_MESSAGE("\tGeometry shader supported (required): %s\n", capabilities.shaderCaps.geometryShaderSupported ? "true" : "false");

@@ -21,7 +21,7 @@
 	#error "This OS is currently not supported!"
 #endif
 
-#if 1//defined(PR_DEBUG)
+#if defined(PR_DEBUG)
 	#define PR_ENABLE_DEBUGGING
 	#define PR_VK_ENABLE_VALIDATION_LAYERS
 	#define PR_COLOURED_LOGGING_FUNCTIONS

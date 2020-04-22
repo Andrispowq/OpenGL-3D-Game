@@ -7,23 +7,23 @@
 
 std::vector<Material*> Renderer::materials;
 
-Renderer::Renderer(VBO* vbo, Pipeline* pipeline, Material* material, Window* window) : Renderable(vbo, pipeline, window)
+Renderer::Renderer(Pipeline* pipeline, Material* material, Window* window)
+	: Renderable(pipeline, window)
 {
-	auto mInd = std::find(materials.begin(), materials.end(), material);
-
-	if (mInd == materials.end())
+	size_t index;
+	if ((index = FindElement(material, materials)) == 0xFFFFFFFF)
 	{
 		materials.push_back(material);
-		this->materialIndex = materials.size() - 1;
+		this->materialIndex = materials.size() - 1;		
 	}
 	else
 	{
-		this->materialIndex = std::distance(materials.begin(), mInd);
-		//delete material;
+		this->materialIndex = index;
 	}
 }
 
-Renderer::Renderer(Window* window) : Renderable(window)
+Renderer::Renderer(Window* window)
+	: Renderable(window)
 {
 	materials.push_back(new Material(window));
 	this->materialIndex = materials.size() - 1;
@@ -51,25 +51,18 @@ void Renderer::PreRender(RenderingEngine* renderingEngine)
 
 void Renderer::Render(const RenderingEngine& renderingEngine) const
 {
-	VBO* vbo = vbos[vboIndex];
 	Pipeline* pipeline = pipelines[pipelineIndex];
 
 	pipeline->BindPipeline();
-	pipeline->GetShader()->UpdateUniforms(parent, renderingEngine.GetCamera(), renderingEngine.GetLights());
-
-	vbo->Bind(pipeline->GetDrawCommandBuffer(), pipeline->GetGraphicsPipeline());
-	vbo->Draw(pipeline->GetDrawCommandBuffer());
-	vbo->Unbind();
-
+	pipeline->getShader()->UpdateUniforms(parent, renderingEngine.GetCamera(), renderingEngine.GetLights());
+	pipeline->RenderPipeline();
 	pipeline->UnbindPipeline();
 }
 
 void Renderer::BatchRender(const RenderingEngine& renderingEngine) const
 {
-	VBO* vbo = vbos[vboIndex];
 	Pipeline* pipeline = pipelines[pipelineIndex];
 
-	pipeline->GetShader()->UpdateUniforms(parent, renderingEngine.GetCamera(), renderingEngine.GetLights());
-
-	vbo->Draw(pipeline->GetDrawCommandBuffer());
+	pipeline->getShader()->UpdateUniforms(parent, renderingEngine.GetCamera(), renderingEngine.GetLights());
+	pipeline->RenderPipeline();
 }

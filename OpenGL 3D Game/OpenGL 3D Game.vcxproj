@@ -20,6 +20,7 @@
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\gui\GLGUIShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\pbr\GLPBRShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\terrain\GLTerrainShader.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\terrain\GLTerrainWireframeShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\texture\GLTexture.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\buffer\VKMeshVBO.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\capabilities\VKCapabilities.cpp" />
@@ -38,6 +39,8 @@
     <ClCompile Include="src\engine\platform\vulkan\rendering\pipeline\VKGraphicsPipeline.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\pipeline\VKPipeline.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\renderpass\VKRenderpass.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\rendering\shaders\basic\VKBasicShader.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\rendering\shaders\pbr\VKPBRShader.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\synchronization\VKFence.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\synchronization\VKSemaphore.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\shaders\VkShader.cpp" />
@@ -109,6 +112,7 @@
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\gui\GLGUIShader.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\pbr\GLPBRShader.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\terrain\GLTerrainShader.h" />
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\terrain\GLTerrainWireframeShader.h" />
     <ClInclude Include="src\engine\platform\opengl\texture\GLTexture.h" />
     <ClInclude Include="src\engine\platform\Prehistoric.h" />
     <ClInclude Include="src\engine\platform\vulkan\buffer\VKMeshVBO.h" />
@@ -128,6 +132,8 @@
     <ClInclude Include="src\engine\platform\vulkan\rendering\pipeline\VKGraphicsPipeline.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\pipeline\VKPipeline.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\renderpass\VKRenderpass.h" />
+    <ClInclude Include="src\engine\platform\vulkan\rendering\shaders\basic\VKBasicShader.h" />
+    <ClInclude Include="src\engine\platform\vulkan\rendering\shaders\pbr\VKPBRShader.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\synchronization\VKFence.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\synchronization\VKSemaphore.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\shaders\VkShader.h" />

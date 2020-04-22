@@ -15,3 +15,17 @@
 #include "engine/prehistoric/core/util/time/Time.h"
 
 #include "codes/InputCode.h"
+
+template<typename T>
+size_t FindElement(T* element, std::vector<T*> list)
+{
+	for (T* _elem : list)
+	{
+		if ((*_elem) == (*element))
+		{
+			return std::distance(list.begin(), std::find(_elem, list.begin(), list.end()));
+		}
+	}
+
+	return 0xFFFFFFFF;
+}
