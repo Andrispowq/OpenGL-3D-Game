@@ -88,19 +88,19 @@ void main()
 	
 	vec3 normal = normalize(normal_FS);
 	vec3 bumpNormal = vec3(0);
-	vec3 bitangent = normalize(cross(tangent_FS, normal));
 	
 	if(dist < highDetailRange && material.usesNormalMap == 1)
 	{
 		float attenuation = clamp(-dist / highDetailRange + 1, 0, 1);
 		
+		vec3 bitangent = normalize(cross(tangent_FS, normal));
 		mat3 tbn = mat3(tangent_FS, normal, bitangent);
 		
-		bumpNormal = 2 * texture(normalMap, texture_FS).rbg - 1;
+		bumpNormal = 2 * pow(texture(normalMap, texture_FS).rbg, vec3(1 / gamma)) - 1;
 		bumpNormal = normalize(bumpNormal);
 		bumpNormal.xz *= attenuation;
 		
-		normal = normalize(tbn * bumpNormal);
+		normal = normalize(tbn * bumpNormal); 
 	}
 	
 	vec3 N = normalize(normal);
@@ -161,7 +161,7 @@ void main()
 	colour /= colour + vec3(1.0);
 	colour = pow(colour, vec3(1.0 / gamma));
 	
-	colour_Out = vec4(vec3(dot(N, V)), 1);
+	colour_Out = vec4(colour, 1);
 }
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)

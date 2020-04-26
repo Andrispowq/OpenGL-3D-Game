@@ -258,6 +258,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 					}
 					if (tokens[1] == "Light")
 					{
+						PR_LOG_MESSAGE("Light's being added to %s\n", nameTokens[1].c_str());
 						std::vector<std::string> compTokens = Util::Split(tokens[2], ';');
 
 						Light* light = new Light();

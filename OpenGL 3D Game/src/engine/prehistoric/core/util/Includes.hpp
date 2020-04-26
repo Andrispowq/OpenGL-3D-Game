@@ -19,11 +19,11 @@
 template<typename T>
 size_t FindElement(T* element, std::vector<T*> list)
 {
-	for (T* _elem : list)
+	for (size_t i = 0; i < list.size(); i++)
 	{
-		if ((*_elem) == (*element))
+		if ((*list[i]) == (*element))
 		{
-			return std::distance(list.begin(), std::find(_elem, list.begin(), list.end()));
+			return i;
 		}
 	}
 

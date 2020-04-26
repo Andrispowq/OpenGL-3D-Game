@@ -37,7 +37,7 @@ public:
 
 		for (const auto& tex : textures)
 		{
-			if (other.textures.find(tex.first) == textures.end())
+			if (other.textures.find(tex.first) == other.textures.end())
 			{
 				return false;
 			}
@@ -50,7 +50,7 @@ public:
 
 		for (const auto& vec4 : vector4s)
 		{
-			if (other.vector4s.find(vec4.first) == vector4s.end())
+			if (other.vector4s.find(vec4.first) == other.vector4s.end())
 			{
 				return false;
 			}
@@ -62,7 +62,7 @@ public:
 		}
 		for (const auto& vec3 : vector3s)
 		{
-			if (other.vector3s.find(vec3.first) == vector3s.end())
+			if (other.vector3s.find(vec3.first) == other.vector3s.end())
 			{
 				return false;
 			}
@@ -74,7 +74,7 @@ public:
 		}
 		for (const auto& vec2 : vector2s)
 		{
-			if (other.vector2s.find(vec2.first) == vector2s.end())
+			if (other.vector2s.find(vec2.first) == other.vector2s.end())
 			{
 				return false;
 			}
@@ -87,7 +87,7 @@ public:
 
 		for (const auto& fl : floats)
 		{
-			if (other.floats.find(fl.first) == floats.end())
+			if (other.floats.find(fl.first) == other.floats.end())
 			{
 				return false;
 			}
@@ -99,7 +99,7 @@ public:
 		}
 		for (const auto& in : ints)
 		{
-			if (other.ints.find(in.first) == ints.end())
+			if (other.ints.find(in.first) == other.ints.end())
 			{
 				return false;
 			}
@@ -126,7 +126,7 @@ private:
 	static std::vector<Vector2f*> listOfVector2s;
 	static std::vector<float*> listOfFloats;
 	static std::vector<int*> listOfInts;
-
+	 
 	std::unordered_map<std::string, size_t> textures;
 	std::unordered_map<std::string, size_t> vector4s;
 	std::unordered_map<std::string, size_t> vector3s;

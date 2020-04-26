@@ -50,19 +50,24 @@ GLTerrainWireframeShader::GLTerrainWireframeShader()
 	}
 }
 
-void GLTerrainWireframeShader::UpdateUniforms(GameObject* object, Camera* camera, std::vector<Light*> lights) const
+void GLTerrainWireframeShader::UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const
+{
+	SetUniform("viewProjection", camera->getViewProjectionMatrix());
+	SetUniform("cameraPosition", camera->getPosition());
+}
+
+void GLTerrainWireframeShader::UpdateObjectUniforms(GameObject* object) const
 {
 	TerrainNode* node = (TerrainNode*)object;
 
 	node->getMaps()->getHeightmap()->Bind(0);
 	SetUniformi("heightmap", 0);
-	/*node->getMaps()->getSplatmap()->Bind(2);
-	SetUniformi("splatmap", 0);*/
+	/*node->getMaps()->getSplatmap()->Bind(1);
+	SetUniformi("splatmap", 1);*/
 
 	SetUniform("localMatrix", object->GetLocalTransform()->getTransformationMatrix());
 	SetUniform("worldMatrix", object->GetWorldTransform()->getTransformationMatrix());
 
-	SetUniform("cameraPosition", camera->getPosition());
 	SetUniform("location", node->getLocation());
 	SetUniform("index", node->getIndex());
 	SetUniformf("scaleY", TerrainConfig::scaleY);
@@ -77,8 +82,6 @@ void GLTerrainWireframeShader::UpdateUniforms(GameObject* object, Camera* camera
 	SetUniformi("tessellationFactor", TerrainConfig::tessellationFactor);
 	SetUniformf("tessellationSlope", TerrainConfig::tessellationSlope);
 	SetUniformf("tessellationShift", TerrainConfig::tessellationShift);
-
-	SetUniform("viewProjection", camera->getViewProjectionMatrix());
 
 	uint32_t texUnit = 3;
 

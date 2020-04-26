@@ -20,6 +20,7 @@ void Terrain::UpdateQuadtree()
 {
 	if (camera->isChanged())
 	{
+		PR_PROFILE("Update");
 		((TerrainQuadtree*)children["Quadtree"])->UpdateQuadtree();
 	}
 }

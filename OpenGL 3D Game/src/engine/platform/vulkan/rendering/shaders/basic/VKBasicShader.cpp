@@ -19,26 +19,13 @@ VKBasicShader::VKBasicShader(Window* window) : VKShader(window->GetContext(), wi
 	AddUniform("gamma", FRAGMENT_SHADER, UniformBuffer, 0, 7, sizeof(float));
 }
 
-void VKBasicShader::UpdateUniforms(GameObject* object, Camera* camera, std::vector<Light*> lights) const
+void VKBasicShader::UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const
 {
 	SetUniform("camera", camera->getViewMatrix(), 16 * sizeof(float) * 0);
 	SetUniform("camera", camera->getProjectionMatrix(), 16 * sizeof(float) * 1);
 	SetUniform("camera", camera->getPosition(), 16 * sizeof(float) * 2);
 
-	SetUniform("model", object->GetWorldTransform()->getTransformationMatrix());
-
-	Material* material = ((Renderer*)object->GetComponent(RENDERER_COMPONENT))->GetMaterial();
-
-	SetTexture(ALBEDO_MAP, material->GetTexture(ALBEDO_MAP));
-	SetTexture(METALLIC_MAP, material->GetTexture(METALLIC_MAP));
-	SetTexture(ROUGHNESS_MAP, material->GetTexture(ROUGHNESS_MAP));
-	
-	SetUniform("material", material->GetVector3f(COLOUR));
-	SetUniformf("material", material->GetFloat(METALLIC), sizeof(Vector3f) + sizeof(float));
-	SetUniformf("material", material->GetFloat(ROUGHNESS), sizeof(Vector3f) + 2 * sizeof(float));
-	SetUniformf("material", EngineConfig::rendererGamma, sizeof(Vector3f) + 3 * sizeof(float)); 
-
-	//SetUniformf("gamma", EngineConfig::rendererGamma);
+	SetUniformf("gamma", EngineConfig::rendererGamma);
 
 	size_t baseOffset = EngineConfig::lightsMaxNumber * sizeof(Vector4f);
 
@@ -61,4 +48,20 @@ void VKBasicShader::UpdateUniforms(GameObject* object, Camera* camera, std::vect
 			SetUniform("lights", Vector4f(), baseOffset * 2 + currentOffset);
 		}
 	}
+}
+
+void VKBasicShader::UpdateObjectUniforms(GameObject* object) const
+{
+	SetUniform("model", object->GetWorldTransform()->getTransformationMatrix());
+
+	Material* material = ((Renderer*)object->GetComponent(RENDERER_COMPONENT))->GetMaterial();
+
+	SetTexture(ALBEDO_MAP, material->GetTexture(ALBEDO_MAP));
+	SetTexture(METALLIC_MAP, material->GetTexture(METALLIC_MAP));
+	SetTexture(ROUGHNESS_MAP, material->GetTexture(ROUGHNESS_MAP));
+	
+	SetUniform("material", material->GetVector3f(COLOUR));
+	SetUniformf("material", material->GetFloat(METALLIC), sizeof(Vector3f) + sizeof(float));
+	SetUniformf("material", material->GetFloat(ROUGHNESS), sizeof(Vector3f) + 2 * sizeof(float));
+	SetUniformf("material", EngineConfig::rendererGamma, sizeof(Vector3f) + 3 * sizeof(float));
 }

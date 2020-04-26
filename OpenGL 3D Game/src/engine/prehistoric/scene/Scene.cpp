@@ -11,7 +11,7 @@ Terrain* Scene::terrain;
 void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 {
 	WorldLoader loader;
-	loader.LoadWorld("res/world/testLevel.wrld", root, window);
+	//loader.LoadWorld("res/world/testLevel.wrld", root, window);
 
 	/*VKMeshVBO* vbo = (VKMeshVBO*)OBJLoader::LoadModel("res/models/", "quad.obj", "", window);
 
@@ -35,29 +35,29 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 
 	//material->AddFloat(METALLIC, new float(1.0));
 	//material->AddFloat(ROUGHNESS, new float(0.1));
-	material->AddFloat(OCCLUSION, new float(01));
+	material->AddFloat(OCCLUSION, new float(1));
 
 	Renderer* renderer = new Renderer(pipeline, material, window);
 
 	GameObject* obj = new GameObject();
 	obj->AddComponent(RENDERER_COMPONENT, renderer);
 	obj->Rotate({ -90, 0, 0 });
-	obj->Move({ 0, 3, 0 });
-	root->AddChild("VK", obj);
+	obj->Move({ 0, -3, 0 });
+	root->AddChild(obj);*/
 
 	terrain = new Terrain(window, camera);
 	terrain->UpdateQuadtree();
 
 	root->AddChild("Terrain", terrain);
 
-	GameObject* light = new GameObject();
-	light->AddComponent("light", new Light(Vector3f(1), Vector3f(100)));
+	/*GameObject* light = new GameObject();
+	light->AddComponent("light", new Light(Vector3f(1), Vector3f(1000)));
 	light->Move({ 0, 30, 0 });
 	root->AddChild("l", light);
-
+  
 	GameObject* light2 = new GameObject();
-	light2->AddComponent("light", new Light(Vector3f(1, 0, 0), Vector3f(10000)));
-	light2->Move({ -20, 20, 40 });
+	light2->AddComponent("light", new Light(Vector3f(1, 0, 0), Vector3f(1000)));
+	light2->Move({ -20, 40, 40 });
 	root->AddChild("l2", light2);*/
 }
 

@@ -78,7 +78,37 @@ GLTerrainShader::GLTerrainShader()
 	//AddUniform("brdfLUT");
 }
 
-void GLTerrainShader::UpdateUniforms(GameObject* object, Camera* camera, std::vector<Light*> lights) const
+void GLTerrainShader::UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const
+{
+	SetUniform("viewProjection", camera->getViewProjectionMatrix());
+	SetUniform("cameraPosition", camera->getPosition());
+
+	for (unsigned int i = 0; i < EngineConfig::lightsMaxNumber; i++)
+	{
+		std::string uName = "lights[" + std::to_string(i) + "].";
+
+		if (i < lights.size())
+		{
+			Light* light = lights[i];
+
+			SetUniform(uName + "position", light->GetParent()->GetWorldTransform()->GetPosition());
+			SetUniform(uName + "colour", light->GetColour());
+			SetUniform(uName + "intensity", light->GetIntensity());
+		}
+		else
+		{
+			SetUniform(uName + "position", Vector3f());
+			SetUniform(uName + "colour", Vector3f());
+			SetUniform(uName + "intensity", Vector3f());
+		}
+	}
+
+	SetUniformi("highDetailRange", EngineConfig::rendererHighDetailRange);
+	SetUniformf("gamma", EngineConfig::rendererGamma);
+	SetUniformi("numberOfLights", (uint32_t)lights.size() < EngineConfig::lightsMaxNumber ? (uint32_t)lights.size() : EngineConfig::lightsMaxNumber);
+}
+
+void GLTerrainShader::UpdateObjectUniforms(GameObject* object) const
 {
 	TerrainNode* node = (TerrainNode*)object;
 
@@ -91,8 +121,6 @@ void GLTerrainShader::UpdateUniforms(GameObject* object, Camera* camera, std::ve
 
 	SetUniform("localMatrix", object->GetLocalTransform()->getTransformationMatrix());
 	SetUniform("worldMatrix", object->GetWorldTransform()->getTransformationMatrix());
-
-	SetUniform("cameraPosition", camera->getPosition());
 	SetUniform("location", node->getLocation());
 	SetUniform("index", node->getIndex());
 	SetUniformf("scaleY", TerrainConfig::scaleY);
@@ -108,8 +136,6 @@ void GLTerrainShader::UpdateUniforms(GameObject* object, Camera* camera, std::ve
 	SetUniformf("tessellationSlope", TerrainConfig::tessellationSlope);
 	SetUniformf("tessellationShift", TerrainConfig::tessellationShift);
 
-	SetUniform("viewProjection", camera->getViewProjectionMatrix());
-	
 	uint32_t texUnit = 3;
 
 	for (unsigned int i = 0; i < 3; i++)
@@ -142,28 +168,4 @@ void GLTerrainShader::UpdateUniforms(GameObject* object, Camera* camera, std::ve
 		SetUniformf(uName + ROUGHNESS, TerrainConfig::materials[i]->GetFloat(ROUGHNESS));
 		//SetUniformf(uName + OCCLUSION, TerrainConfig::materials[i]->GetFloat(OCCLUSION));
 	}
-
-	for (unsigned int i = 0; i < EngineConfig::lightsMaxNumber; i++)
-	{
-		std::string uName = "lights[" + std::to_string(i) + "].";
-
-		if (i < lights.size())
-		{
-			Light* light = lights[i];
-
-			SetUniform(uName + "position", light->GetParent()->GetWorldTransform()->GetPosition());
-			SetUniform(uName + "colour", light->GetColour());
-			SetUniform(uName + "intensity", light->GetIntensity());
-		}
-		else
-		{
-			SetUniform(uName + "position", Vector3f());
-			SetUniform(uName + "colour", Vector3f());
-			SetUniform(uName + "intensity", Vector3f());
-		}
-	}
-
-	SetUniformi("highDetailRange", EngineConfig::rendererHighDetailRange);
-	SetUniformf("gamma", EngineConfig::rendererGamma);
-	SetUniformi("numberOfLights", (int) lights.size());
 }

@@ -18,6 +18,11 @@ public:
 	void Bind(void* commandBuffer) const override;
 	void Draw(void* commandBuffer) const override;
 	void Unbind() const override;
+
+	virtual bool operator==(const VBO& other) override
+	{
+		return vao == (*reinterpret_cast<const GLPatchVBO*>(&other)).vao && vbo == (*reinterpret_cast<const GLPatchVBO*>(&other)).vbo;
+	}
 private:
 	GLuint vao;
 	GLuint vbo;

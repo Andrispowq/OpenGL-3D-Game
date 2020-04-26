@@ -90,15 +90,16 @@ public:
 
 	virtual void SetTexture(const std::string& name, Texture* value) const = 0;
 
-	virtual bool operator==(const Shader& other) = 0;
-
 	//General SetUniform method for Uniform Buffer Objects, like uploading view and projection matrix to the same uniform binding
 	virtual void SetUniform(const std::string& name, const void* value, size_t size, size_t offset = 0) const = 0;
 
 	virtual void BindUniformBlock(const std::string& name, uint32_t binding) const = 0;
 
-	virtual void UpdateUniforms(GameObject* object, Camera* camera, std::vector<Light*> lights) const {}
-	virtual void UpdateUniforms(GameObject* object) const {}
+	virtual bool operator==(const Shader& other) = 0;
+
+	virtual void UpdateConstantUniforms(Camera* camera, std::vector<Light*> lights) const {}
+	virtual void UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const {}
+	virtual void UpdateObjectUniforms(GameObject* object) const {}
 
 	//Shaders cannot be copied, they are stored as pointers in the Renderer component, and referenced with a shaderIndex
 	Shader(const Shader&) = delete;

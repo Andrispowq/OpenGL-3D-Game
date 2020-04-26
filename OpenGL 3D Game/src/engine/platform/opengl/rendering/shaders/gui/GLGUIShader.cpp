@@ -13,7 +13,7 @@ GLGUIShader::GLGUIShader()
 	AddUniform("image");
 }
 
-void GLGUIShader::UpdateUniforms(GameObject* object) const
+void GLGUIShader::UpdateObjectUniforms(GameObject* object) const
 {
 	SetUniform("m_transform", object->GetWorldTransform()->getTransformationMatrix());
 

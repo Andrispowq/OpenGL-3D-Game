@@ -16,7 +16,8 @@ public:
 	VKPBRShader(Window* window);
 	virtual ~VKPBRShader() {}
 
-	virtual void UpdateUniforms(GameObject* root, Camera* camera, std::vector<Light*> lights) const override;
+	virtual void UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const override;
+	virtual void UpdateObjectUniforms(GameObject* object) const override;
 };
 
 #endif

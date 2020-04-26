@@ -54,7 +54,8 @@ void Renderer::Render(const RenderingEngine& renderingEngine) const
 	Pipeline* pipeline = pipelines[pipelineIndex];
 
 	pipeline->BindPipeline();
-	pipeline->getShader()->UpdateUniforms(parent, renderingEngine.GetCamera(), renderingEngine.GetLights());
+	pipeline->getShader()->UpdateShaderUniforms(renderingEngine.GetCamera(), renderingEngine.GetLights());
+	pipeline->getShader()->UpdateObjectUniforms(parent);
 	pipeline->RenderPipeline();
 	pipeline->UnbindPipeline();
 }
@@ -63,6 +64,6 @@ void Renderer::BatchRender(const RenderingEngine& renderingEngine) const
 {
 	Pipeline* pipeline = pipelines[pipelineIndex];
 
-	pipeline->getShader()->UpdateUniforms(parent, renderingEngine.GetCamera(), renderingEngine.GetLights());
+	pipeline->getShader()->UpdateObjectUniforms(parent);
 	pipeline->RenderPipeline();
 }

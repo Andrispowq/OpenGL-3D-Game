@@ -44,18 +44,16 @@ GLPBRShader::GLPBRShader() : GLShader()
 
 	AddUniform("gamma");
 	AddUniform("highDetailRange");
+	AddUniform("numberOfLights");
 }
 
-void GLPBRShader::UpdateUniforms(GameObject* object, Camera* camera, std::vector<Light*> lights) const
+void GLPBRShader::UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const
 {
-	Material* material = dynamic_cast<Renderer*>(object->GetComponent("Renderer"))->GetMaterial();
-
-	SetUniform("m_transform", object->GetWorldTransform()->getTransformationMatrix());
 	SetUniform("m_view", camera->getViewMatrix());
 	SetUniform("m_projection", camera->getProjectionMatrix());
-
 	SetUniform("cameraPosition", camera->getPosition());
 
+	SetUniformi("numberOfLights", (uint32_t)lights.size() > EngineConfig::lightsMaxNumber ? EngineConfig::lightsMaxNumber : (uint32_t)lights.size());
 	for (uint32_t i = 0; i < EngineConfig::lightsMaxNumber; i++)
 	{
 		std::string name;
@@ -75,6 +73,16 @@ void GLPBRShader::UpdateUniforms(GameObject* object, Camera* camera, std::vector
 			SetUniform(name + "].intensity", Vector3f());
 		}
 	}
+
+	SetUniformf("gamma", EngineConfig::rendererGamma);
+	SetUniformi("highDetailRange", EngineConfig::rendererHighDetailRange);
+}
+
+void GLPBRShader::UpdateObjectUniforms(GameObject* object) const
+{
+	Material* material = dynamic_cast<Renderer*>(object->GetComponent("Renderer"))->GetMaterial();
+
+	SetUniform("m_transform", object->GetWorldTransform()->getTransformationMatrix());
 
 	material->GetTexture("albedoMap")->Bind(0);
 	SetUniformi("material.albedoMap", 0);
@@ -99,7 +107,4 @@ void GLPBRShader::UpdateUniforms(GameObject* object, Camera* camera, std::vector
 	SetUniformf("material.roughness", material->GetFloat("roughness"));
 	SetUniformf("material.ambientOcclusion", material->GetFloat("ambientOcclusion"));
 	SetUniform("material.emission", material->GetVector3f("emission"));
-
-	SetUniformf("gamma", EngineConfig::rendererGamma);
-	SetUniformi("highDetailRange", EngineConfig::rendererHighDetailRange);
 }

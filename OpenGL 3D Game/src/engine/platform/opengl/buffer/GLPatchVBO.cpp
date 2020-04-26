@@ -14,7 +14,7 @@ GLPatchVBO::~GLPatchVBO()
 
 void GLPatchVBO::Store(const std::vector<Vector2f>& vertices)
 {
-	size = vertices.size();
+	size = (uint32_t) vertices.size();
 
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
@@ -39,7 +39,7 @@ void GLPatchVBO::Store(const std::vector<Vector2f>& vertices)
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-}
+ }
 
 void GLPatchVBO::Bind(void* commandBuffer) const
 {

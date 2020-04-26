@@ -27,6 +27,11 @@ public:
 
 	VkVertexInputBindingDescription* GetBindingDescription() const;
 	std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions() const;
+
+	virtual bool operator==(const VBO& other) override
+	{
+		return vertexBuffer == (*reinterpret_cast<const VKMeshVBO*>(&other)).vertexBuffer && indexBuffer == (*reinterpret_cast<const VKMeshVBO*>(&other)).indexBuffer;
+	}
 private:
 	VkBuffer vertexBuffer;
 	VkDeviceMemory vertexBufferMemory;

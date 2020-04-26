@@ -80,6 +80,7 @@ void RenderingEngine::Render(GameObject* root)
 	for (auto pipeline : models)
 	{
 		pipeline.first->BindPipeline();
+		pipeline.first->getShader()->UpdateShaderUniforms(camera, lights);
 
 		for (auto renderer : pipeline.second)
 		{

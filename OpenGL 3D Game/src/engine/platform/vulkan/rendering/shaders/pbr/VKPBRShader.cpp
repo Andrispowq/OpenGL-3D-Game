@@ -25,42 +25,22 @@ VKPBRShader::VKPBRShader(Window* window) : VKShader(window->GetContext(), window
 	AddUniform(EMISSION_MAP, GEOMETRY_SHADER | FRAGMENT_SHADER, CombinedImageSampler, 0, 9, 0, nullptr);
 }
 
-void VKPBRShader::UpdateUniforms(GameObject* object, Camera* camera, std::vector<Light*> lights) const
+void VKPBRShader::UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const
 {
-	Material* material = ((Renderer*)object->GetComponent(RENDERER_COMPONENT))->GetMaterial();
-
 	//Offset values are copied from shaders
 	SetUniform("camera", camera->getViewMatrix(), 0);
 	SetUniform("camera", camera->getProjectionMatrix(), 64);
 	SetUniform("camera", camera->getPosition(), 128);
 
 	SetUniformi("lightConditions", EngineConfig::rendererHighDetailRange, 0);
-	SetUniformi("lightConditions", lights.size() >= EngineConfig::lightsMaxNumber ? EngineConfig::lightsMaxNumber : lights.size(), 4);
+	SetUniformi("lightConditions", (uint32_t)lights.size() >= EngineConfig::lightsMaxNumber ? EngineConfig::lightsMaxNumber : (uint32_t)lights.size(), 4);
 	SetUniformf("lightConditions", EngineConfig::rendererGamma, 8);
-
-	SetUniform("m_transform", object->GetWorldTransform()->getTransformationMatrix());
-
-	SetUniform("material", material->GetVector3f(COLOUR), 0);
-	SetUniform("material", material->GetVector3f(EMISSION), 16);
-	SetUniformi("material", material->GetTexture(NORMAL_MAP)->getID() != Material::GetDefaultTexture()->getID(), 32);
-	SetUniformf("material", material->GetFloat(HEIGHT_SCALE), 36);
-	SetUniformf("material", material->GetFloat(METALLIC), 40);
-	SetUniformf("material", material->GetFloat(ROUGHNESS), 44);
-	SetUniformf("material", material->GetFloat(OCCLUSION), 48);
-
-	SetTexture(ALBEDO_MAP, material->GetTexture(ALBEDO_MAP));
-	SetTexture(DISPLACEMENT_MAP, material->GetTexture(DISPLACEMENT_MAP));
-	SetTexture(NORMAL_MAP, material->GetTexture(NORMAL_MAP));
-	SetTexture(METALLIC_MAP, material->GetTexture(METALLIC_MAP));
-	SetTexture(ROUGHNESS_MAP, material->GetTexture(ROUGHNESS_MAP));
-	SetTexture(OCCLUSION_MAP, material->GetTexture(OCCLUSION_MAP));
-	SetTexture(EMISSION_MAP, material->GetTexture(EMISSION_MAP));
 
 	size_t baseOffset = EngineConfig::lightsMaxNumber * sizeof(Vector4f);
 
 	for (uint32_t i = 0; i < EngineConfig::lightsMaxNumber; i++)
 	{
-		size_t currentOffset = sizeof(Vector4f) * i ;
+		size_t currentOffset = sizeof(Vector4f) * i;
 
 		if (i < lights.size())
 		{
@@ -78,4 +58,28 @@ void VKPBRShader::UpdateUniforms(GameObject* object, Camera* camera, std::vector
 			SetUniform("lights", Vector4f(), baseOffset * 2 + currentOffset);
 		}
 	}
+}
+
+void VKPBRShader::UpdateObjectUniforms(GameObject* object) const
+{
+	Material* material = ((Renderer*)object->GetComponent(RENDERER_COMPONENT))->GetMaterial();
+
+	//Offset values are copied from shaders
+	SetUniform("m_transform", object->GetWorldTransform()->getTransformationMatrix());
+
+	SetUniform("material", material->GetVector3f(COLOUR), 0);
+	SetUniform("material", material->GetVector3f(EMISSION), 16);
+	SetUniformi("material", material->GetTexture(NORMAL_MAP)->getID() != Material::GetDefaultTexture()->getID(), 32);
+	SetUniformf("material", material->GetFloat(HEIGHT_SCALE), 36);
+	SetUniformf("material", material->GetFloat(METALLIC), 40);
+	SetUniformf("material", material->GetFloat(ROUGHNESS), 44);
+	SetUniformf("material", material->GetFloat(OCCLUSION), 48);
+
+	SetTexture(ALBEDO_MAP, material->GetTexture(ALBEDO_MAP));
+	SetTexture(DISPLACEMENT_MAP, material->GetTexture(DISPLACEMENT_MAP));
+	SetTexture(NORMAL_MAP, material->GetTexture(NORMAL_MAP));
+	SetTexture(METALLIC_MAP, material->GetTexture(METALLIC_MAP));
+	SetTexture(ROUGHNESS_MAP, material->GetTexture(ROUGHNESS_MAP));
+	SetTexture(OCCLUSION_MAP, material->GetTexture(OCCLUSION_MAP));
+	SetTexture(EMISSION_MAP, material->GetTexture(EMISSION_MAP));
 }

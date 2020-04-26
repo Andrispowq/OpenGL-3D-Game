@@ -45,6 +45,8 @@ void TerrainNode::PreRender(RenderingEngine* renderingEngine)
 	{
 		child.second->PreRender(renderingEngine);
 	}
+
+	GameObject::PreRender(renderingEngine);
 }
 
 void TerrainNode::UpdateQuadtree()
@@ -88,8 +90,6 @@ void TerrainNode::AddChildNodes(int lod)
 				name.append(std::to_string(lod));
 
 				AddChild(name, new TerrainNode(quadtree, { (float) i * gap / 2, (float) j * gap / 2 }, { (float) i, (float) j }, lod));
-			
-				PR_LOG_MESSAGE(name + "\n");
 			}
 		}
 	}

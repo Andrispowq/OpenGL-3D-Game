@@ -48,7 +48,8 @@ public:
 
 	virtual void BindUniformBlock(const std::string& name, uint32_t binding) const override {}
 
-	virtual void UpdateUniforms(GameObject* object, Camera* camera, std::vector<Light*> lights) const = 0;
+	virtual void UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const override = 0;
+	virtual void UpdateObjectUniforms(GameObject* object) const override = 0;
 
 	virtual bool operator==(const Shader& other)
 	{

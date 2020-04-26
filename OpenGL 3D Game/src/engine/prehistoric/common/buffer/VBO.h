@@ -14,6 +14,8 @@ public:
 	virtual void Bind(void* commandBuffer) const = 0;
 	virtual void Draw(void* commandBuffer) const = 0;
 	virtual void Unbind() const = 0;
+
+	virtual bool operator==(const VBO& other) = 0;
 protected:
 	uint32_t size;
 	bool indexed;

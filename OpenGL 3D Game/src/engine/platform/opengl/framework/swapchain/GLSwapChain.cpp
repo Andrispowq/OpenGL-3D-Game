@@ -5,6 +5,8 @@
 
 void GLSwapchain::SetupSwapchain(Window* window)
 {
+	this->window = window;
+
 	//Enabling GL_TEXTURE_2D is deprecated, in debug mode, it will cause the program to break
 	//glEnable(GL_TEXTURE_2D);
 

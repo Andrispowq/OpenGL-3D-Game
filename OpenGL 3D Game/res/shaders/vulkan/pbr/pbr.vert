@@ -15,6 +15,8 @@ layout(set = 0, binding = 0) uniform Model
 void main()
 {
 	gl_Position = m_transform * vec4(position_VS, 1.0);
+	gl_Position.y = -gl_Position.y;
+    //gl_Position.z = (gl_Position.z + gl_Position.w) / 2.0;
 
 	texture_GS = texture_VS;
 	normal_GS = (m_transform * vec4(normal_VS, 0.0)).xyz;

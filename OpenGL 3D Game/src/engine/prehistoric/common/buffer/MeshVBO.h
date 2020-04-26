@@ -17,6 +17,8 @@ public:
 	virtual void Bind(void* commandBuffer) const override  = 0;
 	virtual void Draw(void* commandBuffer) const = 0;
 	virtual void Unbind() const override = 0;
+
+	virtual bool operator==(const VBO& other) override = 0;
 };
 
 #endif

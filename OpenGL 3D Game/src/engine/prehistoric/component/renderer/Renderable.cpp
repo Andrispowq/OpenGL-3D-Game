@@ -7,6 +7,8 @@ std::vector<Pipeline*> Renderable::pipelines;
 
 Renderable::Renderable(Pipeline* pipeline, Window* window)
 {
+	this->window = window;
+
 	size_t index;
 	if ((index = FindElement(pipeline, pipelines)) == 0xFFFFFFFF)
 	{

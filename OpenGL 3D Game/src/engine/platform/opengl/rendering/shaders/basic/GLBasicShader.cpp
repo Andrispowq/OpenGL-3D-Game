@@ -35,14 +35,10 @@ GLBasicShader::GLBasicShader() : GLShader()
 	AddUniform("gamma");
 }
 
-void GLBasicShader::UpdateUniforms(GameObject* object, Camera* camera, std::vector<Light*> lights) const
+void GLBasicShader::UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const
 {
-	Material* material = dynamic_cast<Renderer*>(object->GetComponent("Renderer"))->GetMaterial();
-
-	SetUniform("m_transform", object->GetWorldTransform()->getTransformationMatrix());
 	SetUniform("m_view", camera->getViewMatrix());
 	SetUniform("m_projection", camera->getProjectionMatrix());
-
 	SetUniform("cameraPosition", camera->getPosition());
 
 	for (uint32_t i = 0; i < EngineConfig::lightsMaxNumber; i++)
@@ -65,6 +61,15 @@ void GLBasicShader::UpdateUniforms(GameObject* object, Camera* camera, std::vect
 		}
 	}
 
+	SetUniformf("gamma", EngineConfig::rendererGamma);
+}
+
+void GLBasicShader::UpdateObjectUniforms(GameObject* object) const
+{
+	Material* material = dynamic_cast<Renderer*>(object->GetComponent("Renderer"))->GetMaterial();
+
+	SetUniform("m_transform", object->GetWorldTransform()->getTransformationMatrix());
+
 	material->GetTexture("albedoMap")->Bind(0);
 	SetUniformi("material.albedoMap", 0);
 	material->GetTexture("metallicMap")->Bind(1);
@@ -75,6 +80,4 @@ void GLBasicShader::UpdateUniforms(GameObject* object, Camera* camera, std::vect
 	SetUniform("material.colour", material->GetVector3f("colour"));
 	SetUniformf("material.metallic", material->GetFloat("metallic"));
 	SetUniformf("material.roughness", material->GetFloat("roughness"));
-
-	SetUniformf("gamma", EngineConfig::rendererGamma);
 }
