@@ -52,10 +52,12 @@ void Renderer::PreRender(RenderingEngine* renderingEngine)
 void Renderer::Render(const RenderingEngine& renderingEngine) const
 {
 	Pipeline* pipeline = pipelines[pipelineIndex];
-
+	
 	pipeline->BindPipeline();
 	pipeline->getShader()->UpdateShaderUniforms(renderingEngine.GetCamera(), renderingEngine.GetLights());
+	pipeline->getShader()->UpdateSharedUniforms(parent);
 	pipeline->getShader()->UpdateObjectUniforms(parent);
+
 	pipeline->RenderPipeline();
 	pipeline->UnbindPipeline();
 }

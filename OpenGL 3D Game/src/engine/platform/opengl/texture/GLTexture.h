@@ -23,8 +23,17 @@ public:
 
 	inline GLuint getID() const { return id; }
 	inline void setID(GLuint id) { this->id = id; }
+
+	inline void setType(ImageType type) { this->type = getImageType(type); }
+public:
+	//static methods for easier texture creation
+	static Texture* GenTexture(const std::string& file, SamplerFilter filter = Trilinear, TextureWrapMode wrapMode = Repeat);
+	static Texture* Storage3D(uint32_t width, uint32_t height, ImageFormat format = RGBA32FLOAT, SamplerFilter filter = Trilinear, TextureWrapMode wrapMode = Repeat);
+	static Texture* Storage2D(uint32_t width, uint32_t height, ImageFormat format = RGBA32FLOAT, SamplerFilter filter = Trilinear, TextureWrapMode wrapMode = Repeat);
 private:
-	GLenum getType(ImageType imageType) const;
+	static GLenum getImageType(ImageType imageType);
+	static GLenum getInternalFormat(ImageFormat format);
+	static GLenum getFormat(ImageFormat format);
 private:
 	GLuint id;
 	GLenum type;

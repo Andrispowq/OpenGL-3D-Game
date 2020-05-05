@@ -9,12 +9,12 @@ VKPBRShader::VKPBRShader(Window* window) : VKShader(window->GetContext(), window
 	AddShader(ResourceLoader::LoadShaderVK("vulkan/pbr/pbr_FS.spv"), FRAGMENT_SHADER);
 
 	AddUniform("camera", VERTEX_SHADER | GEOMETRY_SHADER | FRAGMENT_SHADER, UniformBuffer, 0, 2, sizeof(float) * 16 * 2);
-	AddUniform("lightConditions", GEOMETRY_SHADER | FRAGMENT_SHADER, UniformBuffer, 0, 10, sizeof(int) * 2 + sizeof(float) + sizeof(Vector3f));
-	AddUniform("lights", FRAGMENT_SHADER, UniformBuffer, 0, 11, sizeof(Vector4f) * 3 * EngineConfig::lightsMaxNumber);
+	AddUniform("lightConditions", GEOMETRY_SHADER | FRAGMENT_SHADER, UniformBuffer, 0, 10, sizeof(int) * 2 + sizeof(float) + Vector3f::size());
+	AddUniform("lights", FRAGMENT_SHADER, UniformBuffer, 0, 11, Vector4f::size() * 3 * EngineConfig::lightsMaxNumber);
 
 	AddUniform("m_transform", VERTEX_SHADER, UniformBuffer, 0, 0, sizeof(float) * 16);
 
-	AddUniform("material", GEOMETRY_SHADER | FRAGMENT_SHADER, UniformBuffer, 0, 1, sizeof(Vector3f) * 2 + sizeof(int) + sizeof(float) * 4);
+	AddUniform("material", GEOMETRY_SHADER | FRAGMENT_SHADER, UniformBuffer, 0, 1, Vector3f::size() * 2 + sizeof(int) + sizeof(float) * 4);
 
 	AddUniform(ALBEDO_MAP, GEOMETRY_SHADER | FRAGMENT_SHADER, CombinedImageSampler, 0, 3, 0, nullptr);
 	AddUniform(DISPLACEMENT_MAP, GEOMETRY_SHADER | FRAGMENT_SHADER, CombinedImageSampler, 0, 4, 0, nullptr);
@@ -36,11 +36,11 @@ void VKPBRShader::UpdateShaderUniforms(Camera* camera, std::vector<Light*> light
 	SetUniformi("lightConditions", (uint32_t)lights.size() >= EngineConfig::lightsMaxNumber ? EngineConfig::lightsMaxNumber : (uint32_t)lights.size(), 4);
 	SetUniformf("lightConditions", EngineConfig::rendererGamma, 8);
 
-	size_t baseOffset = EngineConfig::lightsMaxNumber * sizeof(Vector4f);
+	size_t baseOffset = EngineConfig::lightsMaxNumber * Vector4f::size();
 
 	for (uint32_t i = 0; i < EngineConfig::lightsMaxNumber; i++)
 	{
-		size_t currentOffset = sizeof(Vector4f) * i;
+		size_t currentOffset = Vector4f::size() * i;
 
 		if (i < lights.size())
 		{

@@ -25,10 +25,15 @@ void main()
 	u * (1 - v) * mapCoord_TE[0] + 
 	u * v* mapCoord_TE[3] + 
 	(1 - u) * v * mapCoord_TE[15]);
+
+	mapCoord = clamp(mapCoord, vec2(0.0), vec2(1.0));
 	
-	float height = texture(heightmap, mapCoord).r * scaleY;
+	float height = texture(heightmap, mapCoord).r* scaleY;
 	
-	//position.y = height;	
+	if (height > 0)
+		height *= 0;
+
+	position.y = height;	
 	gl_Position = position;
 	
 	mapCoord_GS = mapCoord;

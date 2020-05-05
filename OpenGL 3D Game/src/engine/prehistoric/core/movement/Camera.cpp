@@ -80,11 +80,13 @@ void Camera::Input(Window* window, float delta)
 	cameraRotated = false;
 
 	movAmt += CameraInput::GetKey(speedControl) * delta * 35.0f;
-	movAmt = static_cast<float>(std::fmax(0.02, movAmt));
+	movAmt = std::fmax(0.02f, movAmt);
 
 	//Move by input systems
 	bool movedForward = false, movedBackward = false, movedRight = false, movedLeft = false,
 		rotUp = false, rotDown = false, rotRight = false, rotLeft = false;
+
+	//PR_LOG_MESSAGE("Forward: %f\n", inputs[1]->IsForward());
 
 	for (CameraInput* in : inputs)
 	{

@@ -124,12 +124,7 @@ void main()
     vec3 Lo = vec3(0);
 	
 	// reflectance equation
-	int num;
-
-	if (numberOfLights < max_lights) num = numberOfLights;
-	else num = max_lights;
-
-	for(int i = 0; i < num; i++)
+	for(int i = 0; i < numberOfLights; i++)
     {
         // calculate per-light radiance
         vec3 L = -normalize(lights[i].position - position_FS);
@@ -174,7 +169,7 @@ void main()
 
 	vec3 ambient = vec3(0.03);
 	
-	vec3 colour = ambient + Lo;
+	vec3 colour = ambient * albedoColour + Lo;
 	
 	colour /= colour + vec3(1);
 	colour = pow(colour, vec3(1 / gamma));

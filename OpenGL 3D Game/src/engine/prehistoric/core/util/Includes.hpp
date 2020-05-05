@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <vector>
 #include <string>
+#include <sstream>
 
 #include "engine/prehistoric/core/log/Log.h"
 #include "engine/prehistoric/core/util/time/Time.h"

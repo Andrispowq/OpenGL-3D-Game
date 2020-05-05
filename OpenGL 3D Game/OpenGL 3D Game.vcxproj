@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\prehistoric\modules\gpgpu\NormalMapRenderer.cpp" />
     <ClCompile Include="src\engine\config\EngineConfig.cpp" />
     <ClCompile Include="src\engine\config\TerrainConfig.cpp" />
     <ClCompile Include="src\engine\platform\opengl\buffer\GLPatchVBO.cpp" />
@@ -177,6 +178,7 @@
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\GLShader.h" />
     <ClInclude Include="src\engine\prehistoric\core\util\time\Time.h" />
     <ClInclude Include="src\engine\prehistoric\core\util\time\Timer.h" />
+    <ClInclude Include="src\engine\prehistoric\modules\gpgpu\NormalMapRenderer.h" />
     <ClInclude Include="src\engine\prehistoric\modules\terrain\Terrain.h" />
     <ClInclude Include="src\engine\prehistoric\modules\terrain\TerrainMaps.h" />
     <ClInclude Include="src\engine\prehistoric\modules\terrain\TerrainNode.h" />
@@ -246,11 +248,14 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\include\GL;$(SolutionDir)Dependencies\include\GLFW;$(SolutionDir)Dependencies\include\stb;$(SolutionDir)Dependencies\include\Vulkan;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions);_x64;PR_DEBUG</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions);_x64;PR_DEBUG;PR_FAST_MATH</PreprocessorDefinitions>
       <AssemblerOutput>NoListing</AssemblerOutput>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>engine/prehistoric/core/util/Includes.hpp</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <FloatingPointModel>Precise</FloatingPointModel>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -268,11 +273,12 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\include\GL;$(SolutionDir)Dependencies\include\GLFW;$(SolutionDir)Dependencies\include\stb;$(SolutionDir)Dependencies\include\Vulkan;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions);_x64;PR_RELEASE</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions);_x64;PR_RELEASE;PR_FAST_MATH</PreprocessorDefinitions>
       <AssemblerOutput>NoListing</AssemblerOutput>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>engine/prehistoric/core/util/Includes.hpp</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

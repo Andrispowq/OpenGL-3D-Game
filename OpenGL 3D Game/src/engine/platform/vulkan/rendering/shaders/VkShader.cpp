@@ -543,8 +543,8 @@ void VKShader::SetUniform(const std::string& name, const Vector2f& value, size_t
 	void* data;
 	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
 
-	vkMapMemory(device->GetDevice(), mem, offset, sizeof(Vector2f), 0, &data);
-	memcpy(data, &value, sizeof(Vector2f));
+	vkMapMemory(device->GetDevice(), mem, offset, Vector2f::size(), 0, &data);
+	memcpy(data, &value, Vector2f::size());
 	vkUnmapMemory(device->GetDevice(), mem);
 }
 
@@ -553,8 +553,8 @@ void VKShader::SetUniform(const std::string& name, const Vector3f& value, size_t
 	void* data;
 	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
 
-	vkMapMemory(device->GetDevice(), mem, offset, sizeof(Vector3f), 0, &data);
-	memcpy(data, &value, sizeof(Vector3f));
+	vkMapMemory(device->GetDevice(), mem, offset, Vector3f::size(), 0, &data);
+	memcpy(data, &value, Vector3f::size());
 	vkUnmapMemory(device->GetDevice(), mem);
 }
 
@@ -563,8 +563,8 @@ void VKShader::SetUniform(const std::string& name, const Vector4f& value, size_t
 	void* data;
 	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
 
-	vkMapMemory(device->GetDevice(), mem, offset, sizeof(Vector4f), 0, &data);
-	memcpy(data, &value, sizeof(Vector4f));
+	vkMapMemory(device->GetDevice(), mem, offset, Vector4f::size(), 0, &data);
+	memcpy(data, &value, Vector4f::size());
 	vkUnmapMemory(device->GetDevice(), mem);
 }
 

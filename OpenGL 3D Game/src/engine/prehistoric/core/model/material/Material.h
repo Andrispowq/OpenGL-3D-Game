@@ -114,25 +114,15 @@ public:
 	}
 
 	static Texture* GetDefaultTexture() { return listOfTextures[0]; }
-	static Vector4f* GetDefaultVector4f() { return listOfVector4s[0]; }
-	static Vector3f* GetDefaultVector3f() { return listOfVector3s[0]; }
-	static Vector2f* GetDefaultVector2f() { return listOfVector2s[0]; }
-	static float* GetDefaultFloat() { return listOfFloats[0]; }
-	static int* GetDefaultInt() { return listOfInts[0]; }
 private:
 	static std::vector<Texture*> listOfTextures;
-	static std::vector<Vector4f*> listOfVector4s;
-	static std::vector<Vector3f*> listOfVector3s;
-	static std::vector<Vector2f*> listOfVector2s;
-	static std::vector<float*> listOfFloats;
-	static std::vector<int*> listOfInts;
-	 
-	std::unordered_map<std::string, size_t> textures;
-	std::unordered_map<std::string, size_t> vector4s;
-	std::unordered_map<std::string, size_t> vector3s;
-	std::unordered_map<std::string, size_t> vector2s;
-	std::unordered_map<std::string, size_t> floats;
-	std::unordered_map<std::string, size_t> ints;
+	
+	std::unordered_map<std::string, Texture*> textures;
+	std::unordered_map<std::string, Vector4f*> vector4s;
+	std::unordered_map<std::string, Vector3f*> vector3s;
+	std::unordered_map<std::string, Vector2f*> vector2s;
+	std::unordered_map<std::string, float*> floats;
+	std::unordered_map<std::string, int*> ints;
 };
 
 #endif

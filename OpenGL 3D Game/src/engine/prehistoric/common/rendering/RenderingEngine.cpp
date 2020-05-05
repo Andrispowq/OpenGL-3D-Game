@@ -64,6 +64,8 @@ void RenderingEngine::Update(const float delta)
 		window->SetClosed(true);
 	}
 
+	//PR_LOG_MESSAGE("Speed: %f\n", InputInstance.IsJoystickButtonPushed(PR_GAMEPAD_AXIS_LEFT_Y, PR_JOYSTICK_1));
+
 	if (window->GetResized())
 	{
 		Renderable::RecreatePipelines();
@@ -81,10 +83,10 @@ void RenderingEngine::Render(GameObject* root)
 	{
 		pipeline.first->BindPipeline();
 		pipeline.first->getShader()->UpdateShaderUniforms(camera, lights);
+		pipeline.first->getShader()->UpdateSharedUniforms(pipeline.second[0]->GetParent());
 
 		for (auto renderer : pipeline.second)
 		{
-			//pipeline.first->getShader()->UpdateUniforms(renderer->GetParent(), camera, lights);
 			renderer->BatchRender(*this);
 		}
 

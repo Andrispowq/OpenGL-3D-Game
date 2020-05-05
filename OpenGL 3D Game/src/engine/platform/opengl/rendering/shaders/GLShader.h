@@ -30,6 +30,7 @@ public:
 	bool CompileShader() const override;
 
 	virtual void UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const override = 0;
+	virtual void UpdateSharedUniforms(GameObject* object) const override {}
 	virtual void UpdateObjectUniforms(GameObject* object) const override = 0;
 
 	virtual void SetUniformi(const std::string& name, int value, size_t offset = 0) const override { glUniform1i(uniforms.at(name), value); }
@@ -58,7 +59,7 @@ public:
 private:
 	bool AddProgram(const std::vector<char>& code, GLenum type) const;
 private:
-	std::unordered_map<std::string, uint32_t> uniforms;
+	std::map<std::string, uint32_t> uniforms;
 
 	GLuint program;
 	GLuint* shaders;

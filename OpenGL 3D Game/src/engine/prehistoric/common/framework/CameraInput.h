@@ -26,6 +26,17 @@ struct MoveData
 
 static InputData DefInData = { PR_KEY_UNKNOWN, NO_TYPE, PR_JOYSTICK_1 };
 
+template<typename T>
+static T clamp(T val, T min, T max)
+{
+	if (val > max)
+		return val = max;
+	else if (val < min)
+		return val = min;
+	else
+		return val;
+}
+
 class CameraInput
 {
 public:
@@ -84,9 +95,9 @@ public:
 		case JOYSTICK_BUTTON_PRESSED:
 			return InputInstance.IsJoystickButtonPushed(data.code, data.joystickNumber);
 		case JOYSTICK_AXIS_MOVED_NEGATIVE:
-			return InputInstance.GetJoystickAxisOffset(data.code, data.joystickNumber);
+			return clamp(-InputInstance.GetJoystickAxisOffset(data.code, data.joystickNumber), -1.0f, 0.0f);
 		case JOYSTICK_AXIS_MOVED_POSITIVE:
-			return -InputInstance.GetJoystickAxisOffset(data.code, data.joystickNumber);
+			return clamp(-InputInstance.GetJoystickAxisOffset(data.code, data.joystickNumber), 0.0f, 1.0f);
 
 		default:
 			return 0;

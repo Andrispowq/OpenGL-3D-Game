@@ -97,8 +97,13 @@ public:
 
 	virtual bool operator==(const Shader& other) = 0;
 
+	//Constant uniforms -> uniforms that change very infrequently
+	//Shader uniforms -> per-shader uniforms, like view and projection matrices
+	//Shared uniforms -> uniforms that are shared between objects, and can be fetched from the first object
+	//Object uniforms -> unique, per-object values
 	virtual void UpdateConstantUniforms(Camera* camera, std::vector<Light*> lights) const {}
 	virtual void UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const {}
+	virtual void UpdateSharedUniforms(GameObject* object) const {}
 	virtual void UpdateObjectUniforms(GameObject* object) const {}
 
 	//Shaders cannot be copied, they are stored as pointers in the Renderer component, and referenced with a shaderIndex

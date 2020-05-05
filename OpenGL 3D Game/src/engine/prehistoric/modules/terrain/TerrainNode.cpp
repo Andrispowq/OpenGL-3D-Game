@@ -82,14 +82,15 @@ void TerrainNode::AddChildNodes(int lod)
 		{
 			for (unsigned int j = 0; j < 2; j++)
 			{
-				std::string name = "Child ";
-				name.append(std::to_string(i));
-				name.append(", ");
-				name.append(std::to_string(j));
-				name.append(", ");
-				name.append(std::to_string(lod));
+				std::stringstream name;
+				name << "Child ";
+				name << i;
+				name << ", ";
+				name << j;
+				name << ", ";
+				name << lod;
 
-				AddChild(name, new TerrainNode(quadtree, { (float) i * gap / 2, (float) j * gap / 2 }, { (float) i, (float) j }, lod));
+				AddChild(name.str(), new TerrainNode(quadtree, { (float) i * gap / 2, (float) j * gap / 2 }, { (float) i, (float) j }, lod));
 			}
 		}
 	}
@@ -102,11 +103,6 @@ void TerrainNode::RemoveChildNodes()
 
 	if (children.size() != 0)
 	{
-		for (auto& child : children)
-		{
-			delete child.second;
-		}
-
 		children.clear();
 	}
 }

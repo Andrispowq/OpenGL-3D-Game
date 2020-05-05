@@ -24,9 +24,9 @@ void Input::DeleteInstance()
 
 bool Input::IsJoystickButtonPushed(const InputCode& key, const JoystickID& joystick) const
 {
-	auto buttons = joystickButtons[(uint32_t)joystick];
+	auto buttons = joystickButtons[(uint32_t) joystick];
 
-	if (std::find(buttons.begin(), buttons.end(), (uint32_t)key) != buttons.end())
+	if (std::find(buttons.begin(), buttons.end(), (int32_t)key) != buttons.end())
 	{
 		return buttons[(uint32_t)key] == 1;
 	}
@@ -37,8 +37,8 @@ bool Input::IsJoystickButtonPushed(const InputCode& key, const JoystickID& joyst
 float Input::GetJoystickAxisOffset(const InputCode& axis, const JoystickID& joystick) const
 {
 	auto axes = joystickAxes[(uint32_t)joystick];
-
-	if (std::find(axes.begin(), axes.end(), (uint32_t)axis) != axes.end())
+	
+	if (std::find(axes.begin(), axes.end(), (float) axis) != axes.end())
 	{
 		return axes[(uint32_t)axis];
 	}

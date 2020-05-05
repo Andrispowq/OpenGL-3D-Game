@@ -161,7 +161,7 @@ void main()
 	colour /= colour + vec3(1.0);
 	colour = pow(colour, vec3(1.0 / gamma));
 	
-	colour_Out = vec4(colour, 1);
+	colour_Out = vec4(texture(normalMap, texture_FS).rgb, 1);
 }
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)

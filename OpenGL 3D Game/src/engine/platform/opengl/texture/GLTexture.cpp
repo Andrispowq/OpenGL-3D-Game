@@ -1,5 +1,6 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLTexture.h"
+#include "engine/prehistoric/core/util/loader/TextureLoader.h"
 
 GLTexture::GLTexture(GLuint id, GLenum type, uint32_t width, uint32_t height)
 	: id(id), type(type)
@@ -11,7 +12,7 @@ GLTexture::GLTexture(GLuint id, GLenum type, uint32_t width, uint32_t height)
 }
 
 GLTexture::GLTexture(GLuint id, ImageType type, uint32_t width, uint32_t height)
-	: id(id), type(getType(type))
+	: id(id), type(getImageType(type))
 {
 	this->width = width;
 	this->height = height;
@@ -120,16 +121,107 @@ void GLTexture::SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode
 	}
 }
 
-GLenum GLTexture::getType(ImageType type) const
+Texture* GLTexture::GenTexture(const std::string& file, SamplerFilter filter, TextureWrapMode wrapMode)
+{
+	Texture* texture = TextureLoader::LoadTexture(file, nullptr);
+	texture->Bind();
+	texture->SamplerProperties(filter, wrapMode);
+	return texture;
+}
+
+Texture* GLTexture::Storage3D(uint32_t width, uint32_t height, ImageFormat format, SamplerFilter filter, TextureWrapMode wrapMode)
+{
+	GLTexture* texture = new GLTexture();
+	texture->Generate();
+	texture->setType(TEXTURE_CUBE_MAP);
+	texture->Bind();
+	texture->setWidth(width);
+	texture->setHeight(height);
+
+	for (uint32_t i = 0; i < 6; ++i)
+	{
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, getInternalFormat(format), width, height, 0, getFormat(format), GL_FLOAT, nullptr);
+	}
+
+	texture->SamplerProperties(filter, wrapMode);
+	texture->Unbind();
+	return texture;
+}
+
+Texture* GLTexture::Storage2D(uint32_t width, uint32_t height, ImageFormat format, SamplerFilter filter, TextureWrapMode wrapMode)
+{
+	GLTexture* texture = new GLTexture();
+	texture->Generate();
+	texture->setType(TEXTURE_2D);
+	texture->Bind();
+	texture->setWidth(width);
+	texture->setHeight(height);
+
+	glTexStorage2D(GL_TEXTURE_2D, 1, getInternalFormat(format), width, height);
+
+	texture->SamplerProperties(filter, wrapMode);
+	texture->Unbind();
+	return texture;
+}
+
+GLenum GLTexture::getImageType(ImageType type)
 {
 	if (type == TEXTURE_2D)
 		return GL_TEXTURE_2D;
-	if (type == TEXTURE_ARRAY_2D)
+	else if (type == TEXTURE_ARRAY_2D)
 		return GL_TEXTURE_2D_ARRAY;
 	else if (type == TEXTURE_CUBE_MAP)
 		return GL_TEXTURE_CUBE_MAP;
 
-	PR_LOG_ERROR("Unsupported texture type: " + type);
+	PR_LOG_ERROR("Unsupported texture type: %u\n", type);
+
+	return -1;
+}
+
+GLenum GLTexture::getInternalFormat(ImageFormat format)
+{
+	if (format == R8FLOAT)
+		return GL_R8;
+	if (format == R16FLOAT)
+		return GL_R16;
+	if (format == R32FLOAT)
+		return GL_R32F;
+	if (format == RG16FLOAT)
+		return GL_RG16;
+	if (format == RG32FLOAT)
+		return GL_RG32F;
+	if (format == RGB24FLOAT)
+		return GL_RGB32F;
+	if (format == RGBA16FLOAT)
+		return GL_RGBA16F;
+	if (format == RGBA32FLOAT)
+		return GL_RGBA32F;
+
+	PR_LOG_ERROR("Unsupported texture format: %u\n", format);
+
+	return -1;
+}
+
+GLenum GLTexture::getFormat(ImageFormat format)
+{
+	if (format == R8FLOAT)
+		return GL_R;
+	if (format == R16FLOAT)
+		return GL_R;
+	if (format == R32FLOAT)
+		return GL_R;
+	if (format == RG16FLOAT)
+		return GL_RG;
+	if (format == RG32FLOAT)
+		return GL_RG;
+	if (format == RGB24FLOAT)
+		return GL_RGB;
+	if (format == RGBA16FLOAT)
+		return GL_RGBA;
+	if (format == RGBA32FLOAT)
+		return GL_RGBA;
+
+	PR_LOG_ERROR("Unsupported texture format: %u\n", format);
 
 	return -1;
 }

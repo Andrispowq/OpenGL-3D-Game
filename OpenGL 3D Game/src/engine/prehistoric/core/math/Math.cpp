@@ -1,6 +1,209 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "Math.h"
 
+inline Vector2f Vector2f::abs() const
+{
+	return Vector2f(fabs((*this).x), fabs((*this).y));
+}
+
+Vector2f Vector2f::lerp(const Vector2f& b, const float& t, const bool& invert) const
+{
+	float x_ = x + (b.x - x) * t;
+	float y_ = y + (b.y - y) * t;
+
+	return invert ? Vector2f(y_, x_) : Vector2f(x_, y_);
+}
+
+Vector2f Vector2f::lerp(const Vector2f& b, const Vector2f& t, const bool& invert) const
+{
+	float x_ = x + (b.x - x) * t.x;
+	float y_ = y + (b.y - y) * t.y;
+
+	return invert ? Vector2f(y_, x_) : Vector2f(x_, y_);
+}
+
+Vector2f Vector2f::swap() const
+{
+	return Vector2f(y, x);
+}
+
+inline Vector3f Vector3f::abs() const
+{
+	return Vector3f(std::abs(x), std::abs(y), std::abs(z));
+}
+
+Vector3f Vector3f::cross(const Vector3f& v) const
+{
+	float x_ = y * v.z - z * v.y;
+	float y_ = z * v.x - x * v.z;
+	float z_ = x * v.y - y * v.x;
+
+	return Vector3f(x_, y_, z_);
+}
+
+Vector3f Vector3f::reflect(const Vector3f& normal) const
+{
+	return *this - normal * 2 * this->dot(normal);
+}
+
+Vector3f Vector3f::refract(const Vector3f& normal, const float& eta) const
+{
+	float k = 1 - std::pow(eta, 2) * (1 - std::pow(this->dot(normal), 2));
+
+	if (k < 0)
+		return Vector3f(0);
+	else
+		return *this * eta - normal * (eta * this->dot(normal) + std::sqrt(k));
+}
+
+Vector3f Vector3f ::lerp(const Vector3f& b, const float& t) const
+{
+	return _mm_add_ps(_mm_mul_ps(_mm_sub_ps(b.reg, reg), _mm_set_ss(t)), reg);
+}
+
+Vector3f Vector3f::lerp(const Vector3f& b, const Vector3f& t) const
+{
+	return _mm_add_ps(_mm_mul_ps(_mm_sub_ps(b.reg, reg), t.reg), reg);
+}
+
+Vector3f Vector3f::rotate(const Vector3f& angles) const
+{
+	Vector3f rotX = this->rotate(Vector3f(1, 0, 0), angles.x);
+	Vector3f rotY = this->rotate(Vector3f(0, 1, 0), angles.y);
+	Vector3f rotZ = this->rotate(Vector3f(0, 0, 1), angles.z);
+
+	return rotX + rotY + rotZ - *this * 2;
+}
+
+Vector3f Vector3f::rotate(const Vector3f& axis, const float& angle) const
+{
+	Vector3f result;
+
+	float sinHalfAngle = std::sin(ToRadians(angle / 2));
+	float cosHalfAngle = std::cos(ToRadians(angle / 2));
+
+	float rx = axis.x * sinHalfAngle;
+	float ry = axis.y * sinHalfAngle;
+	float rz = axis.z * sinHalfAngle;
+	float rw = cosHalfAngle;
+
+	Quaternionf rotation(rx, ry, rz, rw);
+	Quaternionf conjugate = rotation.Conjugate();
+
+	Quaternionf w = rotation * (*this) * conjugate;
+
+	result.x = w.x;
+	result.y = w.y;
+	result.z = w.z;
+
+	return result;
+}
+
+inline Vector4f Vector4f::abs() const
+{
+	return Vector4f(std::abs(x), std::abs(y), std::abs(z), std::abs(w));
+}
+
+Vector4f Vector4f::lerp(const Vector4f& b, const float& t) const
+{
+	return _mm_add_ps(_mm_mul_ps(_mm_sub_ps(b.reg, reg), _mm_set_ss(t)), reg);
+}
+
+Vector4f Vector4f::lerp(const Vector4f& b, const Vector4f& t) const
+{
+	return _mm_add_ps(_mm_mul_ps(_mm_sub_ps(b.reg, reg), t.reg), reg);
+}
+
+Quaternionf Quaternionf::operator*(const Quaternionf& r) const
+{
+	float x_ = x * r.w + w * r.x + y * r.z - z * r.y;
+	float y_ = y * r.w + w * r.y + z * r.x - x * r.z;
+	float z_ = z * r.w + w * r.z + x * r.y - y * r.x;
+	float w_ = w * r.w - x * r.x - y * r.y - z * r.z;
+
+	return Quaternionf(x_, y_, z_, w_);
+}
+
+Quaternionf Quaternionf::operator*(const Vector4f& r) const
+{
+	float x_ = x * r.w + w * r.x + y * r.z - z * r.y;
+	float y_ = y * r.w + w * r.y + z * r.x - x * r.z;
+	float z_ = z * r.w + w * r.z + x * r.y - y * r.x;
+	float w_ = w * r.w - x * r.x - y * r.y - z * r.z;
+
+	return Quaternionf(x_, y_, z_, w_);
+}
+
+Quaternionf Quaternionf::operator*(const Vector3f& r) const
+{
+	float x_ = w * r.x + y * r.z - z * r.y;
+	float y_ = w * r.y + z * r.x - x * r.z;
+	float z_ = w * r.z + x * r.y - y * r.x;
+	float w_ = -x * r.x - y * r.y - z * r.z;
+
+	return Quaternionf(x_, y_, z_, w_);
+}
+
+Quaternionf Quaternionf::operator*=(const Quaternionf& r)
+{
+	float x_ = x * r.w + w * r.x + y * r.z - z * r.y;
+	float y_ = y * r.w + w * r.y + z * r.x - x * r.z;
+	float z_ = z * r.w + w * r.z + x * r.y - y * r.x;
+	float w_ = w * r.w - x * r.x - y * r.y - z * r.z;
+
+	this->x = x_;
+	this->y = y_;
+	this->z = z_;
+	this->w = w_;
+
+	return *this;
+}
+
+Quaternionf Quaternionf::operator*=(const Vector4f& r)
+{
+	float x_ = x * r.w + w * r.x + y * r.z - z * r.y;
+	float y_ = y * r.w + w * r.y + z * r.x - x * r.z;
+	float z_ = z * r.w + w * r.z + x * r.y - y * r.x;
+	float w_ = w * r.w - x * r.x - y * r.y - z * r.z;
+
+	this->x = x_;
+	this->y = y_;
+	this->z = z_;
+	this->w = w_;
+
+	return *this;
+}
+
+Quaternionf Quaternionf::operator*=(const Vector3f& r)
+{
+	float x_ = w * r.x + y * r.z - z * r.y;
+	float y_ = w * r.y + z * r.x - x * r.z;
+	float z_ = w * r.z + x * r.y - y * r.x;
+	float w_ = -x * r.x - y * r.y - z * r.z;
+
+	this->x = x_;
+	this->y = y_;
+	this->z = z_;
+	this->w = w_;
+
+	return *this;
+}
+
+inline Quaternionf Quaternionf::abs() const
+{
+	return Quaternionf(std::abs(x), std::abs(y), std::abs(z), std::abs(w));
+}
+
+Quaternionf Quaternionf::lerp(const Quaternionf& b, const float& t) const
+{
+	return _mm_add_ps(_mm_mul_ps(_mm_sub_ps(b.reg, reg), _mm_set_ss(t)), reg);
+}
+
+Quaternionf Quaternionf::lerp(const Quaternionf& b, const Quaternionf& t) const
+{
+	return _mm_add_ps(_mm_mul_ps(_mm_sub_ps(b.reg, reg), t.reg), reg);
+}
+
 Matrix4f::Matrix4f(const Matrix4f& v)
 {
 	m = new float[4 * 4];

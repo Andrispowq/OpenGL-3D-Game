@@ -4,9 +4,10 @@
 CoreEngine::CoreEngine()
 {
 	running = false;
-	frameTime = 1 / 120.0;
-
 	engine = new Engine();
+
+	frameTime = 1.0 / FrameworkConfig::windowMaxFPS;
+	PR_LOG_MESSAGE("Frametime: %f\n", frameTime);
 }
 
 CoreEngine::~CoreEngine()
@@ -68,6 +69,7 @@ void CoreEngine::Run()
 			if (frameCounter >= 1.0)
 			{
 				PR_LOG(CYAN, "FPS: %i\n", frames);
+				PR_LOG(CYAN, "FPS: %f\n", 1.0 / passedTime);
 				frames = 0;
 				frameCounter = 0;
 			}

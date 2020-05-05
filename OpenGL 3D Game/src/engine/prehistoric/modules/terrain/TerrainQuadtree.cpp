@@ -34,7 +34,7 @@ TerrainQuadtree::TerrainQuadtree(TerrainMaps& maps, Window* window, Camera* came
 
 	if (FrameworkConfig::api == OpenGL)
 	{
-		shader = new GLTerrainWireframeShader();
+		shader = new GLTerrainShader();
 		pipeline = new GLPipeline(shader, mesh);
 	}
 	else if (FrameworkConfig::api == Vulkan)
@@ -48,12 +48,13 @@ TerrainQuadtree::TerrainQuadtree(TerrainMaps& maps, Window* window, Camera* came
 	{
 		for (int y = 0; y < rootNodes; y++)
 		{
-			std::string name = "Node ";
-			name.append(std::to_string(x));
-			name.append(", ");
-			name.append(std::to_string(y));
+			std::stringstream name;
+			name << "Child ";
+			name << x;
+			name << ", ";
+			name << y;
 
-			AddChild(name, new TerrainNode(this, { (float) x / (float) rootNodes, (float) y / (float) rootNodes }, { (float) x, (float) y }, 0));
+			AddChild(name.str(), new TerrainNode(this, { (float) x / (float) rootNodes, (float) y / (float) rootNodes }, { (float) x, (float) y }, 0));
 		}
 	}
 
