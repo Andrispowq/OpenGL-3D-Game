@@ -98,7 +98,6 @@ void RenderingEngine::Render(GameObject* root)
 	lights.clear();
 }
 
-//TODO: Convert it to template
 static bool FindElement(Pipeline* pipeline, std::unordered_map<Pipeline*, std::vector<Renderable*>> pipelines)
 {
 	for (const auto element : pipelines)

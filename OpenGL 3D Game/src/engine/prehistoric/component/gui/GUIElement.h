@@ -8,8 +8,8 @@
 #include "engine/platform/opengl/buffer/GLMeshVBO.h"
 #include "engine/platform/vulkan/buffer/VKMeshVBO.h"
 
-#include "engine/platform/opengl/rendering/pipeline/GLPipeline.h"
-#include "engine/platform/vulkan/rendering/pipeline/VKPipeline.h"
+#include "engine/platform/opengl/rendering/pipeline/GLGraphicsPipeline.h"
+#include "engine/platform/vulkan/rendering/pipeline/VKGraphicsPipeline.h"
 
 #include "engine/platform/opengl/rendering/shaders/GLShader.h"
 #include "engine/platform/vulkan/rendering/shaders/VKShader.h"

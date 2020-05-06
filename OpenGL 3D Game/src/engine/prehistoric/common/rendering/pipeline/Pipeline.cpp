@@ -2,9 +2,8 @@
 #include "Pipeline.h"
 
 std::vector<Shader*> Pipeline::shaders;
-std::vector<VBO*> Pipeline::vbos;
 
-Pipeline::Pipeline(Shader* shader, VBO* vbo)
+Pipeline::Pipeline(Shader* shader)
 {
 	size_t index;
 	if ((index = FindElement(shader, shaders)) == 0xFFFFFFFF)
@@ -17,24 +16,12 @@ Pipeline::Pipeline(Shader* shader, VBO* vbo)
 		this->shaderIndex = index;
 	}
 
-	if ((index = FindElement(vbo, vbos)) == 0xFFFFFFFF)
-	{
-		vbos.push_back(vbo);
-		this->vboIndex = vbos.size() - 1;
-	}
-	else
-	{
-		this->vboIndex = index;
-	}
-
 	this->shader = shader;
-	this->vbo = vbo;
 }
 
 Pipeline::~Pipeline()
 {
 	shaderIndex = -1;
-	vboIndex = -1;
 }
 
 void Pipeline::CleanUp()
@@ -43,14 +30,9 @@ void Pipeline::CleanUp()
 	{
 		delete shader;
 	}
-
-	for (VBO* vbo : vbos)
-	{
-		delete vbo;
-	}
 }
 
-void Pipeline::SetShader(Shader* shader)
+void Pipeline::setShader(Shader* shader)
 {
 	size_t index;
 	if ((index = FindElement(shader, shaders)) == 0xFFFFFFFF)
@@ -64,20 +46,4 @@ void Pipeline::SetShader(Shader* shader)
 	}
 
 	this->shader = shader;
-}
-
-void Pipeline::SetVbo(VBO* vbo)
-{
-	size_t index;
-	if ((index = FindElement(vbo, vbos)) == 0xFFFFFFFF)
-	{
-		vbos.push_back(vbo);
-		this->vboIndex = vbos.size() - 1;
-	}
-	else
-	{
-		this->vboIndex = index;
-	}
-
-	this->vbo = vbo;
 }

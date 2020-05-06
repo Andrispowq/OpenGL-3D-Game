@@ -511,7 +511,7 @@ namespace VKUtil
 
 	std::vector<VkFormat> VKUtil::GetAvailableFormats(const VkPhysicalDevice& physicalDevice)
 	{
-		//TODO
+		//TODO: Query formats
 		return {};
 	}
 

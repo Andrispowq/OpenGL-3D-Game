@@ -30,12 +30,12 @@ GUIElement::GUIElement(Window* window, Texture* texture, void* data, size_t data
 		if (FrameworkConfig::api == OpenGL)
 		{
 			shader = new GLGUIShader();
-			pipeline = new GLPipeline(shader, guiVbo);
+			pipeline = new GLGraphicsPipeline(shader, guiVbo);
 		}
 		else if (FrameworkConfig::api == Vulkan)
 		{
 			shader = new VKBasicShader(window);
-			pipeline = new VKPipeline(shader, guiVbo);
+			pipeline = new VKGraphicsPipeline(shader, guiVbo);
 		}
 
 		pipeline->CreatePipeline(window);

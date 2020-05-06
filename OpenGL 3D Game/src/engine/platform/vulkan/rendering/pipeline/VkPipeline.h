@@ -5,8 +5,6 @@
 
 #include <vulkan/vulkan.h>
 
-#include "VKGraphicsPipeline.h"
-
 #include "engine/platform/vulkan/framework/surface/VKSurface.h"
 #include "engine/platform/vulkan/framework/device/VKDevice.h"
 #include "engine/platform/vulkan/framework/swapchain/VKSwapchain.h"
@@ -15,7 +13,7 @@
 class VKPipeline : public Pipeline
 {
 public:
-	VKPipeline(Shader* shader, VBO* vbo);
+	VKPipeline(Shader* shader);
 	virtual ~VKPipeline();
 
 	virtual void CreatePipeline(Window* window) override;
@@ -27,7 +25,7 @@ public:
 	virtual void DestroyPipeline() override;
 
 	virtual void RecreatePipeline();
-private:
+protected:
 	//External
 	VKSurface* surface;
 	VKPhysicalDevice* physicalDevice;
@@ -37,7 +35,6 @@ private:
 	VKSwapchain* swapchain;
 
 	//Local
-	VKGraphicsPipeline* graphicsPipeline;
 	bool exists;
 };
 

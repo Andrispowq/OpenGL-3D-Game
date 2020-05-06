@@ -16,8 +16,8 @@
 #include "engine/platform/opengl/rendering/shaders/pbr/GLPBRShader.h"
 #include "engine/platform/vulkan/rendering/shaders/pbr/VKPBRShader.h"
 
-#include "engine/platform/opengl/rendering/pipeline/GLPipeline.h"
-#include "engine/platform/vulkan/rendering/pipeline/VKPipeline.h"
+#include "engine/platform/opengl/rendering/pipeline/GLGraphicsPipeline.h"
+#include "engine/platform/vulkan/rendering/pipeline/VKGraphicsPipeline.h"
 
 #include "engine/prehistoric/core/util/Includes.hpp"
 

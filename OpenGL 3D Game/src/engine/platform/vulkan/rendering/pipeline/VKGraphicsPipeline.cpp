@@ -2,26 +2,30 @@
 #include <glew.h>
 #include "VKGraphicsPipeline.h"
 
-VKGraphicsPipeline::VKGraphicsPipeline(VKDevice& device, VKShader* shader, VKRenderpass& renderpass,
-	const Vector2f& viewportStart, const Vector2f& viewportSize, const Vector2u& scissorStart, const Vector2u& scissorSize, const bool& backfaceCulling, 
-	VKMeshVBO& vbo, VkSampleCountFlagBits samples)
+VKGraphicsPipeline::VKGraphicsPipeline(Shader* shader, VBO* vbo)
+	: VKPipeline(shader), GraphicsPipeline()
 {
-	this->device = &device;
+	this->pipelineLayout = &((VKShader*)shader)->GetPipelineLayout();
+	this->vbo = vbo;
+}
 
-	this->viewportStart = viewportStart;
-	this->viewportSize = viewportSize;
-	this->scissorStart = scissorStart;
-	this->scissorSize = scissorSize;
+VKGraphicsPipeline::~VKGraphicsPipeline()
+{
+}
 
-	this->backfaceCulling = backfaceCulling;
+void VKGraphicsPipeline::CreatePipeline(Window* window)
+{
+	VKPipeline::CreatePipeline(window);
+
+	this->renderpass = &((VKSwapchain*)window->GetSwapchain())->getRenderpass();
 
 	//The actual creation
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 	vertexInputInfo.vertexBindingDescriptionCount = 1;
-	vertexInputInfo.pVertexBindingDescriptions = vbo.GetBindingDescription();
+	vertexInputInfo.pVertexBindingDescriptions = ((VKMeshVBO*)vbo)->GetBindingDescription();
 
-	auto description = vbo.GetAttributeDescriptions();
+	auto description = ((VKMeshVBO*)vbo)->GetAttributeDescriptions();
 	vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(description.size());
 	vertexInputInfo.pVertexAttributeDescriptions = description.data();
 
@@ -31,16 +35,16 @@ VKGraphicsPipeline::VKGraphicsPipeline(VKDevice& device, VKShader* shader, VKRen
 	inputAssembly.primitiveRestartEnable = VK_FALSE;
 
 	VkViewport viewport = {};
-	viewport.x = viewportStart.x;
-	viewport.y = viewportStart.y;
-	viewport.width = viewportStart.x + viewportSize.x;
-	viewport.height = viewportStart.y + viewportSize.y;
+	viewport.x = Pipeline::viewportStart.x;
+	viewport.y = Pipeline::viewportStart.y;
+	viewport.width = Pipeline::viewportStart.x + Pipeline::viewportSize.x;
+	viewport.height = Pipeline::viewportStart.y + Pipeline::viewportSize.y;
 	viewport.minDepth = 0.0f;
 	viewport.maxDepth = 1.0f;
 
 	VkRect2D scissor = {};
-	scissor.offset = { (int32_t)scissorStart.x, (int32_t)scissorStart.y };
-	scissor.extent = { scissorStart.x + scissorSize.x, scissorStart.y + scissorSize.y };
+	scissor.offset = { (int32_t) Pipeline::scissorStart.x, (int32_t)Pipeline::scissorStart.y };
+	scissor.extent = { Pipeline::scissorStart.x + Pipeline::scissorSize.x, Pipeline::scissorStart.y + Pipeline::scissorSize.y };
 
 	VkPipelineViewportStateCreateInfo viewportState = {};
 	viewportState.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
@@ -55,7 +59,7 @@ VKGraphicsPipeline::VKGraphicsPipeline(VKDevice& device, VKShader* shader, VKRen
 	rasterizer.rasterizerDiscardEnable = VK_FALSE;
 	rasterizer.polygonMode = VK_POLYGON_MODE_FILL;// wireframe ? VK_POLYGON_MODE_LINE : VK_POLYGON_MODE_FILL;
 	rasterizer.lineWidth = 1.0f;
-	rasterizer.cullMode = backfaceCulling ? VK_CULL_MODE_BACK_BIT : VK_CULL_MODE_NONE;
+	rasterizer.cullMode = GraphicsPipeline::backfaceCulling ? VK_CULL_MODE_BACK_BIT : VK_CULL_MODE_NONE;
 	rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE; //TODO: Front-face can be a renderer config mode
 	rasterizer.depthBiasEnable = VK_FALSE;
 	rasterizer.depthBiasConstantFactor = 0.0f; // Optional
@@ -65,7 +69,7 @@ VKGraphicsPipeline::VKGraphicsPipeline(VKDevice& device, VKShader* shader, VKRen
 	VkPipelineMultisampleStateCreateInfo multisampling = {};
 	multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 	multisampling.sampleShadingEnable = VK_TRUE;
-	multisampling.rasterizationSamples = samples;
+	multisampling.rasterizationSamples = physicalDevice->getSampleCount(); //TODO: The GraphicsPipeline has a sample count, this should be taken into account
 	multisampling.minSampleShading = 0.2f; // Optional
 	multisampling.pSampleMask = nullptr; // Optional
 	multisampling.alphaToCoverageEnable = VK_FALSE; // Optional
@@ -106,8 +110,8 @@ VKGraphicsPipeline::VKGraphicsPipeline(VKDevice& device, VKShader* shader, VKRen
 
 	VkGraphicsPipelineCreateInfo pipelineInfo = {};
 	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-	pipelineInfo.stageCount = shader->getModuleCount();
-	pipelineInfo.pStages = shader->GetShaderStages();
+	pipelineInfo.stageCount = ((VKShader*)Pipeline::shader)->getModuleCount();
+	pipelineInfo.pStages = ((VKShader*)Pipeline::shader)->GetShaderStages();
 	pipelineInfo.pVertexInputState = &vertexInputInfo;
 	pipelineInfo.pInputAssemblyState = &inputAssembly;
 	pipelineInfo.pViewportState = &viewportState;
@@ -116,24 +120,51 @@ VKGraphicsPipeline::VKGraphicsPipeline(VKDevice& device, VKShader* shader, VKRen
 	pipelineInfo.pDepthStencilState = &depthStencil;
 	pipelineInfo.pColorBlendState = &colorBlending;
 	pipelineInfo.pDynamicState = nullptr; // Optional
-	pipelineInfo.layout = shader->GetPipelineLayout();
-	pipelineInfo.renderPass = renderpass.GetRenderPass();
+	pipelineInfo.layout = ((VKShader*)Pipeline::shader)->GetPipelineLayout();
+	pipelineInfo.renderPass = renderpass->GetRenderPass();
 	pipelineInfo.subpass = 0;
 	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
 	pipelineInfo.basePipelineIndex = -1; // Optional
 
-	if (vkCreateGraphicsPipelines(device.GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS)
+	if (vkCreateGraphicsPipelines(device->GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS)
 	{
 		PR_LOG_RUNTIME_ERROR("Graphics pipeline creation has failed!\n");
 	}
 }
 
-VKGraphicsPipeline::~VKGraphicsPipeline()
+void VKGraphicsPipeline::BindPipeline() const
 {
+	VKPipeline::BindPipeline();
+
+	vkCmdBindPipeline(((VKCommandBuffer*) swapchain->GetDrawCommandBuffer())->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+	vbo->Bind(swapchain->GetDrawCommandBuffer());
+}
+
+void VKGraphicsPipeline::RenderPipeline() const
+{
+	VKPipeline::RenderPipeline();
+
+	vbo->Draw(swapchain->GetDrawCommandBuffer());
+}
+
+void VKGraphicsPipeline::UnbindPipeline() const
+{
+	vbo->Unbind();
+
+	VKPipeline::UnbindPipeline();
+}
+
+void VKGraphicsPipeline::DestroyPipeline()
+{
+	VKPipeline::DestroyPipeline();
+
 	vkDestroyPipeline(device->GetDevice(), graphicsPipeline, nullptr);
 }
 
-void VKGraphicsPipeline::BindGraphicsPipeline(VKCommandBuffer& commandBuffer) const
+void VKGraphicsPipeline::RecreatePipeline()
 {
-	vkCmdBindPipeline(commandBuffer.GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+	VKPipeline::RecreatePipeline();
+
+	DestroyPipeline();
+	CreatePipeline(window);
 }

@@ -11,6 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\platform\opengl\rendering\pipeline\GLGraphicsPipeline.cpp" />
+    <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\ComputePipeline.cpp" />
+    <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\GraphicsPipeline.cpp" />
+    <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\RayTracingPipeline.cpp" />
     <ClCompile Include="src\engine\prehistoric\modules\gpgpu\NormalMapRenderer.cpp" />
     <ClCompile Include="src\engine\config\EngineConfig.cpp" />
     <ClCompile Include="src\engine\config\TerrainConfig.cpp" />
@@ -109,6 +113,7 @@
     <ClInclude Include="src\engine\platform\opengl\buffer\GLPatchVBO.h" />
     <ClInclude Include="src\engine\platform\opengl\capabilities\GLCapabilities.h" />
     <ClInclude Include="src\engine\platform\opengl\framework\swapchain\GLSwapChain.h" />
+    <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLGraphicsPipeline.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLPipeline.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\gui\GLGUIShader.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\pbr\GLPBRShader.h" />
@@ -151,7 +156,10 @@
     <ClInclude Include="src\engine\prehistoric\common\framework\Input.h" />
     <ClInclude Include="src\engine\prehistoric\common\framework\swapchain\Swapchain.h" />
     <ClInclude Include="src\engine\prehistoric\common\framework\Window.h" />
+    <ClInclude Include="src\engine\prehistoric\common\rendering\pipeline\ComputePipeline.h" />
+    <ClInclude Include="src\engine\prehistoric\common\rendering\pipeline\GraphicsPipeline.h" />
     <ClInclude Include="src\engine\prehistoric\common\rendering\pipeline\Pipeline.h" />
+    <ClInclude Include="src\engine\prehistoric\common\rendering\pipeline\RayTracingPipeline.h" />
     <ClInclude Include="src\engine\prehistoric\common\rendering\shaders\Shader.h" />
     <ClInclude Include="src\engine\prehistoric\common\util\DeviceProperties.h" />
     <ClInclude Include="src\engine\prehistoric\common\util\InitDevice.h" />
@@ -255,7 +263,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FloatingPointModel>Precise</FloatingPointModel>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -278,7 +286,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>engine/prehistoric/core/util/Includes.hpp</PrecompiledHeaderFile>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

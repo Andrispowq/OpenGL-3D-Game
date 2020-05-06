@@ -48,7 +48,7 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 	terrain = new Terrain(window, camera);
 	terrain->UpdateQuadtree();
 
-	root->AddChild("Terrain", terrain);
+	//root->AddChild("Terrain", terrain);
 
 	GameObject* light = new GameObject();
 	light->AddComponent("light", new Light(Vector3f(1), Vector3f(1000)));

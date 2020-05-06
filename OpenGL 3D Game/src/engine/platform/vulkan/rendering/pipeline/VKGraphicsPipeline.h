@@ -1,6 +1,9 @@
 #ifndef VK_GRAPHICS_PIPELINE_H
 #define VK_GRAPHICS_PIPELINE_H
 
+#include "engine/prehistoric/common/rendering/pipeline/GraphicsPipeline.h"
+#include "VKPipeline.h"
+
 #include <vulkan/vulkan.h>
 
 #include "engine/platform/vulkan/framework/device/VKDevice.h"
@@ -10,29 +13,38 @@
 
 #include "engine/prehistoric/core/math/Math.h"
 
-class VKGraphicsPipeline
+class VKGraphicsPipeline : public VKPipeline, GraphicsPipeline
 {
 public:
-	VKGraphicsPipeline(VKDevice& device, VKShader* shader, VKRenderpass& renderpass,
-		const Vector2f& viewportStart, const Vector2f& viewportSize, const Vector2u& scissorStart, const Vector2u& scissorSize, const bool& backfaceCulling, 
-		VKMeshVBO& vbo, VkSampleCountFlagBits samples);
+	VKGraphicsPipeline(Shader* shader, VBO* vbo);
 	virtual ~VKGraphicsPipeline();
 
-	void BindGraphicsPipeline(VKCommandBuffer& commandBuffer) const;
+	virtual void CreatePipeline(Window* window) override;
+
+	virtual void BindPipeline() const override;
+	virtual void RenderPipeline() const override;
+	virtual void UnbindPipeline() const override;
+
+	virtual void DestroyPipeline() override;
+
+	virtual void RecreatePipeline();
+
+	virtual bool operator==(const Pipeline& other)
+	{
+		if ((*vbo) == *reinterpret_cast<const VKGraphicsPipeline*>(&other)->vbo && (*shader) == *reinterpret_cast<const VKGraphicsPipeline*>(&other)->shader)
+			return true;
+
+		return false;
+	}
 
 	VkPipeline& GetGraphicsPipeline() { return graphicsPipeline; }
 private:
-	VKDevice* device;
 	VkPipelineLayout* pipelineLayout;
+	VBO* vbo;
+
+	VKRenderpass* renderpass;
 
 	VkPipeline graphicsPipeline;
-
-	Vector2f viewportStart;
-	Vector2f viewportSize;
-	Vector2u scissorStart;
-	Vector2u scissorSize;
-
-	bool backfaceCulling;
 };
 
 #endif

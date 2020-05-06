@@ -236,14 +236,12 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 						if (FrameworkConfig::api == OpenGL)
 						{
-							pipeline = new GLPipeline(shader, vbo);
+							pipeline = new GLGraphicsPipeline(shader, vbo);
 						}
 						else if (FrameworkConfig::api == Vulkan)
 						{
-							pipeline = new VKPipeline(shader, vbo);
+							pipeline = new VKGraphicsPipeline(shader, vbo);
 						}
-
-						pipeline->SetBackfaceCulling(true);
 
 						pipeline->SetViewportStart({ 0, 0 });
 						pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
@@ -328,14 +326,12 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 								if (FrameworkConfig::api == OpenGL)
 								{
-									pipeline = new GLPipeline(shader, vbo);
+									pipeline = new GLGraphicsPipeline(shader, vbo);
 								}
 								else if (FrameworkConfig::api == Vulkan)
 								{
-									pipeline = new VKPipeline(shader, vbo);
+									pipeline = new VKGraphicsPipeline(shader, vbo);
 								}
-
-								pipeline->SetBackfaceCulling(true);
 
 								pipeline->SetViewportStart({ 0, 0 });
 								pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });

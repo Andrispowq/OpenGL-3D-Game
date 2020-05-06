@@ -273,6 +273,18 @@
     <ClCompile Include="src\engine\prehistoric\modules\gpgpu\NormalMapRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\GraphicsPipeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\ComputePipeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\RayTracingPipeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\opengl\rendering\pipeline\GLGraphicsPipeline.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\rendering\shaders\Shader.h">
@@ -555,6 +567,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\prehistoric\modules\gpgpu\NormalMapRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\prehistoric\common\rendering\pipeline\GraphicsPipeline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\prehistoric\common\rendering\pipeline\ComputePipeline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\prehistoric\common\rendering\pipeline\RayTracingPipeline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLGraphicsPipeline.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

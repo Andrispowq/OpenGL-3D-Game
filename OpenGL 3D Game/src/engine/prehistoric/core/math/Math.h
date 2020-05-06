@@ -609,7 +609,7 @@ public:
 	Vector3<T>& xzz() { return this(x, z, z); }
 	Vector3<T>& zxz() { return this(z, x, z); }
 	Vector3<T>& zzx() { return this(z, z, x); }
-	//TODO
+	//TODO: Continue swizzling
 
 	Vector2<T> xy() { return Vector2<T>(x, y); }
 

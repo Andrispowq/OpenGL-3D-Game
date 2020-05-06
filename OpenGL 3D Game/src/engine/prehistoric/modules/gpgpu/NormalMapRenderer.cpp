@@ -31,14 +31,22 @@ NormalMapRenderer::NormalMapRenderer(Window* window, float strength, uint32_t N)
 
 NormalMapRenderer::~NormalMapRenderer()
 {
-	delete shader;
+	delete pipeline;
 	delete normalmap;
 }
 
 void NormalMapRenderer::Render(const Texture* heightmap)
 {
 	//TODO: TEMPORARY CODE -> Not portable to Vulkan
-	shader->Bind(nullptr);
-	
+	pipeline->BindPipeline();
+	//TODO: Update Uniforms
+
+	glBindImageTexture(0, normalmap->getID(), 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+	glDispatchCompute(N / 16, N / 16, 1);
+	glFinish();
+
 	normalmap->Bind();
+	normalmap->SamplerProperties(Trilinear, Repeat);
+
+	pipeline->UnbindPipeline();
 }

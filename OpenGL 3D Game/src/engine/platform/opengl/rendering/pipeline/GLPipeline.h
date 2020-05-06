@@ -9,7 +9,7 @@
 class GLPipeline : public Pipeline
 {
 public:
-	GLPipeline(Shader* shader, VBO* vbo);
+	GLPipeline(Shader* shader);
 	virtual ~GLPipeline() {}
 
 	void CreatePipeline(Window* window) override;
@@ -19,8 +19,6 @@ public:
 	virtual void UnbindPipeline() const override;
 
 	void DestroyPipeline() override;
-private:
-
 };
 
 #endif

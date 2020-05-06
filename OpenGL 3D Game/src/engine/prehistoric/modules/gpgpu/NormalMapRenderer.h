@@ -4,8 +4,8 @@
 #include "engine/platform/opengl/texture/GLTexture.h"
 #include "engine/platform/vulkan/texture/VKTexture.h"
 
-#include "engine/platform/opengl/rendering/shaders/GLShader.h"
-#include "engine/platform/vulkan/rendering/shaders/VKShader.h"
+#include "engine/platform/opengl/rendering/pipeline/GLPipeline.h"
+#include "engine/platform/vulkan/rendering/pipeline/VKPipeline.h"
 
 class NormalMapRenderer
 {
@@ -17,7 +17,7 @@ public:
 private:
 	Window* window;
 	
-	Shader* shader;
+	Pipeline* pipeline;
 	Texture* normalmap;
 
 	float strength;

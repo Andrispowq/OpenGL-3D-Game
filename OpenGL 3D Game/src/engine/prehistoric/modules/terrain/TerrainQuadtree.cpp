@@ -22,7 +22,7 @@ TerrainQuadtree::TerrainQuadtree(TerrainMaps& maps, Window* window, Camera* came
 		}
 		else if (FrameworkConfig::api == Vulkan)
 		{
-			//TODO
+			//TODO: Patch VBO in Vulkan
 		}
 
 		mesh->Store(vertices);
@@ -35,11 +35,11 @@ TerrainQuadtree::TerrainQuadtree(TerrainMaps& maps, Window* window, Camera* came
 	if (FrameworkConfig::api == OpenGL)
 	{
 		shader = new GLTerrainShader();
-		pipeline = new GLPipeline(shader, mesh);
+		pipeline = new GLGraphicsPipeline(shader, mesh);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
-		pipeline = new VKPipeline(shader, mesh);
+		pipeline = new VKGraphicsPipeline(shader, mesh);
 	}
 
 	pipeline->CreatePipeline(window);
