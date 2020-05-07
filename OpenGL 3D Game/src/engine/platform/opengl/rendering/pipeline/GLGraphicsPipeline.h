@@ -22,13 +22,11 @@ public:
 
 	virtual bool operator==(const Pipeline& other) override
 	{
-		if ((*vbo) == *reinterpret_cast<const GLGraphicsPipeline*>(&other)->vbo && (*shader) == *reinterpret_cast<const GLGraphicsPipeline*>(&other)->shader)
+		if (vbo->operator==(*reinterpret_cast<const GLGraphicsPipeline*>(&other)->getVbo()) && shader->operator==(*reinterpret_cast<const GLPipeline*>(&other)->getShader()))
 			return true;
 
 		return false;
 	}
-private:
-	VBO* vbo;
 };
 
 #endif

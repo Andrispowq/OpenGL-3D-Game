@@ -4,8 +4,11 @@
 #include "engine/platform/opengl/texture/GLTexture.h"
 #include "engine/platform/vulkan/texture/VKTexture.h"
 
-#include "engine/platform/opengl/rendering/pipeline/GLPipeline.h"
-#include "engine/platform/vulkan/rendering/pipeline/VKPipeline.h"
+#include "engine/platform/opengl/rendering/pipeline/GLComputePipeline.h"
+//#include "engine/platform/vulkan/rendering/pipeline/VKComputePipeline.h"
+
+#include "engine/platform/opengl/rendering/shaders/gpgpu/GLNormalMapShader.h"
+//#include "engine/platform/vulkan/rendering/shaders/gpgpu/VKNormalMapShader.h""
 
 class NormalMapRenderer
 {
@@ -13,7 +16,9 @@ public:
 	NormalMapRenderer(Window* window, float strength, uint32_t N);
 	virtual ~NormalMapRenderer();
 
-	void Render(const Texture* heightmap);
+	void Render(Texture* heightmap);
+
+	Texture* getNormalmap() { return normalmap; }
 private:
 	Window* window;
 	

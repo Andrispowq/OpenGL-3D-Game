@@ -13,18 +13,6 @@ public:
 
 	static void CleanUp();
 
-	virtual void CreatePipeline(Window* window) = 0;
-
-	virtual void BindPipeline() const = 0;
-	virtual void RenderPipeline() const = 0;
-	virtual void UnbindPipeline() const = 0;
-
-	virtual void DestroyPipeline() = 0;
-
-	virtual void RecreatePipeline() {};
-
-	virtual bool operator==(const Pipeline& other) = 0;
-
 	VBO* getVbo() const { return vbos[vboIndex]; }
 	void setVbo(VBO* vbo);
 

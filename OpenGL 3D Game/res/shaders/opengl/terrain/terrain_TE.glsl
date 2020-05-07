@@ -28,10 +28,7 @@ void main()
 
 	mapCoord = clamp(mapCoord, vec2(0.0), vec2(1.0));
 	
-	float height = texture(heightmap, mapCoord).r* scaleY;
-	
-	if (height > 0)
-		height *= 0;
+	float height = texture(heightmap, mapCoord).r * scaleY;
 
 	position.y = height;	
 	gl_Position = position;

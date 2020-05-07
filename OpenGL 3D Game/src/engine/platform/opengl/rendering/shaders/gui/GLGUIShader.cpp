@@ -17,7 +17,7 @@ void GLGUIShader::UpdateObjectUniforms(GameObject* object) const
 {
 	SetUniform("m_transform", object->GetWorldTransform()->getTransformationMatrix());
 
-	GUIElement* gui = reinterpret_cast<GUIElement*>(object->GetComponent("button"));
+	GUIElement* gui = reinterpret_cast<GUIElement*>(object->GetComponent("GUI")); //TODO: This should NOT be hardcoded here
 
 	gui->getTexture()->Bind();
 	SetUniformi("image", 0);

@@ -3,10 +3,9 @@
 #include "VKGraphicsPipeline.h"
 
 VKGraphicsPipeline::VKGraphicsPipeline(Shader* shader, VBO* vbo)
-	: VKPipeline(shader), GraphicsPipeline()
+	: VKPipeline(shader), GraphicsPipeline(vbo)
 {
 	this->pipelineLayout = &((VKShader*)shader)->GetPipelineLayout();
-	this->vbo = vbo;
 }
 
 VKGraphicsPipeline::~VKGraphicsPipeline()

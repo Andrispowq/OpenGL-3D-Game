@@ -6,6 +6,8 @@
 #include "engine/platform/vulkan/texture/VkTexture.h"
 #include "engine/platform/vulkan/rendering/shaders/pbr/VKPBRShader.h"
 
+#include "engine/prehistoric/component/gui/GUIElement.h"
+
 Terrain* Scene::terrain;
 
 void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
@@ -48,7 +50,14 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 	terrain = new Terrain(window, camera);
 	terrain->UpdateQuadtree();
 
-	//root->AddChild("Terrain", terrain);
+	root->AddChild("Terrain", terrain);
+
+	GameObject* gui = new GameObject;
+	gui->AddComponent("GUI", new GUIElement(window, terrain->getMaps()->getNormalmap()));
+	gui->Move({ 0.5f, 0.5f, 0.0f });
+	gui->SetScale({ 0.25f, 0.25f, 1.0f });
+
+	root->AddChild("GUI", gui);
 
 	GameObject* light = new GameObject();
 	light->AddComponent("light", new Light(Vector3f(1), Vector3f(1000)));

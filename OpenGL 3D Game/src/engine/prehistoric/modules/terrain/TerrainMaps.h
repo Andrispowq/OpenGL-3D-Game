@@ -7,6 +7,9 @@
 #include "engine/config/TerrainConfig.h"
 #include "engine/prehistoric/core/util/loader/TextureLoader.h"
 
+#include "engine/prehistoric/modules/gpgpu/NormalMapRenderer.h"
+//#include "engine/prehistoric/modules/gpgpu/SplatMapRenderer.h"
+
 class TerrainMaps
 {
 public:
@@ -20,6 +23,8 @@ private:
 	Texture* heightmap;
 	Texture* normalmap;
 	Texture* splatmap;
+
+	NormalMapRenderer* normalMapRenderer;
 
 	Window* window;
 };

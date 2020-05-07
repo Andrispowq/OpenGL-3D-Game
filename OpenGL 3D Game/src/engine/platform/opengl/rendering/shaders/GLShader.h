@@ -29,9 +29,9 @@ public:
 	bool AddShader(const std::vector<char>& code, ShaderType type) override;
 	bool CompileShader() const override;
 
-	virtual void UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const override = 0;
+	virtual void UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const override {};
 	virtual void UpdateSharedUniforms(GameObject* object) const override {}
-	virtual void UpdateObjectUniforms(GameObject* object) const override = 0;
+	virtual void UpdateObjectUniforms(GameObject* object) const override {};
 
 	virtual void SetUniformi(const std::string& name, int value, size_t offset = 0) const override { glUniform1i(uniforms.at(name), value); }
 	virtual void SetUniformf(const std::string& name, float value, size_t offset = 0) const override { glUniform1f(uniforms.at(name), value); }

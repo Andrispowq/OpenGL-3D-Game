@@ -14,6 +14,8 @@
 #include "engine/prehistoric/common/buffer/PatchVBO.h"
 #include "engine/prehistoric/core/movement/Camera.h"
 
+#include "engine/prehistoric/common/rendering/pipeline/GraphicsPipeline.h"
+
 class TerrainQuadtree : public Node
 {
 public:

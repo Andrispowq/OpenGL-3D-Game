@@ -6,17 +6,16 @@ TerrainMaps::TerrainMaps(Window* window)
 	this->window = window;
 
 	heightmap = TextureLoader::LoadTexture(TerrainConfig::heightmap, window);
+	heightmap->SamplerProperties(Bilinear, Repeat);
 
-	//TODO: normal + splatmap
-	normalmap = nullptr;
-	splatmap = nullptr;
+	normalMapRenderer = new NormalMapRenderer(window, 12.f, heightmap->getWidth());
+	normalMapRenderer->Render(heightmap);
+	this->normalmap = normalMapRenderer->getNormalmap();
 }
 
 TerrainMaps::~TerrainMaps()
 {
 	delete heightmap;
 
-	//TODO: normal + splatmap
-	delete normalmap;
-	delete splatmap;
+	delete normalMapRenderer;
 }

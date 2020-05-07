@@ -12,7 +12,13 @@ namespace TextureLoader
 			stbi_set_flip_vertically_on_load(0);
 
 		int width, height, channels;
-		unsigned char* data = stbi_load(path.c_str(), &width, &height, &channels, STBI_rgb_alpha);
+
+		//TODO: get rid of this
+		unsigned char* data;
+		if (FrameworkConfig::api == OpenGL)
+			data = stbi_load(path.c_str(), &width, &height, &channels, 0);
+		else
+			data = stbi_load(path.c_str(), &width, &height, &channels, STBI_rgb_alpha);
 
 		if (data == nullptr)
 		{
@@ -24,6 +30,7 @@ namespace TextureLoader
 		if (FrameworkConfig::api == OpenGL)
 		{
 			texture = new GLTexture();
+			static_cast<GLTexture*>(texture)->setType(TEXTURE_2D);
 
 			texture->setWidth(static_cast<uint32_t>(width));
 			texture->setHeight(static_cast<uint32_t>(height));

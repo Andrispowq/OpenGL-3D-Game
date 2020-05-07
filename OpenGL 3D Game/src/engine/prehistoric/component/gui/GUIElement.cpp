@@ -52,7 +52,7 @@ void GUIElement::PreRender(RenderingEngine* renderingEngine)
 		return;
 
 	pipeline->BindPipeline();
-	pipeline->getShader()->UpdateObjectUniforms(parent); //There are no per-shader uniforms
+	pipeline->getShader()->UpdateObjectUniforms(parent);
 
 	guiVbo->Bind(renderingEngine->GetWindow()->GetSwapchain()->GetDrawCommandBuffer());
 	guiVbo->Draw(renderingEngine->GetWindow()->GetSwapchain()->GetDrawCommandBuffer());

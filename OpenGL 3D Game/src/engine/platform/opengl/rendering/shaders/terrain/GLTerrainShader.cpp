@@ -124,10 +124,10 @@ void GLTerrainShader::UpdateSharedUniforms(GameObject* object) const
 
 	node->getMaps()->getHeightmap()->Bind(0);
 	SetUniformi("heightmap", 0);
-	/*node->getMaps()->getNormalmap()->Bind(1);
-	SetUniformi("normalmap", 0);
-	node->getMaps()->getSplatmap()->Bind(2);
-	SetUniformi("splatmap", 0);*/
+	node->getMaps()->getNormalmap()->Bind(1);
+	SetUniformi("normalmap", 1);
+	//node->getMaps()->getSplatmap()->Bind(2);
+	//SetUniformi("splatmap", 0);
 
 	SetUniformf("scaleY", TerrainConfig::scaleY);
 

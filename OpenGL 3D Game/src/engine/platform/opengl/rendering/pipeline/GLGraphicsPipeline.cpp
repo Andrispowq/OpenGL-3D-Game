@@ -2,9 +2,8 @@
 #include "GLGraphicsPipeline.h"
 
 GLGraphicsPipeline::GLGraphicsPipeline(Shader* shader, VBO* vbo)
-	: GLPipeline(shader), GraphicsPipeline()
+	: GLPipeline(shader), GraphicsPipeline(vbo)
 {
-	this->vbo = vbo;
 }
 
 void GLGraphicsPipeline::CreatePipeline(Window* window)

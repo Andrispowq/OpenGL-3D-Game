@@ -12,6 +12,8 @@ public:
 	void UpdateQuadtree();
 
 	virtual void PreRender(RenderingEngine* renderingEngine) override;
+
+	TerrainMaps* getMaps() { return maps; }
 private:
 	TerrainMaps* maps;
 	Window* window;

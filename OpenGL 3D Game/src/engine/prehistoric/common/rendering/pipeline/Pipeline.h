@@ -30,6 +30,8 @@ public:
 	Shader* getShader() const { return shaders[shaderIndex]; }
 	void setShader(Shader* shader);
 
+	size_t getShaderIndex() const { return shaderIndex; }
+
 	virtual bool operator==(const Pipeline& other) = 0;
 
 	Vector2f GetViewportStart() const { return viewportStart; }
@@ -45,7 +47,7 @@ public:
 	void SetScissorSize(const Vector2u& scissorSize) { this->scissorSize = scissorSize; }
 
 	int SetSamples(int samples) { this->samples = samples; }
-protected:
+public:
 	static std::vector<Shader*> shaders;
 
 	Shader* shader;

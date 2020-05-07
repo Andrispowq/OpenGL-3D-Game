@@ -157,7 +157,8 @@ Texture* GLTexture::Storage2D(uint32_t width, uint32_t height, ImageFormat forma
 	texture->setWidth(width);
 	texture->setHeight(height);
 
-	glTexStorage2D(GL_TEXTURE_2D, 1, getInternalFormat(format), width, height);
+	glTexImage2D(GL_TEXTURE_2D, 0, getInternalFormat(format), width, height, 0, getFormat(format), GL_FLOAT, nullptr);
+	//glTexStorage2D(GL_TEXTURE_2D, 1, getInternalFormat(format), width, height);
 
 	texture->SamplerProperties(filter, wrapMode);
 	texture->Unbind();

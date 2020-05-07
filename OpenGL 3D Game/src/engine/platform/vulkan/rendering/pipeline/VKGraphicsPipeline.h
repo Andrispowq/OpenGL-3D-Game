@@ -13,7 +13,7 @@
 
 #include "engine/prehistoric/core/math/Math.h"
 
-class VKGraphicsPipeline : public VKPipeline, GraphicsPipeline
+class VKGraphicsPipeline : public VKPipeline, public GraphicsPipeline
 {
 public:
 	VKGraphicsPipeline(Shader* shader, VBO* vbo);
@@ -31,7 +31,7 @@ public:
 
 	virtual bool operator==(const Pipeline& other)
 	{
-		if ((*vbo) == *reinterpret_cast<const VKGraphicsPipeline*>(&other)->vbo && (*shader) == *reinterpret_cast<const VKGraphicsPipeline*>(&other)->shader)
+		if (vbo->operator==(*reinterpret_cast<const VKGraphicsPipeline*>(&other)->getVbo()) && VKPipeline::shader->operator==(*reinterpret_cast<const VKPipeline*>(&other)->getShader()))
 			return true;
 
 		return false;
@@ -40,8 +40,6 @@ public:
 	VkPipeline& GetGraphicsPipeline() { return graphicsPipeline; }
 private:
 	VkPipelineLayout* pipelineLayout;
-	VBO* vbo;
-
 	VKRenderpass* renderpass;
 
 	VkPipeline graphicsPipeline;
