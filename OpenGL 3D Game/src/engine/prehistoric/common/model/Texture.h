@@ -37,14 +37,14 @@ public:
 
 	inline uint32_t getWidth() const { return width; }
 	inline uint32_t getHeight() const { return height; }
-	inline uint32_t getID() const { return id; }
+	inline uint32_t getID() const { return ID; }
 
 	inline void setWidth(uint32_t width) { this->width = width; }
 	inline void setHeight(uint32_t height) { this->height = height; }
-	inline void setID(uint32_t id) { this->id = id; }
+	inline void setID(uint32_t id) { this->ID = id; }
 protected:
 	uint32_t width, height;
-	uint32_t id;
+	uint32_t ID;
 
 	static int currID;
 };

@@ -11,9 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\platform\opengl\buffer\GLShaderStorageBuffer.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\pipeline\GLComputePipeline.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\pipeline\GLGraphicsPipeline.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLNormalMapShader.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLSplatmapShader.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLTerrainHeightsShader.cpp" />
+    <ClCompile Include="src\engine\prehistoric\common\buffer\ShaderStorageBuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\ComputePipeline.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\GraphicsPipeline.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\RayTracingPipeline.cpp" />
@@ -99,6 +103,8 @@
     <ClCompile Include="src\engine\prehistoric\core\model\Transform.cpp" />
     <ClCompile Include="src\engine\prehistoric\core\model\Vertex.cpp" />
     <ClCompile Include="src\engine\prehistoric\core\movement\Camera.cpp" />
+    <ClCompile Include="src\engine\prehistoric\modules\gpgpu\SplatMapRenderer.cpp" />
+    <ClCompile Include="src\engine\prehistoric\modules\gpgpu\TerrainHeightsQuery.cpp" />
     <ClCompile Include="src\engine\prehistoric\modules\terrain\Terrain.cpp" />
     <ClCompile Include="src\engine\prehistoric\modules\terrain\TerrainMaps.cpp" />
     <ClCompile Include="src\engine\prehistoric\modules\terrain\TerrainNode.cpp" />
@@ -113,12 +119,15 @@
   <ItemGroup>
     <ClInclude Include="src\engine\config\TerrainConfig.h" />
     <ClInclude Include="src\engine\platform\opengl\buffer\GLPatchVBO.h" />
+    <ClInclude Include="src\engine\platform\opengl\buffer\GLShaderStorageBuffer.h" />
     <ClInclude Include="src\engine\platform\opengl\capabilities\GLCapabilities.h" />
     <ClInclude Include="src\engine\platform\opengl\framework\swapchain\GLSwapChain.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLComputePipeline.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLGraphicsPipeline.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLPipeline.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLNormalMapShader.h" />
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLSplatmapShader.h" />
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLTerrainHeightsShader.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\gui\GLGUIShader.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\pbr\GLPBRShader.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\terrain\GLTerrainShader.h" />
@@ -153,6 +162,7 @@
     <ClInclude Include="src\engine\platform\windows\WindowsWindow.h" />
     <ClInclude Include="src\engine\prehistoric\common\buffer\MeshVBO.h" />
     <ClInclude Include="src\engine\prehistoric\common\buffer\PatchVBO.h" />
+    <ClInclude Include="src\engine\prehistoric\common\buffer\ShaderStorageBuffer.h" />
     <ClInclude Include="src\engine\prehistoric\common\buffer\VBO.h" />
     <ClInclude Include="src\engine\prehistoric\common\capabilities\Capabilities.h" />
     <ClInclude Include="src\engine\prehistoric\common\framework\CameraInput.h" />
@@ -191,6 +201,8 @@
     <ClInclude Include="src\engine\prehistoric\core\util\time\Time.h" />
     <ClInclude Include="src\engine\prehistoric\core\util\time\Timer.h" />
     <ClInclude Include="src\engine\prehistoric\modules\gpgpu\NormalMapRenderer.h" />
+    <ClInclude Include="src\engine\prehistoric\modules\gpgpu\SplatMapRenderer.h" />
+    <ClInclude Include="src\engine\prehistoric\modules\gpgpu\TerrainHeightsQuery.h" />
     <ClInclude Include="src\engine\prehistoric\modules\terrain\Terrain.h" />
     <ClInclude Include="src\engine\prehistoric\modules\terrain\TerrainMaps.h" />
     <ClInclude Include="src\engine\prehistoric\modules\terrain\TerrainNode.h" />

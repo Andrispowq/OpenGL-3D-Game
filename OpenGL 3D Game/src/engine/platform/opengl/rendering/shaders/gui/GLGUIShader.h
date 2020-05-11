@@ -11,7 +11,7 @@ public:
 	GLGUIShader();
 	virtual ~GLGUIShader() {}
 
-	virtual void UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const override {}
+	virtual void UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const override {}
 	virtual void UpdateObjectUniforms(GameObject* object) const override;
 };
 

@@ -53,11 +53,11 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 	root->AddChild("Terrain", terrain);
 
 	GameObject* gui = new GameObject;
-	gui->AddComponent("GUI", new GUIElement(window, terrain->getMaps()->getNormalmap()));
+	gui->AddComponent("GUI", new GUIElement(window, TerrainConfig::materials[0]->GetTexture(ALBEDO_MAP)));
 	gui->Move({ 0.5f, 0.5f, 0.0f });
 	gui->SetScale({ 0.25f, 0.25f, 1.0f });
 
-	root->AddChild("GUI", gui);
+	//root->AddChild("GUI", gui);
 
 	GameObject* light = new GameObject();
 	light->AddComponent("light", new Light(Vector3f(1), Vector3f(1000)));
@@ -68,6 +68,11 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 	light2->AddComponent("light", new Light(Vector3f(1, 0, 0), Vector3f(1000)));
 	light2->Move({ -20, 40, 40 });
 	root->AddChild("l2", light2);
+
+	GameObject* sun = new GameObject();
+	sun->AddComponent("light", new Light(Vector3f(1, 1, 1), Vector3f(-1)));
+	sun->Move({ -1000, 1000, 1000 });
+	root->AddChild("sun", sun);
 }
 
 void Scene::DeleteData()

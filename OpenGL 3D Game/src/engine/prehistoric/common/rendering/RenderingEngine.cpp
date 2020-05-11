@@ -30,7 +30,7 @@ RenderingEngine::RenderingEngine()
 	camera->RotateX(20);
 	camera->LogStage();
 
-	camera->setSpeedControl({ PR_KEY_UNKNOWN, MOUSE_SCROLL, PR_JOYSTICK_1 });
+	camera->setSpeedControl({ MOUSE_SCROLL, PR_KEY_UNKNOWN, PR_JOYSTICK_1 });
 }
 
 RenderingEngine::~RenderingEngine()
@@ -41,14 +41,10 @@ RenderingEngine::~RenderingEngine()
 
 void RenderingEngine::Init() const
 {
-	CameraInput* keyInput = new CameraInput({ PR_KEY_W, KEY_HELD, PR_JOYSTICK_1 }, { PR_KEY_S, KEY_HELD, PR_JOYSTICK_1 }, { PR_KEY_D, KEY_HELD, PR_JOYSTICK_1 }, { PR_KEY_A, KEY_HELD, PR_JOYSTICK_1 },
-		{ PR_KEY_UP, KEY_HELD, PR_JOYSTICK_1 }, { PR_KEY_DOWN, KEY_HELD, PR_JOYSTICK_1 }, { PR_KEY_RIGHT, KEY_HELD, PR_JOYSTICK_1 }, { PR_KEY_LEFT, KEY_HELD, PR_JOYSTICK_1 });
-
-	CameraInput* controllerInput = new CameraInput({ PR_GAMEPAD_AXIS_LEFT_Y, JOYSTICK_AXIS_MOVED_POSITIVE, PR_JOYSTICK_1 }, { PR_GAMEPAD_AXIS_LEFT_Y, JOYSTICK_AXIS_MOVED_NEGATIVE, PR_JOYSTICK_1 }, { PR_GAMEPAD_AXIS_LEFT_X, JOYSTICK_AXIS_MOVED_POSITIVE, PR_JOYSTICK_1 }, { PR_GAMEPAD_AXIS_LEFT_X, JOYSTICK_AXIS_MOVED_NEGATIVE, PR_JOYSTICK_1 },
-		{ PR_GAMEPAD_AXIS_RIGHT_Y, JOYSTICK_AXIS_MOVED_POSITIVE, PR_JOYSTICK_1 }, { PR_GAMEPAD_AXIS_RIGHT_Y, JOYSTICK_AXIS_MOVED_NEGATIVE, PR_JOYSTICK_1 }, { PR_GAMEPAD_AXIS_RIGHT_X, JOYSTICK_AXIS_MOVED_POSITIVE, PR_JOYSTICK_1 }, { PR_GAMEPAD_AXIS_RIGHT_X, JOYSTICK_AXIS_MOVED_NEGATIVE, PR_JOYSTICK_1 });
+	CameraInput* keyInput = new CameraInput({ KEY_HELD, PR_KEY_W, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_S, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_D, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_A, PR_JOYSTICK_1 },
+		{ KEY_HELD, PR_KEY_UP, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_DOWN, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_RIGHT, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_LEFT, PR_JOYSTICK_1 });
 
 	camera->AddCameraInput(keyInput);
-	camera->AddCameraInput(controllerInput);
 }
 
 void RenderingEngine::Input(const float delta)
@@ -64,7 +60,10 @@ void RenderingEngine::Update(const float delta)
 		window->SetClosed(true);
 	}
 
-	//PR_LOG_MESSAGE("Speed: %f\n", InputInstance.IsJoystickButtonPushed(PR_GAMEPAD_AXIS_LEFT_Y, PR_JOYSTICK_1));
+	if (InputInstance.IsKeyPushed(PR_KEY_E))
+	{
+		wireframeMode = !wireframeMode;
+	}
 
 	if (window->GetResized())
 	{

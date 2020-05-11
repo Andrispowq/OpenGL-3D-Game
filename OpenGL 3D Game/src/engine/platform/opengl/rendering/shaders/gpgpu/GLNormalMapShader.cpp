@@ -2,6 +2,7 @@
 #include "GLNormalMapShader.h"
 
 GLNormalMapShader::GLNormalMapShader()
+	: GLShader()
 {
 	AddShader(ResourceLoader::LoadShaderGL("opengl/gpgpu/normalMap_CS.glsl"), COMPUTE_SHADER);
 	CompileShader();

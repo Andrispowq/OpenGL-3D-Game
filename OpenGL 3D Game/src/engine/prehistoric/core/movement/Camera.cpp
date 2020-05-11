@@ -1,6 +1,8 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "Camera.h"
 
+static const Vector3f yAxis(0, 1, 0);
+
 Camera::Camera(float moveAmt, float rotAmt, float mouseSensitivity, float fov, const Vector3f& position)
 {
 	this->movAmt = moveAmt;

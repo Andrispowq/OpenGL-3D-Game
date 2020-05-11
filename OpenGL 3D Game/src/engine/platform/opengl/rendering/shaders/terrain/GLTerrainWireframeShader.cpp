@@ -26,12 +26,9 @@ GLTerrainWireframeShader::GLTerrainWireframeShader()
 
 	for (unsigned int i = 0; i < 8; i++)
 	{
-		std::stringstream uName;
-		uName << "lodMorphArea[";
-		uName << i;
-		uName << "]";
+		std::string uName = "lodMorphArea[" + std::to_string(i) + "]";
 
-		AddUniform(uName.str());
+		AddUniform(uName);
 	}
 
 	AddUniform("tessellationFactor");
@@ -44,32 +41,19 @@ GLTerrainWireframeShader::GLTerrainWireframeShader()
 
 	for (unsigned int i = 0; i < 3; i++)
 	{
-		std::stringstream uniformName;
-		uniformName << "materials[";
-		uniformName << i;
-		uniformName << "].";
+		std::string uniformName = "materials[" + std::to_string(i) + "].";
 
-		AddUniform(uniformName.str() + DISPLACEMENT_MAP);
+		AddUniform(uniformName + DISPLACEMENT_MAP);
 
-		AddUniform(uniformName.str() + HEIGHT_SCALE);
-		AddUniform(uniformName.str() + HORIZONTAL_SCALE);
+		AddUniform(uniformName + HEIGHT_SCALE);
+		AddUniform(uniformName + HORIZONTAL_SCALE);
 	}
 }
 
-void GLTerrainWireframeShader::UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const
+void GLTerrainWireframeShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const
 {
 	SetUniform("viewProjection", camera->getViewProjectionMatrix());
 	SetUniform("cameraPosition", camera->getPosition());
-}
-
-void GLTerrainWireframeShader::UpdateSharedUniforms(GameObject* object) const
-{
-	TerrainNode* node = (TerrainNode*)object;
-
-	node->getMaps()->getHeightmap()->Bind(0);
-	SetUniformi("heightmap", 0);
-	/*node->getMaps()->getSplatmap()->Bind(1);
-	SetUniformi("splatmap", 1);*/
 
 	SetUniformf("scaleY", TerrainConfig::scaleY);
 
@@ -81,20 +65,34 @@ void GLTerrainWireframeShader::UpdateSharedUniforms(GameObject* object) const
 
 	for (unsigned int i = 0; i < 3; i++)
 	{
-		std::stringstream uniformName;
-		uniformName << "materials[";
-		uniformName << i;
-		uniformName << "].";
+		std::string uniformName = "materials[" + std::to_string(i) + "].";
 
 		Material* material = TerrainConfig::materials[i];
 
 		material->GetTexture(DISPLACEMENT_MAP)->Bind(texUnit);
-		SetUniformi(uniformName.str() + DISPLACEMENT_MAP, texUnit);
+		SetUniformi(uniformName + DISPLACEMENT_MAP, texUnit);
 		texUnit++;
 
-		SetUniformf(uniformName.str() + HEIGHT_SCALE, material->GetFloat(HEIGHT_SCALE));
-		SetUniformf(uniformName.str() + HORIZONTAL_SCALE, material->GetFloat(HORIZONTAL_SCALE));
+		SetUniformf(uniformName + HEIGHT_SCALE, material->GetFloat(HEIGHT_SCALE));
+		SetUniformf(uniformName + HORIZONTAL_SCALE, material->GetFloat(HORIZONTAL_SCALE));
 	}
+
+	for (unsigned int i = 0; i < 8; i++)
+	{
+		std::string uName = "lodMorphArea[" + std::to_string(i) + "]";
+
+		SetUniformi(uName, TerrainConfig::lodMorphingAreas[i]);
+	}
+}
+
+void GLTerrainWireframeShader::UpdateSharedUniforms(GameObject* object) const
+{
+	TerrainNode* node = (TerrainNode*)object;
+
+	node->getMaps()->getHeightmap()->Bind(0);
+	SetUniformi("heightmap", 0);
+	node->getMaps()->getSplatmap()->Bind(1);
+	SetUniformi("splatmap", 1);
 }
 
 void GLTerrainWireframeShader::UpdateObjectUniforms(GameObject* object) const
@@ -108,14 +106,4 @@ void GLTerrainWireframeShader::UpdateObjectUniforms(GameObject* object) const
 	SetUniform("index", node->getIndex());
 	SetUniformf("gap", node->getGap());
 	SetUniformi("lod", node->getLod());
-
-	for (unsigned int i = 0; i < 8; i++)
-	{
-		std::stringstream uName;
-		uName << "lodMorphArea[";
-		uName << i;
-		uName << "]";
-
-		SetUniformi(uName.str(), TerrainConfig::lodMorphingAreas[i]);
-	}
 }

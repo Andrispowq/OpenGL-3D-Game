@@ -5,10 +5,10 @@ int Texture::currID = 0;
 
 Texture::Texture()
 {
-	id = currID++;
+	ID = currID++;
 }
 
 Texture::~Texture()
 {
-	id = 0xFFFFFFFF;
+	ID = 0xFFFFFFFF;
 }

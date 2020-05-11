@@ -27,7 +27,13 @@ void GLComputePipeline::BindPipeline() const
 		else
 			access = GL_READ_WRITE;
 
-		glBindImageTexture(binding.first, binding.second.first->getID(), 0, GL_FALSE, 0, access, GL_RGBA32F); //TODO: This is hardcoded here, it should be a texture local field
+		//It is very important to cast the texture to the given type, because Texture has also got an ID and a getID method which gives an explicit renderID, not the internal GL ID
+		glBindImageTexture(binding.first, ((GLTexture*) binding.second.first)->getID(), 0, GL_FALSE, 0, access, GL_RGBA32F); //TODO: This is hardcoded here, it should be a texture local field
+	}
+
+	for (const auto& ssbo : ssboBindingTable)
+	{
+		ssbo.second.first->Bind(nullptr);
 	}
 }
 
@@ -41,6 +47,11 @@ void GLComputePipeline::RenderPipeline() const
 
 void GLComputePipeline::UnbindPipeline() const
 {
+	for (const auto& ssbo : ssboBindingTable)
+	{
+		ssbo.second.first->Unbind();
+	}
+
 	GLPipeline::UnbindPipeline();
 }
 

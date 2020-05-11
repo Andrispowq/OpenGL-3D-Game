@@ -18,7 +18,7 @@ void main(void)
 	
 	float slopeFactor = normal.x;
 	
-	vec4 blendValues = vec4(0,0,0,0);
+	vec4 blendValues = vec4(0, 0, 0, 0);
 	
 	if (slopeFactor > 0.5)
 	{

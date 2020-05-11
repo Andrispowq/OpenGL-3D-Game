@@ -13,8 +13,8 @@ enum InputType
 
 struct InputData
 {
-	InputCode code;
 	InputType type;
+	InputCode code;
 	JoystickID joystickNumber;
 };
 
@@ -24,7 +24,7 @@ struct MoveData
 	float amount;
 };
 
-static InputData DefInData = { PR_KEY_UNKNOWN, NO_TYPE, PR_JOYSTICK_1 };
+static InputData DefInData = { NO_TYPE, PR_KEY_UNKNOWN, PR_JOYSTICK_1 };
 
 template<typename T>
 static T clamp(T val, T min, T max)
@@ -62,38 +62,38 @@ public:
 	float IsLeftRot() const { return GetKey(leftRot); }
 
 	//Setters
-	void SetForward(InputData forward) { this->forward = forward; }
-	void SetBackward(InputData backward) { this->backward = backward; }
-	void SetRight(InputData right) { this->right = right; }
-	void SetLeft(InputData left) { this->left = left; }
+	void SetForward(const InputData& forward) { this->forward = forward; }
+	void SetBackward(const InputData& backward) { this->backward = backward; }
+	void SetRight(const InputData& right) { this->right = right; }
+	void SetLeft(const InputData& left) { this->left = left; }
 
-	void SetUp(InputData up) { this->up = up; }
-	void SetDowny(InputData down) { this->down = down; }
-	void SetRightRot(InputData rightRot) { this->rightRot = rightRot; }
-	void SetLeftRot(InputData leftRot) { this->leftRot = leftRot; }
+	void SetUp(const InputData& up) { this->up = up; }
+	void SetDowny(const InputData& down) { this->down = down; }
+	void SetRightRot(const InputData& rightRot) { this->rightRot = rightRot; }
+	void SetLeftRot(const InputData& leftRot) { this->leftRot = leftRot; }
 
-	static float GetKey(InputData data)
+	static float GetKey(const InputData& data)
 	{
 		switch (data.type)
 		{
 		case KEY_PRESSED:
-			return InputInstance.IsKeyPushed(data.code);
+			return (float)InputInstance.IsKeyPushed(data.code);
 		case KEY_HELD:
-			return InputInstance.IsKeyHeld(data.code);
+			return (float)InputInstance.IsKeyHeld(data.code);
 		case KEY_RELEASED:
-			return InputInstance.IsKeyReleased(data.code);
+			return (float)InputInstance.IsKeyReleased(data.code);
 
 		case MOUSE_PRESSED:
-			return InputInstance.IsButtonPushed(data.code);
+			return (float)InputInstance.IsButtonPushed(data.code);
 		case MOUSE_HELD:
-			return InputInstance.IsButtonHeld(data.code);
+			return (float)InputInstance.IsButtonHeld(data.code);
 		case MOUSE_RELEASED:
-			return InputInstance.IsButtonReleased(data.code);
+			return (float)InputInstance.IsButtonReleased(data.code);
 		case MOUSE_SCROLL:
 			return InputInstance.GetScrollOffset();
 
 		case JOYSTICK_BUTTON_PRESSED:
-			return InputInstance.IsJoystickButtonPushed(data.code, data.joystickNumber);
+			return (float)InputInstance.IsJoystickButtonPushed(data.code, data.joystickNumber);
 		case JOYSTICK_AXIS_MOVED_NEGATIVE:
 			return clamp(-InputInstance.GetJoystickAxisOffset(data.code, data.joystickNumber), -1.0f, 0.0f);
 		case JOYSTICK_AXIS_MOVED_POSITIVE:

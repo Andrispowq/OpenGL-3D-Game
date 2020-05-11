@@ -6,6 +6,8 @@
 
 #include <glew.h>
 
+#include "engine/platform/opengl/texture/GLTexture.h"
+
 class GLComputePipeline : public GLPipeline, public ComputePipeline
 {
 public:

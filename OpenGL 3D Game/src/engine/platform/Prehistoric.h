@@ -10,7 +10,7 @@
 	#else
 		#error "Only 64 bit Windows is supported!"
 	#endif
-#elif defined(unix) || defined(_unix) || defined(_unix_)
+#elif defined(unix) || defined(__unix) || defined(_unix_)
 	#error "Linux is not supported!"
 #elif defined(__APPLE__) || defined(__MACH__)
 	#error "Mac OS is currently not supported!" 

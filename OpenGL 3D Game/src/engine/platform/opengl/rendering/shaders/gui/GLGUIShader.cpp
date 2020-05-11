@@ -4,6 +4,7 @@
 #include "engine/prehistoric/component/gui/GUIElement.h"
 
 GLGUIShader::GLGUIShader()
+	: GLShader()
 {
 	AddShader(ResourceLoader::LoadShaderGL("opengl/gui/gui_VS.glsl"), VERTEX_SHADER);
 	AddShader(ResourceLoader::LoadShaderGL("opengl/gui/gui_FS.glsl"), FRAGMENT_SHADER);

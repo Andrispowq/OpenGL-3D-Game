@@ -131,7 +131,12 @@ void main()
         vec3 H = normalize(V + L);
         float dist = length(lights[i].position - position_FS);
         float attenuation = 1 / pow(dist, 2);
-        vec3 radiance = lights[i].colour * lights[i].intensity * attenuation; 
+
+		vec3 radiance;
+		if (lights[i].intensity == vec3(-1))
+			radiance = lights[i].colour * 100;
+		else
+			radiance = lights[i].colour * lights[i].intensity * attenuation; 
         
         // cook-torrance brdf
         float NDF = DistributionGGX(N, H, roughness);

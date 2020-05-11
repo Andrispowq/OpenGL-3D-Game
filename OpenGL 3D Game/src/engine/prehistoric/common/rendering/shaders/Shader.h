@@ -101,8 +101,8 @@ public:
 	//Shader uniforms -> per-shader uniforms, like view and projection matrices
 	//Shared uniforms -> uniforms that are shared between objects, and can be fetched from the first object
 	//Object uniforms -> unique, per-object values
-	virtual void UpdateConstantUniforms(Camera* camera, std::vector<Light*> lights) const {}
-	virtual void UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const {}
+	virtual void UpdateConstantUniforms(Camera* camera, const std::vector<Light*>& lights) const {}
+	virtual void UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const {}
 	virtual void UpdateSharedUniforms(GameObject* object) const {}
 	virtual void UpdateObjectUniforms(GameObject* object) const {}
 

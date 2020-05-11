@@ -33,6 +33,7 @@
 
 //Component names:
 #define RENDERER_COMPONENT "Renderer"
+#define WIREFRAME_RENDERER_COMPONENT "WireframeRenderer"
 #define LIGHT_COMPONENT "Light"
 
 #define GUI_ELEMENT_COMPONENT "GUIElement"

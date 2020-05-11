@@ -30,7 +30,7 @@ void main()
 	
 	float height = texture(heightmap, mapCoord).r * scaleY;
 
-	position.y = height;	
+	position.y = height;
 	gl_Position = position;
 	
 	mapCoord_GS = mapCoord;

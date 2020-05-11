@@ -15,9 +15,7 @@ GLBasicShader::GLBasicShader() : GLShader()
 
 	for (uint32_t i = 0; i < EngineConfig::lightsMaxNumber; i++)
 	{
-		std::string name;
-		name += "lights[";
-		name += std::to_string(i);
+		std::string name = "lights[" + std::to_string(i);
 
 		AddUniform(name + "].position");
 		AddUniform(name + "].colour");
@@ -35,7 +33,7 @@ GLBasicShader::GLBasicShader() : GLShader()
 	AddUniform("gamma");
 }
 
-void GLBasicShader::UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const
+void GLBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const
 {
 	SetUniform("m_view", camera->getViewMatrix());
 	SetUniform("m_projection", camera->getProjectionMatrix());
@@ -43,9 +41,7 @@ void GLBasicShader::UpdateShaderUniforms(Camera* camera, std::vector<Light*> lig
 
 	for (uint32_t i = 0; i < EngineConfig::lightsMaxNumber; i++)
 	{
-		std::string name;
-		name += "lights[";
-		name += std::to_string(i);
+		std::string name = "lights[" + std::to_string(i);
 
 		if (i < lights.size())
 		{

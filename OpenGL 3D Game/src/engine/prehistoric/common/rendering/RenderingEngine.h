@@ -31,6 +31,8 @@ public:
 	inline Camera* GetCamera() const { return camera; }
 	inline std::vector<Light*> GetLights() const { return lights; }
 
+	inline bool isWireframeMode() const { return wireframeMode; }
+
 	RenderingEngine(const RenderingEngine& engine) = delete;
 	RenderingEngine operator=(const RenderingEngine& engine) = delete;
 private:
@@ -39,6 +41,8 @@ private:
 
 	Window* window;
 	Camera* camera;
+
+	bool wireframeMode;
 };
 
 #endif

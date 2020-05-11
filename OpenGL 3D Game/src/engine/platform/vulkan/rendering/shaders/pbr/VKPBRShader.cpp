@@ -25,7 +25,7 @@ VKPBRShader::VKPBRShader(Window* window) : VKShader(window->GetContext(), window
 	AddUniform(EMISSION_MAP, GEOMETRY_SHADER | FRAGMENT_SHADER, CombinedImageSampler, 0, 9, 0, nullptr);
 }
 
-void VKPBRShader::UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const
+void VKPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const
 {
 	//Offset values are copied from shaders
 	SetUniform("camera", camera->getViewMatrix(), 0);

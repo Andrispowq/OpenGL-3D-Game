@@ -222,7 +222,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 								shader = new VKBasicShader(window);
 							}
 						}
-						if (compTokens[1] == "pbr")
+						else if (compTokens[1] == "pbr")
 						{
 							if (FrameworkConfig::api == OpenGL)
 							{
@@ -311,7 +311,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 										shader = new VKBasicShader(window);
 									}
 								}
-								if (compTokens[1] == "pbr")
+								else if (compTokens[1] == "pbr")
 								{
 									if (FrameworkConfig::api == OpenGL)
 									{

@@ -43,6 +43,8 @@ public:
 	int getLod() const { return lod; }
 	bool isLeaf() const { return leaf; }
 private:
+	float getTerrainHeight(Vector2f position) const;
+private:
 	TerrainQuadtree* quadtree;
 
 	Vector3f worldPosition;

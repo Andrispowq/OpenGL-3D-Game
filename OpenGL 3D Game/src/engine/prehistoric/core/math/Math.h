@@ -499,7 +499,7 @@ public:
 	Vector2<T> swap() const;
 
 	Vector2<T> negate() const { return Vector2<T>(-x, -y); };
-	Vector2<T> negated() { this->x = -x; this->y = -y; };
+	Vector2<T> negated() { this->x = -x; this->y = -y; return *this; };
 
 	Vector2<T>& xx() { return this(x, x); }
 	Vector2<T>& yy() { return this(y, y); }
@@ -588,7 +588,7 @@ public:
 	Vector3<T> rotate(const Vector3<T>& axis, const T& angle) const;
 
 	Vector3<T> negate() const { return Vector3<T>(-x, -y, -z); };
-	Vector3<T> negated() { this->x = -x; this->y = -y; this->z = -z; };
+	Vector3<T> negated() { this->x = -x; this->y = -y; this->z = -z; return *this; };
 
 	Vector3<T>& xzy() { return this(x, z, y); }
 	Vector3<T>& yxz() { return this(y, x, z); }
@@ -655,10 +655,10 @@ public:
 
 	~Vector4<T>() {}
 
-	inline Vector4<T> operator+(const Vector4<T>& v) const { return Vector4<T>(x + v.x, y + v.y, z + v.z, w + w); }
-	inline Vector4<T> operator-(const Vector4<T>& v) const { return Vector4<T>(x - v.x, y - v.y, z - v.z, w - w); }
-	inline Vector4<T> operator*(const Vector4<T>& v) const { return Vector4<T>(x * v.x, y * v.y, z * v.z, w * w); }
-	inline Vector4<T> operator/(const Vector4<T>& v) const { return Vector4<T>(x / v.x, y / v.y, z / v.z, w / w); }
+	inline Vector4<T> operator+(const Vector4<T>& v) const { return Vector4<T>(x + v.x, y + v.y, z + v.z, w + v.w); }
+	inline Vector4<T> operator-(const Vector4<T>& v) const { return Vector4<T>(x - v.x, y - v.y, z - v.z, w - v.w); }
+	inline Vector4<T> operator*(const Vector4<T>& v) const { return Vector4<T>(x * v.x, y * v.y, z * v.z, w * v.w); }
+	inline Vector4<T> operator/(const Vector4<T>& v) const { return Vector4<T>(x / v.x, y / v.y, z / v.z, w / v.w); }
 
 	inline Vector4<T> operator+(const T& v) const { return Vector4<T>(x + v, y + v, z + v, w + v); }
 	inline Vector4<T> operator-(const T& v) const { return Vector4<T>(x - v, y - v, z - v, w - v); }
@@ -707,7 +707,7 @@ public:
 	Vector4<T> lerp(const Vector4<T>& b, const Vector4<T>& t) const;
 
 	Vector4<T> negate() const { return Vector4<T>(-x, -y, -z, -w); };
-	Vector4<T> negated() { this->x = -x; this->y = -y; this->z = -z; this->w = -w; };
+	Vector4<T> negated() { this->x = -x; this->y = -y; this->z = -z; this->w = -w; return *this; };
 
 	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f, %f ]", (T) x, (T) y, (T) z, (T) w); }
 public:
@@ -748,10 +748,10 @@ public:
 
 	~Quaternion<T>() {}
 
-	inline Quaternion<T> operator+(const Vector4<T>& v) const { return Quaternion<T>(x + v.x, y + v.y, z + v.z, w + w); }
-	inline Quaternion<T> operator-(const Vector4<T>& v) const { return Quaternion<T>(x - v.x, y - v.y, z - v.z, w - w); }
-	inline Quaternion<T> operator+(const Quaternion<T>& v) const { return Quaternion<T>(x + v.x, y + v.y, z + v.z, w + w); }
-	inline Quaternion<T> operator-(const Quaternion<T>& v) const { return Quaternion<T>(x - v.x, y - v.y, z - v.z, w - w); }
+	inline Quaternion<T> operator+(const Vector4<T>& v) const { return Quaternion<T>(x + v.x, y + v.y, z + v.z, w + v.w); }
+	inline Quaternion<T> operator-(const Vector4<T>& v) const { return Quaternion<T>(x - v.x, y - v.y, z - v.z, w - v.w); }
+	inline Quaternion<T> operator+(const Quaternion<T>& v) const { return Quaternion<T>(x + v.x, y + v.y, z + v.z, w + v.w); }
+	inline Quaternion<T> operator-(const Quaternion<T>& v) const { return Quaternion<T>(x - v.x, y - v.y, z - v.z, w - v.w); }
 
 	inline Quaternion<T> operator+(const T& v) const { return Quaternion<T>(x + v, y + v, z + v, w + v); }
 	inline Quaternion<T> operator-(const T& v) const { return Quaternion<T>(x - v, y - v, z - v, w - v); }
@@ -810,7 +810,7 @@ public:
 	Quaternion<T> lerp(const Quaternion<T>& b, const Quaternion<T>& t) const;
 
 	Quaternion<T> negate() const { return Quaternion<T>(-x, -y, -z, -w); };
-	Quaternion<T> negated() { this->x = -x; this->y = -y; this->z = -z; this->w = -w; };
+	Quaternion<T> negated() { this->x = -x; this->y = -y; this->z = -z; this->w = -w; return *this; };
 
 	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f, %f ]", (T) x, (T) y, (T) z, (T) w); }
 public:

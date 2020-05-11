@@ -8,7 +8,8 @@
 #include "engine/prehistoric/core/util/loader/TextureLoader.h"
 
 #include "engine/prehistoric/modules/gpgpu/NormalMapRenderer.h"
-//#include "engine/prehistoric/modules/gpgpu/SplatMapRenderer.h"
+#include "engine/prehistoric/modules/gpgpu/SplatMapRenderer.h"
+#include "engine/prehistoric/modules/gpgpu/TerrainHeightsQuery.h"
 
 class TerrainMaps
 {
@@ -19,14 +20,20 @@ public:
 	Texture* getHeightmap() const { return heightmap; }
 	Texture* getNormalmap() const { return normalmap; }
 	Texture* getSplatmap() const { return splatmap; }
+
+	float* getTerrainHeights() const { return terrainHeights; }
 private:
 	Texture* heightmap;
 	Texture* normalmap;
 	Texture* splatmap;
 
 	NormalMapRenderer* normalMapRenderer;
+	SplatMapRenderer* splatMapRenderer;
+	TerrainHeightsQuery* heightsQuery;
 
 	Window* window;
+
+	float* terrainHeights;
 };
 
 #endif

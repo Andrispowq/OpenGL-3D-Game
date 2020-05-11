@@ -11,6 +11,14 @@ TerrainMaps::TerrainMaps(Window* window)
 	normalMapRenderer = new NormalMapRenderer(window, 12.f, heightmap->getWidth());
 	normalMapRenderer->Render(heightmap);
 	this->normalmap = normalMapRenderer->getNormalmap();
+
+	splatMapRenderer = new SplatMapRenderer(window, normalmap->getWidth());
+	splatMapRenderer->Render(normalmap);
+	this->splatmap = splatMapRenderer->getSplatmap();
+
+	heightsQuery = new TerrainHeightsQuery(window, heightmap->getWidth());
+	heightsQuery->Query(heightmap);
+	this->terrainHeights = heightsQuery->getHeights();
 }
 
 TerrainMaps::~TerrainMaps()
@@ -18,4 +26,6 @@ TerrainMaps::~TerrainMaps()
 	delete heightmap;
 
 	delete normalMapRenderer;
+	delete splatMapRenderer;
+	delete heightsQuery;
 }

@@ -33,9 +33,7 @@ GLPBRShader::GLPBRShader() : GLShader()
 
 	for (uint32_t i = 0; i < EngineConfig::lightsMaxNumber; i++)
 	{
-		std::string name;
-		name += "lights[";
-		name += std::to_string(i);
+		std::string name = "lights[" + std::to_string(i);
 
 		AddUniform(name + "].position");
 		AddUniform(name + "].colour");
@@ -47,7 +45,7 @@ GLPBRShader::GLPBRShader() : GLShader()
 	AddUniform("numberOfLights");
 }
 
-void GLPBRShader::UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const
+void GLPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const
 {
 	SetUniform("m_view", camera->getViewMatrix());
 	SetUniform("m_projection", camera->getProjectionMatrix());
@@ -56,9 +54,7 @@ void GLPBRShader::UpdateShaderUniforms(Camera* camera, std::vector<Light*> light
 	SetUniformi("numberOfLights", (uint32_t)lights.size() > EngineConfig::lightsMaxNumber ? EngineConfig::lightsMaxNumber : (uint32_t)lights.size());
 	for (uint32_t i = 0; i < EngineConfig::lightsMaxNumber; i++)
 	{
-		std::string name;
-		name += "lights[";
-		name += std::to_string(i);
+		std::string name = "lights[" + std::to_string(i);
 
 		if (i < lights.size())
 		{
@@ -80,7 +76,7 @@ void GLPBRShader::UpdateShaderUniforms(Camera* camera, std::vector<Light*> light
 
 void GLPBRShader::UpdateObjectUniforms(GameObject* object) const
 {
-	Material* material = dynamic_cast<Renderer*>(object->GetComponent("Renderer"))->GetMaterial();
+	Material* material = dynamic_cast<Renderer*>(object->GetComponent(RENDERER_COMPONENT))->GetMaterial();
 
 	SetUniform("m_transform", object->GetWorldTransform()->getTransformationMatrix());
 

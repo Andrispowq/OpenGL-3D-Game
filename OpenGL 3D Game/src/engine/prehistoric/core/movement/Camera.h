@@ -5,8 +5,6 @@
 
 #include "engine/config/EngineConfig.h"
 
-static const Vector3f yAxis(0, 1, 0);
-
 class Camera
 {
 public:

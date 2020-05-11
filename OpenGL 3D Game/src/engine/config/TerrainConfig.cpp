@@ -112,11 +112,11 @@ namespace TerrainConfig
 						}
 						else if (nameTokens[2] == "float")
 						{
-							material->AddFloat(tokens[1], new float((float)std::atof(tokens[2].c_str())));
+							material->AddFloat(tokens[1], new float{ (float)std::atof(tokens[2].c_str()) });
 						}
 						else if (nameTokens[2] == "int")
 						{
-							material->AddInt(tokens[1], new int(std::atoi(tokens[2].c_str())));
+							material->AddInt(tokens[1], new int{ std::atoi(tokens[2].c_str()) });
 						}
 					}
 				}

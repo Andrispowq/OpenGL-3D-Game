@@ -31,16 +31,26 @@ TerrainQuadtree::TerrainQuadtree(TerrainMaps& maps, Window* window, Camera* came
 	material = new Material(window);
 
 	Shader* shader = nullptr;
+	Shader* wireframeShader = nullptr;
 
 	if (FrameworkConfig::api == OpenGL)
 	{
 		shader = new GLTerrainShader();
 		pipeline = new GLGraphicsPipeline(shader, mesh);
+
+		wireframeShader = new GLTerrainWireframeShader();
+		wireframePipeline = new GLGraphicsPipeline(wireframeShader, mesh);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
 		pipeline = new VKGraphicsPipeline(shader, mesh);
+		wireframePipeline = new VKGraphicsPipeline(wireframeShader, mesh);
 	}
+
+	pipeline->SetViewportStart({ 0, 0 });
+	pipeline->SetViewportSize({ (float) FrameworkConfig::windowWidth, (float) FrameworkConfig::windowHeight });
+	pipeline->SetScissorStart({ 0, 0 });
+	pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
 
 	pipeline->CreatePipeline(window);
 

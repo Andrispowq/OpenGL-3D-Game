@@ -47,6 +47,6 @@ void Node::PreRender(RenderingEngine* renderingEngine)
 Node* Node::AddChild(const std::string& key, Node* child)
 {
     child->parent = this;
-    children.emplace(key, child);    
+    children.emplace(key, child);
     return this;
 }

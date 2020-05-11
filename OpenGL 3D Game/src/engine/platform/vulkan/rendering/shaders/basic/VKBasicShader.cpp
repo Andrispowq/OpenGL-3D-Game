@@ -19,7 +19,7 @@ VKBasicShader::VKBasicShader(Window* window) : VKShader(window->GetContext(), wi
 	AddUniform("gamma", FRAGMENT_SHADER, UniformBuffer, 0, 7, sizeof(float));
 }
 
-void VKBasicShader::UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const
+void VKBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const
 {
 	SetUniform("camera", camera->getViewMatrix(), 16 * sizeof(float) * 0);
 	SetUniform("camera", camera->getProjectionMatrix(), 16 * sizeof(float) * 1);

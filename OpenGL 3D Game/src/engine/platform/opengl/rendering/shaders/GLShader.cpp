@@ -127,9 +127,10 @@ bool GLShader::AddUniform(const std::string& name, uint32_t stages, UniformType 
 {
 	GLuint location = glGetUniformLocation(program, name.c_str());
 
-	if (location == -1)
+	if (location == 0xFFFFFFFF)
 	{
 		PR_LOG_ERROR("Uniform %s was not found in a shader code\n", name.c_str());
+		uniforms.emplace(name, 0xFFFFFFFF);
 		return false;
 	}
 
@@ -141,9 +142,10 @@ bool GLShader::AddUniformBlock(const std::string& name, uint32_t stages, Uniform
 {
 	GLuint location = glGetUniformBlockIndex(program, name.c_str());
 	
-	if (location == -1)
+	if (location == 0xFFFFFFFF)
 	{
 		PR_LOG_ERROR("Uniform block %s was not found in a shader code\n", name.c_str());
+		uniforms.emplace(name, 0xFFFFFFFF);
 		return false;
 	}
 

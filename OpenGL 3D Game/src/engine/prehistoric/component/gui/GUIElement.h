@@ -33,7 +33,7 @@ public:
 
 	Texture* getTexture() { return texture; }
 
-	bool setVisible(bool visible) { this->visible = visible; }
+	void setVisible(bool visible) { this->visible = visible; }
 
 	void setData(void* data, size_t dataSize = 0) { this->data = data; this->dataSize = dataSize; }
 	void setTexture(Texture* texture) { this->texture = texture; }

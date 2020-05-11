@@ -27,6 +27,7 @@ public:
 
 	PatchVBO* getVbo() { return mesh; }
 	Pipeline* getPipeline() { return pipeline; }
+	Pipeline* getWireframePipeline() { return wireframePipeline; }
 	Material* getMaterial() { return material; }
 
 	TerrainMaps* getTerrainMaps() { return maps; }
@@ -41,6 +42,7 @@ private:
 
 	PatchVBO* mesh;
 	Pipeline* pipeline;
+	Pipeline* wireframePipeline;
 	Material* material;
 
 	static std::vector<Vector2f> vertices;

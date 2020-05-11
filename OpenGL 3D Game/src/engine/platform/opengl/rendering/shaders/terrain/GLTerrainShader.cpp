@@ -26,12 +26,9 @@ GLTerrainShader::GLTerrainShader()
 
 	for (unsigned int i = 0; i < 8; i++)
 	{
-		std::stringstream uName;
-		uName << "lodMorphArea[";
-		uName << i;
-		uName << "]";
+		std::string uName = "lodMorphArea[" + std::to_string(i) + "]";
 
-		AddUniform(uName.str());
+		AddUniform(uName);
 	}
 
 	AddUniform("tessellationFactor");
@@ -45,35 +42,29 @@ GLTerrainShader::GLTerrainShader()
 
 	for (unsigned int i = 0; i < 3; i++)
 	{
-		std::stringstream uniformName;
-		uniformName << "materials[";
-		uniformName << i;
-		uniformName << "].";
+		std::string uniformName = "materials[" + std::to_string(i) + "].";
 
-		AddUniform(uniformName.str() + ALBEDO_MAP);
-		AddUniform(uniformName.str() + NORMAL_MAP);
-		AddUniform(uniformName.str() + DISPLACEMENT_MAP);
-		AddUniform(uniformName.str() + METALLIC_MAP);
-		AddUniform(uniformName.str() + ROUGHNESS_MAP);
-		//AddUniform(uniformName.str() + OCCLUSION_MAP);
+		AddUniform(uniformName + ALBEDO_MAP);
+		AddUniform(uniformName + NORMAL_MAP);
+		AddUniform(uniformName + DISPLACEMENT_MAP);
+		AddUniform(uniformName + METALLIC_MAP);
+		AddUniform(uniformName + ROUGHNESS_MAP);
+		//AddUniform(uniformName + OCCLUSION_MAP);
 
-		AddUniform(uniformName.str() + HEIGHT_SCALE);
-		AddUniform(uniformName.str() + HORIZONTAL_SCALE);
-		AddUniform(uniformName.str() + METALLIC);
-		AddUniform(uniformName.str() + ROUGHNESS);
-		//AddUniform(uniformName.str() + OCCLUSION);
+		AddUniform(uniformName + HEIGHT_SCALE);
+		AddUniform(uniformName + HORIZONTAL_SCALE);
+		AddUniform(uniformName + METALLIC);
+		AddUniform(uniformName + ROUGHNESS);
+		//AddUniform(uniformName. + OCCLUSION);
 	}
 
 	for (unsigned int i = 0; i < EngineConfig::lightsMaxNumber; i++)
 	{
-		std::stringstream uniformName;
-		uniformName << "lights[";
-		uniformName << i;
-		uniformName << "].";
+		std::string uniformName = "lights[" + std::to_string(i) + "].";
 
-		AddUniform(uniformName.str() + "position");
-		AddUniform(uniformName.str() + "colour");
-		AddUniform(uniformName.str() + "intensity");
+		AddUniform(uniformName + "position");
+		AddUniform(uniformName + "colour");
+		AddUniform(uniformName + "intensity");
 	}
 
 	AddUniform("highDetailRange");
@@ -85,37 +76,83 @@ GLTerrainShader::GLTerrainShader()
 	//AddUniform("brdfLUT");
 }
 
-void GLTerrainShader::UpdateShaderUniforms(Camera* camera, std::vector<Light*> lights) const
+void GLTerrainShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const
 {
 	SetUniform("viewProjection", camera->getViewProjectionMatrix());
 	SetUniform("cameraPosition", camera->getPosition());
 
 	for (unsigned int i = 0; i < EngineConfig::lightsMaxNumber; i++)
 	{
-		std::stringstream uniformName;
-		uniformName << "lights[";
-		uniformName << i;
-		uniformName << "].";
+		std::string uniformName = "lights[" + std::to_string(i) + "].";
 
 		if (i < lights.size())
 		{
 			Light* light = lights[i];
 
-			SetUniform(uniformName.str() + "position", light->GetParent()->GetWorldTransform()->GetPosition());
-			SetUniform(uniformName.str() + "colour", light->GetColour());
-			SetUniform(uniformName.str() + "intensity", light->GetIntensity());
+			SetUniform(uniformName + "position", light->GetParent()->GetWorldTransform()->GetPosition());
+			SetUniform(uniformName + "colour", light->GetColour());
+			SetUniform(uniformName + "intensity", light->GetIntensity());
 		}
 		else
 		{
-			SetUniform(uniformName.str() + "position", Vector3f());
-			SetUniform(uniformName.str() + "colour", Vector3f());
-			SetUniform(uniformName.str() + "intensity", Vector3f());
+			SetUniform(uniformName + "position", Vector3f());
+			SetUniform(uniformName + "colour", Vector3f());
+			SetUniform(uniformName + "intensity", Vector3f());
 		}
 	}
 
 	SetUniformi("highDetailRange", EngineConfig::rendererHighDetailRange);
 	SetUniformf("gamma", EngineConfig::rendererGamma);
 	SetUniformi("numberOfLights", (uint32_t)lights.size() < EngineConfig::lightsMaxNumber ? (uint32_t)lights.size() : EngineConfig::lightsMaxNumber);
+
+	//Some other stuff that is terrain-related
+	SetUniformf("scaleY", TerrainConfig::scaleY);
+
+	SetUniformi("tessellationFactor", TerrainConfig::tessellationFactor);
+	SetUniformf("tessellationSlope", TerrainConfig::tessellationSlope);
+	SetUniformf("tessellationShift", TerrainConfig::tessellationShift);
+
+	for (unsigned int i = 0; i < 8; i++)
+	{
+		std::string uName = "lodMorphArea[" + std::to_string(i) + "]";
+
+		SetUniformi(uName, TerrainConfig::lodMorphingAreas[i]);
+	}
+
+	uint32_t texUnit = 3;
+
+	for (unsigned int i = 0; i < 3; i++)
+	{
+		std::string uniformName = "materials[" + std::to_string(i) + "].";
+
+		Material* material = TerrainConfig::materials[i];
+
+		material->GetTexture(ALBEDO_MAP)->Bind(texUnit);
+		SetUniformi(uniformName + ALBEDO_MAP, texUnit);
+		texUnit++;
+
+		material->GetTexture(NORMAL_MAP)->Bind(texUnit);
+		SetUniformi(uniformName + NORMAL_MAP, texUnit);
+		texUnit++;
+
+		material->GetTexture(DISPLACEMENT_MAP)->Bind(texUnit);
+		SetUniformi(uniformName + DISPLACEMENT_MAP, texUnit);
+		texUnit++;
+
+		material->GetTexture(METALLIC_MAP)->Bind(texUnit);
+		SetUniformi(uniformName + METALLIC_MAP, texUnit);
+		texUnit++;
+
+		material->GetTexture(ROUGHNESS_MAP)->Bind(texUnit);
+		SetUniformi(uniformName + ROUGHNESS_MAP, texUnit);
+		texUnit++;
+
+		SetUniformf(uniformName + HEIGHT_SCALE, material->GetFloat(HEIGHT_SCALE));
+		SetUniformf(uniformName + HORIZONTAL_SCALE, material->GetFloat(HORIZONTAL_SCALE));
+		SetUniformf(uniformName + METALLIC, material->GetFloat(METALLIC));
+		SetUniformf(uniformName + ROUGHNESS, material->GetFloat(ROUGHNESS));
+		//SetUniformf(uniformName + OCCLUSION, material->GetFloat(OCCLUSION));
+	}
 }
 
 void GLTerrainShader::UpdateSharedUniforms(GameObject* object) const
@@ -126,52 +163,8 @@ void GLTerrainShader::UpdateSharedUniforms(GameObject* object) const
 	SetUniformi("heightmap", 0);
 	node->getMaps()->getNormalmap()->Bind(1);
 	SetUniformi("normalmap", 1);
-	//node->getMaps()->getSplatmap()->Bind(2);
-	//SetUniformi("splatmap", 0);
-
-	SetUniformf("scaleY", TerrainConfig::scaleY);
-
-	SetUniformi("tessellationFactor", TerrainConfig::tessellationFactor);
-	SetUniformf("tessellationSlope", TerrainConfig::tessellationSlope);
-	SetUniformf("tessellationShift", TerrainConfig::tessellationShift);
-
-	uint32_t texUnit = 3;
-
-	for (unsigned int i = 0; i < 3; i++)
-	{
-		std::stringstream uniformName;
-		uniformName << "materials[";
-		uniformName << i;
-		uniformName << "].";
-
-		Material* material = TerrainConfig::materials[i];
-
-		material->GetTexture(ALBEDO_MAP)->Bind(texUnit);
-		SetUniformi(uniformName.str() + ALBEDO_MAP, texUnit);
-		texUnit++;
-
-		material->GetTexture(NORMAL_MAP)->Bind(texUnit);
-		SetUniformi(uniformName.str() + NORMAL_MAP, texUnit);
-		texUnit++;
-
-		material->GetTexture(DISPLACEMENT_MAP)->Bind(texUnit);
-		SetUniformi(uniformName.str() + DISPLACEMENT_MAP, texUnit);
-		texUnit++;
-
-		material->GetTexture(METALLIC_MAP)->Bind(texUnit);
-		SetUniformi(uniformName.str() + METALLIC_MAP, texUnit);
-		texUnit++;
-
-		material->GetTexture(ROUGHNESS_MAP)->Bind(texUnit);
-		SetUniformi(uniformName.str() + ROUGHNESS_MAP, texUnit);
-		texUnit++;
-
-		SetUniformf(uniformName.str() + HEIGHT_SCALE, material->GetFloat(HEIGHT_SCALE));
-		SetUniformf(uniformName.str() + HORIZONTAL_SCALE, material->GetFloat(HORIZONTAL_SCALE));
-		SetUniformf(uniformName.str() + METALLIC, material->GetFloat(METALLIC));
-		SetUniformf(uniformName.str() + ROUGHNESS, material->GetFloat(ROUGHNESS));
-		//SetUniformf(uniformName.str() + OCCLUSION, material->GetFloat(OCCLUSION));
-	}
+	node->getMaps()->getSplatmap()->Bind(2);
+	SetUniformi("splatmap", 2);
 }
 
 void GLTerrainShader::UpdateObjectUniforms(GameObject* object) const
@@ -185,14 +178,4 @@ void GLTerrainShader::UpdateObjectUniforms(GameObject* object) const
 	SetUniform("index", node->getIndex());
 	SetUniformf("gap", node->getGap());
 	SetUniformi("lod", node->getLod());
-
-	for (unsigned int i = 0; i < 8; i++)
-	{
-		std::stringstream uName;
-		uName << "lodMorphArea[";
-		uName << i;
-		uName << "]";
-
-		SetUniformi(uName.str(), TerrainConfig::lodMorphingAreas[i]);
-	}
 }

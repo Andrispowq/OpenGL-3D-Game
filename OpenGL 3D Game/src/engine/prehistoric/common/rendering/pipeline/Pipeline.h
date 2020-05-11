@@ -46,7 +46,7 @@ public:
 	void SetScissorStart(const Vector2u& scissorStart) { this->scissorStart = scissorStart; }
 	void SetScissorSize(const Vector2u& scissorSize) { this->scissorSize = scissorSize; }
 
-	int SetSamples(int samples) { this->samples = samples; }
+	void SetSamples(int samples) { this->samples = samples; }
 public:
 	static std::vector<Shader*> shaders;
 

@@ -22,8 +22,8 @@ public:
 	inline std::vector<Vertex> getVertices() const { return vertices; }
 	inline std::vector<uint16_t> getIndices() const { return indices; }
 
-	inline void setVertices(std::vector<Vertex> vertices) { this->vertices = vertices; }
-	inline void setIndices(std::vector<uint16_t> indices) { this->indices = indices; }
+	inline void setVertices(const std::vector<Vertex>& vertices) { this->vertices = vertices; }
+	inline void setIndices(const std::vector<uint16_t>& indices) { this->indices = indices; }
 private:
 	std::vector<Vertex> vertices;
 	std::vector<uint16_t> indices;

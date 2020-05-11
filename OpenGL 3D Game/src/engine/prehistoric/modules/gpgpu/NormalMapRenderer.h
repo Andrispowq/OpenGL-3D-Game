@@ -8,7 +8,7 @@
 //#include "engine/platform/vulkan/rendering/pipeline/VKComputePipeline.h"
 
 #include "engine/platform/opengl/rendering/shaders/gpgpu/GLNormalMapShader.h"
-//#include "engine/platform/vulkan/rendering/shaders/gpgpu/VKNormalMapShader.h""
+//#include "engine/platform/vulkan/rendering/shaders/gpgpu/VKNormalMapShader.h"
 
 class NormalMapRenderer
 {

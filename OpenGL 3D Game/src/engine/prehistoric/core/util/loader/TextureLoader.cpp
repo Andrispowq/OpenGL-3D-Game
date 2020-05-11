@@ -53,7 +53,6 @@ namespace TextureLoader
 			}
 
 			texture->SamplerProperties(Anisotropic, Repeat);
-
 			texture->Unbind();
 		}
 		else if (FrameworkConfig::api == Vulkan)
