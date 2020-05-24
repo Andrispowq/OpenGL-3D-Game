@@ -11,7 +11,7 @@ class Pipeline
 {
 public:
 	Pipeline(Shader* shader);
-	Pipeline() : shaderIndex(-1) {}
+	Pipeline() : shader(nullptr), samples(0), shaderIndex(-1) {}
 
 	virtual ~Pipeline();
 

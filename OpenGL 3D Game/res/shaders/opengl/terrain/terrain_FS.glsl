@@ -34,6 +34,7 @@ const int max_lights = 10;
 uniform Material materials[3];
 uniform Light lights[max_lights];
 uniform sampler2D normalmap;
+uniform sampler2D heightmap;
 uniform sampler2D splatmap;
 uniform vec3 cameraPosition;
 uniform int highDetailRange;
@@ -58,7 +59,7 @@ void main()
 	float dist = length(cameraPosition - position_FS);
 	float height = position_FS.y;
 
-	vec3 N = normalize(texture(normalmap, mapCoord_FS).rbg);
+	vec3 N = normalize(texture(normalmap, mapCoord_FS).rbg * 2.0 - 1.0);
 	
 	vec4 blendValues = texture(splatmap, mapCoord_FS);
 	
@@ -131,12 +132,7 @@ void main()
         vec3 H = normalize(V + L);
         float dist = length(lights[i].position - position_FS);
         float attenuation = 1 / pow(dist, 2);
-
-		vec3 radiance;
-		if (lights[i].intensity == vec3(-1))
-			radiance = lights[i].colour * 100;
-		else
-			radiance = lights[i].colour * lights[i].intensity * attenuation; 
+		vec3 radiance = lights[i].colour * lights[i].intensity * attenuation; 
         
         // cook-torrance brdf
         float NDF = DistributionGGX(N, H, roughness);
@@ -179,7 +175,7 @@ void main()
 	colour /= colour + vec3(1);
 	colour = pow(colour, vec3(1 / gamma));
 
-	outColour = vec4(colour, 1);
+	outColour = vec4(N, 1);
 }
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)

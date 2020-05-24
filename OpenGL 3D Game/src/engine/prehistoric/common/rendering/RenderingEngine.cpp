@@ -53,6 +53,8 @@ void RenderingEngine::Input(const float delta)
 	window->Input();
 }
 
+bool br = false;
+
 void RenderingEngine::Update(const float delta)
 {
 	if (InputInstance.IsKeyPushed(PR_KEY_ESCAPE))
@@ -71,12 +73,23 @@ void RenderingEngine::Update(const float delta)
 		window->SetResized(false);
 	}
 
+	if (InputInstance.IsKeyPushed(PR_KEY_Q))
+	{
+		br = true;
+	}
+
 	camera->Input(window, delta);
 }
 
 void RenderingEngine::Render(GameObject* root)
 {
 	root->PreRender(this);
+
+	if (br)
+	{
+		PR_LOG_MESSAGE("hello\n");
+		br = false;
+	}
 
 	for (auto pipeline : models)
 	{
@@ -101,7 +114,7 @@ static bool FindElement(Pipeline* pipeline, std::unordered_map<Pipeline*, std::v
 {
 	for (const auto element : pipelines)
 	{
-		if ((*pipeline) == (*element.first))
+		if ((*pipeline).operator==(*element.first))
 		{
 			return true;
 		}
@@ -114,7 +127,7 @@ void RenderingEngine::AddModel(Renderable* renderable)
 {
 	Pipeline* pipeline = renderable->GetPipeline();
 
-	if(FindElement(pipeline, models))//if (models.find(pipeline) != models.end())
+	if(FindElement(pipeline, models))
 	{
 		auto& renderables = models[pipeline];
 		renderables.push_back(renderable);

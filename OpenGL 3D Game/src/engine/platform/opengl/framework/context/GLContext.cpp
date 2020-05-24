@@ -84,16 +84,16 @@ static void OpenGLMessageCallback(
 	switch (severity)
 	{
 	case GL_DEBUG_SEVERITY_HIGH:  
-		PR_LOG_RUNTIME_ERROR(output.c_str(), id, sType.c_str(), sSource.c_str(), "HIGH", message);
+		PR_LOG_RUNTIME_ERROR(output, id, sType.c_str(), sSource.c_str(), "HIGH", message);
 		return;
 	case GL_DEBUG_SEVERITY_MEDIUM:
-		PR_LOG_ERROR(output.c_str(), id, sType.c_str(), sSource.c_str(), "MEDIUM", message);
+		PR_LOG_ERROR(output, id, sType.c_str(), sSource.c_str(), "MEDIUM", message);
 		return;
 	case GL_DEBUG_SEVERITY_LOW:
-		PR_LOG_WARNING(output.c_str(), id, sType.c_str(), sSource.c_str(), "LOW", message);
+		PR_LOG_WARNING(output, id, sType.c_str(), sSource.c_str(), "LOW", message);
 		return;
 	case GL_DEBUG_SEVERITY_NOTIFICATION:
-		PR_LOG(CYAN, output.c_str(), id, sType.c_str(), sSource.c_str(), "NOTIFICATION", message);
+		PR_LOG(CYAN, output, id, sType.c_str(), sSource.c_str(), "NOTIFICATION", message);
 		return;
 	default:
 		return;

@@ -129,18 +129,18 @@ Texture* GLTexture::GenTexture(const std::string& file, SamplerFilter filter, Te
 	return texture;
 }
 
-Texture* GLTexture::Storage3D(uint32_t width, uint32_t height, ImageFormat format, SamplerFilter filter, TextureWrapMode wrapMode)
+Texture* GLTexture::Storage3D(uint32_t width, uint32_t height, uint32_t level, ImageFormat format, SamplerFilter filter, TextureWrapMode wrapMode)
 {
 	GLTexture* texture = new GLTexture();
-	texture->Generate();
-	texture->setType(TEXTURE_CUBE_MAP);
-	texture->Bind();
 	texture->setWidth(width);
 	texture->setHeight(height);
+	texture->setType(TEXTURE_CUBE_MAP);
+	texture->Generate();
+	texture->Bind();
 
 	for (uint32_t i = 0; i < 6; ++i)
 	{
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, getInternalFormat(format), width, height, 0, getFormat(format), GL_FLOAT, nullptr);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, level, getInternalFormat(format), width, height, 0, getFormat(format), GL_FLOAT, nullptr);
 	}
 
 	texture->SamplerProperties(filter, wrapMode);
@@ -148,17 +148,16 @@ Texture* GLTexture::Storage3D(uint32_t width, uint32_t height, ImageFormat forma
 	return texture;
 }
 
-Texture* GLTexture::Storage2D(uint32_t width, uint32_t height, ImageFormat format, SamplerFilter filter, TextureWrapMode wrapMode)
+Texture* GLTexture::Storage2D(uint32_t width, uint32_t height, uint32_t levels, ImageFormat format, SamplerFilter filter, TextureWrapMode wrapMode)
 {
 	GLTexture* texture = new GLTexture();
-	texture->Generate();
-	texture->setType(TEXTURE_2D);
-	texture->Bind();
 	texture->setWidth(width);
 	texture->setHeight(height);
+	texture->setType(TEXTURE_2D);
+	texture->Generate();
+	texture->Bind();
 
-	//glTexImage2D(GL_TEXTURE_2D, 0, getInternalFormat(format), width, height, 0, getFormat(format), GL_FLOAT, nullptr);
-	glTexStorage2D(GL_TEXTURE_2D, 1, getInternalFormat(format), width, height); //This does not work for some reason, though the Java version uses this method
+	glTexStorage2D(GL_TEXTURE_2D, levels, getInternalFormat(format), width, height);
 
 	texture->SamplerProperties(filter, wrapMode);
 	texture->Unbind();

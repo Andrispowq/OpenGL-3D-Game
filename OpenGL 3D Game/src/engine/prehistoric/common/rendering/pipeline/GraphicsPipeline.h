@@ -7,7 +7,7 @@ class GraphicsPipeline
 {
 public:
 	GraphicsPipeline(VBO* vbo);
-	GraphicsPipeline() : vboIndex(-1) {}
+	GraphicsPipeline() : vbo(nullptr), wireframe(false), backfaceCulling(false), vboIndex(-1) {}
 
 	virtual ~GraphicsPipeline();
 

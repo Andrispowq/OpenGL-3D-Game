@@ -17,7 +17,7 @@ struct ImageData
 
 namespace TextureLoader
 {
-	Texture* LoadTexture(const std::string& path, Window* window);
+	Texture* LoadTexture(const std::string& path, Window* window, SamplerFilter filter = Anisotropic, TextureWrapMode wrapMode = Repeat);
 	ImageData LoadTextureData(const std::string& path);
 };
 

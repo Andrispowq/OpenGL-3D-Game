@@ -4,6 +4,7 @@
 #include "engine/platform/vulkan/rendering/pipeline/VKGraphicsPipeline.h"
 
 VKMeshVBO::VKMeshVBO(const Mesh& mesh, Window* window)
+	: copyCommandPool(VK_NULL_HANDLE)
 {
 	this->physicalDevice = reinterpret_cast<VKPhysicalDevice*>(window->GetContext()->GetPhysicalDevice());
 	this->device = reinterpret_cast<VKDevice*>(window->GetContext()->GetDevice());

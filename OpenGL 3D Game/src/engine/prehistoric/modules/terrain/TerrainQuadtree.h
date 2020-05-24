@@ -1,51 +1,40 @@
 #ifndef TERRAIN_QUADTREE_H
 #define TERRAIN_QUADTREE_H
 
-#include "engine/prehistoric/core/gameObject/GameObject.h"
 #include "engine/prehistoric/core/gameObject/Node.h"
 
+#include "TerrainNode.h"
+
+#include "engine/platform/opengl/rendering/pipeline/GLGraphicsPipeline.h"
+#include "engine/platform/vulkan/rendering/pipeline/VKGraphicsPipeline.h"
+
+#include "engine/platform/opengl/rendering/shaders/terrain/GLTerrainShader.h"
+#include "engine/platform/opengl/rendering/shaders/terrain/GLTerrainWireframeShader.h"
+
 #include "engine/platform/opengl/buffer/GLPatchVBO.h"
-//#include "engine/platform/vulkan/buffer/VKPatchVBO.h"
+#include "engine/platform/vulkan/buffer/VKMeshVBO.h"
 
-#include "TerrainMaps.h"
-
-#include "engine/prehistoric/component/renderer/Renderer.h"
-#include "engine/prehistoric/common/framework/Window.h"
-#include "engine/prehistoric/common/buffer/PatchVBO.h"
-#include "engine/prehistoric/core/movement/Camera.h"
-
-#include "engine/prehistoric/common/rendering/pipeline/GraphicsPipeline.h"
+//#include "engine/platform/vulkan/rendering/shaders/terrain/VKTerrainShader.h"
+//#include "engine/platform/vulkan/rendering/shaders/terrain/VKTerrainWireframeShader.h"
 
 class TerrainQuadtree : public Node
 {
 public:
-	TerrainQuadtree(TerrainMaps& maps, Window* window, Camera* camera);
+	TerrainQuadtree(Window* window, Camera* camera, TerrainMaps* maps);
 	virtual ~TerrainQuadtree();
 
 	void UpdateQuadtree();
-	std::vector<Vector2f> GeneratePatch();
-
-	PatchVBO* getVbo() { return mesh; }
-	Pipeline* getPipeline() { return pipeline; }
-	Pipeline* getWireframePipeline() { return wireframePipeline; }
-	Material* getMaterial() { return material; }
-
-	TerrainMaps* getTerrainMaps() { return maps; }
-	Window* getWindow() { return window; }
-	Camera* getCamera() { return camera; }
+	std::vector<Vector2f> generatePatch() const;
 public:
-	static int rootNodes;
+	constexpr static int rootNodes = 8;
 private:
-	TerrainMaps* maps;
 	Window* window;
 	Camera* camera;
 
-	PatchVBO* mesh;
-	Pipeline* pipeline;
-	Pipeline* wireframePipeline;
-	Material* material;
+	TerrainMaps* maps;
 
-	static std::vector<Vector2f> vertices;
+	Renderer* renderer;
+	Renderer* wireframeRenderer;
 };
 
 #endif

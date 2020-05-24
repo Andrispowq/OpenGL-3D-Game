@@ -2,13 +2,11 @@
 #include "Terrain.h"
 
 Terrain::Terrain(Window* window, Camera* camera)
+	: window(window), camera(camera)
 {
-	this->window = window;
-	this->camera = camera;
-
 	maps = new TerrainMaps(window);
 	
-	AddChild("Quadtree", new TerrainQuadtree(*maps, window, camera));
+	AddChild("Quadtree", new TerrainQuadtree(window, camera, maps));
 }
 
 Terrain::~Terrain()
@@ -16,16 +14,16 @@ Terrain::~Terrain()
 	delete maps;
 }
 
+void Terrain::PreRender(RenderingEngine* renderingEngine)
+{
+	UpdateQuadtree();
+	Node::PreRender(renderingEngine);
+}
+
 void Terrain::UpdateQuadtree()
 {
 	if (camera->isChanged())
 	{
-		((TerrainQuadtree*)children["Quadtree"])->UpdateQuadtree();
+		((TerrainQuadtree*)children.at("Quadtree"))->UpdateQuadtree();
 	}
-}
-
-void Terrain::PreRender(RenderingEngine* renderingEngine)
-{
-	UpdateQuadtree();
-	GameObject::PreRender(renderingEngine);
 }

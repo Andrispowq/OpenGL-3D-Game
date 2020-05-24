@@ -35,11 +35,6 @@ struct Layout
 	LayoutMember* members = nullptr;
 	size_t memberCount = 0;
 
-	~Layout()
-	{
-		delete[] members;
-	}
-
 	void addLayoutMember(LayoutType type, LayoutTypeInfo typeInfo, size_t count)
 	{
 		if (members == nullptr)
@@ -101,10 +96,18 @@ public:
 
 	virtual void Store(void* data, const Layout& layout) = 0;
 
-	virtual void Bind(void* commandBuffer) const = 0;
+	virtual void Bind(void* commandBuffer, uint32_t binding) const = 0;
 	virtual void Unbind() const = 0;
 
+	virtual void MapBuffer() = 0;
+	virtual void UnmapBuffer() = 0;
+
+	void* getMappedData() const { return data; }
+
 	virtual bool operator==(const ShaderStorageBuffer& other) = 0;
+protected:
+	void* data;
+	Layout layout;
 };
 
 #endif

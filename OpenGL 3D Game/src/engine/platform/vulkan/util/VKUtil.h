@@ -8,9 +8,9 @@
 struct QueueFamilyIndices
 {
 	uint32_t graphicsFamily;
-	bool hasGraphicsFamily;
-
 	uint32_t presentFamily;
+
+	bool hasGraphicsFamily;
 	bool hasPresentFamily;
 };
 

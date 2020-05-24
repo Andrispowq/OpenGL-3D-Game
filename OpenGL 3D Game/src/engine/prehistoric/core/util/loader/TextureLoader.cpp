@@ -6,7 +6,7 @@
 
 namespace TextureLoader
 {
-	Texture* TextureLoader::LoadTexture(const std::string& path, Window* window)
+	Texture* TextureLoader::LoadTexture(const std::string& path, Window* window, SamplerFilter filter, TextureWrapMode wrapMode)
 	{
 		if(FrameworkConfig::api == OpenGL)
 			stbi_set_flip_vertically_on_load(0);
@@ -30,7 +30,6 @@ namespace TextureLoader
 		if (FrameworkConfig::api == OpenGL)
 		{
 			texture = new GLTexture();
-			static_cast<GLTexture*>(texture)->setType(TEXTURE_2D);
 
 			texture->setWidth(static_cast<uint32_t>(width));
 			texture->setHeight(static_cast<uint32_t>(height));
@@ -51,17 +50,18 @@ namespace TextureLoader
 			{
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)data);
 			}
-
-			texture->SamplerProperties(Anisotropic, Repeat);
-			texture->Unbind();
 		}
 		else if (FrameworkConfig::api == Vulkan)
 		{
 			texture = new VKTexture(*((VKPhysicalDevice*)window->GetContext()->GetPhysicalDevice()), *((VKDevice*)window->GetContext()->GetDevice()), width, height);
 
-			static_cast<VKTexture*>(texture)->UpdateStagingBuffer(size_t(width * height * 4), data, RGBA32FLOAT);
+			static_cast<VKTexture*>(texture)->UpdateStagingBuffer((size_t)width * height * 4, data, RGBA32FLOAT);
 			texture->Generate();
+			texture->Bind();
 		}
+
+		texture->SamplerProperties(filter, wrapMode);
+		texture->Unbind();
 
 		stbi_image_free(data);
 

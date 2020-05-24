@@ -27,11 +27,11 @@ SplatMapRenderer::SplatMapRenderer(Window* window, uint32_t N)
 	//TODO: TEXTURES
 	if (FrameworkConfig::api == OpenGL)
 	{
-		splatmap = GLTexture::Storage2D(N, N, RGBA32FLOAT, Trilinear);
+		splatmap = GLTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), RGBA32FLOAT, Bilinear);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
-		//splatmap = VKTexture::Storage2D(N, N, RGBA32FLOAT, Trilinear);
+		//splatmap = VKTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), RGBA32FLOAT, Bilinear);
 	}
 
 	if (FrameworkConfig::api == OpenGL)
@@ -73,5 +73,5 @@ void SplatMapRenderer::Render(Texture* normalmap)
 	pipeline->UnbindPipeline();
 
 	splatmap->Bind();
-	splatmap->SamplerProperties(Trilinear, Repeat);
+	splatmap->SamplerProperties(Bilinear, Repeat);
 }

@@ -1,11 +1,10 @@
 #ifndef TERRAIN_MAPS_H
 #define TERRAIN_MAPS_H
 
-#include "engine/prehistoric/common/model/Texture.h"
-#include "engine/prehistoric/common/framework/Window.h"
-
 #include "engine/config/TerrainConfig.h"
-#include "engine/prehistoric/core/util/loader/TextureLoader.h"
+
+#include "engine/platform/opengl/texture/GLTexture.h"
+#include "engine/platform/vulkan/texture/VKTexture.h"
 
 #include "engine/prehistoric/modules/gpgpu/NormalMapRenderer.h"
 #include "engine/prehistoric/modules/gpgpu/SplatMapRenderer.h"
@@ -21,19 +20,19 @@ public:
 	Texture* getNormalmap() const { return normalmap; }
 	Texture* getSplatmap() const { return splatmap; }
 
-	float* getTerrainHeights() const { return terrainHeights; }
+	float* getHeights() const { return heights; }
 private:
+	Window* window;
+
 	Texture* heightmap;
 	Texture* normalmap;
 	Texture* splatmap;
 
-	NormalMapRenderer* normalMapRenderer;
-	SplatMapRenderer* splatMapRenderer;
-	TerrainHeightsQuery* heightsQuery;
+	float* heights;
 
-	Window* window;
-
-	float* terrainHeights;
+	NormalMapRenderer* normalmapRenderer;
+	SplatMapRenderer* splatmapRenderer;
+	TerrainHeightsQuery* query;
 };
 
 #endif

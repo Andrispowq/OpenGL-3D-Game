@@ -3,57 +3,55 @@
 
 #include "engine/prehistoric/core/gameObject/GameObject.h"
 
-#include "engine/platform/opengl/rendering/pipeline/GLGraphicsPipeline.h"
-#include "engine/platform/vulkan/rendering/pipeline/VKGraphicsPipeline.h"
+#include "TerrainMaps.h"
 
-#include "engine/platform/opengl/rendering/shaders/terrain/GLTerrainShader.h"
-//#include "engine/platform/vulkan/rendering/shaders/terrain/VKTerrainShader.h"
+#include "engine/prehistoric/common/buffer/PatchVBO.h"
+#include "engine/prehistoric/core/math/Math.h"
 
-#include "engine/platform/opengl/rendering/shaders/terrain/GLTerrainWireframeShader.h"
-//#include "engine/platform/vulkan/rendering/shaders/terrain/VKTerrainWireframeShader.h"
-
-#include "engine/prehistoric/common/rendering/RenderingEngine.h"
-
-#include "engine/config/FrameworkConfig.h"
-
-#include "TerrainQuadtree.h"
+#include "engine/prehistoric/component/renderer/Renderer.h"
 
 class TerrainNode : public GameObject
 {
 public:
-	TerrainNode(TerrainQuadtree* quatree, Vector2f location, Vector2f index, int lod);
+	TerrainNode(Pipeline* pipeline, Pipeline* wireframePipeline, TerrainMaps* maps,
+		Window* window, Camera* camera,	const Vector2f& location, 
+		int lod, const Vector2f& index);
 	virtual ~TerrainNode();
 
-	virtual void PreRender(RenderingEngine* renderingEngine) override;
+	void PreRender(RenderingEngine* renderingEngine) override;
 
 	void UpdateQuadtree();
-	void AddChildNodes(int lod);
-	void RemoveChildNodes();
 	void UpdateChildNodes();
 
+	void AddChildNodes(int lod);
+	void RemoveChildNodes();
+
 	void ComputeWorldPosition();
+	float getTerrainHeight(const Vector2f& location) const;
 
-	TerrainMaps* getMaps() const { return quadtree->getTerrainMaps(); }
+	TerrainMaps* getMaps() const { return maps; }
 
-	Vector3f getWorldPosition() const { return worldPosition; }
-	Vector2f getLocation() const { return location; }
-	Vector2f getIndex() const { return index; }
-
-	float getGap() const { return gap; }
 	int getLod() const { return lod; }
-	bool isLeaf() const { return leaf; }
+	Vector2f getLocation() const { return location; }
+	Vector3f getWorldPosition() const { return worldPosition; }
+	Vector2f getIndex() const { return index; }
+	float getGap() const { return gap; }
 private:
-	float getTerrainHeight(Vector2f position) const;
-private:
-	TerrainQuadtree* quadtree;
+	Window* window;
+	Camera* camera;
+	
+	TerrainMaps* maps;
 
-	Vector3f worldPosition;
-	Vector2f location;
-	Vector2f index;
-
-	float gap;
-	int lod;
 	bool leaf;
+	int lod;
+	Vector2f location;
+	Vector3f worldPosition;
+	Vector2f index;
+	float gap;
+
+	Renderer* renderer;
+	Renderer* wireframeRenderer;
+	Material* material;
 };
 
 #endif

@@ -48,6 +48,8 @@ GLTerrainWireframeShader::GLTerrainWireframeShader()
 		AddUniform(uniformName + HEIGHT_SCALE);
 		AddUniform(uniformName + HORIZONTAL_SCALE);
 	}
+
+	AddUniform("highDetailRange");
 }
 
 void GLTerrainWireframeShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const
@@ -83,6 +85,8 @@ void GLTerrainWireframeShader::UpdateShaderUniforms(Camera* camera, const std::v
 
 		SetUniformi(uName, TerrainConfig::lodMorphingAreas[i]);
 	}
+
+	SetUniformi("highDetailRange", EngineConfig::rendererHighDetailRange);
 }
 
 void GLTerrainWireframeShader::UpdateSharedUniforms(GameObject* object) const

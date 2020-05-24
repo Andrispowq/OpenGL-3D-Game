@@ -3,29 +3,25 @@
 
 TerrainMaps::TerrainMaps(Window* window)
 {
-	this->window = window;
+	this->heightmap = TextureLoader::LoadTexture(TerrainConfig::heightmap, window, Bilinear);
 
-	heightmap = TextureLoader::LoadTexture(TerrainConfig::heightmap, window);
-	heightmap->SamplerProperties(Bilinear, Repeat);
+	this->normalmapRenderer = new NormalMapRenderer(window, 12.0f, heightmap->getWidth());
+	normalmapRenderer->Render(heightmap);
+	this->normalmap = normalmapRenderer->getNormalmap();
 
-	normalMapRenderer = new NormalMapRenderer(window, 12.f, heightmap->getWidth());
-	normalMapRenderer->Render(heightmap);
-	this->normalmap = normalMapRenderer->getNormalmap();
+	this->splatmapRenderer = new SplatMapRenderer(window, normalmap->getWidth());
+	splatmapRenderer->Render(normalmap);
+	this->splatmap = splatmapRenderer->getSplatmap();
 
-	splatMapRenderer = new SplatMapRenderer(window, normalmap->getWidth());
-	splatMapRenderer->Render(normalmap);
-	this->splatmap = splatMapRenderer->getSplatmap();
-
-	heightsQuery = new TerrainHeightsQuery(window, heightmap->getWidth());
-	heightsQuery->Query(heightmap);
-	this->terrainHeights = heightsQuery->getHeights();
+	this->query = new TerrainHeightsQuery(window, heightmap->getWidth());
+	query->Query(heightmap);
+	this->heights = query->getHeights();
 }
 
 TerrainMaps::~TerrainMaps()
 {
 	delete heightmap;
-
-	delete normalMapRenderer;
-	delete splatMapRenderer;
-	delete heightsQuery;
+	delete normalmapRenderer;
+	delete splatmapRenderer;
+	delete query;
 }

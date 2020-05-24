@@ -14,9 +14,9 @@ void main(void)
 	ivec2 x = ivec2(gl_GlobalInvocationID.xy);
 	vec2 texCoord = gl_GlobalInvocationID.xy / float(N);
 	
-	vec3 normal = normalize(texture(normalmap, texCoord).rgb);
+	vec3 normal = normalize(texture(normalmap, texCoord).rgb) * 2 - 1;
 	
-	float slopeFactor = normal.x;
+	float slopeFactor = normal.z;
 	
 	vec4 blendValues = vec4(0, 0, 0, 0);
 	

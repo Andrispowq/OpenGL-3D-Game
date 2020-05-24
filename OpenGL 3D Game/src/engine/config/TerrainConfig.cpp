@@ -65,14 +65,19 @@ namespace TerrainConfig
 				{
 					if (nameTokens[1] == "ranges")
 					{
-						lodRanges.reserve(std::atoi(tokens[1].c_str()));
+						lodRanges.resize(std::atoi(tokens[1].c_str()));
+						lodMorphingAreas.resize(std::atoi(tokens[1].c_str()));
 					}
 					if (nameTokens[1] == "range")
 					{
 						int index = std::atoi(tokens[1].c_str());
 						int range = std::atoi(tokens[2].c_str());
-						lodRanges.push_back(range);
-						lodMorphingAreas.push_back(range - UpdateMorphingArea(index + 1));
+						lodRanges[index] = range;
+
+						if (range == 0)
+							lodMorphingAreas[index] = 0;
+						else
+							lodMorphingAreas[index] = range - UpdateMorphingArea(index + 1);
 					}
 				}
 				

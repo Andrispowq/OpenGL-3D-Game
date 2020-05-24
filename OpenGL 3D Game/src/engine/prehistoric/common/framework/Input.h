@@ -60,7 +60,7 @@ public:
 	inline void SetButtonsHolding(const std::vector<int>& buttonsHolding) { this->buttonsHolding = buttonsHolding; }
 	inline void SetReleasedButtons(const std::vector<int>& releasedButtons) { this->releasedButtons = releasedButtons; }
 protected:
-	Input() {};
+	Input() : scrollOffset(0.0f), pause(false) {};
 	virtual ~Input() {}
 protected:
 	static Input *instance;

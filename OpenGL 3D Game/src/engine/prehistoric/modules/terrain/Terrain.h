@@ -1,23 +1,25 @@
 #ifndef TERRAIN_H
 #define TERRAIN_H
 
+#include "engine/prehistoric/core/gameObject/Node.h"
+
 #include "TerrainQuadtree.h"
 
-class Terrain : public GameObject
+class Terrain : public Node
 {
 public:
 	Terrain(Window* window, Camera* camera);
 	virtual ~Terrain();
 
+	void PreRender(RenderingEngine* renderingEngine) override;
 	void UpdateQuadtree();
 
-	virtual void PreRender(RenderingEngine* renderingEngine) override;
-
-	TerrainMaps* getMaps() { return maps; }
+	TerrainMaps* getMaps() const { return maps; }
 private:
-	TerrainMaps* maps;
 	Window* window;
 	Camera* camera;
+
+	TerrainMaps* maps;
 };
 
 #endif

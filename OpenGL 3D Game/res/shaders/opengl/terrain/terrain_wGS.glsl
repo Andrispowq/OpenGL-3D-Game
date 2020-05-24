@@ -84,12 +84,12 @@ void main()
 
 	for(int i = 0; i < gl_in.length(); ++i)
 	{
-		vec4 worldPos = gl_in[i].gl_Position + vec4(displacement[i],0);
+		vec4 worldPos = gl_in[i].gl_Position + vec4(displacement[i], 0);
 		gl_Position = viewProjection * worldPos;
 		EmitVertex();
 	}
 	
-	vec4 worldPos = gl_in[0].gl_Position + vec4(displacement[0],0);
+	vec4 worldPos = gl_in[0].gl_Position + vec4(displacement[0], 0);
 	gl_Position = viewProjection * worldPos;
 	EmitVertex();
 	

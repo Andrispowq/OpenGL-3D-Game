@@ -17,7 +17,7 @@ public:
 
 	GameObject* AddComponent(const std::string& name, Component* component);
 	Component* GetComponent(const std::string& name) const;
-private:
+protected:
 	std::unordered_map<std::string, Component*> components;
 };
 

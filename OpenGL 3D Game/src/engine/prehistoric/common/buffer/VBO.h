@@ -6,7 +6,7 @@
 class VBO
 {
 public:
-	VBO() {}
+	VBO() : size(0), indexed(false) {}
 	virtual ~VBO() = 0;
 
 	virtual void Store(const Mesh& mesh) {}

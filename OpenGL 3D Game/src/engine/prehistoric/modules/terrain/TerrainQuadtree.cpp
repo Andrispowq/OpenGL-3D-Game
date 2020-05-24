@@ -1,75 +1,64 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "TerrainQuadtree.h"
 
-#include "TerrainNode.h"
-
-int TerrainQuadtree::rootNodes = 8;
-std::vector<Vector2f> TerrainQuadtree::vertices;
-
-TerrainQuadtree::TerrainQuadtree(TerrainMaps& maps, Window* window, Camera* camera)
+TerrainQuadtree::TerrainQuadtree(Window* window, Camera* camera, TerrainMaps* maps)
+	: window(window), camera(camera), maps(maps)
 {
-	this->maps = &maps;
-	this->window = window;
-	this->camera = camera;
-
-	if (vertices.size() == 0)
-	{
-		vertices = GeneratePatch();
-	
-		if (FrameworkConfig::api == OpenGL)
-		{
-			mesh = new GLPatchVBO();
-		}
-		else if (FrameworkConfig::api == Vulkan)
-		{
-			//TODO: Patch VBO in Vulkan
-		}
-
-		mesh->Store(vertices);
-	}
-
-	material = new Material(window);
-
 	Shader* shader = nullptr;
+	Pipeline* pipeline = nullptr;
 	Shader* wireframeShader = nullptr;
+	Pipeline* wireframePipeline = nullptr;
+
+	PatchVBO* vbo = nullptr;
 
 	if (FrameworkConfig::api == OpenGL)
 	{
-		shader = new GLTerrainShader();
-		pipeline = new GLGraphicsPipeline(shader, mesh);
+		vbo = new GLPatchVBO();
+		vbo->Store(generatePatch());
 
+		shader = new GLTerrainShader();
 		wireframeShader = new GLTerrainWireframeShader();
-		wireframePipeline = new GLGraphicsPipeline(wireframeShader, mesh);
+
+		pipeline = new GLGraphicsPipeline(shader, vbo);
+		wireframePipeline = new GLGraphicsPipeline(wireframeShader, vbo);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
-		pipeline = new VKGraphicsPipeline(shader, mesh);
-		wireframePipeline = new VKGraphicsPipeline(wireframeShader, mesh);
+		//TODO
 	}
 
 	pipeline->SetViewportStart({ 0, 0 });
-	pipeline->SetViewportSize({ (float) FrameworkConfig::windowWidth, (float) FrameworkConfig::windowHeight });
+	pipeline->SetViewportSize({ (float) FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
 	pipeline->SetScissorStart({ 0, 0 });
 	pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
 
 	pipeline->CreatePipeline(window);
 
-	for (int x = 0; x < rootNodes; x++)
-	{
-		for (int y = 0; y < rootNodes; y++)
-		{
-			std::stringstream name;
-			name << "Child ";
-			name << x;
-			name << ", ";
-			name << y;
+	wireframePipeline->SetViewportStart({ 0, 0 });
+	wireframePipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
+	wireframePipeline->SetScissorStart({ 0, 0 });
+	wireframePipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
 
-			AddChild(name.str(), new TerrainNode(this, { (float) x / (float) rootNodes, (float) y / (float) rootNodes }, { (float) x, (float) y }, 0));
+	wireframePipeline->CreatePipeline(window);
+
+	for (int i = 0; i < rootNodes; i++)
+	{
+		for (int j = 0; j < rootNodes; j++)
+		{
+			std::stringstream ss;
+			ss << "Child ";
+			ss << i;
+			ss << ", ";
+			ss << j;
+
+			AddChild(ss.str(), new TerrainNode(pipeline, wireframePipeline,
+				maps, window, camera, { i / (float)rootNodes, j / (float)rootNodes },
+				0, { float(i), float(j) }));
 		}
 	}
 
 	worldTransform->SetScaling({ TerrainConfig::scaleXZ, TerrainConfig::scaleY, TerrainConfig::scaleXZ });
-	worldTransform->SetPosition({ TerrainConfig::scaleXZ / 2, 0, TerrainConfig::scaleXZ / 2 });
+	worldTransform->SetPosition({ -TerrainConfig::scaleXZ / 2.0f, 0, -TerrainConfig::scaleXZ / 2.0f });
 }
 
 TerrainQuadtree::~TerrainQuadtree()
@@ -78,18 +67,16 @@ TerrainQuadtree::~TerrainQuadtree()
 
 void TerrainQuadtree::UpdateQuadtree()
 {
-	for (auto child : children)
+	for (auto node : children)
 	{
-		((TerrainNode*)child.second)->UpdateQuadtree();
+		((TerrainNode*)node.second)->UpdateQuadtree();
 	}
 }
 
-std::vector<Vector2f> TerrainQuadtree::GeneratePatch()
+std::vector<Vector2f> TerrainQuadtree::generatePatch() const
 {
-	std::vector<Vector2f> patches;
-	patches.reserve(16);
-
-	size_t index = 0;
+	std::vector<Vector2f> vertices;
+	vertices.reserve(16);
 
 	vertices.push_back({ 0, 0 });
 	vertices.push_back({ 0.333f, 0 });

@@ -4,7 +4,9 @@
 GameObject::~GameObject()
 {
 	for (auto kv : components)
+	{
 		delete kv.second;
+	}
 }
 
 void GameObject::PreInput(const float delta)

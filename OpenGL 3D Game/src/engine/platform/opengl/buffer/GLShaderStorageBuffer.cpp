@@ -17,6 +17,9 @@ GLShaderStorageBuffer::~GLShaderStorageBuffer()
 */
 void GLShaderStorageBuffer::Store(void* data, const Layout& layout)
 {
+	this->data = data;
+	this->layout = layout;
+
 	glGenBuffers(1, &id);
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, id);
 
@@ -88,12 +91,22 @@ void GLShaderStorageBuffer::Store(void* data, const Layout& layout)
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
 }
 
-void GLShaderStorageBuffer::Bind(void* commandBuffer) const
+void GLShaderStorageBuffer::Bind(void* commandBuffer, uint32_t binding) const
 {
-	glBindBuffer(GL_SHADER_STORAGE_BUFFER, id);
+	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, binding, id);
 }
 
 void GLShaderStorageBuffer::Unbind() const
 {
 	glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+}
+
+void GLShaderStorageBuffer::MapBuffer()
+{
+	data = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_READ_ONLY);
+}
+
+void GLShaderStorageBuffer::UnmapBuffer()
+{
+	glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }

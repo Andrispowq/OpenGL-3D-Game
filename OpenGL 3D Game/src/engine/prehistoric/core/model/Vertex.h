@@ -12,7 +12,7 @@ public:
 	Vertex(const Vector3f& position) : position(position), texture(Vector2f(0)), normal(Vector3f(0)), textureIndex(-1), normalIndex(-1) {}
 	Vertex() : position(Vector3f(0)), texture(Vector2f(0)), normal(Vector3f(0)), textureIndex(-1), normalIndex(-1) {}
 
-	Vertex(uint16_t index, Vector3f position) : index(index), position(position), length(position.length()) {}
+	Vertex(uint16_t index, Vector3f position) : index(index), position(position), length(position.length()), textureIndex(-1), normalIndex(-1) {}
 
 	~Vertex() { /*delete duplicateVertex;*/ }
 

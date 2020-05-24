@@ -8,15 +8,18 @@
 class GLShaderStorageBuffer : public ShaderStorageBuffer
 {
 public:
-	GLShaderStorageBuffer() {}
+	GLShaderStorageBuffer() : id(0xffffffff) {}
 	GLShaderStorageBuffer(void* data, const Layout& layout);
 
 	virtual ~GLShaderStorageBuffer() override;
 
 	virtual void Store(void* data, const Layout& layout) override;
 
-	virtual void Bind(void* commandBuffer) const override;
+	virtual void Bind(void* commandBuffer, uint32_t binding) const override;
 	virtual void Unbind() const override;
+
+	virtual void MapBuffer() override;
+	virtual void UnmapBuffer() override;
 
 	virtual bool operator==(const ShaderStorageBuffer& other) override
 	{

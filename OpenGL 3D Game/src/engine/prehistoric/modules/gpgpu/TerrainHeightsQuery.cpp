@@ -25,7 +25,7 @@ TerrainHeightsQuery::TerrainHeightsQuery(Window* window, uint32_t N)
 	pipeline->CreatePipeline(window);
 
 	//TODO: TEXTURES
-	heights = new float[N * N];
+	//heights = new float[N * N];
 
 	if (FrameworkConfig::api == OpenGL)
 	{
@@ -37,7 +37,7 @@ TerrainHeightsQuery::TerrainHeightsQuery(Window* window, uint32_t N)
 	}
 
 	Layout layout;
-	layout.addLayoutMember(LayoutType::FLOAT, LayoutTypeInfo::SINGLE_ELEMENT, N * N);
+	layout.addLayoutMember(LayoutType::FLOAT, LayoutTypeInfo::UNSIZED_ARRAY, N * N);
 	/*layout.memberCount = 1;
 	layout.members = new LayoutMember();
 	
@@ -84,4 +84,10 @@ void TerrainHeightsQuery::Query(Texture* heightmap)
 
 	pipeline->RenderPipeline();
 	pipeline->UnbindPipeline();
+
+	buffer->Bind(nullptr, 0);
+	buffer->MapBuffer();
+	heights = (float*) buffer->getMappedData();
+	buffer->UnmapBuffer();
+	buffer->Unbind();
 }

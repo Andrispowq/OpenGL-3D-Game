@@ -28,11 +28,11 @@ NormalMapRenderer::NormalMapRenderer(Window* window, float strength, uint32_t N)
 	//TODO: TEXTURES
 	if (FrameworkConfig::api == OpenGL)
 	{
-		normalmap = GLTexture::Storage2D(N, N, RGBA32FLOAT, Trilinear);
+		normalmap = GLTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), RGBA32FLOAT, Bilinear);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
-		//normalmap = VKTexture::Storage2D(N, N, RGBA32FLOAT, Trilinear);
+		//normalmap = VKTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), RGBA32FLOAT, Bilinear);
 	}
 
 	if (FrameworkConfig::api == OpenGL)
@@ -74,5 +74,5 @@ void NormalMapRenderer::Render(Texture* heightmap)
 	pipeline->UnbindPipeline();
 
 	normalmap->Bind();
-	normalmap->SamplerProperties(Trilinear, Repeat);
+	normalmap->SamplerProperties(Bilinear, Repeat);
 }

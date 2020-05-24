@@ -6,7 +6,7 @@
 class Light : public Component
 {
 public:
-	Light(Vector3f colour = 0, Vector3f intensity = 1) : Component(), colour(colour), intensity(intensity) {}
+	Light(const Vector3f& colour = 0, const Vector3f& intensity = 1) : Component(), colour(colour), intensity(intensity) {}
 	virtual ~Light() {}
 
 	virtual void PreRender(RenderingEngine* renderingEngine) override;

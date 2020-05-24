@@ -33,7 +33,7 @@ void GLComputePipeline::BindPipeline() const
 
 	for (const auto& ssbo : ssboBindingTable)
 	{
-		ssbo.second.first->Bind(nullptr);
+		ssbo.second.first->Bind(nullptr, ssbo.first);
 	}
 }
 
@@ -42,6 +42,7 @@ void GLComputePipeline::RenderPipeline() const
 	GLPipeline::RenderPipeline();
 
 	glDispatchCompute(invocationSize.x, invocationSize.y, invocationSize.z);
+	glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 	glFinish();
 }
 

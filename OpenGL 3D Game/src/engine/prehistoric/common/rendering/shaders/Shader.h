@@ -67,7 +67,7 @@ class Light;
 class Shader
 {
 public:
-	Shader() {}
+	Shader() : counter(0) {}
 	virtual ~Shader() = 0;
 
 	virtual void Bind(void* commandBuffer) const = 0;
