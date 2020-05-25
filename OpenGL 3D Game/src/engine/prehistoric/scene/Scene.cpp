@@ -7,6 +7,7 @@
 #include "engine/platform/vulkan/rendering/shaders/pbr/VKPBRShader.h"
 
 #include "engine/prehistoric/component/gui/GUIElement.h"
+#include "engine/prehistoric/component/gui/button/GUIButton.h"
 
 Terrain* Scene::terrain;
 
@@ -15,10 +16,10 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 	WorldLoader loader;
 	loader.LoadWorld("res/world/testLevel.wrld", root, window);
 
-	/*VKMeshVBO* vbo = (VKMeshVBO*)OBJLoader::LoadModel("res/models/", "quad.obj", "", window);
+	VKMeshVBO* vbo = (VKMeshVBO*)OBJLoader::LoadModel("res/models/", "quad.obj", "", window);
 
 	VKShader* shader = new VKPBRShader(window);
-	VKPipeline* pipeline = new VKPipeline(shader, vbo);
+	VKGraphicsPipeline* pipeline = new VKGraphicsPipeline(shader, vbo);
 
 	pipeline->SetBackfaceCulling(true);
 
@@ -45,9 +46,9 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 	obj->AddComponent(RENDERER_COMPONENT, renderer);
 	obj->Rotate({ -90, 0, 0 });
 	obj->Move({ 0, -3, 0 });
-	root->AddChild("OBJ", obj);*/
+	root->AddChild("OBJ", obj);
 
-	terrain = new Terrain(window, camera);
+	/*terrain = new Terrain(window, camera);
 	terrain->UpdateQuadtree();
 
 	root->AddChild("Terrain", terrain);
@@ -58,17 +59,17 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 	gui->SetScale({ 0.25f, 0.25f, 1.0f });
 	//((GUIElement*)gui->GetComponent("GUI"))->setVisible(false);
 
-	root->AddChild("GUI", gui);
+	root->AddChild("GUI", gui);*/
   
 	GameObject* light2 = new GameObject();
 	light2->AddComponent("light", new Light(Vector3f(1, 0, 0), Vector3f(1000)));
 	light2->Move({ -20, 40, 40 });
 	root->AddChild("l", light2);
 
-	GameObject* sun = new GameObject();
+	/*GameObject* sun = new GameObject();
 	sun->AddComponent("light", new Light(Vector3f(1, 1, 1), Vector3f(1)));
 	sun->Move({ 0, 500, 0 });
-	root->AddChild("sun", sun);
+	root->AddChild("sun", sun);*/
 }
 
 void Scene::DeleteData()

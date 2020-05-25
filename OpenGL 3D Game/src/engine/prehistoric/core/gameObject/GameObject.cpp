@@ -1,6 +1,8 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GameObject.h"
 
+#include "engine/prehistoric/core/Engine.h"
+
 GameObject::~GameObject()
 {
 	for (auto kv : components)
@@ -9,24 +11,14 @@ GameObject::~GameObject()
 	}
 }
 
-void GameObject::PreInput(const float delta)
+void GameObject::PreUpdate(Engine* engine)
 {
 	for (auto kv : components)
 	{
-		kv.second->PreInput(delta);
+		kv.second->PreUpdate(engine);
 	}
 
-	Node::PreInput(delta);
-}
-
-void GameObject::PreUpdate(const float delta)
-{
-	for (auto kv : components)
-	{
-		kv.second->PreUpdate(delta);
-	}
-
-	Node::PreUpdate(delta);
+	Node::PreUpdate(engine);
 }
 
 void GameObject::PreRender(RenderingEngine* renderingEngine)

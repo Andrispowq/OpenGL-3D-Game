@@ -18,7 +18,6 @@ Engine::Engine()
 	renderingEngine->Init();
 
 	TerrainConfig::LoadConfig("res/config/terrain.cfg", renderingEngine->GetWindow());
-
 	Scene::CreateScene(root, renderingEngine->GetWindow(), renderingEngine->GetCamera());
 }
 
@@ -31,23 +30,28 @@ Engine::~Engine()
 	delete root;
 }
 
-void Engine::Input(const float frameTime)
+void Engine::Input(float frameTime)
 {
 	this->frameTime = frameTime;
 
 	InputInstance.Update();
 
-	root->PreInput(frameTime);
-	renderingEngine->Input(frameTime);
+	renderingEngine->Input();
 }
 
+//For consistency: Engine updates the root node, and then the engines do the work they need to
+//Most components will register themselves into an engine's list of components, and then the engine can update them
 void Engine::Update()
 {
-	root->PreUpdate(frameTime);
+	root->PreUpdate(this);
+
 	renderingEngine->Update(frameTime);
 }
 
 void Engine::Render()
 {
+	//We cannot detect keys in the render loop, because it runs differently then the update and input loop
+	root->PreRender(renderingEngine);
+
 	renderingEngine->Render(root);
 }

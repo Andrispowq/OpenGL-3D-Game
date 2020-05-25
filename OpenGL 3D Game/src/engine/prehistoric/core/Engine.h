@@ -16,14 +16,18 @@ public:
 	Engine();
 	virtual ~Engine();
 
-	void Input(const float frameTime);
+	void Input(float frameTime);
 	void Update();
 	void Render();
 
 	inline RenderingEngine* GetRenderingEngine() const { return renderingEngine; }
 
+	inline float getFrameTime() const { return frameTime; }
+
 	Engine(const Engine& engine) = delete;
 	Engine operator=(const Engine& engine) = delete;
+	Engine(const Engine&& engine) = delete;
+	Engine operator=(const Engine&& engine) = delete;
 private:
 	//Root object
 	GameObject* root;

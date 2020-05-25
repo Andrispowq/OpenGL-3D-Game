@@ -1,7 +1,9 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GUIButton.h"
 
-void GUIButton::PreUpdate(const float delta)
+#include "engine/prehistoric/core/Engine.h"
+
+void GUIButton::PreUpdate(Engine* engine)
 {
 	bool* val = (bool*)data;
 
@@ -15,8 +17,8 @@ void GUIButton::PreUpdate(const float delta)
 		mousePos *= 2;
 		mousePos -= 1;
 
-		Vector2f start = parent->GetWorldTransform()->GetPosition().xy() - parent->GetWorldTransform()->GetScaling().xy();
-		Vector2f size = parent->GetWorldTransform()->GetScaling().xy() * 2;
+		Vector2f start = parent->getWorldTransform()->GetPosition().xy() - parent->getWorldTransform()->GetScaling().xy();
+		Vector2f size = parent->getWorldTransform()->GetScaling().xy() * 2;
 
 		if (start <= mousePos && (start + size) >= mousePos)
 		{

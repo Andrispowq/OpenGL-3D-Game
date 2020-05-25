@@ -16,7 +16,7 @@ GLGUIShader::GLGUIShader()
 
 void GLGUIShader::UpdateObjectUniforms(GameObject* object) const
 {
-	SetUniform("m_transform", object->GetWorldTransform()->getTransformationMatrix());
+	SetUniform("m_transform", object->getWorldTransform()->getTransformationMatrix());
 
 	GUIElement* gui = reinterpret_cast<GUIElement*>(object->GetComponent("GUI")); //TODO: This should NOT be hardcoded here
 

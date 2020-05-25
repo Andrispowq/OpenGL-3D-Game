@@ -18,7 +18,7 @@ public:
 
     void AddCameraInput(CameraInput* input) { inputs.push_back(input); }
 
-	void Input(Window* window, float delta);
+	void Update(Window* window, float delta);
 	void Move(const Vector3f& dir, const float& amount);
 	void RotateX(const float& angle);
 	void RotateY(const float& angle);

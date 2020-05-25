@@ -89,7 +89,7 @@ void GLTerrainShader::UpdateShaderUniforms(Camera* camera, const std::vector<Lig
 		{
 			Light* light = lights[i];
 
-			SetUniform(uniformName + "position", light->GetParent()->GetWorldTransform()->GetPosition());
+			SetUniform(uniformName + "position", light->GetParent()->getWorldTransform()->GetPosition());
 			SetUniform(uniformName + "colour", light->GetColour());
 			SetUniform(uniformName + "intensity", light->GetIntensity());
 		}
@@ -171,8 +171,8 @@ void GLTerrainShader::UpdateObjectUniforms(GameObject* object) const
 {
 	TerrainNode* node = (TerrainNode*)object;
 
-	SetUniform("localMatrix", object->GetLocalTransform()->getTransformationMatrix());
-	SetUniform("worldMatrix", object->GetWorldTransform()->getTransformationMatrix());
+	SetUniform("localMatrix", node->getLocalTransform()->getTransformationMatrix());
+	SetUniform("worldMatrix", object->getWorldTransform()->getTransformationMatrix());
 
 	SetUniform("location", node->getLocation());
 	SetUniform("index", node->getIndex());

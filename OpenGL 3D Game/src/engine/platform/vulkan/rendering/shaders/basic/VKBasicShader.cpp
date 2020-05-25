@@ -37,7 +37,7 @@ void VKBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light
 		{
 			Light* light = lights[i];
 
-			SetUniform("lights", Vector4f(light->GetParent()->GetWorldTransform()->GetPosition(), 0), baseOffset * 0 + currentOffset);
+			SetUniform("lights", Vector4f(light->GetParent()->getWorldTransform()->GetPosition(), 0), baseOffset * 0 + currentOffset);
 			SetUniform("lights", Vector4f(light->GetColour(), 0), baseOffset * 1 + currentOffset);
 			SetUniform("lights", Vector4f(light->GetIntensity(), 0), baseOffset * 2 + currentOffset);
 		}
@@ -52,7 +52,7 @@ void VKBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light
 
 void VKBasicShader::UpdateObjectUniforms(GameObject* object) const
 {
-	SetUniform("model", object->GetWorldTransform()->getTransformationMatrix());
+	SetUniform("model", object->getWorldTransform()->getTransformationMatrix());
 
 	Material* material = ((Renderer*)object->GetComponent(RENDERER_COMPONENT))->GetMaterial();
 

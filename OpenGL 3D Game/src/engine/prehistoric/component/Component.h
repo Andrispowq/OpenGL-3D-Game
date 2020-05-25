@@ -2,6 +2,7 @@
 #define COMPONENT_H
 
 class GameObject;
+class Engine;
 
 #include "engine/prehistoric/core/gameObject/Node.h"
 
@@ -11,8 +12,7 @@ public:
 	Component() : parent(nullptr) {}
 	virtual ~Component() {}
 
-	virtual void PreInput(const float delta) {}
-	virtual void PreUpdate(const float delta) {}
+	virtual void PreUpdate(Engine* engine) {}
 	virtual void PreRender(RenderingEngine* renderingEngine) {}
 
 	inline GameObject* GetParent() const { return parent; }

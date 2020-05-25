@@ -47,7 +47,7 @@ void VKPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>
 			Light* light = lights[i];
 			//light->GetColour().print();
 
-			SetUniform("lights", Vector4f(light->GetParent()->GetWorldTransform()->GetPosition(), 0), baseOffset * 0 + currentOffset);
+			SetUniform("lights", Vector4f(light->GetParent()->getWorldTransform()->GetPosition(), 0), baseOffset * 0 + currentOffset);
 			SetUniform("lights", Vector4f(light->GetColour(), 0), baseOffset * 1 + currentOffset);
 			SetUniform("lights", Vector4f(light->GetIntensity(), 0), baseOffset * 2 + currentOffset);
 		}
@@ -65,7 +65,7 @@ void VKPBRShader::UpdateObjectUniforms(GameObject* object) const
 	Material* material = ((Renderer*)object->GetComponent(RENDERER_COMPONENT))->GetMaterial();
 
 	//Offset values are copied from shaders
-	SetUniform("m_transform", object->GetWorldTransform()->getTransformationMatrix());
+	SetUniform("m_transform", object->getWorldTransform()->getTransformationMatrix());
 
 	SetUniform("material", material->GetVector3f(COLOUR), 0);
 	SetUniform("material", material->GetVector3f(EMISSION), 16);

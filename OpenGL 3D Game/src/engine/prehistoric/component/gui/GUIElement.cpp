@@ -6,6 +6,8 @@
 #include "engine/platform/opengl/rendering/shaders/gui/GLGUIShader.h"
 #include "engine/platform/vulkan/rendering/shaders/basic/VKBasicShader.h"
 
+#include "engine/prehistoric/core/Engine.h"
+
 VBO* GUIElement::guiVbo = nullptr;
 Pipeline* GUIElement::pipeline = nullptr;
 
@@ -42,7 +44,7 @@ GUIElement::GUIElement(Window* window, Texture* texture, void* data, size_t data
 	}
 }
 
-void GUIElement::PreUpdate(const float delta)
+void GUIElement::PreUpdate(Engine* engine)
 {
 }
 

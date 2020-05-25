@@ -9,7 +9,7 @@ public:
 	GUIButton(Window* window, Texture* texture = nullptr, void* data = nullptr, size_t dataSize = 0, bool visible = true)
 		: GUIElement(window, texture, data, dataSize, visible) {}
 
-	virtual void PreUpdate(const float delta) override;
+	virtual void PreUpdate(Engine* engine) override;
 };
 
 #endif

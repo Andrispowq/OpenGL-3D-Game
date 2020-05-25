@@ -3,7 +3,7 @@
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-	if (width == 0 || height == 0)
+	if ((width == 0 || height == 0) && FrameworkConfig::api == Vulkan)
 	{
 		PR_LOG_RUNTIME_ERROR("Window minimalization is not supported!\n");
 	}

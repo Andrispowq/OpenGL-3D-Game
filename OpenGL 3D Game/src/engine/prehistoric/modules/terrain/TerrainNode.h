@@ -36,6 +36,8 @@ public:
 	Vector3f getWorldPosition() const { return worldPosition; }
 	Vector2f getIndex() const { return index; }
 	float getGap() const { return gap; }
+
+	Transform* getLocalTransform() const { return localTransform; }
 private:
 	Window* window;
 	Camera* camera;
@@ -52,6 +54,8 @@ private:
 	Renderer* renderer;
 	Renderer* wireframeRenderer;
 	Material* material;
+
+	Transform* localTransform;
 };
 
 #endif

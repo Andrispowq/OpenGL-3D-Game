@@ -47,15 +47,12 @@ void RenderingEngine::Init() const
 	camera->AddCameraInput(keyInput);
 }
 
-void RenderingEngine::Input(const float delta)
+void RenderingEngine::Input()
 {
-	window->ClearScreen();
 	window->Input();
 }
 
-bool br = false;
-
-void RenderingEngine::Update(const float delta)
+void RenderingEngine::Update(float delta)
 {
 	if (InputInstance.IsKeyPushed(PR_KEY_ESCAPE))
 	{
@@ -73,24 +70,13 @@ void RenderingEngine::Update(const float delta)
 		window->SetResized(false);
 	}
 
-	if (InputInstance.IsKeyPushed(PR_KEY_Q))
-	{
-		br = true;
-	}
-
-	camera->Input(window, delta);
+	camera->Update(window, delta);
 }
 
 void RenderingEngine::Render(GameObject* root)
 {
-	root->PreRender(this);
-
-	if (br)
-	{
-		PR_LOG_MESSAGE("hello\n");
-		br = false;
-	}
-
+	window->ClearScreen();
+	
 	for (auto pipeline : models)
 	{
 		pipeline.first->BindPipeline();

@@ -10,6 +10,7 @@ static const ClockTime start = Clock::now();
 namespace Time
 {
 	double getTime();
+	long long getTimeNanoseconds();
 };
 
 #endif

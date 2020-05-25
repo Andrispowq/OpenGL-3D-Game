@@ -5,20 +5,20 @@
 #include "engine/prehistoric/core/model/Transform.h"
 #include "engine/prehistoric/common/rendering/RenderingEngine.h"
 
+class Engine;
+
 class Node
 {
 public:
     Node();
     virtual ~Node();
 
-    virtual void PreInput(const float delta);
-    virtual void PreUpdate(const float delta);
+    virtual void PreUpdate(Engine* engine);
     virtual void PreRender(RenderingEngine* renderingEngine);
 
     Node* AddChild(const std::string& key, Node* child);
 
-    inline Transform* GetWorldTransform() const { return worldTransform; }
-    inline Transform* GetLocalTransform() const { return localTransform; }
+    inline Transform* getWorldTransform() const { return worldTransform; }
 
     inline std::unordered_map<std::string, Node*> GetChildren() const { return children; }
 
@@ -34,7 +34,6 @@ protected:
     Node * parent;
 
     Transform* worldTransform;
-    Transform* localTransform;
 };
 
 #endif

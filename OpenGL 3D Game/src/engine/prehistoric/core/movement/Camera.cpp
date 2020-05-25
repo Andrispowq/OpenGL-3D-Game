@@ -74,7 +74,7 @@ void Camera::LogStage() const
 	GetLeft().print();
 }
 
-void Camera::Input(Window* window, float delta)
+void Camera::Update(Window* window, float delta)
 {
 	this->previousPosition = position;
 	this->previousForward = forward;

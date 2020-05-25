@@ -14,6 +14,8 @@ TerrainNode::TerrainNode(Pipeline* pipeline, Pipeline* wireframePipeline, Terrai
 	Vector3f localScaling = { gap, 0, gap };
 	Vector3f localPosition = { location.x, 0, location.y };
 
+	localTransform = new Transform();
+
 	localTransform->SetScaling(localScaling);
 	localTransform->SetPosition(localPosition);
 

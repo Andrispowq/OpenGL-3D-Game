@@ -20,8 +20,8 @@ public:
 
 	void Init() const;
 
-	void Input(const float delta);
-	void Update(const float delta);
+	void Input();
+	void Update(float delta);
 	void Render(GameObject* root);
 
 	void AddModel(Renderable* renderable);

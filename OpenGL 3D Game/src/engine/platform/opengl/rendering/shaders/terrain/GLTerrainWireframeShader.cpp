@@ -103,8 +103,8 @@ void GLTerrainWireframeShader::UpdateObjectUniforms(GameObject* object) const
 {
 	TerrainNode* node = (TerrainNode*)object;
 
-	SetUniform("localMatrix", object->GetLocalTransform()->getTransformationMatrix());
-	SetUniform("worldMatrix", object->GetWorldTransform()->getTransformationMatrix());
+	SetUniform("localMatrix", node->getLocalTransform()->getTransformationMatrix());
+	SetUniform("worldMatrix", object->getWorldTransform()->getTransformationMatrix());
 
 	SetUniform("location", node->getLocation());
 	SetUniform("index", node->getIndex());

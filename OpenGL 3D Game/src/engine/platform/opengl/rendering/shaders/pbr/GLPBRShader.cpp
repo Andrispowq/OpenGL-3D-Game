@@ -58,7 +58,7 @@ void GLPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>
 
 		if (i < lights.size())
 		{
-			SetUniform(name + "].position", lights[i]->GetParent()->GetWorldTransform()->GetPosition());
+			SetUniform(name + "].position", lights[i]->GetParent()->getWorldTransform()->GetPosition());
 			SetUniform(name + "].colour", lights[i]->GetColour());
 			SetUniform(name + "].intensity", lights[i]->GetIntensity());
 		}
@@ -78,7 +78,7 @@ void GLPBRShader::UpdateObjectUniforms(GameObject* object) const
 {
 	Material* material = dynamic_cast<Renderer*>(object->GetComponent(RENDERER_COMPONENT))->GetMaterial();
 
-	SetUniform("m_transform", object->GetWorldTransform()->getTransformationMatrix());
+	SetUniform("m_transform", object->getWorldTransform()->getTransformationMatrix());
 
 	material->GetTexture("albedoMap")->Bind(0);
 	SetUniformi("material.albedoMap", 0);

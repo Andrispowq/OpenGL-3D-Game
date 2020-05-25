@@ -11,8 +11,7 @@ public:
 	GameObject() {}
 	virtual ~GameObject();
 
-	void PreInput(const float delta) override;
-	void PreUpdate(const float delta) override;
+	void PreUpdate(Engine* engine) override;
 	void PreRender(RenderingEngine* renderingEngine) override;
 
 	GameObject* AddComponent(const std::string& name, Component* component);

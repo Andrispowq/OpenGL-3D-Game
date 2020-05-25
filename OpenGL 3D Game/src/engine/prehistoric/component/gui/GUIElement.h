@@ -22,7 +22,7 @@ public:
 
 	static void CleanUp();
 
-	virtual void PreUpdate(const float delta) override;
+	virtual void PreUpdate(Engine* engine) override;
 	virtual void PreRender(RenderingEngine* renderingEngine) override;
 
 	bool isVisible() const { return visible; }

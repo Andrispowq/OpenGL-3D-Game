@@ -1,12 +1,13 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "Node.h"
 
+#include "engine/prehistoric/core/Engine.h"
+
 Node::Node()
 {
     parent = nullptr;
 
     worldTransform = new Transform();
-    localTransform = new Transform();
 }
 
 Node::~Node()
@@ -17,22 +18,13 @@ Node::~Node()
     }
 
     delete worldTransform;
-    delete localTransform;
 }
 
-void Node::PreInput(const float delta)
+void Node::PreUpdate(Engine* engine)
 {
     for (auto child : children)
     {
-        child.second->PreInput(delta);
-    }
-}
-
-void Node::PreUpdate(const float delta)
-{
-    for (auto child : children)
-    {
-        child.second->PreUpdate(delta);
+        child.second->PreUpdate(engine);
     }
 }
 
