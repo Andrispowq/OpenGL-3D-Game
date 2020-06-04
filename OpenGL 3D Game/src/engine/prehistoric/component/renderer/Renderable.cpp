@@ -2,6 +2,8 @@
 #include "Renderable.h"
 #include "engine/prehistoric/core/model/material/Material.h"
 #include "engine/prehistoric/common/rendering/pipeline/Pipeline.h"
+#include "engine/prehistoric/common/rendering/pipeline/GraphicsPipeline.h"
+#include "engine/prehistoric/common/rendering/pipeline/ComputePipeline.h"
 
 std::vector<Pipeline*> Renderable::pipelines;
 
@@ -61,4 +63,6 @@ void Renderable::CleanUp()
 	}
 
 	Pipeline::CleanUp();
+	GraphicsPipeline::CleanUp();
+	
 }

@@ -3,7 +3,7 @@
 
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "engine/prehistoric/core/model/Transform.h"
-#include "engine/prehistoric/common/rendering/RenderingEngine.h"
+#include "engine/prehistoric/engines/RenderingEngine.h"
 
 class Engine;
 

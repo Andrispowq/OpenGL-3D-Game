@@ -115,7 +115,7 @@ void CoreEngine::Run()
 			if (frameCounter >= NANOSECOND)
 			{
 				PR_LOG(CYAN, "FPS: %i\n", frames);
-				PR_LOG(CYAN, "FPS: %f\n", NANOSECOND / (passedTime));
+				//PR_LOG(CYAN, "FPS: %f\n", NANOSECOND / (passedTime));
 				frames = 0;
 				frameCounter = 0;
 			}

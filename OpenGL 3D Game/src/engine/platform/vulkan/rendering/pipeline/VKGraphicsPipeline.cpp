@@ -59,7 +59,7 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 	rasterizer.polygonMode = VK_POLYGON_MODE_FILL;// wireframe ? VK_POLYGON_MODE_LINE : VK_POLYGON_MODE_FILL;
 	rasterizer.lineWidth = 1.0f;
 	rasterizer.cullMode = GraphicsPipeline::backfaceCulling ? VK_CULL_MODE_BACK_BIT : VK_CULL_MODE_NONE;
-	rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE; //TODO: Front-face can be a renderer config mode
+	rasterizer.frontFace = frontFace == FrontFace::COUNTER_CLOCKWISE ? VK_FRONT_FACE_COUNTER_CLOCKWISE : VK_FRONT_FACE_CLOCKWISE; //TODO: Front-face can be a renderer config mode
 	rasterizer.depthBiasEnable = VK_FALSE;
 	rasterizer.depthBiasConstantFactor = 0.0f; // Optional
 	rasterizer.depthBiasClamp = 0.0f; // Optional
@@ -109,10 +109,11 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 
 	VkGraphicsPipelineCreateInfo pipelineInfo = {};
 	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
-	pipelineInfo.stageCount = ((VKShader*)Pipeline::shader)->getModuleCount();
+ 	pipelineInfo.stageCount = ((VKShader*)Pipeline::shader)->getModuleCount();
 	pipelineInfo.pStages = ((VKShader*)Pipeline::shader)->GetShaderStages();
 	pipelineInfo.pVertexInputState = &vertexInputInfo;
 	pipelineInfo.pInputAssemblyState = &inputAssembly;
+	pipelineInfo.pTessellationState = nullptr;
 	pipelineInfo.pViewportState = &viewportState;
 	pipelineInfo.pRasterizationState = &rasterizer;
 	pipelineInfo.pMultisampleState = &multisampling;

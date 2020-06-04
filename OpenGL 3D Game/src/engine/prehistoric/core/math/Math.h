@@ -508,6 +508,8 @@ public:
 	Vector2<T>& yx() { return this(y, x); }
 
 	void print() const { PR_LOG_MESSAGE("[ %f, %f ]\n", (T) x, (T) y); }
+
+	static size_t size() { return 2 * sizeof(float); }
 public:
 	union
 	{
@@ -614,6 +616,8 @@ public:
 	Vector2<T> xy() { return Vector2<T>(x, y); }
 
 	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f ]\n", (T) x, (T) y, (T) z); }
+
+	static size_t size() { return 3 * sizeof(float); }
 public:
 	union
 	{
@@ -710,6 +714,8 @@ public:
 	Vector4<T> negated() { this->x = -x; this->y = -y; this->z = -z; this->w = -w; return *this; };
 
 	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f, %f ]", (T) x, (T) y, (T) z, (T) w); }
+
+	static size_t size() { return 4 * sizeof(float); }
 public:
 	union
 	{

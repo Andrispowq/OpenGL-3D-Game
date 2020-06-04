@@ -45,7 +45,6 @@ void VKPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>
 		if (i < lights.size())
 		{
 			Light* light = lights[i];
-			//light->GetColour().print();
 
 			SetUniform("lights", Vector4f(light->GetParent()->getWorldTransform()->GetPosition(), 0), baseOffset * 0 + currentOffset);
 			SetUniform("lights", Vector4f(light->GetColour(), 0), baseOffset * 1 + currentOffset);

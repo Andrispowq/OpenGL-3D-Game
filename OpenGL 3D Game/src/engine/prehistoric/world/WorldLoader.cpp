@@ -154,7 +154,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 							objToAdd = reinterpret_cast<GameObject*>(objToAdd->GetChildren()[nameTokens[i]]);
 							i++;
 
-							if(nameTokens.size() < (i + 1))
+							if(nameTokens.size() < (size_t(i) + 1))
 							{
 								GameObject* obj = new GameObject();
 
@@ -202,10 +202,10 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 				{
 					if (tokens[1] == "Renderer")
 					{
-						std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
+ 						std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
 
-						VBO* vbo = models[compTokens[0]];
-						Material* material = materials[compTokens[2]];
+						VBO* vbo = models.at(compTokens[0]);
+						Material* material = materials.at(compTokens[2]);
 						Shader* shader = nullptr;
 
 						Pipeline* pipeline = nullptr;
@@ -237,10 +237,16 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 						if (FrameworkConfig::api == OpenGL)
 						{
 							pipeline = new GLGraphicsPipeline(shader, vbo);
+
+							reinterpret_cast<GLGraphicsPipeline*>(pipeline)->SetBackfaceCulling(true);
+							reinterpret_cast<GLGraphicsPipeline*>(pipeline)->SetWireframe(false);
 						}
 						else if (FrameworkConfig::api == Vulkan)
 						{
 							pipeline = new VKGraphicsPipeline(shader, vbo);
+
+							reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(true);
+							reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetWireframe(false);
 						}
 
 						pipeline->SetViewportStart({ 0, 0 });
@@ -293,8 +299,8 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 							{
 								std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
 
-								VBO* vbo = models[compTokens[0]];
-								Material* material = materials[compTokens[2]];
+								VBO* vbo = models.at(compTokens[0]);
+								Material* material = materials.at(compTokens[2]);
 								Shader* shader = nullptr;
 
 								Pipeline* pipeline = nullptr;

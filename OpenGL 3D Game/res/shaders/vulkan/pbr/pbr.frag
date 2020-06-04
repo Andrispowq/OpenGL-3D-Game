@@ -96,7 +96,7 @@ void main()
 		vec3 bitangent = normalize(cross(tangent_FS, normal));
 		mat3 tbn = mat3(tangent_FS, normal, bitangent);
 		
-		bumpNormal = 2 * pow(texture(normalMap, texture_FS).rbg, vec3(1 / gamma)) - 1;
+		bumpNormal = 2 * pow(texture(normalMap, texture_FS).rbg, vec3(1)) - 1;
 		bumpNormal = normalize(bumpNormal);
 		bumpNormal.xz *= attenuation;
 		
@@ -154,14 +154,14 @@ void main()
 	vec2 envBRDF = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;*/
 	vec3 specular = vec3(0.23, 0.78, 0.88);//prefilteredColor * (F * envBRDF.x + envBRDF.y);
 	
-	vec3 ambient = (kD * diffuse + vec3(0)) * occlusion;
+	vec3 ambient = (kD * diffuse + vec3(0))/* * occlusion*/;
 
 	vec3 colour = ambient + Lo + max(emission * emissionFactor, 0.0);
 	
 	colour /= colour + vec3(1.0);
 	colour = pow(colour, vec3(1.0 / gamma));
 	
-	colour_Out = vec4(texture(normalMap, texture_FS).rgb, 1);
+	colour_Out = vec4(vec3(dot(N, V)), 1);
 }
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)

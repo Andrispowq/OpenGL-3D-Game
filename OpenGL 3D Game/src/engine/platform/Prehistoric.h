@@ -11,13 +11,16 @@
 		#error "Only 64 bit Windows is supported!"
 	#endif
 #elif defined(unix) || defined(__unix) || defined(_unix_)
-	#error "Linux is not supported!"
+	#define PR_LINUX
+	#error "Linux is currently not supported!"
 #elif defined(__APPLE__) || defined(__MACH__)
+	#define PR_MAC_OS
 	#error "Mac OS is currently not supported!" 
 #elif defined(__ANDROID__)
 	#define PR_ANDROID
 	#error "Android is currently not supported!"
 #else
+	#define PR_UNKNOWN_OS
 	#error "This OS is currently not supported!"
 #endif
 

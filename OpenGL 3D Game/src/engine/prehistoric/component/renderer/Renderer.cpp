@@ -1,7 +1,7 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "Renderer.h"
 #include "engine/prehistoric/common/rendering/pipeline/Pipeline.h"
-#include "engine/prehistoric/common/rendering/RenderingEngine.h"
+#include "engine/prehistoric/engines/RenderingEngine.h"
 #include "engine/prehistoric/core/gameObject/GameObject.h"
 #include "engine/prehistoric/core/model/material/Material.h"
 

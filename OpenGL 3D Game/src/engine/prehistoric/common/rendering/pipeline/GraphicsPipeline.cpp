@@ -19,6 +19,7 @@ GraphicsPipeline::GraphicsPipeline(VBO* vbo)
 
 	this->vbo = vbo;
 	this->backfaceCulling = true; //TODO: convert to option
+	this->frontFace = FrontFace::COUNTER_CLOCKWISE;
 }
 
 GraphicsPipeline::~GraphicsPipeline()

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
@@ -21,6 +21,7 @@
     <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\ComputePipeline.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\GraphicsPipeline.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\RayTracingPipeline.cpp" />
+    <ClCompile Include="src\engine\prehistoric\engines\AudioEngine.cpp" />
     <ClCompile Include="src\engine\prehistoric\modules\gpgpu\NormalMapRenderer.cpp" />
     <ClCompile Include="src\engine\config\EngineConfig.cpp" />
     <ClCompile Include="src\engine\config\TerrainConfig.cpp" />
@@ -92,7 +93,7 @@
     <ClCompile Include="src\engine\prehistoric\core\util\Util.cpp" />
     <ClCompile Include="src\engine\prehistoric\core\Engine.cpp" />
     <ClCompile Include="src\engine\CoreEngine.cpp" />
-    <ClCompile Include="src\engine\prehistoric\common\rendering\RenderingEngine.cpp" />
+    <ClCompile Include="src\engine\prehistoric\engines\RenderingEngine.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\basic\GLBasicShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\GLShader.cpp" />
     <ClCompile Include="src\engine\prehistoric\core\gameObject\Node.cpp" />
@@ -195,7 +196,8 @@
     <ClInclude Include="src\engine\prehistoric\core\util\ModelFabricator.h" />
     <ClInclude Include="src\engine\prehistoric\core\Engine.h" />
     <ClInclude Include="src\engine\CoreEngine.h" />
-    <ClInclude Include="src\engine\prehistoric\common\rendering\RenderingEngine.h" />
+    <ClInclude Include="src\engine\prehistoric\engines\AudioEngine.h" />
+    <ClInclude Include="src\engine\prehistoric\engines\RenderingEngine.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\basic\GLBasicShader.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\GLShader.h" />
     <ClInclude Include="src\engine\prehistoric\core\util\time\Time.h" />
@@ -271,8 +273,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\include\GL;$(SolutionDir)Dependencies\include\GLFW;$(SolutionDir)Dependencies\include\stb;$(SolutionDir)Dependencies\include\Vulkan;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions);_x64;PR_DEBUG;PR_FAST_MATH</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\include\AL;$(SolutionDir)Dependencies\include\GL;$(SolutionDir)Dependencies\include\GLFW;$(SolutionDir)Dependencies\include\stb;$(SolutionDir)Dependencies\include\Vulkan;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions);_x64;_CRT_SECURE_NO_WARNINGS;PR_DEBUG;PR_FAST_MATH</PreprocessorDefinitions>
       <AssemblerOutput>NoListing</AssemblerOutput>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>engine/prehistoric/core/util/Includes.hpp</PrecompiledHeaderFile>
@@ -283,8 +285,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\lib\GL\64 bit;$(SolutionDir)Dependencies\lib\GLFW;$(SolutionDir)Dependencies\lib\Vulkan;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;glfw3.lib;opengl32.lib;glew32s.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\lib\AL;$(SolutionDir)Dependencies\lib\GL\64 bit;$(SolutionDir)Dependencies\lib\GLFW;$(SolutionDir)Dependencies\lib\Vulkan;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;glfw3.lib;opengl32.lib;glew32s.lib;vulkan-1.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -296,12 +298,12 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\include\GL;$(SolutionDir)Dependencies\include\GLFW;$(SolutionDir)Dependencies\include\stb;$(SolutionDir)Dependencies\include\Vulkan;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions);_x64;PR_RELEASE;PR_FAST_MATH</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependencies\include\AL;$(SolutionDir)Dependencies\include\GL;$(SolutionDir)Dependencies\include\GLFW;$(SolutionDir)Dependencies\include\stb;$(SolutionDir)Dependencies\include\Vulkan;$(ProjectDir)src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>GLEW_STATIC;_MBCS;%(PreprocessorDefinitions);_x64;_CRT_SECURE_NO_WARNINGS;PR_RELEASE;PR_FAST_MATH</PreprocessorDefinitions>
       <AssemblerOutput>NoListing</AssemblerOutput>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>engine/prehistoric/core/util/Includes.hpp</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -309,8 +311,8 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\lib\GL\64 bit;$(SolutionDir)Dependencies\lib\GLFW;$(SolutionDir)Dependencies\lib\Vulkan;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;vulkan-1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\lib\AL;$(SolutionDir)Dependencies\lib\GL\64 bit;$(SolutionDir)Dependencies\lib\GLFW;$(SolutionDir)Dependencies\lib\Vulkan;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;glfw3.lib;opengl32.lib;glew32s.lib;vulkan-1.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

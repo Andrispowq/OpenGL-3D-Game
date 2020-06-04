@@ -42,9 +42,6 @@
     <ClCompile Include="src\engine\prehistoric\core\gameObject\Node.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\prehistoric\common\rendering\RenderingEngine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\prehistoric\core\Engine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -309,6 +306,12 @@
     <ClCompile Include="src\engine\prehistoric\modules\terrain\Terrain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\prehistoric\engines\RenderingEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\prehistoric\engines\AudioEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\rendering\shaders\Shader.h">
@@ -354,9 +357,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\prehistoric\core\gameObject\Node.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\prehistoric\common\rendering\RenderingEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\prehistoric\core\Engine.h">
@@ -627,6 +627,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\prehistoric\modules\terrain\Terrain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\prehistoric\engines\RenderingEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\prehistoric\engines\AudioEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
