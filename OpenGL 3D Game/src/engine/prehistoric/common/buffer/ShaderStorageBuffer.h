@@ -30,7 +30,7 @@ struct LayoutMember
 
 struct Layout
 {
-	const static size_t MAX_MEMBERS = 10;
+	constexpr static size_t MAX_MEMBERS = 10;
 
 	LayoutMember* members = nullptr;
 	size_t memberCount = 0;

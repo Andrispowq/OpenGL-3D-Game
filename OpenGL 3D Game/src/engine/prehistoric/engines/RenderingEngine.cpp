@@ -96,24 +96,11 @@ void RenderingEngine::Render(GameObject* root)
 	lights.clear();
 }
 
-static bool FindElement(Pipeline* pipeline, std::unordered_map<Pipeline*, std::vector<Renderable*>> pipelines)
-{
-	for (const auto element : pipelines)
-	{
-		if ((*pipeline).operator==(*element.first))
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
 void RenderingEngine::AddModel(Renderable* renderable)
 {
 	Pipeline* pipeline = renderable->GetPipeline();
 
-	if(FindElement(pipeline, models))
+	if(models.find(pipeline) != models.end())
 	{
 		auto& renderables = models[pipeline];
 		renderables.push_back(renderable);

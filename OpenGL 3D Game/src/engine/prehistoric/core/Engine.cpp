@@ -14,6 +14,8 @@ Engine::Engine()
 
 	//Engines' initialization
 	renderingEngine = new RenderingEngine();
+	audioEngine = new AudioEngine();
+
 	InputInstance.Init(renderingEngine->GetWindow());
 	renderingEngine->Init();
 
@@ -25,7 +27,9 @@ Engine::~Engine()
 {
 	Scene::DeleteData();
 	Input::DeleteInstance();
+
 	delete renderingEngine;
+	delete audioEngine;
 
 	delete root;
 }
@@ -45,6 +49,7 @@ void Engine::Update()
 {
 	root->PreUpdate(this);
 
+	audioEngine->Update(frameTime);
 	renderingEngine->Update(frameTime);
 }
 

@@ -4,6 +4,8 @@
 #include "engine/prehistoric/scene/Scene.h"
 
 #include "engine/prehistoric/engines/RenderingEngine.h"
+#include "engine/prehistoric/engines/AudioEngine.h"
+
 #include "engine/prehistoric/core/gameObject/GameObject.h"
 
 #include "engine/config/EngineConfig.h"
@@ -34,6 +36,7 @@ private:
 
 	//Engines
 	RenderingEngine* renderingEngine;
+	AudioEngine* audioEngine;
 
 	//Frametime, set once per update
 	float frameTime;

@@ -38,12 +38,6 @@ TerrainHeightsQuery::TerrainHeightsQuery(Window* window, uint32_t N)
 
 	Layout layout;
 	layout.addLayoutMember(LayoutType::FLOAT, LayoutTypeInfo::UNSIZED_ARRAY, N * N);
-	/*layout.memberCount = 1;
-	layout.members = new LayoutMember();
-	
-	layout.members[0].count = N * N;
-	layout.members[0].type = LayoutType::FLOAT;
-	layout.members[0].typeInfo = LayoutTypeInfo::SINGLE_ELEMENT;*/
 
 	buffer->Store(heights, layout);
 

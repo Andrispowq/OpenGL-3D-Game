@@ -38,8 +38,6 @@ private:
 	VkBuffer indexBuffer;
 	VkDeviceMemory indexBufferMemory;
 
-	VkCommandPool copyCommandPool;
-
 	VKPhysicalDevice* physicalDevice;
 	VKDevice* device;
 	VKSwapchain* swapchain;

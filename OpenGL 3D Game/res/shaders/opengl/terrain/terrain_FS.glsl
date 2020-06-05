@@ -175,7 +175,7 @@ void main()
 	colour /= colour + vec3(1);
 	colour = pow(colour, vec3(1 / gamma));
 
-	outColour = vec4(N, 1);
+	outColour = vec4(colour, 1);
 }
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)

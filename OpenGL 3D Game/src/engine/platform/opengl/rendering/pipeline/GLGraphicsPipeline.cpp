@@ -22,6 +22,11 @@ void GLGraphicsPipeline::RenderPipeline() const
 {
 	GLPipeline::RenderPipeline();
 
+	if (frontFace == FrontFace::CLOCKWISE)
+		glFrontFace(GL_FRONT);
+	else
+		glFrontFace(GL_BACK);
+
 	vbo->Draw(nullptr);
 }
 

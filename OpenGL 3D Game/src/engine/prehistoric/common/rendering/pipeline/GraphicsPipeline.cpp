@@ -4,7 +4,6 @@
 std::vector<VBO*> GraphicsPipeline::vbos;
 
 GraphicsPipeline::GraphicsPipeline(VBO* vbo)
-	: wireframe(false)
 {
 	size_t index;
 	if ((index = FindElement(vbo, vbos)) == 0xFFFFFFFF)

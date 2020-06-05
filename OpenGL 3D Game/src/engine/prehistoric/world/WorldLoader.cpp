@@ -239,14 +239,12 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 							pipeline = new GLGraphicsPipeline(shader, vbo);
 
 							reinterpret_cast<GLGraphicsPipeline*>(pipeline)->SetBackfaceCulling(true);
-							reinterpret_cast<GLGraphicsPipeline*>(pipeline)->SetWireframe(false);
 						}
 						else if (FrameworkConfig::api == Vulkan)
 						{
 							pipeline = new VKGraphicsPipeline(shader, vbo);
 
-							reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(true);
-							reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetWireframe(false);
+							reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);
 						}
 
 						pipeline->SetViewportStart({ 0, 0 });

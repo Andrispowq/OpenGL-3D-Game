@@ -18,13 +18,12 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 
 	if (FrameworkConfig::api == Vulkan)
 	{
-		VKMeshVBO* vbo = (VKMeshVBO*)OBJLoader::LoadModel("res/models/", "barrel.obj", "", window);
+		VKMeshVBO* vbo = (VKMeshVBO*)OBJLoader::LoadModel("res/models/", "quad.obj", "", window);
 
 		VKShader* shader = new VKPBRShader(window);
 		VKGraphicsPipeline* pipeline = new VKGraphicsPipeline(shader, vbo);
 
 		pipeline->SetBackfaceCulling(true);
-
 		pipeline->SetFrontFace(FrontFace::CLOCKWISE);
 
 		pipeline->SetViewportStart({ 0, 0 });
@@ -35,12 +34,13 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 		pipeline->CreatePipeline(window);
 
 		Material* material = new Material(window);
-		material->AddTexture(ALBEDO_MAP, TextureLoader::LoadTexture("res/textures/barrel/barrel_DIF.png", window));
-		//material->AddTexture(NORMAL_MAP, TextureLoader::LoadTexture("res/textures/barrel/barrel_NRM.png", window));
-		material->AddTexture(METALLIC_MAP, TextureLoader::LoadTexture("res/textures/barrel/barrel_MET.png", window));
+		material->AddTexture(ALBEDO_MAP, TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_DIF.png", window));
+		material->AddTexture(NORMAL_MAP, TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_NRM.png", window));
+		material->AddTexture(METALLIC_MAP, TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_MET.png", window));
+		material->AddTexture(ROUGHNESS_MAP, TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_RGH.png", window));
 
 		//material->AddFloat(METALLIC, new float(1.0));
-		material->AddFloat(ROUGHNESS, new float(0.3));
+		//material->AddFloat(ROUGHNESS, new float(0.3));
 		material->AddFloat(OCCLUSION, new float(1));
 
 		Renderer* renderer = new Renderer(pipeline, material, window);
@@ -52,7 +52,14 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 		obj->SetScale({ 0.5f, 0.5f, 0.5f });
 		root->AddChild("OBJ", obj);
 
-		/*terrain = new Terrain(window, camera);
+		GameObject* light2 = new GameObject();
+		light2->AddComponent("light", new Light(Vector3f(1, 0, 0), Vector3f(1000)));
+		light2->Move({ -20, 40, 40 });
+		root->AddChild("l", light2);
+	}
+	else
+	{
+		terrain = new Terrain(window, camera);
 		terrain->UpdateQuadtree();
 
 		root->AddChild("Terrain", terrain);
@@ -63,17 +70,12 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 		gui->SetScale({ 0.25f, 0.25f, 1.0f });
 		//((GUIElement*)gui->GetComponent("GUI"))->setVisible(false);
 
-		root->AddChild("GUI", gui);*/
+		root->AddChild("GUI", gui);
 
-		GameObject* light2 = new GameObject();
-		light2->AddComponent("light", new Light(Vector3f(1, 0, 0), Vector3f(1000)));
-		light2->Move({ -20, 40, 40 });
-		root->AddChild("l", light2);
-
-		/*GameObject* sun = new GameObject();
+		GameObject* sun = new GameObject();
 		sun->AddComponent("light", new Light(Vector3f(1, 1, 1), Vector3f(1)));
 		sun->Move({ 0, 500, 0 });
-		root->AddChild("sun", sun);*/
+		root->AddChild("sun", sun);
 	}
 }
 
