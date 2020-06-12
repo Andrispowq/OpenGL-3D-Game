@@ -1,9 +1,9 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "Transform.h"
 
-Matrix4f Transform::getTransformationMatrix() const
+void Transform::calculateTransformationMatrix()
 {
-	return Matrix4f::Transformation(position, rotation, scaling);
+	transformationMatrix = Matrix4f::Transformation(position, rotation, scaling);
 }
 
 Matrix4f Transform::getModelViewProjectionMatrix(const Camera& camera) const

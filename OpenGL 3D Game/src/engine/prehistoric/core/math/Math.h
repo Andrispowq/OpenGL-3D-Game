@@ -4,6 +4,8 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "engine/platform/Prehistoric.h"
 
+#include <xmmintrin.h>
+
 #define PI 3.14159265358979323846264338327950288419716939
 
 template<typename T>
@@ -20,7 +22,6 @@ static T ToRadians(T x)
 
 //On x64 Windows we use SIMD to offer faster math
 #if defined(PR_WINDOWS_64) && defined(PR_FAST_MATH) 
-#include <xmmintrin.h>
 
 class Vector2f
 {

@@ -1,3 +1,5 @@
+#if !defined(PR_FAST_MATH)
+
 template<typename T>
 inline Vector2<T> Vector2<T>::abs() const
 {
@@ -251,3 +253,5 @@ Quaternion<T> Quaternion<T>::lerp(const Quaternion<T>& b, const Quaternion<T>& t
 
 	return Quaternion<T>(x_, y_, z_, w_);
 }
+
+#endif

@@ -115,7 +115,7 @@ void CoreEngine::Run()
 			if (frameCounter >= NANOSECOND)
 			{
 				PR_LOG(CYAN, "FPS: %i\n", frames);
-				//PR_LOG(CYAN, "FPS: %f\n", NANOSECOND / (passedTime));
+				PR_LOG(CYAN, "Delta time: %f ms\n", std::max(passedTime / pow(10, 6), frameTime * 1000.0));
 				frames = 0;
 				frameCounter = 0;
 			}
@@ -129,7 +129,7 @@ void CoreEngine::Run()
 		else
 		{
 			using namespace std::chrono_literals;
-			std::this_thread::sleep_for(0ms);
+			std::this_thread::sleep_for(1ms);
 		}
 	}
 }

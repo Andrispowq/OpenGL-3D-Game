@@ -11,7 +11,7 @@ enum class FrontFace
 class VBO
 {
 public:
-	VBO() : size(0), indexed(false) {}
+	VBO() : size(0), indexed(false), frontFace(FrontFace::COUNTER_CLOCKWISE) {}
 	virtual ~VBO() = 0;
 
 	virtual void Store(const Mesh& mesh) {}
