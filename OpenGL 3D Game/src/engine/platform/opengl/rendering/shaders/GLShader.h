@@ -63,8 +63,8 @@ private:
 	{
 		return uniforms.at(name);
 	}
-private:
-	std::map<std::string, uint32_t> uniforms;
+protected:
+	std::unordered_map<std::string, uint32_t> uniforms;
 
 	GLuint program;
 	GLuint* shaders;

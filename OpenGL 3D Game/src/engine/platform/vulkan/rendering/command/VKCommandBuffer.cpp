@@ -30,7 +30,6 @@ void VKCommandBuffer::BindBuffer() const
 	{
 		PR_LOG_RUNTIME_ERROR("Failed to begin command buffer!\n");
 	}
-	_putenv("");
 }
 
 void VKCommandBuffer::UnbindBuffer() const

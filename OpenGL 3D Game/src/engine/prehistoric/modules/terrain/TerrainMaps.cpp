@@ -5,7 +5,7 @@ TerrainMaps::TerrainMaps(Window* window)
 {
 	this->heightmap = TextureLoader::LoadTexture(TerrainConfig::heightmap, window, Bilinear);
 
-	this->normalmapRenderer = new NormalMapRenderer(window, 12.0f, heightmap->getWidth());
+ 	this->normalmapRenderer = new NormalMapRenderer(window, 60, heightmap->getWidth());
 	normalmapRenderer->Render(heightmap);
 	this->normalmap = normalmapRenderer->getNormalmap();
 

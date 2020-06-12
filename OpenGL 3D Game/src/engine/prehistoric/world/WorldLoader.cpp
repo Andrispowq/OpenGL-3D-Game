@@ -38,6 +38,21 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 				if (nameTokens[1] == "load")
 				{
 					MeshVBO* vbo = OBJLoader::LoadModel(directoryModels, tokens[2], "", window);
+
+					if (tokens[3] == "clockwise")
+					{
+						vbo->SetFrontFace(FrontFace::CLOCKWISE);
+					}
+					else if (tokens[3] == "counter-clockwise")
+					{
+						vbo->SetFrontFace(FrontFace::COUNTER_CLOCKWISE);
+					}
+					else
+					{
+						PR_LOG_ERROR("Double-sided meshes are not yet supported!\n");
+						vbo->SetFrontFace(FrontFace::DOUBLE_SIDED);
+					}
+
 					models.emplace(tokens[1], vbo);
 				}
 			}
@@ -206,45 +221,71 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 						VBO* vbo = models.at(compTokens[0]);
 						Material* material = materials.at(compTokens[2]);
-						Shader* shader = nullptr;
 
+						Shader* shader = nullptr;
 						Pipeline* pipeline = nullptr;
 
-						//Checking for shader types
-						if (compTokens[1] == "basic")
+						auto shaderIndex = shaders.find(compTokens[1]);
+						if (shaderIndex != shaders.end())
+						{
+							shader = shaderIndex->second;
+						}
+						else
 						{
 							if (FrameworkConfig::api == OpenGL)
 							{
-								shader = new GLBasicShader();
+								if (compTokens[1] == "pbr")
+								{
+									shader = new GLPBRShader();
+								}
+								else if (compTokens[1] == "basic")
+								{
+									shader = new GLBasicShader();
+								}
 							}
-							else
+							else if (FrameworkConfig::api == Vulkan)
 							{
-								shader = new VKBasicShader(window);
+								if (compTokens[1] == "pbr")
+								{
+									shader = new VKPBRShader(window);
+								}
+								else if (compTokens[1] == "basic")
+								{
+									shader = new VKBasicShader(window);
+								}
 							}
+
+							shaders.insert(std::make_pair(compTokens[1], shader));
 						}
-						else if (compTokens[1] == "pbr")
+
+						auto pipelineIndex = pipelines.find(compTokens[0] + "," + compTokens[1]);
+						if (pipelineIndex != pipelines.end())
+						{
+							pipeline = pipelineIndex->second;
+						}
+						else
 						{
 							if (FrameworkConfig::api == OpenGL)
 							{
-								shader = new GLPBRShader();
+								pipeline = new GLGraphicsPipeline(shader, vbo);
+
+								reinterpret_cast<GLGraphicsPipeline*>(pipeline)->SetBackfaceCulling(true);
 							}
-							else
+							else if (FrameworkConfig::api == Vulkan)
 							{
-								shader = new VKPBRShader(window);
+								pipeline = new VKGraphicsPipeline(shader, vbo);
+
+								reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);;
 							}
-						}
 
-						if (FrameworkConfig::api == OpenGL)
-						{
-							pipeline = new GLGraphicsPipeline(shader, vbo);
+							pipeline->SetViewportStart({ 0, 0 });
+							pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
+							pipeline->SetScissorStart({ 0, 0 });
+							pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
 
-							reinterpret_cast<GLGraphicsPipeline*>(pipeline)->SetBackfaceCulling(true);
-						}
-						else if (FrameworkConfig::api == Vulkan)
-						{
-							pipeline = new VKGraphicsPipeline(shader, vbo);
+							pipeline->CreatePipeline(window);
 
-							reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);
+							pipelines.insert(std::make_pair(compTokens[0] + "," + compTokens[1], pipeline));
 						}
 
 						pipeline->SetViewportStart({ 0, 0 });
@@ -304,7 +345,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 								Pipeline* pipeline = nullptr;
 
 								//Checking for shader types
-								if (compTokens[1] == "basic")
+								/*if (compTokens[1] == "basic")
 								{
 									if (FrameworkConfig::api == OpenGL)
 									{
@@ -341,7 +382,70 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 								pipeline->SetScissorStart({ 0, 0 });
 								pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
 
-								pipeline->CreatePipeline(window);
+								pipeline->CreatePipeline(window);*/
+
+								auto shaderIndex = shaders.find(compTokens[1]);
+								if (shaderIndex != shaders.end())
+								{
+									shader = shaderIndex->second;
+								}
+								else
+								{
+									if (FrameworkConfig::api == OpenGL)
+									{
+										if (compTokens[1] == "pbr")
+										{
+											shader = new GLPBRShader();
+										}
+										else if (compTokens[1] == "basic")
+										{
+											shader = new GLBasicShader();
+										}
+									}
+									else if (FrameworkConfig::api == Vulkan)
+									{
+										if (compTokens[1] == "pbr")
+										{
+											shader = new VKPBRShader(window);
+										}
+										else if (compTokens[1] == "basic")
+										{
+											shader = new VKBasicShader(window);
+										}
+									}
+
+									shaders.insert(std::make_pair(compTokens[1], shader));
+								}
+
+								auto pipelineIndex = pipelines.find(compTokens[0] + "," + compTokens[1]);
+								if (pipelineIndex != pipelines.end())
+								{
+									pipeline = pipelineIndex->second;
+								}
+								else
+								{
+									if (FrameworkConfig::api == OpenGL)
+									{
+										pipeline = new GLGraphicsPipeline(shader, vbo);
+
+										reinterpret_cast<GLGraphicsPipeline*>(pipeline)->SetBackfaceCulling(true);
+									}
+									else if (FrameworkConfig::api == Vulkan)
+									{
+										pipeline = new VKGraphicsPipeline(shader, vbo);
+
+										reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);
+									}
+
+									pipeline->SetViewportStart({ 0, 0 });
+									pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
+									pipeline->SetScissorStart({ 0, 0 });
+									pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
+
+									pipeline->CreatePipeline(window);
+
+									pipelines.insert(std::make_pair(compTokens[0] + "," + compTokens[1], pipeline));
+								}
 
 								Renderer* renderer = new Renderer(pipeline, material, window);
 

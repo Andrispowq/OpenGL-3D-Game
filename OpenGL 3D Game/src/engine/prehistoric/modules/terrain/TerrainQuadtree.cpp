@@ -21,6 +21,9 @@ TerrainQuadtree::TerrainQuadtree(Window* window, Camera* camera, TerrainMaps* ma
 
 		pipeline = new GLGraphicsPipeline(shader, vbo);
 		wireframePipeline = new GLGraphicsPipeline(wireframeShader, vbo);
+
+		reinterpret_cast<GLGraphicsPipeline*>(pipeline)->SetBackfaceCulling(true);
+		reinterpret_cast<GLGraphicsPipeline*>(wireframePipeline)->SetBackfaceCulling(true);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{

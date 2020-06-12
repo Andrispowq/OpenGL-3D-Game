@@ -7,8 +7,6 @@ GLTexture::GLTexture(GLuint id, GLenum type, uint32_t width, uint32_t height)
 {
 	this->width = width;
 	this->height = height;
-
-	SamplerProperties(Nearest, Repeat);
 }
 
 GLTexture::GLTexture(GLuint id, ImageType type, uint32_t width, uint32_t height)
@@ -16,8 +14,6 @@ GLTexture::GLTexture(GLuint id, ImageType type, uint32_t width, uint32_t height)
 {
 	this->width = width;
 	this->height = height;
-
-	SamplerProperties(Nearest, Repeat);
 }
 
 GLTexture::GLTexture(GLuint id)
@@ -25,8 +21,6 @@ GLTexture::GLTexture(GLuint id)
 {
 	this->width = 0;
 	this->height = 0;
-
-	SamplerProperties(Nearest, Repeat);
 }
 
 GLTexture::~GLTexture()
@@ -43,6 +37,23 @@ void GLTexture::Bind(uint32_t slot) const
 void GLTexture::Unbind() const
 {
 	glBindTexture(type, 0);
+}
+
+void GLTexture::UploadTextureData(size_t size, uint8_t channels, unsigned char* data, ImageFormat format)
+{
+	if (channels == 3)
+	{
+		if ((((int32_t)width) & 3) != 0)
+		{
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 2 - (((int32_t)width) & 1));
+		}
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, (void*)data);
+	}
+	else if (channels == 4)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)data);
+	}
 }
 
 void GLTexture::Generate()
@@ -137,13 +148,13 @@ Texture* GLTexture::Storage3D(uint32_t width, uint32_t height, uint32_t level, I
 	texture->setType(TEXTURE_CUBE_MAP);
 	texture->Generate();
 	texture->Bind();
+	texture->SamplerProperties(filter, wrapMode);
 
 	for (uint32_t i = 0; i < 6; ++i)
 	{
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, level, getInternalFormat(format), width, height, 0, getFormat(format), GL_FLOAT, nullptr);
 	}
 
-	texture->SamplerProperties(filter, wrapMode);
 	texture->Unbind();
 	return texture;
 }
@@ -156,10 +167,10 @@ Texture* GLTexture::Storage2D(uint32_t width, uint32_t height, uint32_t levels, 
 	texture->setType(TEXTURE_2D);
 	texture->Generate();
 	texture->Bind();
+	texture->SamplerProperties(filter, wrapMode);
 
 	glTexStorage2D(GL_TEXTURE_2D, levels, getInternalFormat(format), width, height);
 
-	texture->SamplerProperties(filter, wrapMode);
 	texture->Unbind();
 	return texture;
 }
@@ -180,21 +191,19 @@ GLenum GLTexture::getImageType(ImageType type)
 
 GLenum GLTexture::getInternalFormat(ImageFormat format)
 {
-	if (format == R8FLOAT)
+	if (format == R8_SRGB || format == R8_LINEAR)
 		return GL_R8;
-	if (format == R16FLOAT)
+	if (format == R16_SFLOAT || format == R16_LINEAR)
 		return GL_R16;
-	if (format == R32FLOAT)
+	if (format == R32_SFLOAT || format == R32_LINEAR)
 		return GL_R32F;
-	if (format == RG16FLOAT)
+	if (format == R8G8_SRGB || format == R8G8_LINEAR)
 		return GL_RG16;
-	if (format == RG32FLOAT)
+	if (format == R16G16_SFLOAT || format == R16G16_LINEAR)
 		return GL_RG32F;
-	if (format == RGB24FLOAT)
+	if (format == R8G8B8_SRGB || format == R8G8B8_LINEAR)
 		return GL_RGB32F;
-	if (format == RGBA16FLOAT)
-		return GL_RGBA16F;
-	if (format == RGBA32FLOAT)
+	if (format == R8G8B8A8_SRGB || format == R8G8B8A8_LINEAR)
 		return GL_RGBA32F;
 
 	PR_LOG_ERROR("Unsupported texture format: %u\n", format);
@@ -204,21 +213,19 @@ GLenum GLTexture::getInternalFormat(ImageFormat format)
 
 GLenum GLTexture::getFormat(ImageFormat format)
 {
-	if (format == R8FLOAT)
+	if (format == R8_SRGB || format == R8_LINEAR)
 		return GL_R;
-	if (format == R16FLOAT)
+	if (format == R16_SFLOAT || format == R16_LINEAR)
 		return GL_R;
-	if (format == R32FLOAT)
+	if (format == R32_SFLOAT || format == R32_LINEAR)
 		return GL_R;
-	if (format == RG16FLOAT)
+	if (format == R8G8_SRGB || format == R8G8_LINEAR)
 		return GL_RG;
-	if (format == RG32FLOAT)
+	if (format == R16G16_SFLOAT || format == R16G16_LINEAR)
 		return GL_RG;
-	if (format == RGB24FLOAT)
+	if (format == R8G8B8_SRGB || format == R8G8B8A8_LINEAR)
 		return GL_RGB;
-	if (format == RGBA16FLOAT)
-		return GL_RGBA;
-	if (format == RGBA32FLOAT)
+	if (format == R8G8B8A8_SRGB || format == R8G8B8A8_LINEAR)
 		return GL_RGBA;
 
 	PR_LOG_ERROR("Unsupported texture format: %u\n", format);

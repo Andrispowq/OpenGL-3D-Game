@@ -27,11 +27,11 @@ SplatMapRenderer::SplatMapRenderer(Window* window, uint32_t N)
 	//TODO: TEXTURES
 	if (FrameworkConfig::api == OpenGL)
 	{
-		splatmap = GLTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), RGBA32FLOAT, Bilinear);
+		splatmap = GLTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), R8G8B8A8_LINEAR, Bilinear);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
-		//splatmap = VKTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), RGBA32FLOAT, Bilinear);
+		//splatmap = VKTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), R8G8B8A8_LINEAR, Bilinear);
 	}
 
 	if (FrameworkConfig::api == OpenGL)

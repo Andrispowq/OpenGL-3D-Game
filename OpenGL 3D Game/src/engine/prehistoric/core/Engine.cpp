@@ -56,6 +56,7 @@ void Engine::Update()
 void Engine::Render()
 {
 	//We cannot detect keys in the render loop, because it runs differently then the update and input loop
+	renderingEngine->GetWindow()->ClearScreen();
 	root->PreRender(renderingEngine);
 
 	renderingEngine->Render(root);

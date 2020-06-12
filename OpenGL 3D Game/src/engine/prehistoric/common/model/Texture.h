@@ -1,9 +1,11 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+//from vulkan.h
 enum ImageFormat
 {
-	RGBA32FLOAT, RGB24FLOAT, RGBA16FLOAT, DEPTH32FLOAT, R16FLOAT, R32FLOAT, R8FLOAT, RG16FLOAT, RG32FLOAT
+	R8G8B8A8_SRGB, R8G8B8_SRGB, D32_SFLOAT, R16_SFLOAT, R32_SFLOAT, R8_SRGB, R8G8_SRGB, R16G16_SFLOAT,
+	R8G8B8A8_LINEAR, R8G8B8_LINEAR, D32_LINEAR, R16_LINEAR, R32_LINEAR, R8_LINEAR, R8G8_LINEAR, R16G16_LINEAR
 };
 
 enum ImageType
@@ -31,6 +33,7 @@ public:
 	virtual void Bind(uint32_t slot = 0) const = 0;
 	virtual void Unbind() const = 0;
 
+	virtual void UploadTextureData(size_t size, uint8_t channels, unsigned char* data, ImageFormat format) = 0;
 	virtual void Generate() = 0;
 
 	virtual void SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode) = 0;

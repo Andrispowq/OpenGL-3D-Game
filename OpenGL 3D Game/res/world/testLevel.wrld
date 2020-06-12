@@ -2,7 +2,7 @@
 
 # Usage: # means comment, but make sure to add a space after the hash
 # First you have to specify the model and texture loading directory, where your models and texture are located. The locations of the textures and models are relative
-# to this location, eg.: if model directory is res/models/, and you load a texture from pbr/tex_DIF.png, it will load it from res/models/pbr/tex_DIF.png
+# to this location, eg.: if texture directory is res/textures/, and you load a texture from pbr/tex_DIF.png, it will load it from res/textures/pbr/tex_DIF.png
 # Make sure not to have double slashes, have it only after the directory or before every texture!
 # After model and texture loading, you can create a material:
 #	- materials.add <matname>						creates a new material
@@ -30,8 +30,8 @@ directories.models res/models/
 directories.textures res/textures/
 
 # MODELS/TEXTURE TO LOAD
-models.load quadModel quad.obj
-models.load sphereModel sphere.obj
+models.load quadModel quad.obj counter-clockwise
+models.load sphereModel sphere.obj clockwise
 
 textures.load oak_DIF oakFloor/oakFloor_DIF.png
 textures.load oak_NRM oakFloor/oakFloor_NRM.png

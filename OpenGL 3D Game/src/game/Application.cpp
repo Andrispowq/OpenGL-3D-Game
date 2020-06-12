@@ -3,7 +3,7 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "engine/CoreEngine.h"
 
-int main()
+int main(int argc, char** args)
 {
 	CoreEngine engine;
 	engine.Start();

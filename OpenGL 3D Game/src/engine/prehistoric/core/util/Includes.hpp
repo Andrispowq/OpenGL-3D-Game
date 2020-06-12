@@ -22,11 +22,19 @@ size_t FindElement(T* element, std::vector<T*> list)
 {
 	for (size_t i = 0; i < list.size(); i++)
 	{
-		if ((*list[i]) == (*element))
+		if (list[i] == element)
 		{
 			return i;
 		}
 	}
 
 	return 0xFFFFFFFF;
+}
+
+constexpr static uint8_t number_of_digits(long long number)
+{
+	if (number == 0)
+		return 1;
+
+	return uint8_t(log10(abs(number))) + 1;
 }

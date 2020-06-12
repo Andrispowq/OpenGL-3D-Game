@@ -46,11 +46,11 @@ void TerrainNode::PreRender(RenderingEngine* renderingEngine)
 	{
 		if (renderingEngine->isWireframeMode())
 		{
-			renderer->PreRender(renderingEngine);
+			wireframeRenderer->PreRender(renderingEngine);
 		}
 		else
 		{
-			wireframeRenderer->PreRender(renderingEngine);
+			renderer->PreRender(renderingEngine);
 		}
 	}
 

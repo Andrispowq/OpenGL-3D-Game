@@ -27,6 +27,14 @@ namespace TextureLoader
 
 		Texture* texture = nullptr;
 
+		ImageFormat format;
+		if (channels == 3 && FrameworkConfig::api != Vulkan) //Vulkan can't decide if it's supports 24 bit textures yet, so don't do this
+			format = R8G8B8_LINEAR;
+		else
+			format = R8G8B8A8_LINEAR;
+
+		//We generally want to generate the texture, then upload the data, but in Vulkan, uploading the data actually loads everything into a staging buffer which
+		//is then copied into the actual texture during generation
 		if (FrameworkConfig::api == OpenGL)
 		{
 			texture = new GLTexture();
@@ -37,25 +45,14 @@ namespace TextureLoader
 			texture->Generate();
 			texture->Bind();
 
-			if (channels == 3)
-			{
-				if ((width & 3) != 0)
-				{
-					glPixelStorei(GL_UNPACK_ALIGNMENT, 2 - (width & 1));
-				}
-
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, (void*)data);
-			}
-			else if (channels == 4)
-			{
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)data);
-			}
+			texture->UploadTextureData((size_t)width * height * channels, channels, data, format);
 		}
 		else if (FrameworkConfig::api == Vulkan)
 		{
 			texture = new VKTexture(*((VKPhysicalDevice*)window->GetContext()->GetPhysicalDevice()), *((VKDevice*)window->GetContext()->GetDevice()), width, height);
 
-			static_cast<VKTexture*>(texture)->UpdateStagingBuffer((size_t)width * height * 4, data, RGBA32FLOAT);
+			texture->UploadTextureData((size_t)width * height * 4, channels, data, format);
+
 			texture->Generate();
 			texture->Bind();
 		}

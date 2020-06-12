@@ -13,7 +13,7 @@ public:
 	VKTexture(VKPhysicalDevice& physicalDevice, VKDevice& device, uint32_t width, uint32_t height);
 	virtual ~VKTexture();
 
-	void UpdateStagingBuffer(size_t size, unsigned char* pixels, ImageFormat format);
+	virtual void UploadTextureData(size_t size, uint8_t channels, unsigned char* pixels, ImageFormat format) override;
 
 	virtual void Bind(uint32_t slot = 0) const override;
 	virtual void Unbind() const override;

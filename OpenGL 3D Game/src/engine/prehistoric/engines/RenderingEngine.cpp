@@ -26,8 +26,9 @@ RenderingEngine::RenderingEngine()
 
 	window->SetClearColor(0.23f, 0.78f, 0.88f, 1.0f);
 
-	camera = new Camera(5.0f, 50.0f, 0.8f, 80.0f, Vector3f(0, 2, -3));
-	camera->RotateX(20);
+	camera = new Camera(5.0f, 50.0f, 0.8f, 80.0f, Vector3f(-178, 102, -47));
+	camera->RotateY(-80);
+	camera->RotateX(30);
 	camera->LogStage();
 
 	camera->setSpeedControl({ MOUSE_SCROLL, PR_KEY_UNKNOWN, PR_JOYSTICK_1 });
@@ -75,21 +76,24 @@ void RenderingEngine::Update(float delta)
 
 void RenderingEngine::Render(GameObject* root)
 {
-	window->ClearScreen();
-	
+	window->GetSwapchain()->BindDrawCommandBuffer();
+
 	for (auto pipeline : models)
 	{
 		pipeline.first->BindPipeline();
 		pipeline.first->getShader()->UpdateShaderUniforms(camera, lights);
-  		pipeline.first->getShader()->UpdateSharedUniforms(pipeline.second[0]->GetParent());
+		pipeline.first->getShader()->UpdateSharedUniforms(pipeline.second[0]->GetParent());
 
 		for (auto renderer : pipeline.second)
 		{
+			//pipeline.first->getShader()->Bind(window->GetSwapchain()->GetDrawCommandBuffer());
 			renderer->BatchRender(*this);
 		}
 
 		pipeline.first->UnbindPipeline();
 	}
+
+	window->GetSwapchain()->UnbindDrawCommandBuffer();
 
 	window->Render();
 	models.clear();

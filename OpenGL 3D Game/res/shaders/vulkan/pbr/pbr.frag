@@ -96,7 +96,7 @@ void main()
 		vec3 bitangent = normalize(cross(tangent_FS, normal));
 		mat3 tbn = mat3(tangent_FS, normal, bitangent);
 		
-		bumpNormal = 2 * pow(texture(normalMap, texture_FS).rbg, vec3(1 / gamma)) - 1;
+		bumpNormal = 2 * texture(normalMap, texture_FS).rbg - 1;
 		bumpNormal = normalize(bumpNormal);
 		bumpNormal.xz *= attenuation;
 		

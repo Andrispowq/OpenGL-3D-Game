@@ -37,11 +37,9 @@ void VKPipeline::RecreatePipeline()
 
 void VKPipeline::BindPipeline() const
 {
-	VKCommandBuffer* buff = (VKCommandBuffer*) swapchain->GetDrawCommandBuffer();
+	VKCommandBuffer* buff = (VKCommandBuffer*)window->GetSwapchain()->GetDrawCommandBuffer();
 
-	buff->BindBuffer();
-
-	shader->Bind(buff);
+	//shader->Bind(buff);
 	swapchain->BeginRenderpass();
 }
 
@@ -55,8 +53,6 @@ void VKPipeline::UnbindPipeline() const
 
 	swapchain->EndRenderpass();
 	shader->Unbind();
-
-	buff->UnbindBuffer();
 }
 
 void VKPipeline::DestroyPipeline()

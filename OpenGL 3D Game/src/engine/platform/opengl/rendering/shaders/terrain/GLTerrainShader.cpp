@@ -74,6 +74,13 @@ GLTerrainShader::GLTerrainShader()
 	//AddUniform("irradianceMap");
 	//AddUniform("prefilterMap");
 	//AddUniform("brdfLUT");
+
+	location_localMatrix = uniforms.at("localMatrix");
+	location_worldMatrix = uniforms.at("worldMatrix");
+	location_location = uniforms.at("location");
+	location_index = uniforms.at("index");
+	location_gap = uniforms.at("gap");
+	location_lod = uniforms.at("lod");
 }
 
 void GLTerrainShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const
@@ -81,6 +88,10 @@ void GLTerrainShader::UpdateShaderUniforms(Camera* camera, const std::vector<Lig
 	SetUniform("viewProjection", camera->getViewProjectionMatrix());
 	SetUniform("cameraPosition", camera->getPosition());
 
+	uint32_t nOfLights = (uint32_t)lights.size() < EngineConfig::lightsMaxNumber ? (uint32_t)lights.size() : EngineConfig::lightsMaxNumber;
+
+	//TODO: copy this
+#if defined(PR_DEBUG)
 	for (unsigned int i = 0; i < EngineConfig::lightsMaxNumber; i++)
 	{
 		std::string uniformName = "lights[" + std::to_string(i) + "].";
@@ -95,15 +106,28 @@ void GLTerrainShader::UpdateShaderUniforms(Camera* camera, const std::vector<Lig
 		}
 		else
 		{
+			//Load some dummy values for debug mode so we don't access undefined memory while debugging, but we won't in release mode
 			SetUniform(uniformName + "position", Vector3f());
 			SetUniform(uniformName + "colour", Vector3f());
 			SetUniform(uniformName + "intensity", Vector3f());
 		}
 	}
+#else
+	for (unsigned int i = 0; i < nOfLights; i++)
+	{
+		std::string uniformName = "lights[" + std::to_string(i) + "].";
+
+		Light* light = lights[i];
+
+		SetUniform(uniformName + "position", light->GetParent()->getWorldTransform()->GetPosition());
+		SetUniform(uniformName + "colour", light->GetColour());
+		SetUniform(uniformName + "intensity", light->GetIntensity());
+	}
+#endif
 
 	SetUniformi("highDetailRange", EngineConfig::rendererHighDetailRange);
 	SetUniformf("gamma", EngineConfig::rendererGamma);
-	SetUniformi("numberOfLights", (uint32_t)lights.size() < EngineConfig::lightsMaxNumber ? (uint32_t)lights.size() : EngineConfig::lightsMaxNumber);
+	SetUniformi("numberOfLights", nOfLights);
 
 	//Some other stuff that is terrain-related
 	SetUniformf("scaleY", TerrainConfig::scaleY);
@@ -170,6 +194,15 @@ void GLTerrainShader::UpdateSharedUniforms(GameObject* object) const
 void GLTerrainShader::UpdateObjectUniforms(GameObject* object) const
 {
 	TerrainNode* node = (TerrainNode*)object;
+
+	//This is an optimisation that is not necessary right now, it may be in the future though
+	/*glUniformMatrix4fv(location_localMatrix, 1, GL_FALSE, node->getLocalTransform()->getTransformationMatrix().m);
+	glUniformMatrix4fv(location_worldMatrix, 1, GL_FALSE, node->getWorldTransform()->getTransformationMatrix().m);
+
+	glUniform2f(location_location, node->getLocation().x, node->getLocation().y);
+	glUniform2f(location_index, node->getIndex().x, node->getIndex().y);
+	glUniform1f(location_gap, node->getGap());
+	glUniform1i(location_lod, node->getLod());*/
 
 	SetUniform("localMatrix", node->getLocalTransform()->getTransformationMatrix());
 	SetUniform("worldMatrix", object->getWorldTransform()->getTransformationMatrix());

@@ -33,10 +33,12 @@ private:
 	std::string directoryTextures;
 
 	//Rendering stuff
-	std::unordered_map<std::string, MeshVBO*> models;
 	std::unordered_map<std::string, Texture*> textures;
 	std::unordered_map<std::string, Material*> materials;
+
+	std::unordered_map<std::string, MeshVBO*> models;
 	std::unordered_map<std::string, Shader*> shaders;
+	std::unordered_map<std::string, Pipeline*> pipelines;
 };
 
 #endif

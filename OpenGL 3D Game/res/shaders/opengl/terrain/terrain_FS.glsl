@@ -59,7 +59,7 @@ void main()
 	float dist = length(cameraPosition - position_FS);
 	float height = position_FS.y;
 
-	vec3 N = normalize(texture(normalmap, mapCoord_FS).rbg * 2.0 - 1.0);
+	vec3 N = texture(normalmap, mapCoord_FS).rbg * 2 - 1;
 	
 	vec4 blendValues = texture(splatmap, mapCoord_FS);
 	
@@ -128,7 +128,7 @@ void main()
 	for(int i = 0; i < numberOfLights; i++)
     {
         // calculate per-light radiance
-        vec3 L = -normalize(lights[i].position - position_FS);
+        vec3 L = normalize(lights[i].position - position_FS);
         vec3 H = normalize(V + L);
         float dist = length(lights[i].position - position_FS);
         float attenuation = 1 / pow(dist, 2);
@@ -149,26 +149,26 @@ void main()
             
         // add to outgoing radiance Lo
         float NdotL = max(dot(N, L), 0);
-        Lo += (kD * albedoColour / PI + specular) * radiance * NdotL;
+		Lo += (kD * albedoColour / PI + specular) * radiance * NdotL;
     }
 	
-	/*vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0), F0, roughness);
+	vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0), F0, roughness);
 	
 	vec3 kS = F;
 	vec3 kD = 1 - kS;
 	kD *= 1 - metallic;
 	
-	vec3 irradiance = texture(irradianceMap, N).rgb;
+	vec3 irradiance = vec3(0.23, 0.78, 0.88);//texture(irradianceMap, N).rgb;
 	vec3 diffuse = irradiance * albedoColour;
 	
-	const float MAX_REFLECTION_LOD = 4;
+	/*const float MAX_REFLECTION_LOD = 4;
 	vec3 prefilteredColor = textureLod(prefilterMap, R,  roughness * MAX_REFLECTION_LOD).rgb;
-	vec2 envBRDF = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
-	vec3 specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
+	vec2 envBRDF = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;*/
+	vec3 specular = vec3(0.23, 0.78, 0.88);//prefilteredColor * (F * envBRDF.x + envBRDF.y);
 	
-	vec3 ambient = (kD * diffuse + specular) * occlusion;*/
+	vec3 ambient = (kD * diffuse + specular) * occlusion;
 
-	vec3 ambient = vec3(0.03);
+	//vec3 ambient = vec3(0.03);
 	
 	vec3 colour = ambient * albedoColour + Lo;
 	

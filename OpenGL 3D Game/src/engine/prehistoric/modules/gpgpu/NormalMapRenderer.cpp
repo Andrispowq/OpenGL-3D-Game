@@ -28,11 +28,11 @@ NormalMapRenderer::NormalMapRenderer(Window* window, float strength, uint32_t N)
 	//TODO: TEXTURES
 	if (FrameworkConfig::api == OpenGL)
 	{
-		normalmap = GLTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), RGBA32FLOAT, Bilinear);
+		normalmap = GLTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), R8G8B8A8_LINEAR, Bilinear);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
-		//normalmap = VKTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), RGBA32FLOAT, Bilinear);
+		//normalmap = VKTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), R8G8B8A8_LINEAR, Bilinear);
 	}
 
 	if (FrameworkConfig::api == OpenGL)

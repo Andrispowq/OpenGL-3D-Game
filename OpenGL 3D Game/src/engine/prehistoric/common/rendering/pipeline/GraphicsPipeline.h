@@ -3,16 +3,11 @@
 
 #include "Pipeline.h"
 
-enum class FrontFace
-{
-	CLOCKWISE, COUNTER_CLOCKWISE, DOUBLE_SIDED
-};
-
 class GraphicsPipeline
 {
 public:
 	GraphicsPipeline(VBO* vbo);
-	GraphicsPipeline() : vbo(nullptr), backfaceCulling(false), vboIndex(-1), frontFace(FrontFace::COUNTER_CLOCKWISE) {}
+	GraphicsPipeline() : vbo(nullptr), backfaceCulling(false), vboIndex(-1) {}
 
 	virtual ~GraphicsPipeline();
 
@@ -23,7 +18,6 @@ public:
 
 	bool IsBackfaceCulling() const { return backfaceCulling; }
 	void SetBackfaceCulling(bool backfaceCulling) { this->backfaceCulling = backfaceCulling; }
-	void SetFrontFace(FrontFace frontFace) { this->frontFace = frontFace; }
 protected:
 	static std::vector<VBO*> vbos;
 
@@ -31,7 +25,6 @@ protected:
 	size_t vboIndex;
 
 	bool backfaceCulling;
-	FrontFace frontFace;
 };
 
 #endif

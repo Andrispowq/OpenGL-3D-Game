@@ -22,10 +22,24 @@ void GLGraphicsPipeline::RenderPipeline() const
 {
 	GLPipeline::RenderPipeline();
 
-	if (frontFace == FrontFace::CLOCKWISE)
-		glFrontFace(GL_FRONT);
+	if (vbo->getFrontFace() == FrontFace::CLOCKWISE)
+	{
+		glFrontFace(GL_CW);
+	}
 	else
-		glFrontFace(GL_BACK);
+	{
+		glFrontFace(GL_CCW);
+	}
+
+	if (backfaceCulling)
+	{
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+	}
+	else
+	{
+		glDisable(GL_CULL_FACE);
+	}
 
 	vbo->Draw(nullptr);
 }

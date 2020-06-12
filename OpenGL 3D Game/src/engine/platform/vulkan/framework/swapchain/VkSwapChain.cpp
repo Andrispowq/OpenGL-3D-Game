@@ -5,6 +5,8 @@
 
 void VKSwapchain::SetupSwapchain(Window* window)
 {
+    this->window = window;
+
     this->physicalDevice = (VKPhysicalDevice*) window->GetContext()->GetPhysicalDevice();
     this->device = (VKDevice*)window->GetContext()->GetDevice();
 

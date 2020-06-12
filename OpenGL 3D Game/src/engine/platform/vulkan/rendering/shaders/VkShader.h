@@ -61,6 +61,7 @@ public:
 			auto& stage = shaderStages[i];
 			auto& ostage = (*reinterpret_cast<const VKShader*>(&other)).shaderStages[i];
 
+			//TODO: This does not work, and I know why, but it's not used so I'll leave it in here for now
 			if (stage.flags != ostage.flags || stage.module != ostage.module || stage.pName != ostage.pName || stage.pNext != ostage.pNext
 				|| stage.pSpecializationInfo != ostage.pSpecializationInfo || stage.stage != ostage.stage)
 				return false;

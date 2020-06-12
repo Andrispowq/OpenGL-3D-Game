@@ -20,6 +20,9 @@ public:
 
 	virtual uint32_t GetAquiredImageIndex() const { return -1; };
 	virtual void* GetDrawCommandBuffer() const { return nullptr; };
+
+	virtual void BindDrawCommandBuffer() {};
+	virtual void UnbindDrawCommandBuffer() {};
 protected:
 	Window* window;
 };

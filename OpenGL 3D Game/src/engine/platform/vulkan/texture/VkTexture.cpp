@@ -21,7 +21,7 @@ VKTexture::~VKTexture()
 	vkFreeMemory(device->GetDevice(), textureImageMemory, nullptr);
 }
 
-void VKTexture::UpdateStagingBuffer(size_t size, unsigned char* pixels, ImageFormat format)
+void VKTexture::UploadTextureData(size_t size, uint8_t channels, unsigned char* pixels, ImageFormat format)
 {
  	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
@@ -51,11 +51,11 @@ void VKTexture::Generate()
 		VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
 		textureImage, textureImageMemory);
 
-	VKUtil::TransitionImageLayout(*device, textureImage, GetFormat(format), VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
+	VKUtil::TransitionImageLayout(*device, textureImage, /*GetFormat(format)*/VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
 	VKUtil::CopyBufferToImage(*device, stagingBuffer, textureImage, width, height);
 	//VKUtil::TransitionImageLayout(*device, textureImage, GetFormat(format), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, mipLevels);
-	VKUtil::GenerateMipmaps(physicalDevice->GetPhysicalDevice(), *device, textureImage, VK_FORMAT_R8G8B8A8_SRGB, width, height, mipLevels);
-
+	VKUtil::GenerateMipmaps(physicalDevice->GetPhysicalDevice(), *device, textureImage, GetFormat(format), width, height, mipLevels);
+	
 	//We're no longer in need of the staging buffers
 	vkDestroyBuffer(device->GetDevice(), stagingBuffer, nullptr);
 	vkFreeMemory(device->GetDevice(), stagingBufferMemory, nullptr);
@@ -184,34 +184,37 @@ VkFormat VKTexture::GetFormat(ImageFormat format) const
 	//TODO: Query for formats
 	switch (format)
 	{
-	case RGBA32FLOAT:
+	case R8G8B8A8_SRGB:
 		return VK_FORMAT_R8G8B8A8_SRGB;
-		break;
-	case RGB24FLOAT:
+	case R8G8B8_SRGB:
 		return VK_FORMAT_R8G8B8_SRGB;
-		break;
-	case RGBA16FLOAT:
-		return VK_FORMAT_R4G4B4A4_UNORM_PACK16;
-		break;
-	case DEPTH32FLOAT:
+	case D32_SFLOAT:
 		return VK_FORMAT_D32_SFLOAT;
-		break;
-	case R16FLOAT:
-		return VK_FORMAT_D16_UNORM;
-		break;
-	case R32FLOAT:
+	case R16_SFLOAT:
+		return VK_FORMAT_R16_SFLOAT;
+	case R32_SFLOAT:
 		return VK_FORMAT_R32_SFLOAT;
-		break;
-	case R8FLOAT:
+	case R8_SRGB:
 		return VK_FORMAT_R8_SRGB;
-		break;
-	case RG16FLOAT:
+	case R8G8_SRGB:
 		return VK_FORMAT_R8G8_SRGB;
-		break;
-	case RG32FLOAT:
+	case R16G16_SFLOAT:
 		return VK_FORMAT_R16G16_SFLOAT;
-		break;
-	default:
-		return VK_FORMAT_R8G8B8A8_SRGB;
+	case R8G8B8A8_LINEAR:
+		return VK_FORMAT_R8G8B8A8_UNORM;
+	case R8G8B8_LINEAR:
+		return VK_FORMAT_R8G8B8_UNORM;
+	case D32_LINEAR:
+		return VK_FORMAT_D32_SFLOAT_S8_UINT; //Not sure about that one
+	case R16_LINEAR:
+		return VK_FORMAT_R16_UNORM;
+	case R32_LINEAR:
+		return VK_FORMAT_R32_UINT;
+	case R8_LINEAR:
+		return VK_FORMAT_R8_UNORM;
+	case R8G8_LINEAR:
+		return VK_FORMAT_R8G8_UNORM;
+	case R16G16_LINEAR:
+		return VK_FORMAT_R16G16_UNORM;
 	}
 }

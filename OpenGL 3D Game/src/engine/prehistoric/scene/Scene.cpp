@@ -19,12 +19,13 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 	if (FrameworkConfig::api == Vulkan)
 	{
 		VKMeshVBO* vbo = (VKMeshVBO*)OBJLoader::LoadModel("res/models/", "quad.obj", "", window);
+		vbo->SetFrontFace(FrontFace::CLOCKWISE);
 
 		VKShader* shader = new VKPBRShader(window);
+
 		VKGraphicsPipeline* pipeline = new VKGraphicsPipeline(shader, vbo);
 
 		pipeline->SetBackfaceCulling(true);
-		pipeline->SetFrontFace(FrontFace::CLOCKWISE);
 
 		pipeline->SetViewportStart({ 0, 0 });
 		pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
@@ -65,7 +66,7 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 		root->AddChild("Terrain", terrain);
 
 		GameObject* gui = new GameObject;
-		gui->AddComponent("GUI", new GUIElement(window, terrain->getMaps()->getNormalmap()));
+		gui->AddComponent("GUI", new GUIElement(window, terrain->getMaps()->getSplatmap()));
 		gui->Move({ 0.5f, 0.5f, 0.0f });
 		gui->SetScale({ 0.25f, 0.25f, 1.0f });
 		//((GUIElement*)gui->GetComponent("GUI"))->setVisible(false);
@@ -73,9 +74,14 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 		root->AddChild("GUI", gui);
 
 		GameObject* sun = new GameObject();
-		sun->AddComponent("light", new Light(Vector3f(1, 1, 1), Vector3f(1)));
-		sun->Move({ 0, 500, 0 });
+		sun->AddComponent("light", new Light(Vector3f(1, 1, 1), Vector3f(200000000)));
+		sun->Move({ -2000, 4000, 2000 });
 		root->AddChild("sun", sun);
+
+		GameObject* light = new GameObject();
+		light->AddComponent("light", new Light(Vector3f(1, 0.56f, 0.34f), Vector3f(300000)));
+		light->Move({ 100, 200, -300 });
+		root->AddChild("light", light);
 	}
 }
 

@@ -59,7 +59,7 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 	rasterizer.polygonMode = VK_POLYGON_MODE_FILL;// wireframe ? VK_POLYGON_MODE_LINE : VK_POLYGON_MODE_FILL;
 	rasterizer.lineWidth = 1.0f;
 	rasterizer.cullMode = GraphicsPipeline::backfaceCulling ? VK_CULL_MODE_BACK_BIT : VK_CULL_MODE_NONE;
-	rasterizer.frontFace = frontFace == FrontFace::COUNTER_CLOCKWISE ? VK_FRONT_FACE_COUNTER_CLOCKWISE : VK_FRONT_FACE_CLOCKWISE; //TODO: Front-face can be a renderer config mode
+	rasterizer.frontFace = vbo->getFrontFace() == FrontFace::COUNTER_CLOCKWISE ? VK_FRONT_FACE_COUNTER_CLOCKWISE : VK_FRONT_FACE_CLOCKWISE; //TODO: Front-face can be a renderer config mode
 	rasterizer.depthBiasEnable = VK_FALSE;
 	rasterizer.depthBiasConstantFactor = 0.0f; // Optional
 	rasterizer.depthBiasClamp = 0.0f; // Optional

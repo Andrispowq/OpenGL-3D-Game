@@ -16,6 +16,14 @@ public:
 	virtual void UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const override;
 	virtual void UpdateSharedUniforms(GameObject* object) const override;
 	virtual void UpdateObjectUniforms(GameObject* object) const override;
+
+private:
+	uint32_t location_localMatrix;
+	uint32_t location_worldMatrix;
+	uint32_t location_location;
+	uint32_t location_index;
+	uint32_t location_gap;
+	uint32_t location_lod;
 };
 
 #endif

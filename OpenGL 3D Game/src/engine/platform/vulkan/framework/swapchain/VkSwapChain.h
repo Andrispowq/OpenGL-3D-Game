@@ -38,6 +38,9 @@ public:
 	void BeginRenderpass() { renderpass->BeginRenderpass(*commandPool->GetCommandBuffer(aquiredImageIndex), swapchainExtent, *swapchainFramebuffers[aquiredImageIndex], clearColor); }
 	void EndRenderpass() { renderpass->EndRenderpass(*commandPool->GetCommandBuffer(aquiredImageIndex)); }
 
+	virtual void BindDrawCommandBuffer() { commandPool->GetCommandBuffer(aquiredImageIndex)->BindBuffer(); };
+	virtual void UnbindDrawCommandBuffer() { commandPool->GetCommandBuffer(aquiredImageIndex)->UnbindBuffer(); };
+
 	VkSwapchainKHR getSwapchain() const { return swapchain; }
 	std::vector<VkImage> getSwapchainImages() const { return swapchainImages; }
 	std::vector<VkImageView> getSwapchainImageViews() const { return swapchainImageViews; }
