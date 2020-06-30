@@ -35,11 +35,8 @@ public:
 	virtual uint32_t GetAquiredImageIndex() const override { return aquiredImageIndex; }
 	virtual void* GetDrawCommandBuffer() const override { return commandPool->GetCommandBuffer(aquiredImageIndex); }
 
-	void BeginRenderpass() { renderpass->BeginRenderpass(*commandPool->GetCommandBuffer(aquiredImageIndex), swapchainExtent, *swapchainFramebuffers[aquiredImageIndex], clearColor); }
-	void EndRenderpass() { renderpass->EndRenderpass(*commandPool->GetCommandBuffer(aquiredImageIndex)); }
-
-	virtual void BindDrawCommandBuffer() { commandPool->GetCommandBuffer(aquiredImageIndex)->BindBuffer(); };
-	virtual void UnbindDrawCommandBuffer() { commandPool->GetCommandBuffer(aquiredImageIndex)->UnbindBuffer(); };
+	virtual void PrepareRendering() override;
+	virtual void EndRendering() override;	
 
 	VkSwapchainKHR getSwapchain() const { return swapchain; }
 	std::vector<VkImage> getSwapchainImages() const { return swapchainImages; }

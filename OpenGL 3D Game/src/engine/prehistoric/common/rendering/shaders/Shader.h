@@ -80,20 +80,20 @@ public:
 	virtual bool CompileShader() const = 0;
 
 	//Uniform handling
-	virtual void SetUniformi(const std::string& name, int value, size_t offset = 0) const = 0;
-	virtual void SetUniformf(const std::string& name, float value, size_t offset = 0) const = 0;
+	virtual void SetUniformi(const std::string& name, int value, size_t offset = 0, uint32_t instance_index = 0) const = 0;
+	virtual void SetUniformf(const std::string& name, float value, size_t offset = 0, uint32_t instance_index = 0) const = 0;
 
-	virtual void SetUniform(const std::string& name, const Vector2f& value, size_t offset = 0) const = 0;
-	virtual void SetUniform(const std::string& name, const Vector3f& value, size_t offset = 0) const = 0;
-	virtual void SetUniform(const std::string& name, const Vector4f& value, size_t offset = 0) const = 0;
-	virtual void SetUniform(const std::string& name, const Matrix4f& value, size_t offset = 0) const = 0;
+	virtual void SetUniform(const std::string& name, const Vector2f& value, size_t offset = 0, uint32_t instance_index = 0) const = 0;
+	virtual void SetUniform(const std::string& name, const Vector3f& value, size_t offset = 0, uint32_t instance_index = 0) const = 0;
+	virtual void SetUniform(const std::string& name, const Vector4f& value, size_t offset = 0, uint32_t instance_index = 0) const = 0;
+	virtual void SetUniform(const std::string& name, const Matrix4f& value, size_t offset = 0, uint32_t instance_index = 0) const = 0;
 
-	virtual void SetTexture(const std::string& name, Texture* value) const = 0;
+	virtual void SetTexture(const std::string& name, Texture* value, uint32_t instance_index = 0) const = 0;
 
 	//General SetUniform method for Uniform Buffer Objects, like uploading view and projection matrix to the same uniform binding
-	virtual void SetUniform(const std::string& name, const void* value, size_t size, size_t offset = 0) const = 0;
+	virtual void SetUniform(const std::string& name, const void* value, size_t size, size_t offset = 0, uint32_t instance_index = 0) const = 0;
 
-	virtual void BindUniformBlock(const std::string& name, uint32_t binding) const = 0;
+	virtual void BindUniformBlock(const std::string& name, uint32_t binding, uint32_t instance_index = 0) const = 0;
 
 	virtual bool operator==(const Shader& other) = 0;
 
@@ -101,10 +101,10 @@ public:
 	//Shader uniforms -> per-shader uniforms, like view and projection matrices
 	//Shared uniforms -> uniforms that are shared between objects, and can be fetched from the first object
 	//Object uniforms -> unique, per-object values
-	virtual void UpdateConstantUniforms(Camera* camera, const std::vector<Light*>& lights) const {}
-	virtual void UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const {}
-	virtual void UpdateSharedUniforms(GameObject* object) const {}
-	virtual void UpdateObjectUniforms(GameObject* object) const {}
+	virtual void UpdateConstantUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index = 0) const {}
+	virtual void UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index = 0) const {}
+	virtual void UpdateSharedUniforms(GameObject* object, uint32_t instance_index = 0) const {}
+	virtual void UpdateObjectUniforms(GameObject* object, uint32_t instance_index = 0) const {}
 
 	//Shaders cannot be copied, they are stored as pointers in the Renderer component, and referenced with a shaderIndex
 	Shader(const Shader&) = delete;

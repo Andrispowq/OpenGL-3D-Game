@@ -12,14 +12,28 @@ const int max_lights = 10;
 const float PI = 3.141592653589793;
 const float emissionFactor = 3.0;
 
-layout(set = 0, binding = 11, std140) uniform Lights
+layout(set = 0, binding = 0, std140) uniform Camera
+{
+	layout(offset = 0) mat4 m_view;
+	layout(offset = 64) mat4 m_projection;
+	layout(offset = 128) vec3 cameraPosition;
+};
+
+layout(set = 0, binding = 1, std140) uniform LightConditions
+{
+	layout(offset = 0) int highDetailRange;
+	layout(offset = 4) int numberOfLights;
+	layout(offset = 8) float gamma;
+};
+
+layout(set = 0, binding = 2, std140) uniform Lights
 {
 	layout(offset = max_lights * 0 * 16) vec3 position[max_lights];
 	layout(offset = max_lights * 1 * 16) vec3 colour[max_lights];
 	layout(offset = max_lights * 2 * 16) vec3 intensity[max_lights];
 } lights;
 
-layout(set = 0, binding = 1, std140) uniform Material
+layout(set = 1, binding = 0, std140) uniform Material
 {
 	layout(offset = 00) vec3 colour;
 	layout(offset = 16) vec3 emission;
@@ -30,27 +44,13 @@ layout(set = 0, binding = 1, std140) uniform Material
 	layout(offset = 48) float occlusion;
 } material;
 
-layout(set = 0, binding = 2, std140) uniform Camera
-{
-	layout(offset = 0) mat4 m_view;
-	layout(offset = 64) mat4 m_projection;
-	layout(offset = 128) vec3 cameraPosition;
-};
-
-layout(set = 0, binding = 10, std140) uniform LightConditions
-{
-	layout(offset = 0) int highDetailRange;
-	layout(offset = 4) int numberOfLights;
-	layout(offset = 8) float gamma;
-};
-
-layout (set = 0, binding = 3) uniform sampler2D albedoMap;
-layout (set = 0, binding = 4) uniform sampler2D displacementMap;
-layout (set = 0, binding = 5) uniform sampler2D normalMap;
-layout (set = 0, binding = 6) uniform sampler2D metallicMap;
-layout (set = 0, binding = 7) uniform sampler2D roughnessMap;
-layout (set = 0, binding = 8) uniform sampler2D occlusionMap;
-layout (set = 0, binding = 9) uniform sampler2D emissionMap;
+layout (set = 1, binding = 1) uniform sampler2D albedoMap;
+layout (set = 1, binding = 2) uniform sampler2D displacementMap;
+layout (set = 1, binding = 3) uniform sampler2D normalMap;
+layout (set = 1, binding = 4) uniform sampler2D metallicMap;
+layout (set = 1, binding = 5) uniform sampler2D roughnessMap;
+layout (set = 1, binding = 6) uniform sampler2D occlusionMap;
+layout (set = 1, binding = 7) uniform sampler2D emissionMap;
 
 float DistributionGGX(vec3 N, vec3 H, float roughness);
 float GeometrySchlickGGX(float NdotV, float roughness);
@@ -140,28 +140,28 @@ void main()
         Lo += (kD * albedoColour / PI + specular) * radiance * NdotL;
     }
 
-	vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0), F0, roughness);
+	/*vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0), F0, roughness);
 
 	vec3 kS = F;
 	vec3 kD = 1.0 - kS;
 	kD *= 1.0 - metallic;
 
 	vec3 irradiance = vec3(0.23, 0.78, 0.88);//texture(irradianceMap, normal_FS).rgb;	
-	vec3 diffuse = irradiance * albedoColour;
+	vec3 diffuse = irradiance * albedoColour;*/
 	
 	/*const float MAX_REFLECTION_LOD = 4.0;
 	vec3 prefilteredColor = textureLod(prefilterMap, R,  roughness * MAX_REFLECTION_LOD).rgb;
 	vec2 envBRDF = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;*/
-	vec3 specular = vec3(0.23, 0.78, 0.88);//prefilteredColor * (F * envBRDF.x + envBRDF.y);
+	//vec3 specular = vec3(0.23, 0.78, 0.88);//prefilteredColor * (F * envBRDF.x + envBRDF.y);
 	
-	vec3 ambient = (kD * diffuse + vec3(0))/* * occlusion*/;
+	vec3 ambient = vec3(0.03);//(kD * diffuse + specular) * occlusion;
 
-	vec3 colour = ambient + Lo + max(emission * emissionFactor, 0.0);
+	vec3 colour = ambient * albedoColour + Lo + max(emission * emissionFactor, 0.0);
 	
 	colour /= colour + vec3(1.0);
 	colour = pow(colour, vec3(1.0 / gamma));
 	
-	colour_Out = vec4(vec3(dot(N, V)), 1);
+	colour_Out = vec4(colour, 1);
 }
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)

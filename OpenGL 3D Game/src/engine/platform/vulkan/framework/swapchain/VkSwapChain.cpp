@@ -137,8 +137,38 @@ void VKSwapchain::SetupSwapchain(Window* window)
     imagesInFlight[aquiredImageIndex] = inFlightFences[currentFrame]->GetFence();
 }
 
+void VKSwapchain::PrepareRendering()
+{
+    renderpass->BeginRenderpass(*commandPool->GetCommandBuffer(aquiredImageIndex), swapchainExtent, *swapchainFramebuffers[aquiredImageIndex], clearColor);
+    commandPool->GetCommandBuffer(aquiredImageIndex)->BindBuffer();
+
+    //Get the next available image to render to
+    vkWaitForFences(device->GetDevice(), 1, &(inFlightFences[currentFrame]->GetFence()), VK_TRUE, UINT64_MAX);
+
+    VkResult res = vkAcquireNextImageKHR(device->GetDevice(), swapchain, UINT64_MAX, imageAvailableSemaphores[currentFrame]->GetSemaphore(), VK_NULL_HANDLE, &aquiredImageIndex);
+
+    if (res == VK_ERROR_OUT_OF_DATE_KHR || res == VK_SUBOPTIMAL_KHR)
+    {
+        SetWindowSize(window->GetWidth(), window->GetHeight());
+    }
+
+    if (imagesInFlight[aquiredImageIndex] != VK_NULL_HANDLE)
+    {
+        vkWaitForFences(device->GetDevice(), 1, &imagesInFlight[aquiredImageIndex], VK_TRUE, UINT64_MAX);
+    }
+
+    imagesInFlight[aquiredImageIndex] = inFlightFences[currentFrame]->GetFence();
+}
+
+void VKSwapchain::EndRendering()
+{
+    commandPool->GetCommandBuffer(aquiredImageIndex)->UnbindBuffer();
+    renderpass->EndRenderpass(*commandPool->GetCommandBuffer(aquiredImageIndex));
+}
+
 void VKSwapchain::SwapBuffers()
 {
+    //Submit the graphics queue for rendering
     VkSubmitInfo submitInfo = {};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
@@ -161,6 +191,7 @@ void VKSwapchain::SwapBuffers()
         PR_LOG_RUNTIME_ERROR("Failed to submit draw command buffer!\n");
     }
 
+    //Present the results on the present queue
     VkPresentInfoKHR presentInfo = {};
     presentInfo.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
     presentInfo.waitSemaphoreCount = 1;
@@ -174,23 +205,6 @@ void VKSwapchain::SwapBuffers()
     vkQueueWaitIdle(device->GetPresentQueue().GetQueue());
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
-
-    //After drawing, we can get the next image to draw on
-    vkWaitForFences(device->GetDevice(), 1, &(inFlightFences[currentFrame]->GetFence()), VK_TRUE, UINT64_MAX);
-
-    VkResult res = vkAcquireNextImageKHR(device->GetDevice(), swapchain, UINT64_MAX, imageAvailableSemaphores[currentFrame]->GetSemaphore(), VK_NULL_HANDLE, &aquiredImageIndex);
-
-    if (res == VK_ERROR_OUT_OF_DATE_KHR)
-    {
-        SetWindowSize(window->GetWidth(), window->GetHeight());
-    }
-
-    if (imagesInFlight[aquiredImageIndex] != VK_NULL_HANDLE)
-    {
-        vkWaitForFences(device->GetDevice(), 1, &imagesInFlight[aquiredImageIndex], VK_TRUE, UINT64_MAX);
-    }
-
-    imagesInFlight[aquiredImageIndex] = inFlightFences[currentFrame]->GetFence();
 }
 
 void VKSwapchain::SetVSync(bool vSync) const

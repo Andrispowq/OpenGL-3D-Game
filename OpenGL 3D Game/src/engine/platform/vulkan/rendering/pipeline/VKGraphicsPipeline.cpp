@@ -134,7 +134,7 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 
 void VKGraphicsPipeline::BindPipeline() const
 {
-	VKPipeline::BindPipeline();
+	//VKPipeline::BindPipeline();
 
 	vkCmdBindPipeline(((VKCommandBuffer*) swapchain->GetDrawCommandBuffer())->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
 	vbo->Bind(swapchain->GetDrawCommandBuffer());
@@ -142,16 +142,16 @@ void VKGraphicsPipeline::BindPipeline() const
 
 void VKGraphicsPipeline::RenderPipeline() const
 {
-	VKPipeline::RenderPipeline();
+	//VKPipeline::RenderPipeline(); //does nothing
 
 	vbo->Draw(swapchain->GetDrawCommandBuffer());
 }
 
 void VKGraphicsPipeline::UnbindPipeline() const
 {
-	vbo->Unbind();
+	//vbo->Unbind();
 
-	VKPipeline::UnbindPipeline();
+	//VKPipeline::UnbindPipeline();
 }
 
 void VKGraphicsPipeline::DestroyPipeline()

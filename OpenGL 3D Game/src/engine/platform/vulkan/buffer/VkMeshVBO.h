@@ -5,6 +5,8 @@
 
 #include <vulkan/vulkan.h>
 
+#include "VKBuffer.h"
+
 #include <vector>
 
 #include "engine/platform/vulkan/rendering/command/VKCommandBuffer.h"
@@ -30,13 +32,11 @@ public:
 
 	virtual bool operator==(const VBO& other) override
 	{
-		return vertexBuffer == (*reinterpret_cast<const VKMeshVBO*>(&other)).vertexBuffer && indexBuffer == (*reinterpret_cast<const VKMeshVBO*>(&other)).indexBuffer;
+		return vertexBuffer->operator==(*(*reinterpret_cast<const VKMeshVBO*>(&other)).vertexBuffer) && indexBuffer->operator==(*(*reinterpret_cast<const VKMeshVBO*>(&other)).indexBuffer);
 	}
 private:
-	VkBuffer vertexBuffer;
-	VkDeviceMemory vertexBufferMemory;
-	VkBuffer indexBuffer;
-	VkDeviceMemory indexBufferMemory;
+	VKBuffer* vertexBuffer;
+	VKBuffer* indexBuffer;
 
 	VKPhysicalDevice* physicalDevice;
 	VKDevice* device;

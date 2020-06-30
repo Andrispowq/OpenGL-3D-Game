@@ -66,6 +66,6 @@ void Renderer::BatchRender(const RenderingEngine& renderingEngine) const
 {
 	Pipeline* pipeline = pipelines[pipelineIndex];
 
-	pipeline->getShader()->UpdateObjectUniforms(parent);
+	pipeline->getShader()->UpdateObjectUniforms(parent, shader_instance_index);
 	pipeline->RenderPipeline();
 }

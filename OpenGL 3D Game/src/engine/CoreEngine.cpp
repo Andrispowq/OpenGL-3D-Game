@@ -1,7 +1,7 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "CoreEngine.h"
 
-const static double NANOSECOND = std::pow(10, 9);
+constexpr static double NANOSECOND = 1000000000;
 
 CoreEngine::CoreEngine()
 {

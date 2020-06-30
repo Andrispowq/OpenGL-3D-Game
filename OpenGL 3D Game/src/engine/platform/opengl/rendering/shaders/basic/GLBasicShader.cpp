@@ -33,7 +33,7 @@ GLBasicShader::GLBasicShader() : GLShader()
 	AddUniform("gamma");
 }
 
-void GLBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const
+void GLBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index) const
 {
 	SetUniform("m_view", camera->getViewMatrix());
 	SetUniform("m_projection", camera->getProjectionMatrix());
@@ -60,7 +60,7 @@ void GLBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light
 	SetUniformf("gamma", EngineConfig::rendererGamma);
 }
 
-void GLBasicShader::UpdateObjectUniforms(GameObject* object) const
+void GLBasicShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
 {
 	Material* material = dynamic_cast<Renderer*>(object->GetComponent("Renderer"))->GetMaterial();
 

@@ -12,7 +12,21 @@ layout (location = 1) out vec2 texture_FS;
 layout (location = 2) out vec3 normal_FS;
 layout (location = 3) out vec3 tangent_FS;
 
-layout(set = 0, binding = 1, std140) uniform Material
+layout(set = 0, binding = 0, std140) uniform Camera
+{
+	layout(offset = 0) mat4 m_view;
+	layout(offset = 64) mat4 m_projection;
+	layout(offset = 128) vec3 cameraPosition;
+};
+
+layout(set = 0, binding = 0, std140) uniform LightConditions
+{
+	layout(offset = 0) int highDetailRange;
+	layout(offset = 4) int numberOfLights;
+	layout(offset = 8) float gamma;
+};
+
+layout(set = 1, binding = 0, std140) uniform Material
 {
 	layout(offset = 00) vec3 colour;
 	layout(offset = 16) vec3 emission;
@@ -23,27 +37,13 @@ layout(set = 0, binding = 1, std140) uniform Material
 	layout(offset = 48) float occlusion;
 } material;
 
-layout(set = 0, binding = 2, std140) uniform Camera
-{
-	layout(offset = 0) mat4 m_view;
-	layout(offset = 64) mat4 m_projection;
-	layout(offset = 128) vec3 cameraPosition;
-};
-
-layout(set = 0, binding = 10, std140) uniform LightConditions
-{
-	layout(offset = 0) int highDetailRange;
-	layout(offset = 4) int numberOfLights;
-	layout(offset = 8) float gamma;
-};
-
-layout (set = 0, binding = 3) uniform sampler2D albedoMap;
-layout (set = 0, binding = 4) uniform sampler2D displacementMap;
-layout (set = 0, binding = 5) uniform sampler2D normalMap;
-layout (set = 0, binding = 6) uniform sampler2D metallicMap;
-layout (set = 0, binding = 7) uniform sampler2D roughnessMap;
-layout (set = 0, binding = 8) uniform sampler2D occlusionMap;
-layout (set = 0, binding = 9) uniform sampler2D emissionMap;
+layout (set = 1, binding = 1) uniform sampler2D albedoMap;
+layout (set = 1, binding = 2) uniform sampler2D displacementMap;
+layout (set = 1, binding = 3) uniform sampler2D normalMap;
+layout (set = 1, binding = 4) uniform sampler2D metallicMap;
+layout (set = 1, binding = 5) uniform sampler2D roughnessMap;
+layout (set = 1, binding = 6) uniform sampler2D occlusionMap;
+layout (set = 1, binding = 7) uniform sampler2D emissionMap;
 
 vec3 tangent;
 vec3 displacement[3];

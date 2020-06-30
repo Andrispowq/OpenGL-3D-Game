@@ -7,7 +7,7 @@ layout (location = 2) in vec3 normal_VS;
 layout (location = 0) out vec2 texture_GS;
 layout (location = 1) out vec3 normal_GS;
 
-layout(set = 0, binding = 0) uniform Model
+layout(set = 2, binding = 0) uniform Model
 {
 	layout(offset = 0) mat4 m_transform;
 };

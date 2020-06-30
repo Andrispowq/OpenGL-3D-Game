@@ -159,24 +159,27 @@ VKShader::~VKShader()
 {
 	vkDestroyPipelineLayout(device->GetDevice(), pipelineLayout, nullptr);
 
-	for (const auto& set : descriptorSetLayouts)
+	for (uint32_t instance = 0; instance < instance_counter; instance++)
 	{
-		vkDestroyDescriptorSetLayout(device->GetDevice(), set.second, nullptr);
-	}
-
-	for (const auto& buffer : uniformBuffers)
-	{
-		for (size_t i = 0; i < numBuffers; i++)
+		for (const auto& set : descriptorSetLayouts)
 		{
-			vkDestroyBuffer(device->GetDevice(), buffer.second.first[i], nullptr);
+			vkDestroyDescriptorSetLayout(device->GetDevice(), set.second[instance], nullptr);
 		}
-	}
-	
-	for (const auto& memory : uniformBuffersMemories)
-	{
-		for (size_t i = 0; i < numBuffers; i++)
+
+		for (const auto& buffer : uniformBuffers)
 		{
-			vkFreeMemory(device->GetDevice(), memory.second.first[i], nullptr);
+			for (size_t i = 0; i < numBuffers; i++)
+			{
+				vkDestroyBuffer(device->GetDevice(), buffer.second.first[i][instance], nullptr);
+			}
+		}
+
+		for (const auto& memory : uniformBuffersMemories)
+		{
+			for (size_t i = 0; i < numBuffers; i++)
+			{
+				vkFreeMemory(device->GetDevice(), memory.second.first[i][instance], nullptr);
+			}
 		}
 	}
 
@@ -191,6 +194,9 @@ VKShader::~VKShader()
 	delete[] shaderStages;
 }
 
+/*
+	We only add every uniform once, so we could use the index 0 everywhere, but upon creation the instance_counter is 0, so we'll use that
+*/
 bool VKShader::AddUniform(const std::string& name, uint32_t stages, UniformType type, uint32_t set, uint32_t binding, size_t size, Texture* texture)
 {
 	uint32_t flags = GetShaderStages(stages);
@@ -203,8 +209,8 @@ bool VKShader::AddUniform(const std::string& name, uint32_t stages, UniformType 
 	auto layoutIndex = descriptorSetLayouts.find(set);
 	if  (setIndex != descriptorSets.end() && layoutIndex != descriptorSetLayouts.end())
 	{
-		_DescriptorSetLayout = descriptorSetLayouts.at(set);
-		_DescriptorSets = descriptorSets.at(set);
+		_DescriptorSetLayout = descriptorSetLayouts.at(set)[instance_counter];
+		_DescriptorSets = descriptorSets.at(set)[instance_counter];
 
 		vkDestroyDescriptorSetLayout(device->GetDevice(), _DescriptorSetLayout, nullptr);
 		vkFreeDescriptorSets(device->GetDevice(), descriptorPool, numBuffers, _DescriptorSets.data());
@@ -290,7 +296,8 @@ bool VKShader::AddUniform(const std::string& name, uint32_t stages, UniformType 
 		return false;
 	}
 
-	descriptorSetLayouts.insert(std::make_pair(set, _DescriptorSetLayout));
+	std::vector<VkDescriptorSetLayout> _DSetLayout = { _DescriptorSetLayout };
+	descriptorSetLayouts.insert(std::make_pair(set, _DSetLayout));
 
 	//We create the pipeline layout
 	std::vector<VkDescriptorSetLayout> listOfLayoutSets;
@@ -298,7 +305,7 @@ bool VKShader::AddUniform(const std::string& name, uint32_t stages, UniformType 
 
 	for (const auto& _Layout : descriptorSetLayouts)
 	{
-		listOfLayoutSets.push_back(_Layout.second);
+		listOfLayoutSets.push_back(_Layout.second[instance_counter]);
 	}
 
 	VkPipelineLayoutCreateInfo pipelineLayoutInfo = {};
@@ -322,10 +329,10 @@ bool VKShader::AddUniform(const std::string& name, uint32_t stages, UniformType 
 	{
 		VKTexture* tex = (VKTexture*)texture;
 
-		std::vector<VkImageView> views(numBuffers, tex->GetTextureImageView());
+		std::vector<std::vector<VkImageView>> views(numBuffers, { tex->GetTextureImageView() });
 		imageViews.insert(std::make_pair(name, views));
 
-		std::vector<VkSampler> sampler(numBuffers, tex->GetTextureSampler());
+		std::vector< std::vector<VkSampler>> sampler(numBuffers, { tex->GetTextureSampler() });
 		samplers.insert(std::make_pair(name, sampler));
 	}
 	
@@ -347,7 +354,8 @@ bool VKShader::AddUniform(const std::string& name, uint32_t stages, UniformType 
 		return false;
 	}
 
-	descriptorSets.insert(std::make_pair(set, _DescriptorSets));
+	std::vector<std::vector<VkDescriptorSet>> _DSets = { _DescriptorSets };
+	descriptorSets.insert(std::make_pair(set, _DSets));
 
 	/*for (const auto& _set : descriptorSets)
 	{
@@ -356,7 +364,7 @@ bool VKShader::AddUniform(const std::string& name, uint32_t stages, UniformType 
 		PR_LOG_MESSAGE("Descriptor set %u, ID: %p\n", _set.first, _set.second[2]);
 	}*/
 
-	std::unordered_map<uint32_t, std::pair<std::vector<VkBuffer>, size_t>> uBuffers;
+	std::unordered_map<uint32_t, std::pair<std::vector<std::vector<VkBuffer>>, size_t>> uBuffers;
 
 	for (const auto& buff : uniformBuffers)
 	{
@@ -371,13 +379,13 @@ bool VKShader::AddUniform(const std::string& name, uint32_t stages, UniformType 
 		for (size_t i = 0; i < numBuffers; i++)
 		{
 			VkDescriptorBufferInfo bufferInfo = {};
-			bufferInfo.buffer = buffer.second.first[i];
+			bufferInfo.buffer = buffer.second.first[instance_counter][i];
 			bufferInfo.offset = 0;
 			bufferInfo.range = buffer.second.second;
 
 			VkWriteDescriptorSet descriptorWrite = {};
 			descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			descriptorWrite.dstSet = descriptorSets[set][i];
+			descriptorWrite.dstSet = descriptorSets[set][instance_counter][i];
 			descriptorWrite.dstBinding = buffer.first;
 			descriptorWrite.dstArrayElement = 0;
 			descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -498,99 +506,83 @@ bool VKShader::AddShader(const std::vector<char>& code, ShaderType type)
 	return true;
 }
 
-void VKShader::Bind(void* commandBuffer) const
+void VKShader::BindSet(void* commandBuffer, uint32_t set, uint32_t instance_index) const
 {
-	std::vector<VkDescriptorSet> sets;
-	sets.reserve(descriptorSets.size());
-	uint8_t count = 0;
-
-	for (const auto& set : descriptorSets)
-	{
-		sets.push_back(set.second[swapchain->GetAquiredImageIndex()]);
-		count++;
-	}
-
-	if (count == 0)
-		return;
+	if (set >= descriptorSets.size())
+		PR_LOG_RUNTIME_ERROR("Tried to bind set %i, but only 0 to %i sets are valid!\n", set, descriptorSets.size());
 
 	VKCommandBuffer* vkcmdbuff = reinterpret_cast<VKCommandBuffer*>(commandBuffer);
 	
-	vkCmdBindDescriptorSets(vkcmdbuff->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, count, sets.data(), 0, nullptr);
+	vkCmdBindDescriptorSets(vkcmdbuff->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets.at(set).at(instance_index).at(swapchain->GetAquiredImageIndex()), 0, nullptr);
 }
 
-void VKShader::SetUniformi(const std::string& name, int value, size_t offset) const
+void VKShader::SetUniformi(const std::string& name, int value, size_t offset, uint32_t instance_index) const
 {
 	void* data;
-	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
+	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[instance_index][swapchain->GetAquiredImageIndex()];
 
 	vkMapMemory(device->GetDevice(), mem, offset, sizeof(int), 0, &data);
 	memcpy(data, &value, sizeof(int));
 	vkUnmapMemory(device->GetDevice(), mem);
 }
 
-void VKShader::SetUniformf(const std::string& name, float value, size_t offset) const
+void VKShader::SetUniformf(const std::string& name, float value, size_t offset, uint32_t instance_index) const
 {
 	void* data;
-	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
+	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[instance_index][swapchain->GetAquiredImageIndex()];
 
 	vkMapMemory(device->GetDevice(), mem, offset, sizeof(float), 0, &data);
 	memcpy(data, &value, sizeof(float));
 	vkUnmapMemory(device->GetDevice(), mem);
 }
 
-void VKShader::SetUniform(const std::string& name, const Vector2f& value, size_t offset) const
+void VKShader::SetUniform(const std::string& name, const Vector2f& value, size_t offset, uint32_t instance_index) const
 {
 	void* data;
-	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
+	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[instance_index][swapchain->GetAquiredImageIndex()];
 
 	vkMapMemory(device->GetDevice(), mem, offset, Vector2f::size(), 0, &data);
 	memcpy(data, &value, Vector2f::size());
 	vkUnmapMemory(device->GetDevice(), mem);
 }
 
-void VKShader::SetUniform(const std::string& name, const Vector3f& value, size_t offset) const
+void VKShader::SetUniform(const std::string& name, const Vector3f& value, size_t offset, uint32_t instance_index) const
 {
 	void* data;
-	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
+	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[instance_index][swapchain->GetAquiredImageIndex()];
 
 	vkMapMemory(device->GetDevice(), mem, offset, Vector3f::size(), 0, &data);
 	memcpy(data, &value, Vector3f::size());
 	vkUnmapMemory(device->GetDevice(), mem);
 }
 
-void VKShader::SetUniform(const std::string& name, const Vector4f& value, size_t offset) const
+void VKShader::SetUniform(const std::string& name, const Vector4f& value, size_t offset, uint32_t instance_index) const
 {
 	void* data;
-	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
+	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[instance_index][swapchain->GetAquiredImageIndex()];
 
 	vkMapMemory(device->GetDevice(), mem, offset, Vector4f::size(), 0, &data);
 	memcpy(data, &value, Vector4f::size());
 	vkUnmapMemory(device->GetDevice(), mem);
 }
 
-void VKShader::SetUniform(const std::string& name, const Matrix4f& value, size_t offset) const
+void VKShader::SetUniform(const std::string& name, const Matrix4f& value, size_t offset, uint32_t instance_index) const
 {
 	void* data;
-	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
+	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[instance_index][swapchain->GetAquiredImageIndex()];
 
-	float* dataF = value.GetData();
+	float* dataF = value.m;
 
 	vkMapMemory(device->GetDevice(), mem, offset, sizeof(float) * 16, 0, &data);
 	memcpy(data, dataF, sizeof(float) * 16);
 	vkUnmapMemory(device->GetDevice(), mem);
 }
 
-void VKShader::SetTexture(const std::string& name, Texture* value) const
+void VKShader::SetTexture(const std::string& name, Texture* value, uint32_t instance_index) const
 {
 	std::pair<uint32_t, uint32_t> setBind = setBindings.at(name);
 
 	VKTexture* tex = (VKTexture*)value;
-
-	/*std::vector<VkImageView> views(numBuffers, tex->GetTextureImageView());
-	imageViews.insert(std::make_pair(name, views));
-
-	std::vector<VkSampler> sampler(numBuffers, tex->GetTextureSampler());
-	samplers.insert(std::make_pair(name, sampler));*/
 
 	for (size_t i = 0; i < numBuffers; i++)
 	{
@@ -601,7 +593,7 @@ void VKShader::SetTexture(const std::string& name, Texture* value) const
 
 		VkWriteDescriptorSet descriptorWrite = {};
 		descriptorWrite.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		descriptorWrite.dstSet = descriptorSets.at(setBind.first)[i];
+		descriptorWrite.dstSet = descriptorSets.at(setBind.first)[instance_index][i];
 		descriptorWrite.dstBinding = setBind.second;
 		descriptorWrite.dstArrayElement = 0;
 		descriptorWrite.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
@@ -614,14 +606,19 @@ void VKShader::SetTexture(const std::string& name, Texture* value) const
 	}
 }
 
-void VKShader::SetUniform(const std::string& name, const void* value, size_t size, size_t offset) const
+void VKShader::SetUniform(const std::string& name, const void* value, size_t size, size_t offset, uint32_t instance_index) const
 {
 	void* data;
-	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[swapchain->GetAquiredImageIndex()];
+	const VkDeviceMemory& mem = uniformBuffersMemories.at(name).first[instance_index][swapchain->GetAquiredImageIndex()];
 
 	vkMapMemory(device->GetDevice(), mem, offset, size, 0, &data);
 	memcpy(data, value, size);
 	vkUnmapMemory(device->GetDevice(), mem);
+}
+
+void VKShader::RegisterInstance()
+{
+	instance_counter++;
 }
 
 VkShaderModule VKShader::CreateShaderModule(const std::vector<char>& code) const
@@ -683,6 +680,8 @@ void VKShader::CreateUniformBuffer(VkDeviceSize bufferSize, const std::string& n
 		vkBindBufferMemory(device->GetDevice(), ubos[i], uboMemories[i], 0);
 	}
 
-	uniformBuffers.insert(std::make_pair(name, std::make_pair(ubos, bufferSize)));
-	uniformBuffersMemories.insert(std::make_pair(name, std::make_pair(uboMemories, bufferSize)));
+	std::vector<std::vector<VkBuffer>> _ubos = { ubos };
+	std::vector<std::vector<VkDeviceMemory>> _uboMemories = { uboMemories };
+	uniformBuffers.insert(std::make_pair(name, std::make_pair(_ubos, bufferSize)));
+	uniformBuffersMemories.insert(std::make_pair(name, std::make_pair(_uboMemories, bufferSize)));
 }

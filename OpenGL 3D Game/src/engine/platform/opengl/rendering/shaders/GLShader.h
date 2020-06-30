@@ -29,23 +29,23 @@ public:
 	bool AddShader(const std::vector<char>& code, ShaderType type) override;
 	bool CompileShader() const override;
 
-	virtual void UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const override {};
-	virtual void UpdateSharedUniforms(GameObject* object) const override {}
-	virtual void UpdateObjectUniforms(GameObject* object) const override {};
+	virtual void UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index = 0) const override {};
+	virtual void UpdateSharedUniforms(GameObject* object, uint32_t instance_index = 0) const override {}
+	virtual void UpdateObjectUniforms(GameObject* object, uint32_t instance_index = 0) const override {};
 
-	virtual void SetUniformi(const std::string& name, int value, size_t offset = 0) const override { glUniform1i(getUniformLocation(name), value); }
-	virtual void SetUniformf(const std::string& name, float value, size_t offset = 0) const override { glUniform1f(getUniformLocation(name), value); }
+	virtual void SetUniformi(const std::string& name, int value, size_t offset = 0, uint32_t instance_index = 0) const override { glUniform1i(getUniformLocation(name), value); }
+	virtual void SetUniformf(const std::string& name, float value, size_t offset = 0, uint32_t instance_index = 0) const override { glUniform1f(getUniformLocation(name), value); }
 
-	virtual void SetUniform(const std::string& name, const Vector2f& value, size_t offset = 0) const override { glUniform2f(getUniformLocation(name), value.x, value.y); }
-	virtual void SetUniform(const std::string& name, const Vector3f& value, size_t offset = 0) const override { glUniform3f(getUniformLocation(name), value.x, value.y, value.z); }
-	virtual void SetUniform(const std::string& name, const Vector4f& value, size_t offset = 0) const override { glUniform4f(getUniformLocation(name), value.x, value.y, value.z, value.w); }
-	virtual void SetUniform(const std::string& name, const Matrix4f& matrix, size_t offset = 0) const override { glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, matrix.m); }
+	virtual void SetUniform(const std::string& name, const Vector2f& value, size_t offset = 0, uint32_t instance_index = 0) const override { glUniform2f(getUniformLocation(name), value.x, value.y); }
+	virtual void SetUniform(const std::string& name, const Vector3f& value, size_t offset = 0, uint32_t instance_index = 0) const override { glUniform3f(getUniformLocation(name), value.x, value.y, value.z); }
+	virtual void SetUniform(const std::string& name, const Vector4f& value, size_t offset = 0, uint32_t instance_index = 0) const override { glUniform4f(getUniformLocation(name), value.x, value.y, value.z, value.w); }
+	virtual void SetUniform(const std::string& name, const Matrix4f& matrix, size_t offset = 0, uint32_t instance_index = 0) const override { glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, matrix.m); }
 
-	virtual void SetTexture(const std::string& name, Texture* value) const {};
+	virtual void SetTexture(const std::string& name, Texture* value, uint32_t instance_index = 0) const {};
 
-	virtual void SetUniform(const std::string& name, const void* value, size_t size, size_t offset = 0) const override {}
+	virtual void SetUniform(const std::string& name, const void* value, size_t size, size_t offset = 0, uint32_t instance_index = 0) const override {}
 
-	virtual void BindUniformBlock(const std::string& name, uint32_t binding) const override { glUniformBlockBinding(program, getUniformLocation(name), binding); }
+	virtual void BindUniformBlock(const std::string& name, uint32_t binding, uint32_t instance_index = 0) const override { glUniformBlockBinding(program, getUniformLocation(name), binding); }
 
 	void BindFragDataLocation(const std::string& name, GLuint index)
 	{

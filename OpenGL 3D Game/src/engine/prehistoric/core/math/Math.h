@@ -410,8 +410,6 @@ public:
 
 	float* const getRow(const int i) const;
 
-	float* GetData() const;
-
 	void print() const
 	{
 		PR_LOG_MESSAGE("Matrix: \n");
@@ -903,8 +901,6 @@ public:
 	static Matrix4f View(const Vector3f& forward, const Vector3f& up);
 
 	float* const getRow(const int i) const;
-
-	float* GetData() const;
 
 	void print() const
 	{

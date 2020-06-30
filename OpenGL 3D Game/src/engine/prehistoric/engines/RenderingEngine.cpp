@@ -5,7 +5,7 @@
 #include "engine/prehistoric/common/util/DeviceProperties.h"
 #include "engine/platform/vulkan/framework/context/VKContext.h"
 
-#include "engine/prehistoric/component/gui/button/GUIButton.h"
+#include "engine/prehistoric/modules/gui/button/GUIButton.h"
 
 RenderingEngine::RenderingEngine()
 {
@@ -26,9 +26,17 @@ RenderingEngine::RenderingEngine()
 
 	window->SetClearColor(0.23f, 0.78f, 0.88f, 1.0f);
 
-	camera = new Camera(5.0f, 50.0f, 0.8f, 80.0f, Vector3f(-178, 102, -47));
-	camera->RotateY(-80);
-	camera->RotateX(30);
+	if (FrameworkConfig::api == OpenGL)
+	{
+		camera = new Camera(5.0f, 50.0f, 0.8f, 80.0f, Vector3f(-178, 102, -47));
+		camera->RotateY(-80);
+		camera->RotateX(30);
+	}
+	else
+	{
+		camera = new Camera(5.0f, 50.0f, 0.8f, 80.0f, Vector3f(0, 0, -2));
+	}
+
 	camera->LogStage();
 
 	camera->setSpeedControl({ MOUSE_SCROLL, PR_KEY_UNKNOWN, PR_JOYSTICK_1 });
@@ -76,24 +84,26 @@ void RenderingEngine::Update(float delta)
 
 void RenderingEngine::Render(GameObject* root)
 {
-	window->GetSwapchain()->BindDrawCommandBuffer();
+	window->GetSwapchain()->PrepareRendering();
 
 	for (auto pipeline : models)
 	{
-		pipeline.first->BindPipeline();
-		pipeline.first->getShader()->UpdateShaderUniforms(camera, lights);
-		pipeline.first->getShader()->UpdateSharedUniforms(pipeline.second[0]->GetParent());
+		Pipeline* pl = pipeline.first;
+
+		pl->BindPipeline();
+		pl->getShader()->UpdateShaderUniforms(camera, lights);
+		//The models array is guaranteed to contain at least on entry for each pipeline, so this is safe to get the first element
+		pl->getShader()->UpdateSharedUniforms(pipeline.second[0]->GetParent()); 
 
 		for (auto renderer : pipeline.second)
 		{
-			//pipeline.first->getShader()->Bind(window->GetSwapchain()->GetDrawCommandBuffer());
 			renderer->BatchRender(*this);
 		}
 
-		pipeline.first->UnbindPipeline();
+		pl->UnbindPipeline();
 	}
 
-	window->GetSwapchain()->UnbindDrawCommandBuffer();
+	window->GetSwapchain()->EndRendering();
 
 	window->Render();
 	models.clear();

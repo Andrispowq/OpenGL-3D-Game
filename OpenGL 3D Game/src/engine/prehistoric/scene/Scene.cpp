@@ -6,8 +6,8 @@
 #include "engine/platform/vulkan/texture/VkTexture.h"
 #include "engine/platform/vulkan/rendering/shaders/pbr/VKPBRShader.h"
 
-#include "engine/prehistoric/component/gui/GUIElement.h"
-#include "engine/prehistoric/component/gui/button/GUIButton.h"
+#include "engine/prehistoric/modules/gui/GUIElement.h"
+#include "engine/prehistoric/modules/gui/button/GUIButton.h"
 
 Terrain* Scene::terrain;
 
@@ -25,7 +25,7 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 
 		VKGraphicsPipeline* pipeline = new VKGraphicsPipeline(shader, vbo);
 
-		pipeline->SetBackfaceCulling(true);
+		pipeline->SetBackfaceCulling(false);
 
 		pipeline->SetViewportStart({ 0, 0 });
 		pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
@@ -65,12 +65,10 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 
 		root->AddChild("Terrain", terrain);
 
-		GameObject* gui = new GameObject;
-		gui->AddComponent("GUI", new GUIElement(window, terrain->getMaps()->getSplatmap()));
+		GameObject* gui = new GUIElement(window, terrain->getMaps()->getSplatmap());
 		gui->Move({ 0.5f, 0.5f, 0.0f });
 		gui->SetScale({ 0.25f, 0.25f, 1.0f });
 		//((GUIElement*)gui->GetComponent("GUI"))->setVisible(false);
-
 		root->AddChild("GUI", gui);
 
 		GameObject* sun = new GameObject();

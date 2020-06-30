@@ -17,6 +17,10 @@
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLNormalMapShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLSplatmapShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLTerrainHeightsShader.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\buffer\VKBuffer.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorPool.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorSet.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorSetBinding.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\buffer\ShaderStorageBuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\ComputePipeline.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\GraphicsPipeline.cpp" />
@@ -72,8 +76,8 @@
     <ClCompile Include="src\engine\prehistoric\common\rendering\shaders\Shader.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\util\DeviceProperties.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\util\InitDevice.cpp" />
-    <ClCompile Include="src\engine\prehistoric\component\gui\button\GUIButton.cpp" />
-    <ClCompile Include="src\engine\prehistoric\component\gui\GUIElement.cpp" />
+    <ClCompile Include="src\engine\prehistoric\modules\gui\button\GUIButton.cpp" />
+    <ClCompile Include="src\engine\prehistoric\modules\gui\GUIElement.cpp" />
     <ClCompile Include="src\engine\prehistoric\component\light\Light.cpp" />
     <ClCompile Include="src\engine\prehistoric\component\renderer\Renderable.cpp" />
     <ClCompile Include="src\engine\prehistoric\component\renderer\Renderer.cpp" />
@@ -135,6 +139,7 @@
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\terrain\GLTerrainWireframeShader.h" />
     <ClInclude Include="src\engine\platform\opengl\texture\GLTexture.h" />
     <ClInclude Include="src\engine\platform\Prehistoric.h" />
+    <ClInclude Include="src\engine\platform\vulkan\buffer\VKBuffer.h" />
     <ClInclude Include="src\engine\platform\vulkan\buffer\VKMeshVBO.h" />
     <ClInclude Include="src\engine\platform\vulkan\capabilities\VKCapabilities.h" />
     <ClInclude Include="src\engine\platform\vulkan\framework\context\VKContext.h" />
@@ -148,6 +153,9 @@
     <ClInclude Include="src\engine\platform\vulkan\framework\swapchain\VKSwapchain.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\command\VKCommandBuffer.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\command\VKCommandPool.h" />
+    <ClInclude Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorPool.h" />
+    <ClInclude Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorSet.h" />
+    <ClInclude Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorSetBinding.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\framebuffer\VKFramebuffer.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\pipeline\VKGraphicsPipeline.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\pipeline\VKPipeline.h" />
@@ -179,8 +187,8 @@
     <ClInclude Include="src\engine\prehistoric\common\util\DeviceProperties.h" />
     <ClInclude Include="src\engine\prehistoric\common\util\InitDevice.h" />
     <ClInclude Include="src\engine\prehistoric\component\Component.h" />
-    <ClInclude Include="src\engine\prehistoric\component\gui\button\GUIButton.h" />
-    <ClInclude Include="src\engine\prehistoric\component\gui\GUIElement.h" />
+    <ClInclude Include="src\engine\prehistoric\modules\gui\button\GUIButton.h" />
+    <ClInclude Include="src\engine\prehistoric\modules\gui\GUIElement.h" />
     <ClInclude Include="src\engine\prehistoric\component\light\Light.h" />
     <ClInclude Include="src\engine\prehistoric\component\renderer\Renderable.h" />
     <ClInclude Include="src\engine\prehistoric\component\renderer\Renderer.h" />

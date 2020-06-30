@@ -5,6 +5,8 @@
 #include "engine/prehistoric/common/rendering/pipeline/GraphicsPipeline.h"
 #include "engine/prehistoric/common/rendering/pipeline/ComputePipeline.h"
 
+#include "engine/platform/vulkan/rendering/shaders/VkShader.h"
+
 std::vector<Pipeline*> Renderable::pipelines;
 
 Renderable::Renderable(Pipeline* pipeline, Window* window)
@@ -20,6 +22,17 @@ Renderable::Renderable(Pipeline* pipeline, Window* window)
 	else
 	{
 		this->pipelineIndex = index;
+	}
+
+	shader_instance_index = 0;
+
+	//This is ugly code but there is no good workaround without some overhead, maybe if I find a way this will be removed
+	//Please also note that VKShader::RegisterInstance() considers the Shader pipeline constant, 
+	//which implies that you cannot add further uniforms, as they'd only affect the lastest instance
+	if (FrameworkConfig::api == Vulkan)
+	{
+		shader_instance_index = reinterpret_cast<VKShader*>(pipeline->getShader())->getInstanceIndex();
+		reinterpret_cast<VKShader*>(pipeline->getShader())->RegisterInstance();
 	}
 
 	//Just in case, but this might be added as optional because it resets the viewport and the scissor

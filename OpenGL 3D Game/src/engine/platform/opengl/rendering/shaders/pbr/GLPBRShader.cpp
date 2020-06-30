@@ -45,7 +45,7 @@ GLPBRShader::GLPBRShader() : GLShader()
 	AddUniform("numberOfLights");
 }
 
-void GLPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const
+void GLPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index) const
 {
 	SetUniform("m_view", camera->getViewMatrix());
 	SetUniform("m_projection", camera->getProjectionMatrix());
@@ -74,7 +74,7 @@ void GLPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>
 	SetUniformi("highDetailRange", EngineConfig::rendererHighDetailRange);
 }
 
-void GLPBRShader::UpdateObjectUniforms(GameObject* object) const
+void GLPBRShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
 {
 	Material* material = dynamic_cast<Renderer*>(object->GetComponent(RENDERER_COMPONENT))->GetMaterial();
 

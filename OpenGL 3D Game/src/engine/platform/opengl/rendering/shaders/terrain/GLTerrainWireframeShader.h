@@ -11,9 +11,9 @@ public:
 	GLTerrainWireframeShader();
 	virtual ~GLTerrainWireframeShader() {}
 
-	virtual void UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const override;
-	virtual void UpdateSharedUniforms(GameObject* object) const override;
-	virtual void UpdateObjectUniforms(GameObject* object) const override;
+	virtual void UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index = 0) const override;
+	virtual void UpdateSharedUniforms(GameObject* object, uint32_t instance_index = 0) const override;
+	virtual void UpdateObjectUniforms(GameObject* object, uint32_t instance_index = 0) const override;
 };
 
 #endif

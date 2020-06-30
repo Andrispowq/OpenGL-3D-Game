@@ -23,6 +23,7 @@ GUIElement::GUIElement(Window* window, Texture* texture, void* data, size_t data
 	if (guiVbo == nullptr)
 	{
 		guiVbo = ModelFabricator::CreateQuad(window);
+		guiVbo->SetFrontFace(FrontFace::CLOCKWISE);
 	}
 
 	if (pipeline == nullptr)
@@ -42,6 +43,8 @@ GUIElement::GUIElement(Window* window, Texture* texture, void* data, size_t data
 
 		pipeline->CreatePipeline(window);
 	}
+
+	AddComponent(RENDERER_COMPONENT, new Renderer(pipeline, nullptr, window));
 }
 
 void GUIElement::PreUpdate(Engine* engine)
@@ -53,14 +56,7 @@ void GUIElement::PreRender(RenderingEngine* renderingEngine)
 	if (!visible)
 		return;
 
-	pipeline->BindPipeline();
-	pipeline->getShader()->UpdateObjectUniforms(parent);
-
-	guiVbo->Bind(renderingEngine->GetWindow()->GetSwapchain()->GetDrawCommandBuffer());
-	guiVbo->Draw(renderingEngine->GetWindow()->GetSwapchain()->GetDrawCommandBuffer());
-	guiVbo->Unbind();
-	
-	pipeline->UnbindPipeline();
+	GameObject::PreRender(renderingEngine);
 }
 
 GUIElement::~GUIElement()

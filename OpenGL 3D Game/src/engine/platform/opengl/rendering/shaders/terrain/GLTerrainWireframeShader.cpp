@@ -52,7 +52,7 @@ GLTerrainWireframeShader::GLTerrainWireframeShader()
 	AddUniform("highDetailRange");
 }
 
-void GLTerrainWireframeShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const
+void GLTerrainWireframeShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index) const
 {
 	SetUniform("viewProjection", camera->getViewProjectionMatrix());
 	SetUniform("cameraPosition", camera->getPosition());
@@ -89,7 +89,7 @@ void GLTerrainWireframeShader::UpdateShaderUniforms(Camera* camera, const std::v
 	SetUniformi("highDetailRange", EngineConfig::rendererHighDetailRange);
 }
 
-void GLTerrainWireframeShader::UpdateSharedUniforms(GameObject* object) const
+void GLTerrainWireframeShader::UpdateSharedUniforms(GameObject* object, uint32_t instance_index) const
 {
 	TerrainNode* node = (TerrainNode*)object;
 
@@ -99,7 +99,7 @@ void GLTerrainWireframeShader::UpdateSharedUniforms(GameObject* object) const
 	SetUniformi("splatmap", 1);
 }
 
-void GLTerrainWireframeShader::UpdateObjectUniforms(GameObject* object) const
+void GLTerrainWireframeShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
 {
 	TerrainNode* node = (TerrainNode*)object;
 

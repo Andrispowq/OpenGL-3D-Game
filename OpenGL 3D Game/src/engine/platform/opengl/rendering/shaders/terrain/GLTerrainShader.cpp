@@ -83,7 +83,7 @@ GLTerrainShader::GLTerrainShader()
 	location_lod = uniforms.at("lod");
 }
 
-void GLTerrainShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights) const
+void GLTerrainShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index) const
 {
 	SetUniform("viewProjection", camera->getViewProjectionMatrix());
 	SetUniform("cameraPosition", camera->getPosition());
@@ -179,7 +179,7 @@ void GLTerrainShader::UpdateShaderUniforms(Camera* camera, const std::vector<Lig
 	}
 }
 
-void GLTerrainShader::UpdateSharedUniforms(GameObject* object) const
+void GLTerrainShader::UpdateSharedUniforms(GameObject* object, uint32_t instance_index) const
 {
 	TerrainNode* node = (TerrainNode*)object;
 
@@ -191,7 +191,7 @@ void GLTerrainShader::UpdateSharedUniforms(GameObject* object) const
 	SetUniformi("splatmap", 2);
 }
 
-void GLTerrainShader::UpdateObjectUniforms(GameObject* object) const
+void GLTerrainShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
 {
 	TerrainNode* node = (TerrainNode*)object;
 

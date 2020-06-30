@@ -18,14 +18,21 @@ struct Light
 const float PI = 3.141592653589793238;
 const int max_lights = 10;
 
-layout (set = 0, binding = 2, std140) uniform Lights
+layout(set = 0, binding = 0) uniform Camera 
+{
+    mat4 view;
+    mat4 proj;
+    vec3 cameraPosition;
+};
+
+layout (set = 0, binding = 1, std140) uniform Lights
 {
     layout(offset = max_lights * 0 * 16) vec3 position[max_lights];
 	layout(offset = max_lights * 1 * 16) vec3 colour[max_lights];
 	layout(offset = max_lights * 2 * 16) vec3 intensity[max_lights];
 } lights;
 
-layout (set = 0, binding = 3, std140) uniform Materials
+layout (set = 1, binding = 1, std140) uniform Materials
 {
     layout (offset = 00) vec3 colour;
 	layout (offset = 16) float metallic;
@@ -34,16 +41,9 @@ layout (set = 0, binding = 3, std140) uniform Materials
     layout (offset = 24) float gamma;
 } material;
 
-layout(set = 0, binding = 0) uniform Camera 
-{
-    mat4 view;
-    mat4 proj;
-    vec3 cameraPosition;
-};
-
-layout(set = 0, binding = 4) uniform sampler2D albedoMap;
-layout(set = 0, binding = 5) uniform sampler2D metallicMap;
-layout(set = 0, binding = 6) uniform sampler2D roughnessMap;
+layout(set = 1, binding = 2) uniform sampler2D albedoMap;
+layout(set = 1, binding = 3) uniform sampler2D metallicMap;
+layout(set = 1, binding = 4) uniform sampler2D roughnessMap;
 
 float DistributionGGX(vec3 N, vec3 H, float roughness);
 float GeometrySchlickGGX(float NdotV, float roughness);

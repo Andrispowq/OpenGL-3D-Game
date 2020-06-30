@@ -1,7 +1,7 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLGUIShader.h"
 
-#include "engine/prehistoric/component/gui/GUIElement.h"
+#include "engine/prehistoric/modules/gui/GUIElement.h"
 
 GLGUIShader::GLGUIShader()
 	: GLShader()
@@ -14,11 +14,11 @@ GLGUIShader::GLGUIShader()
 	AddUniform("image");
 }
 
-void GLGUIShader::UpdateObjectUniforms(GameObject* object) const
+void GLGUIShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
 {
 	SetUniform("m_transform", object->getWorldTransform()->getTransformationMatrix());
 
-	GUIElement* gui = reinterpret_cast<GUIElement*>(object->GetComponent("GUI")); //TODO: This should NOT be hardcoded here
+	GUIElement* gui = reinterpret_cast<GUIElement*>(object); //TODO: This should NOT be hardcoded here
 
 	gui->getTexture()->Bind();
 	SetUniformi("image", 0);

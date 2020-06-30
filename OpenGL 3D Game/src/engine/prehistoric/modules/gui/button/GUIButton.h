@@ -1,7 +1,7 @@
 #ifndef GUI_BUTTON_H
 #define GUI_BUTTON_H
 
-#include "engine/prehistoric/component/gui/GUIElement.h"
+#include "engine/prehistoric/modules/gui/GUIElement.h"
 
 class GUIButton : public GUIElement
 {

@@ -1,7 +1,7 @@
 #ifndef GUI_ELEMENT_H
 #define GUI_ELEMENT_H
 
-#include "engine/prehistoric/component/Component.h"
+#include "engine/prehistoric/core/gameObject/GameObject.h"
 
 #include "engine/prehistoric/common/model/Texture.h"
 
@@ -14,7 +14,9 @@
 #include "engine/platform/opengl/rendering/shaders/GLShader.h"
 #include "engine/platform/vulkan/rendering/shaders/VKShader.h"
 
-class GUIElement : public Component
+#include "engine/prehistoric/component/renderer/Renderer.h"
+
+class GUIElement : public GameObject
 {
 public:
 	GUIElement(Window* window, Texture* texture = nullptr, void* data = nullptr, size_t dataSize = 0, bool visible = true);
@@ -46,6 +48,7 @@ protected:
 
 	static VBO* guiVbo;
 	static Pipeline* pipeline;
+	
 	Texture* texture;
 
 	Window* window;

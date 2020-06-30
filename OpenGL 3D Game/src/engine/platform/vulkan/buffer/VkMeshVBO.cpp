@@ -23,11 +23,8 @@ VKMeshVBO::VKMeshVBO(Window* window)
 
 VKMeshVBO::~VKMeshVBO()
 {
-	vkDestroyBuffer(device->GetDevice(), vertexBuffer, nullptr);
-	vkFreeMemory(device->GetDevice(), vertexBufferMemory, nullptr);
-
-	vkDestroyBuffer(device->GetDevice(), indexBuffer, nullptr);
-	vkFreeMemory(device->GetDevice(), indexBufferMemory, nullptr);
+	delete vertexBuffer;
+	delete indexBuffer;
 }
 
 void VKMeshVBO::Store(const Mesh& mesh)
@@ -37,45 +34,32 @@ void VKMeshVBO::Store(const Mesh& mesh)
 	//Building mesh data
 	VkDeviceSize vBufferSize = mesh.getVertices().size() * Vertex::GetSize();
 	VkDeviceSize iBufferSize = mesh.getIndices().size() * sizeof(uint16_t);
-	void* data;
+
+	this->vertexBuffer = new VKBuffer(physicalDevice, device, vBufferSize,
+		VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
+	this->indexBuffer = new VKBuffer(physicalDevice, device, iBufferSize,
+		VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
 	float* vData = mesh.GetVertexData();
 	uint16_t* iData = mesh.GetIndexData();
 
 	//Creation of the vertex buffer
-	VkBuffer stagingBuffer;
-	VkDeviceMemory stagingBufferMemory;
+	VKBuffer* stagingBuffer = new VKBuffer(physicalDevice, device, vBufferSize,
+		VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
-	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), vBufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
-		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+	stagingBuffer->MapMemory(vData);
+	stagingBuffer->CopyBuffer(vertexBuffer); //Copies the object which invoked the function to the buffer passed as an argument
 
-	vkMapMemory(device->GetDevice(), stagingBufferMemory, 0, vBufferSize, 0, &data);
-	memcpy(data, vData, (size_t) vBufferSize);
-	vkUnmapMemory(device->GetDevice(), stagingBufferMemory);
-
-	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), vBufferSize,
-		VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, 
-		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, vertexBuffer, vertexBufferMemory);
-	VKUtil::CopyBuffer(*device, stagingBuffer, vertexBuffer, vBufferSize);
-
-	vkDestroyBuffer(device->GetDevice(), stagingBuffer, nullptr);
-	vkFreeMemory(device->GetDevice(), stagingBufferMemory, nullptr);
+	delete stagingBuffer;
 	 
 	//Creation of index buffer
-	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), iBufferSize, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
-		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
+	stagingBuffer = new VKBuffer(physicalDevice, device, iBufferSize,
+		VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
-	vkMapMemory(device->GetDevice(), stagingBufferMemory, 0, iBufferSize, 0, &data);
-	memcpy(data, iData, (size_t) iBufferSize);
-	vkUnmapMemory(device->GetDevice(), stagingBufferMemory);
+	stagingBuffer->MapMemory(iData);
+	stagingBuffer->CopyBuffer(indexBuffer); //Copies the object which invoked the function to the buffer passed as an argument
 
-	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), iBufferSize, 
-		VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, 
-		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, indexBuffer, indexBufferMemory);
-	VKUtil::CopyBuffer(*device, stagingBuffer, indexBuffer, iBufferSize);
-
-	vkDestroyBuffer(device->GetDevice(), stagingBuffer, nullptr);
-	vkFreeMemory(device->GetDevice(), stagingBufferMemory, nullptr);
+	delete stagingBuffer;
 }
 
 void VKMeshVBO::Bind(void* commandBuffer) const
@@ -85,8 +69,8 @@ void VKMeshVBO::Bind(void* commandBuffer) const
 	//VkBuffer vertexBuffers[] = { vertexBuffer };
 	VkDeviceSize offsets[] = { 0 };
 
-	vkCmdBindVertexBuffers(buffer->GetCommandBuffer(), 0, 1, &vertexBuffer, offsets);
-	vkCmdBindIndexBuffer(buffer->GetCommandBuffer(), indexBuffer, 0, VK_INDEX_TYPE_UINT16);
+	vkCmdBindVertexBuffers(buffer->GetCommandBuffer(), 0, 1, &vertexBuffer->getBuffer(), offsets);
+	vkCmdBindIndexBuffer(buffer->GetCommandBuffer(), indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
 }
 
 void VKMeshVBO::Draw(void* commandBuffer) const

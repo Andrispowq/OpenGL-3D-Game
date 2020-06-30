@@ -36,6 +36,7 @@ protected:
 	Window* window;
 
 	size_t pipelineIndex;
+	uint32_t shader_instance_index;
 };
 
 #endif
