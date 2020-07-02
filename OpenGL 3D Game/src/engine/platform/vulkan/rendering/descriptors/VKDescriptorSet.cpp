@@ -18,6 +18,7 @@ void VKDescriptorSet::finalize()
 
 	for (auto& binding : bindings)
 	{
+		binding.finalize();
 		_bindings.push_back(binding.getBinding());
 	}
 

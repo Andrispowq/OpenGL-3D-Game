@@ -3,6 +3,8 @@
 
 #include <vulkan/vulkan.h>
 
+#include "engine/prehistoric/common/rendering/shaders/Shader.h"
+
 #include "engine/platform/vulkan/buffer/VKBuffer.h"
 #include "engine/platform/vulkan/texture/VkTexture.h"
 
@@ -15,16 +17,29 @@ union DescriptorData
 class VKDescriptorSetBinding
 {
 public:
-	VKDescriptorSetBinding(VkDescriptorSetLayoutBinding _binding) : _binding(_binding) {}
-	VKDescriptorSetBinding() : _binding(VkDescriptorSetLayoutBinding{}) {}
+	VKDescriptorSetBinding(UniformType type, uint32_t binding, uint32_t stageFlags) : _binding(VkDescriptorSetLayoutBinding{}), type(type), binding(binding), stageFlags(stageFlags) {}
 	virtual ~VKDescriptorSetBinding() {}
+
+	void finalize();
 
 	inline VkDescriptorSetLayoutBinding& getBinding() { return _binding; }
 
-	inline void setData(DescriptorData data) { this->data = data; }
+	inline void setBuffer(VKBuffer* buffer) { if(texture == nullptr) this->buffer = buffer; }
+	inline void setTexture(VKTexture* texture) { if(buffer == nullptr) this->texture = texture; }
+
+	inline VKBuffer* getBuffer() const { return buffer; }
+	inline VKTexture* getTexture() const { return texture; }
 private:
+	VkDescriptorType GetDescriptorType(UniformType type) const;
+	uint32_t GetShaderStages(uint32_t stages) const;
+
 	VkDescriptorSetLayoutBinding _binding;
-	DescriptorData data;
+	VKBuffer* buffer = nullptr;
+	VKTexture* texture = nullptr;
+
+	UniformType type;
+	uint32_t binding;
+	uint32_t stageFlags;
 };
 
 #endif

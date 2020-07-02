@@ -22,7 +22,7 @@ public:
 	/*
 		This method will create the descriptor pool, allocate the sets, and so on, and the only thing you can change now is the new instances
 	*/
-	void finalize();
+	void finalize(VkPipelineLayout& layout);
 
 	void registerInstance();
 
