@@ -1,3 +1,0 @@
-This file contains the list of known bugs, and things what I want to implement.
-Errors that need fix:
-	-WorldLoader does not work well with objects that are added to child objects of root
