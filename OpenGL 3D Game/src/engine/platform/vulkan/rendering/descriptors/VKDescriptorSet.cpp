@@ -24,7 +24,7 @@ void VKDescriptorSet::finalize()
 
 	VkDescriptorSetLayoutCreateInfo _createInfo = {};
 	_createInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-	_createInfo.bindingCount = _bindings.size();
+	_createInfo.bindingCount = (uint32_t)_bindings.size();
 	_createInfo.pBindings = _bindings.data();
 
 	if (vkCreateDescriptorSetLayout(device->GetDevice(), &_createInfo, nullptr, &layout) != VK_SUCCESS)

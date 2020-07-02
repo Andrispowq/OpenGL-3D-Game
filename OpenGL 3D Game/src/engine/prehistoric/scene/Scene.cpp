@@ -14,7 +14,7 @@ Terrain* Scene::terrain;
 void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 {
 	WorldLoader loader;
-	loader.LoadWorld("res/world/testLevel.wrld", root, window);
+	//loader.LoadWorld("res/world/testLevel.wrld", root, window);
 
 	if (FrameworkConfig::api == Vulkan)
 	{

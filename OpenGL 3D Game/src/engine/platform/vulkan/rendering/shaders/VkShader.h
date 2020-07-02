@@ -6,6 +6,8 @@
 #include "engine/platform/vulkan/framework/swapchain/VKSwapchain.h"
 #include "engine/platform/vulkan/framework/device/VKDevice.h"
 
+#include "engine/platform/vulkan/rendering/descriptors/VKDescriptorPool.h"
+
 #include "engine/prehistoric/core/gameObject/GameObject.h"
 #include "engine/prehistoric/core/util/Includes.hpp"
 
@@ -83,11 +85,13 @@ private:
 	VkShaderModule CreateShaderModule(const std::vector<char>& code) const;
 	void CreateStageInfo(VkPipelineShaderStageCreateInfo& info, VkShaderModule module, const char* main, VkShaderStageFlagBits type);
 
-	void CreateUniformBuffer(VkDeviceSize bufferSize, const std::string& name);
-
 protected:
-	VkDescriptorType GetDescriptorType(UniformType type) const;
-	uint32_t GetShaderStages(uint32_t stages) const;
+	//Outside data
+	VKDevice* device;
+	VKPhysicalDevice* physicalDevice;
+	VKSwapchain* swapchain;
+
+	uint32_t instance_counter = 0;
 
 	//Module data
 	VkShaderModule* modules;
@@ -95,39 +99,7 @@ protected:
 
 	//Pipeline data
 	VkPipelineLayout pipelineLayout;
-	VkDescriptorPool descriptorPool;
-
-	//Per uniform, per framebuffer data
-	uint32_t numBuffers;
-	uint32_t numDescriptors = 0;
-	uint32_t numSets = 0;
-
-	//Uniforms (descriptorSets and descriptorSetLayouts are wrapped in a vector because it's per shader instances)
-	std::unordered_map<UniformType, VkDescriptorPoolSize> descriptorSizes; //Descriptor pool creation helper
-	std::unordered_map<uint32_t, std::vector<std::vector<VkDescriptorSet>>> descriptorSets; //We can access the descriptor sets easily with a number
-	std::unordered_map<uint32_t, std::vector<VkDescriptorSetLayout>> descriptorSetLayouts; //We can access the descriptor set layout easily with a number
-	std::unordered_map<uint32_t, std::unordered_map<uint32_t, VkDescriptorSetLayoutBinding>> bindings; //We can access the set layout binding for each binding with the set and the binding
-
-	std::unordered_map<std::string, std::pair<uint32_t, uint32_t>> setBindings; //This stores the set and binding per uniform by it's name
-
-	//The actual uniform data (they are wrapped in a vector because we need to have a separate uniform buffer and memory for every single instance of this shader
-	//std::string : uniform name, pair: the uniforms and the size of ONE uniforms (buffer or memory), outer vector: per swapchain image, inner vector: per instance of the shader
-	std::unordered_map<std::string, std::pair<std::vector<std::vector<VkBuffer>>, size_t>> uniformBuffers;
-	std::unordered_map<std::string, std::pair<std::vector<std::vector<VkDeviceMemory>>, size_t>> uniformBuffersMemories;
-
-	//std::string : uniform name, outer vector: per swapchain image, inner vector: per instance of the shader
-	std::unordered_map<std::string, std::vector<std::vector<VkImageView>>> imageViews;
-	std::unordered_map<std::string, std::vector<std::vector<VkSampler>>> samplers;
-
-	//This stores the uniforms' types so we can access the right uniform type
-	std::unordered_map<std::string, UniformType> uniformTypes;
-
-	//Outside data
-	VKDevice* device;
-	VKPhysicalDevice* physicalDevice;
-	VKSwapchain* swapchain;
-
-	uint32_t instance_counter = 0;
+	VKDescriptorPool* descriptorPool;
 };
 
 #endif

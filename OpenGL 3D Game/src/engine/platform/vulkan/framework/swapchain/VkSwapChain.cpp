@@ -139,9 +139,6 @@ void VKSwapchain::SetupSwapchain(Window* window)
 
 void VKSwapchain::PrepareRendering()
 {
-    renderpass->BeginRenderpass(*commandPool->GetCommandBuffer(aquiredImageIndex), swapchainExtent, *swapchainFramebuffers[aquiredImageIndex], clearColor);
-    commandPool->GetCommandBuffer(aquiredImageIndex)->BindBuffer();
-
     //Get the next available image to render to
     vkWaitForFences(device->GetDevice(), 1, &(inFlightFences[currentFrame]->GetFence()), VK_TRUE, UINT64_MAX);
 
@@ -158,12 +155,15 @@ void VKSwapchain::PrepareRendering()
     }
 
     imagesInFlight[aquiredImageIndex] = inFlightFences[currentFrame]->GetFence();
+
+    commandPool->GetCommandBuffer(aquiredImageIndex)->BindBuffer();
+    renderpass->BeginRenderpass(*commandPool->GetCommandBuffer(aquiredImageIndex), swapchainExtent, *swapchainFramebuffers[aquiredImageIndex], clearColor);
 }
 
 void VKSwapchain::EndRendering()
 {
-    commandPool->GetCommandBuffer(aquiredImageIndex)->UnbindBuffer();
     renderpass->EndRenderpass(*commandPool->GetCommandBuffer(aquiredImageIndex));
+    commandPool->GetCommandBuffer(aquiredImageIndex)->UnbindBuffer();
 }
 
 void VKSwapchain::SwapBuffers()

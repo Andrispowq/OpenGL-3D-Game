@@ -12,8 +12,6 @@ VKPBRShader::VKPBRShader(Window* window) : VKShader(window->GetContext(), window
 	AddUniform("lightConditions", GEOMETRY_SHADER | FRAGMENT_SHADER, UniformBuffer, 0, 1, sizeof(int) * 2 + sizeof(float) + Vector3f::size());
 	AddUniform("lights", FRAGMENT_SHADER, UniformBuffer, 0, 2, Vector4f::size() * 3 * EngineConfig::lightsMaxNumber);
 
-	AddUniform("m_transform", VERTEX_SHADER, UniformBuffer, 2, 0, sizeof(float) * 16);
-
 	AddUniform("material", GEOMETRY_SHADER | FRAGMENT_SHADER, UniformBuffer, 1, 0, Vector3f::size() * 2 + sizeof(int) + sizeof(float) * 4);
 
 	AddUniform(ALBEDO_MAP, GEOMETRY_SHADER | FRAGMENT_SHADER, CombinedImageSampler, 1, 1, 0, nullptr);
@@ -23,6 +21,10 @@ VKPBRShader::VKPBRShader(Window* window) : VKShader(window->GetContext(), window
 	AddUniform(ROUGHNESS_MAP, GEOMETRY_SHADER | FRAGMENT_SHADER, CombinedImageSampler, 1, 5, 0, nullptr);
 	AddUniform(OCCLUSION_MAP, GEOMETRY_SHADER | FRAGMENT_SHADER, CombinedImageSampler, 1, 6, 0, nullptr);
 	AddUniform(EMISSION_MAP, GEOMETRY_SHADER | FRAGMENT_SHADER, CombinedImageSampler, 1, 7, 0, nullptr);
+
+	AddUniform("m_transform", VERTEX_SHADER, UniformBuffer, 2, 0, sizeof(float) * 16);
+
+	descriptorPool->finalize(pipelineLayout);
 }
 
 void VKPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index) const

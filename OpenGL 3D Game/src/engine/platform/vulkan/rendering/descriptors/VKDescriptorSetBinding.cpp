@@ -1,6 +1,24 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "VKDescriptorSetBinding.h"
 
+VKDescriptorSetBinding::~VKDescriptorSetBinding()
+{
+	if (!finalized)
+		return;
+
+	if (texture == nullptr)
+	{
+		if (buffer == nullptr)
+		{
+			return;
+		}
+		else
+		{
+			//delete buffer;
+		}
+	}
+}
+
 void VKDescriptorSetBinding::finalize()
 {
 	_binding.binding = binding;
@@ -8,6 +26,8 @@ void VKDescriptorSetBinding::finalize()
 	_binding.descriptorType = GetDescriptorType(type);
 	_binding.stageFlags = stageFlags;
 	_binding.pImmutableSamplers = nullptr; //For now
+
+	finalized = true;
 }
 
 VkDescriptorType VKDescriptorSetBinding::GetDescriptorType(UniformType type) const

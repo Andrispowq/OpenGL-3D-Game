@@ -4,8 +4,7 @@
 VKBuffer::VKBuffer(VKPhysicalDevice* physicalDevice, VKDevice* device, size_t size, VkBufferUsageFlags buFlags, VkMemoryPropertyFlags mpFlags)
 	: physicalDevice(physicalDevice), device(device), size(size), _buFlags(buFlags), _mpFlags(mpFlags)
 {
-	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
-		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, buffer, memory);
+	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), size, buFlags, mpFlags, buffer, memory);
 }
 
 VKBuffer::~VKBuffer()

@@ -18,7 +18,7 @@ class VKDescriptorSetBinding
 {
 public:
 	VKDescriptorSetBinding(UniformType type, uint32_t binding, uint32_t stageFlags) : _binding(VkDescriptorSetLayoutBinding{}), type(type), binding(binding), stageFlags(stageFlags) {}
-	virtual ~VKDescriptorSetBinding() {}
+	virtual ~VKDescriptorSetBinding();
 
 	void finalize();
 
@@ -36,6 +36,8 @@ private:
 	VkDescriptorSetLayoutBinding _binding;
 	VKBuffer* buffer = nullptr;
 	VKTexture* texture = nullptr;
+
+	bool finalized = false;
 
 	UniformType type;
 	uint32_t binding;

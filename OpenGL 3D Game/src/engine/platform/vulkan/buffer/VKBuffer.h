@@ -18,6 +18,7 @@ public:
 	inline VkBuffer& getBuffer() { return buffer; }
 	inline VkDeviceMemory& getMemory() { return memory; }
 
+	inline size_t getSize() const {  return size; }
 	inline void setSize(size_t size) { this->size = size; }
 
 	inline void setBufferUsageFlags(VkBufferUsageFlags _buFlags) { this->_buFlags = _buFlags; }
