@@ -42,12 +42,18 @@ public:
 	inline uint32_t getHeight() const { return height; }
 	inline uint32_t getID() const { return ID; }
 
+	inline ImageFormat getFormat() const { return format; }
+
 	inline void setWidth(uint32_t width) { this->width = width; }
 	inline void setHeight(uint32_t height) { this->height = height; }
 	inline void setID(uint32_t id) { this->ID = id; }
+
+	inline void setFormat(ImageFormat format) { this->format = format; }
 protected:
 	uint32_t width, height;
 	uint32_t ID;
+
+	ImageFormat format;
 
 	static int currID;
 };

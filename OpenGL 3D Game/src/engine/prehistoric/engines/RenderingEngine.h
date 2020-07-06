@@ -33,11 +33,15 @@ public:
 
 	inline bool isWireframeMode() const { return wireframeMode; }
 
+	inline Light* getSun() const { return sun; }
+
 	RenderingEngine(const RenderingEngine& engine) = delete;
 	RenderingEngine operator=(const RenderingEngine& engine) = delete;
 private:
 	std::unordered_map<Pipeline*, std::vector<Renderable*>> models;
 	std::vector<Light*> lights;
+
+	Light* sun = nullptr;
 
 	Window* window;
 	Camera* camera;

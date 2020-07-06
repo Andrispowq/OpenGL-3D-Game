@@ -13,7 +13,6 @@ namespace TextureLoader
 
 		int width, height, channels;
 
-		//TODO: get rid of this
 		unsigned char* data;
 		if (FrameworkConfig::api == OpenGL)
 			data = stbi_load(path.c_str(), &width, &height, &channels, 0);

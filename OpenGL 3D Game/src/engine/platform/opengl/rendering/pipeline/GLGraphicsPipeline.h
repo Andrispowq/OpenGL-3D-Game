@@ -19,14 +19,6 @@ public:
 	virtual void UnbindPipeline() const override;
 
 	virtual void DestroyPipeline() override;
-
-	virtual bool operator==(const Pipeline& other) override
-	{
-		if (vbo->operator==(*reinterpret_cast<const GLGraphicsPipeline*>(&other)->getVbo()) && shader->operator==(*reinterpret_cast<const GLPipeline*>(&other)->getShader()))
-			return true;
-
-		return false;
-	}
 };
 
 #endif

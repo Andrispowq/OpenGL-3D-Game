@@ -32,8 +32,6 @@ public:
 
 	size_t getShaderIndex() const { return shaderIndex; }
 
-	virtual bool operator==(const Pipeline& other) = 0;
-
 	Vector2f GetViewportStart() const { return viewportStart; }
 	Vector2f GetViewportSize() const { return viewportSize; }
 	Vector2u GetScissorStart() const { return scissorStart; }

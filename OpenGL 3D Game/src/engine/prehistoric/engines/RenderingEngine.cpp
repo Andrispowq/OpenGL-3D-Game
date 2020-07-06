@@ -106,6 +106,7 @@ void RenderingEngine::Render(GameObject* root)
 	window->GetSwapchain()->EndRendering();
 
 	window->Render();
+	//We clean up this data before rendering and not after rendering so that it can be used in the PreUpdate functions of the Atmosphere for examples
 	models.clear();
 	lights.clear();
 }
@@ -128,5 +129,8 @@ void RenderingEngine::AddModel(Renderable* renderable)
 
 void RenderingEngine::AddLight(Light* light)
 {
+	if (light->IsSun())
+		sun = light;
+
 	lights.push_back(light);
 }

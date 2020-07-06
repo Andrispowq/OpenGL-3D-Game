@@ -59,7 +59,7 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 	rasterizer.polygonMode = VK_POLYGON_MODE_FILL;// wireframe ? VK_POLYGON_MODE_LINE : VK_POLYGON_MODE_FILL;
 	rasterizer.lineWidth = 1.0f;
 	rasterizer.cullMode = GraphicsPipeline::backfaceCulling ? VK_CULL_MODE_BACK_BIT : VK_CULL_MODE_NONE;
-	rasterizer.frontFace = vbo->getFrontFace() == FrontFace::COUNTER_CLOCKWISE ? VK_FRONT_FACE_COUNTER_CLOCKWISE : VK_FRONT_FACE_CLOCKWISE; //TODO: Front-face can be a renderer config mode
+	rasterizer.frontFace = vbo->getFrontFace() == FrontFace::COUNTER_CLOCKWISE ? VK_FRONT_FACE_COUNTER_CLOCKWISE : VK_FRONT_FACE_CLOCKWISE;
 	rasterizer.depthBiasEnable = VK_FALSE;
 	rasterizer.depthBiasConstantFactor = 0.0f; // Optional
 	rasterizer.depthBiasClamp = 0.0f; // Optional
@@ -68,7 +68,8 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 	VkPipelineMultisampleStateCreateInfo multisampling = {};
 	multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 	multisampling.sampleShadingEnable = VK_TRUE;
-	multisampling.rasterizationSamples = physicalDevice->getSampleCount(); //TODO: The GraphicsPipeline has a sample count, this should be taken into account
+	//This is correct because VK_SAMPLE_COUNT_8_BIT for example has the value 8, so we can directly compare them
+	multisampling.rasterizationSamples = Pipeline::GetSamples() < (int) physicalDevice->getSampleCount() ? VK_SAMPLE_COUNT_1_BIT : physicalDevice->getSampleCount(); 
 	multisampling.minSampleShading = 0.2f; // Optional
 	multisampling.pSampleMask = nullptr; // Optional
 	multisampling.alphaToCoverageEnable = VK_FALSE; // Optional

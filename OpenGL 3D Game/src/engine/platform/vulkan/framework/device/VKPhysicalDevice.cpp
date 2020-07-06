@@ -60,7 +60,6 @@ void VKPhysicalDevice::PickPhysicalDevice(VKSurface* surface, VKInstance* instan
 
 bool VKPhysicalDevice::IsDeviceSuitable(VKSurface* surface, VkPhysicalDevice device, VkPhysicalDeviceFeatures features) const
 {
-	//TODO: features check
 	VkPhysicalDeviceProperties deviceProperties;
 	VkPhysicalDeviceFeatures deviceFeatures;
 

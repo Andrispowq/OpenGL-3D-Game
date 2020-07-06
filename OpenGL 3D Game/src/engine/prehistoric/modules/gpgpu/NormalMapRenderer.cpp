@@ -8,7 +8,7 @@ NormalMapRenderer::NormalMapRenderer(Window* window, float strength, uint32_t N)
 	this->strength = strength;
 	this->N = N;
 
-	//TODO: VK PIPELINE
+	//TODO: Create the Vulkan equivalent of the GLComputePipeline
 	if (FrameworkConfig::api == OpenGL)
 	{
 		pipeline = new GLComputePipeline(new GLNormalMapShader());
@@ -25,7 +25,6 @@ NormalMapRenderer::NormalMapRenderer(Window* window, float strength, uint32_t N)
 
 	pipeline->CreatePipeline(window);
 
-	//TODO: TEXTURES
 	if (FrameworkConfig::api == OpenGL)
 	{
 		normalmap = GLTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), R8G8B8A8_LINEAR, Bilinear);

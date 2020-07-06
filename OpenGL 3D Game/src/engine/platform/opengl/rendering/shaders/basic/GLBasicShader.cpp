@@ -39,23 +39,39 @@ void GLBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light
 	SetUniform("m_projection", camera->getProjectionMatrix());
 	SetUniform("cameraPosition", camera->getPosition());
 
-	for (uint32_t i = 0; i < EngineConfig::lightsMaxNumber; i++)
+#if defined(PR_DEBUG)
+	for (unsigned int i = 0; i < EngineConfig::lightsMaxNumber; i++)
 	{
-		std::string name = "lights[" + std::to_string(i);
+		std::string uniformName = "lights[" + std::to_string(i) + "].";
 
 		if (i < lights.size())
 		{
-			SetUniform(name + "].position", lights[i]->GetParent()->getWorldTransform()->GetPosition());
-			SetUniform(name + "].colour", lights[i]->GetColour());
-			SetUniform(name + "].intensity", lights[i]->GetIntensity());
+			Light* light = lights[i];
+
+			SetUniform(uniformName + "position", light->GetParent()->getWorldTransform()->GetPosition());
+			SetUniform(uniformName + "colour", light->GetColour());
+			SetUniform(uniformName + "intensity", light->GetIntensity());
 		}
 		else
 		{
-			SetUniform(name + "].position", Vector3f());
-			SetUniform(name + "].colour", Vector3f());
-			SetUniform(name + "].intensity", Vector3f());
+			//Load some dummy values for debug mode so we don't access undefined memory while debugging, but we won't in release mode
+			SetUniform(uniformName + "position", Vector3f());
+			SetUniform(uniformName + "colour", Vector3f());
+			SetUniform(uniformName + "intensity", Vector3f());
 		}
 	}
+#else
+	for (unsigned int i = 0; i < nOfLights; i++)
+	{
+		std::string uniformName = "lights[" + std::to_string(i) + "].";
+
+		Light* light = lights[i];
+
+		SetUniform(uniformName + "position", light->GetParent()->getWorldTransform()->GetPosition());
+		SetUniform(uniformName + "colour", light->GetColour());
+		SetUniform(uniformName + "intensity", light->GetIntensity());
+	}
+#endif
 
 	SetUniformf("gamma", EngineConfig::rendererGamma);
 }

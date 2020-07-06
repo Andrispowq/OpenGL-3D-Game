@@ -90,7 +90,6 @@ void GLTerrainShader::UpdateShaderUniforms(Camera* camera, const std::vector<Lig
 
 	uint32_t nOfLights = (uint32_t)lights.size() < EngineConfig::lightsMaxNumber ? (uint32_t)lights.size() : EngineConfig::lightsMaxNumber;
 
-	//TODO: copy this
 #if defined(PR_DEBUG)
 	for (unsigned int i = 0; i < EngineConfig::lightsMaxNumber; i++)
 	{

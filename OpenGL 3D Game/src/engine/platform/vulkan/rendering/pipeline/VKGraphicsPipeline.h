@@ -29,14 +29,6 @@ public:
 
 	virtual void RecreatePipeline();
 
-	virtual bool operator==(const Pipeline& other)
-	{
-		if (vbo->operator==(*reinterpret_cast<const VKGraphicsPipeline*>(&other)->getVbo()) && VKPipeline::shader->operator==(*reinterpret_cast<const VKPipeline*>(&other)->getShader()))
-			return true;
-
-		return false;
-	}
-
 	VkPipeline& GetGraphicsPipeline() { return graphicsPipeline; }
 private:
 	VkPipelineLayout* pipelineLayout;

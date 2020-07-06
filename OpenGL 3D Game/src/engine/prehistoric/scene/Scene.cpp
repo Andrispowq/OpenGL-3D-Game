@@ -9,6 +9,8 @@
 #include "engine/prehistoric/modules/gui/GUIElement.h"
 #include "engine/prehistoric/modules/gui/button/GUIButton.h"
 
+#include "engine/prehistoric/modules/atmosphere/Atmosphere.h"
+
 Terrain* Scene::terrain;
 
 void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
@@ -60,6 +62,8 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 	}
 	else
 	{
+		root->AddChild("Atmosphere", new Atmosphere(window));		
+
 		terrain = new Terrain(window, camera);
 		terrain->UpdateQuadtree();
 
@@ -72,8 +76,8 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 		root->AddChild("GUI", gui);
 
 		GameObject* sun = new GameObject();
-		sun->AddComponent("light", new Light(Vector3f(1, 1, 1), Vector3f(200000000)));
-		sun->Move({ -2000, 4000, 2000 });
+		sun->AddComponent("light", new Light(Vector3f(1, 1, 1), Vector3f(200000000), true));
+		sun->SetPosition({ -2000, 4000, 2000 });
 		root->AddChild("sun", sun);
 
 		GameObject* light = new GameObject();

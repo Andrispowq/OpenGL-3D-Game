@@ -7,7 +7,7 @@ TerrainHeightsQuery::TerrainHeightsQuery(Window* window, uint32_t N)
 
 	this->N = N;
 
-	//TODO: VK PIPELINE
+	//TODO: Create the Vulkan equivalent of the GLComputePipeline
 	if (FrameworkConfig::api == OpenGL)
 	{
 		pipeline = new GLComputePipeline(new GLTerrainHeightsShader());
@@ -24,7 +24,6 @@ TerrainHeightsQuery::TerrainHeightsQuery(Window* window, uint32_t N)
 
 	pipeline->CreatePipeline(window);
 
-	//TODO: TEXTURES
 	//heights = new float[N * N];
 
 	if (FrameworkConfig::api == OpenGL)

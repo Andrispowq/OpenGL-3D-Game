@@ -100,8 +100,11 @@ static void OpenGLMessageCallback(
 	}
 }
 
-bool GLContext::InitContext(Window* window)
+GLContext::GLContext(Window* window)
+	: Context(window)
 {
+	this->window = window;
+
 	glfwMakeContextCurrent(reinterpret_cast<GLFWwindow*>(window->GetWindowHandle()));
 
 	GLenum error = glewInit();
@@ -113,7 +116,6 @@ bool GLContext::InitContext(Window* window)
 		PR_LOG_ERROR("The initialisation of OpenGL Extension Wrangler Library (GLEW) has failed! The error: \n%s\n", glewGetErrorString(error));
 
 		glfwTerminate();
-		return false;
 	}
 
 #if defined(PR_ENABLE_DEBUGGING)
@@ -123,11 +125,4 @@ bool GLContext::InitContext(Window* window)
 
 	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DEBUG_SEVERITY_NOTIFICATION, 0, nullptr, GL_FALSE);
 #endif
-
-	return true;
-}
-
-bool GLContext::DeleteContext(Window* window)
-{
-	return true;
 }

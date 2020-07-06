@@ -1,6 +1,8 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "Pipeline.h"
 
+#include "engine/config/FrameworkConfig.h"
+
 std::vector<Shader*> Pipeline::shaders;
 
 Pipeline::Pipeline(Shader* shader)
@@ -17,6 +19,11 @@ Pipeline::Pipeline(Shader* shader)
 	}
 
 	this->shader = shader;
+
+	viewportStart = { 0, 0 };
+	viewportSize = { (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight };
+	scissorStart = { 0, 0 };
+	scissorSize = { FrameworkConfig::windowWidth, FrameworkConfig::windowHeight };
 }
 
 Pipeline::~Pipeline()

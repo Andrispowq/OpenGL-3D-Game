@@ -6,7 +6,7 @@ class Window;
 class Context
 {
 public:
-	Context(Window* window) {}
+	Context(Window* window) : window(window) {}
 	virtual ~Context() = 0;
 
 	virtual void* GetNativePhysicalDevice() { return nullptr; };

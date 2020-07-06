@@ -1,6 +1,9 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "WindowsWindow.h"
 
+#include "engine/platform/opengl/framework/context/GLContext.h"
+#include "engine/platform/vulkan/framework/context/VKContext.h"
+
 static void error_callback(int error, const char* description)
 {
 	PR_LOG_ERROR("Error: %s\n", description);
@@ -45,11 +48,13 @@ bool WindowsWindow::Create()
 		return false;
 	}
 
-	//Initialisation of the API
-	if (!context->InitContext(this))
+	if (FrameworkConfig::api == OpenGL)
 	{
-		glfwTerminate();
-		return false;
+		context = new GLContext(this);
+	}
+	else if (FrameworkConfig::api == Vulkan)
+	{
+		context = new VKContext(this);
 	}
 
 	swapchain->SetupSwapchain(this);

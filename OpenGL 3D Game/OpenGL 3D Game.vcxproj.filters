@@ -324,6 +324,18 @@
     <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorPool.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\config\AtmosphereConfig.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\prehistoric\modules\atmosphere\Atmosphere.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\atmosphere\GLAtmosphereScatteringShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\atmosphere\GLAtmosphereShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\rendering\shaders\Shader.h">
@@ -657,6 +669,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\config\AtmosphereConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\prehistoric\modules\atmosphere\Atmosphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\atmosphere\GLAtmosphereScatteringShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\atmosphere\GLAtmosphereShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

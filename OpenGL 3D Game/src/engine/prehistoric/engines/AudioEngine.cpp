@@ -37,7 +37,7 @@ void AudioEngine::Input()
 
 void AudioEngine::Update(float delta)
 {
-    //TODO: only sample code!
+    //TODO: write loading code for the AudioEngine
 
     /*wav_hdr header;
     char* soundData = load_wav("res/sounds/bounce.wav", header);

@@ -10,8 +10,8 @@
 class GLContext : public Context
 {
 public:
-	bool InitContext(Window* window) override;
-	bool DeleteContext(Window* window) override;
+	GLContext(Window* window);
+	virtual ~GLContext() {}
 };
 
 #endif

@@ -181,7 +181,7 @@ void VKTexture::SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode
 
 VkFormat VKTexture::GetFormat(ImageFormat format) const
 {
-	//TODO: Query for formats
+	//TODO: See which formats are available, return if it is, and return VK_FORMAT_R8G8B8A8_SRGB if it's not
 	switch (format)
 	{
 	case R8G8B8A8_SRGB:
@@ -216,5 +216,7 @@ VkFormat VKTexture::GetFormat(ImageFormat format) const
 		return VK_FORMAT_R8G8_UNORM;
 	case R16G16_LINEAR:
 		return VK_FORMAT_R16G16_UNORM;
+	default:
+		return VK_FORMAT_R8G8B8A8_SRGB;
 	}
 }

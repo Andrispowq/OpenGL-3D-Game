@@ -55,25 +55,6 @@ public:
 	virtual void UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index = 0) const override = 0;
 	virtual void UpdateObjectUniforms(GameObject* object, uint32_t instance_index = 0) const override = 0;
 
-	virtual bool operator==(const Shader& other)
-	{
-		if (counter != (*reinterpret_cast<const VKShader*>(&other)).counter)
-			return false;
-
-		for (uint32_t i = 0; i < counter; i++)
-		{
-			auto& stage = shaderStages[i];
-			auto& ostage = (*reinterpret_cast<const VKShader*>(&other)).shaderStages[i];
-
-			//TODO: This does not work, and I know why, but it's not used so I'll leave it in here for now
-			if (stage.flags != ostage.flags || stage.module != ostage.module || stage.pName != ostage.pName || stage.pNext != ostage.pNext
-				|| stage.pSpecializationInfo != ostage.pSpecializationInfo || stage.stage != ostage.stage)
-				return false;
-		}
-
-		return true;
-	}
-
 	VkPipelineShaderStageCreateInfo* GetShaderStages() { return shaderStages; }
 	VkPipelineLayout& GetPipelineLayout() { return pipelineLayout; }
 

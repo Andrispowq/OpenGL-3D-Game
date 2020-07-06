@@ -8,6 +8,7 @@ Engine::Engine()
 	//Config loading
 	FrameworkConfig::LoadConfig("res/config/framework.cfg");
 	EngineConfig::LoadConfig("res/config/engine.cfg");
+	AtmosphereConfig::LoadConfig("res/config/atmosphere.cfg");
 
 	//Rootobject init
 	root = new GameObject();
@@ -18,7 +19,8 @@ Engine::Engine()
 
 	InputInstance.Init(renderingEngine->GetWindow());
 	renderingEngine->Init();
-
+	
+	//Loading configs that depend on some engine feature like the window
 	TerrainConfig::LoadConfig("res/config/terrain.cfg", renderingEngine->GetWindow());
 	Scene::CreateScene(root, renderingEngine->GetWindow(), renderingEngine->GetCamera());
 }

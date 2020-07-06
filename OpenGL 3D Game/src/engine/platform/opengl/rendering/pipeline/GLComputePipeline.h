@@ -21,14 +21,6 @@ public:
 	virtual void UnbindPipeline() const override;
 
 	virtual void DestroyPipeline() override;
-
-	virtual bool operator==(const Pipeline& other)
-	{
-		if (GLPipeline::shader->operator==(*reinterpret_cast<const GLPipeline*>(&other)->getShader()))
-			return true;
-
-		return false;
-	}
 };
 
 #endif

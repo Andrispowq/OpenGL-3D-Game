@@ -95,8 +95,6 @@ public:
 
 	virtual void BindUniformBlock(const std::string& name, uint32_t binding, uint32_t instance_index = 0) const = 0;
 
-	virtual bool operator==(const Shader& other) = 0;
-
 	//Constant uniforms -> uniforms that change very infrequently
 	//Shader uniforms -> per-shader uniforms, like view and projection matrices
 	//Shared uniforms -> uniforms that are shared between objects, and can be fetched from the first object

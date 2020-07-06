@@ -57,7 +57,6 @@ void Renderable::RecreatePipelines()
 {
 	for (Pipeline* pipeline : pipelines)
 	{
-		//TODO: Viewport and scissor configuration respecting the previous size
 		pipeline->SetViewportStart(0);
 		pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
 		pipeline->SetScissorStart(0);

@@ -27,7 +27,7 @@ TerrainQuadtree::TerrainQuadtree(Window* window, Camera* camera, TerrainMaps* ma
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
-		//TODO
+		//TODO: implement terrains in Vulkan
 	}
 
 	pipeline->SetViewportStart({ 0, 0 });

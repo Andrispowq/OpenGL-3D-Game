@@ -31,6 +31,11 @@ namespace FrameworkConfig
 				std::vector<std::string> tokens = Util::Split(line, ' ');
 				std::vector<std::string> nameTokens = Util::Split(tokens[0], '.');
 
+				if (line.substr(0, 1).c_str()[0] == '#')
+				{
+					continue; //This line is a comment then
+				}
+
 				if (nameTokens[0] == "window")
 				{
 					if (nameTokens[1] == "name")

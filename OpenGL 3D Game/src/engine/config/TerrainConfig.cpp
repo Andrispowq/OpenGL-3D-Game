@@ -33,6 +33,11 @@ namespace TerrainConfig
 				std::vector<std::string> tokens = Util::Split(line, ' ');
 				std::vector<std::string> nameTokens = Util::Split(tokens[0], '.');
 
+				if (line.substr(0, 1).c_str()[0] == '#')
+				{
+					continue; //This line is a comment then
+				}
+
 				if (nameTokens[0] == "scale")
 				{
 					if (nameTokens[1] == "y")
@@ -81,7 +86,7 @@ namespace TerrainConfig
 					}
 				}
 				
-				//TODO: per terrain!
+				//TODO: make the per-terrain data be in the world files, not in the general terrain-file
 				if (nameTokens[0] == "heightmap")
 				{
 					heightmap = tokens[1];

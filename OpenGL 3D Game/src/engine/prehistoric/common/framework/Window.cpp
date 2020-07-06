@@ -18,12 +18,10 @@ Window::Window(const int& width, const int& height, const char* title, const boo
 	if (FrameworkConfig::api == OpenGL)
 	{
 		swapchain = new GLSwapchain();
-		context = new GLContext();
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
 		swapchain = new VKSwapchain();
-		context = new VKContext();
 	}
 	else
 	{
@@ -42,12 +40,12 @@ Window::Window()
 	if (FrameworkConfig::api == OpenGL)
 	{
 		swapchain = new GLSwapchain();
-		context = new GLContext();
+		context = new GLContext(this);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
 		swapchain = new VKSwapchain();
-		context = new VKContext();
+		context = new VKContext(this);
 	}
 	else
 	{
@@ -58,8 +56,7 @@ Window::Window()
 Window::~Window()
 {
 	swapchain->DeleteSwapchain(context->GetDevice());
-	context->DeleteContext(this);
-
+	
 	delete swapchain;
 	delete context;
 }

@@ -28,7 +28,7 @@ void GLComputePipeline::BindPipeline() const
 			access = GL_READ_WRITE;
 
 		//It is very important to cast the texture to the given type, because Texture has also got an ID and a getID method which gives an explicit renderID, not the internal GL ID
-		glBindImageTexture(binding.first, ((GLTexture*) binding.second.first)->getID(), 0, GL_FALSE, 0, access, GL_RGBA32F); //TODO: This is hardcoded here, it should be a texture local field
+		glBindImageTexture(binding.first, ((GLTexture*) binding.second.first)->getID(), 0, GL_FALSE, 0, access, GL_RGBA32F);
 	}
 
 	for (const auto& ssbo : ssboBindingTable)

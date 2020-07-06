@@ -11,6 +11,7 @@
 #include "engine/config/EngineConfig.h"
 #include "engine/config/FrameworkConfig.h"
 #include "engine/config/TerrainConfig.h"
+#include "engine/config/AtmosphereConfig.h"
 
 class Engine
 {

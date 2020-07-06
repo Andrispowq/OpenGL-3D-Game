@@ -11,9 +11,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\engine\config\AtmosphereConfig.cpp" />
     <ClCompile Include="src\engine\platform\opengl\buffer\GLShaderStorageBuffer.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\pipeline\GLComputePipeline.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\pipeline\GLGraphicsPipeline.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\atmosphere\GLAtmosphereScatteringShader.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\atmosphere\GLAtmosphereShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLNormalMapShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLSplatmapShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLTerrainHeightsShader.cpp" />
@@ -26,6 +29,7 @@
     <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\GraphicsPipeline.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\RayTracingPipeline.cpp" />
     <ClCompile Include="src\engine\prehistoric\engines\AudioEngine.cpp" />
+    <ClCompile Include="src\engine\prehistoric\modules\atmosphere\Atmosphere.cpp" />
     <ClCompile Include="src\engine\prehistoric\modules\gpgpu\NormalMapRenderer.cpp" />
     <ClCompile Include="src\engine\config\EngineConfig.cpp" />
     <ClCompile Include="src\engine\config\TerrainConfig.cpp" />
@@ -122,6 +126,7 @@
     <ClCompile Include="src\game\Application.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\engine\config\AtmosphereConfig.h" />
     <ClInclude Include="src\engine\config\TerrainConfig.h" />
     <ClInclude Include="src\engine\platform\opengl\buffer\GLPatchVBO.h" />
     <ClInclude Include="src\engine\platform\opengl\buffer\GLShaderStorageBuffer.h" />
@@ -130,6 +135,8 @@
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLComputePipeline.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLGraphicsPipeline.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLPipeline.h" />
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\atmosphere\GLAtmosphereScatteringShader.h" />
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\atmosphere\GLAtmosphereShader.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLNormalMapShader.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLSplatmapShader.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLTerrainHeightsShader.h" />
@@ -187,6 +194,7 @@
     <ClInclude Include="src\engine\prehistoric\common\util\DeviceProperties.h" />
     <ClInclude Include="src\engine\prehistoric\common\util\InitDevice.h" />
     <ClInclude Include="src\engine\prehistoric\component\Component.h" />
+    <ClInclude Include="src\engine\prehistoric\modules\atmosphere\Atmosphere.h" />
     <ClInclude Include="src\engine\prehistoric\modules\gui\button\GUIButton.h" />
     <ClInclude Include="src\engine\prehistoric\modules\gui\GUIElement.h" />
     <ClInclude Include="src\engine\prehistoric\component\light\Light.h" />
