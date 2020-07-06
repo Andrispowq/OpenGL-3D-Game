@@ -14,8 +14,8 @@
 class VKContext : public Context
 {
 public:
-	bool InitContext(Window* window) override;
-	bool DeleteContext(Window* window) override;
+	VKContext(Window* window);
+	virtual ~VKContext();
 
 	VKInstance GetInstance() const { return instance; }
 

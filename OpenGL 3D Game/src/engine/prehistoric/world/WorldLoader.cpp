@@ -102,32 +102,32 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 					{
 						std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
 
-						Vector4f* value = new Vector4f((float) std::atof(compTokens[0].c_str()), (float) std::atof(compTokens[1].c_str()), (float) std::atof(compTokens[2].c_str()), (float) std::atof(compTokens[3].c_str()));
+						Vector4f value = Vector4f((float) std::atof(compTokens[0].c_str()), (float) std::atof(compTokens[1].c_str()), (float) std::atof(compTokens[2].c_str()), (float) std::atof(compTokens[3].c_str()));
 						material->AddVector4f(tokens[1], value);
 					}
 					if (nameTokens[2] == "vec3")
 					{
 						std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
 
-						Vector3f* value = new Vector3f((float) std::atof(compTokens[0].c_str()), (float) std::atof(compTokens[1].c_str()), (float) std::atof(compTokens[2].c_str()));
+						Vector3f value = Vector3f((float) std::atof(compTokens[0].c_str()), (float) std::atof(compTokens[1].c_str()), (float) std::atof(compTokens[2].c_str()));
 						material->AddVector3f(tokens[1], value);
 					}
 					if (nameTokens[2] == "vec2")
 					{
 						std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
 
-						Vector2f* value = new Vector2f((float) std::atof(compTokens[0].c_str()), (float) std::atof(compTokens[1].c_str()));
+						Vector2f value = Vector2f((float) std::atof(compTokens[0].c_str()), (float) std::atof(compTokens[1].c_str()));
 						material->AddVector2f(tokens[1], value);
 					}
 
 					if (nameTokens[2] == "float")
 					{
-						float* value = new float{ static_cast<float>(std::atof(tokens[2].c_str())) };
+						float value = static_cast<float>(std::atof(tokens[2].c_str()));
 						material->AddFloat(tokens[1], value);
 					}
 					if (nameTokens[2] == "int")
 					{
-						int* value = new int{ std::atoi(tokens[2].c_str()) };
+						int value = std::atoi(tokens[2].c_str());
 						material->AddInt(tokens[1], value);
 					}
 				}

@@ -103,25 +103,25 @@ namespace TerrainConfig
 						}
 						else if (nameTokens[2] == "vec4")
 						{
-							material->AddVector4f(tokens[1], new Vector4f((float) std::atof(tokens[2].c_str()), (float)std::atof(tokens[3].c_str())
+							material->AddVector4f(tokens[1], Vector4f((float) std::atof(tokens[2].c_str()), (float)std::atof(tokens[3].c_str())
 														, (float)std::atof(tokens[4].c_str()), (float)std::atof(tokens[5].c_str())));
 						}
 						else if (nameTokens[2] == "vec3")
 						{
-							material->AddVector3f(tokens[1], new Vector3f((float)std::atof(tokens[2].c_str()), (float)std::atof(tokens[3].c_str())
+							material->AddVector3f(tokens[1], Vector3f((float)std::atof(tokens[2].c_str()), (float)std::atof(tokens[3].c_str())
 								, (float)std::atof(tokens[4].c_str())));
 						}
 						else if (nameTokens[2] == "vec2")
 						{
-							material->AddVector2f(tokens[1], new Vector2f((float)std::atof(tokens[2].c_str()), (float)std::atof(tokens[3].c_str())));
+							material->AddVector2f(tokens[1], Vector2f((float)std::atof(tokens[2].c_str()), (float)std::atof(tokens[3].c_str())));
 						}
 						else if (nameTokens[2] == "float")
 						{
-							material->AddFloat(tokens[1], new float{ (float)std::atof(tokens[2].c_str()) });
+							material->AddFloat(tokens[1], (float)std::atof(tokens[2].c_str()));
 						}
 						else if (nameTokens[2] == "int")
 						{
-							material->AddInt(tokens[1], new int{ std::atoi(tokens[2].c_str()) });
+							material->AddInt(tokens[1], std::atoi(tokens[2].c_str()));
 						}
 					}
 				}

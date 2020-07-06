@@ -34,27 +34,27 @@ void Material::AddTexture(const std::string& key, Texture* value)
 	textures.insert(std::make_pair(key, value));
 }
 
-void Material::AddVector4f(const std::string& key, Vector4f* value)
+void Material::AddVector4f(const std::string& key, Vector4f value)
 {
 	vector4s.insert(std::make_pair(key, value));
 }
 
-void Material::AddVector3f(const std::string& key, Vector3f* value)
+void Material::AddVector3f(const std::string& key, Vector3f value)
 {
 	vector3s.insert(std::make_pair(key, value));
 }
 
-void Material::AddVector2f(const std::string& key, Vector2f* value)
+void Material::AddVector2f(const std::string& key, Vector2f value)
 {
 	vector2s.insert(std::make_pair(key, value));
 }
 
-void Material::AddFloat(const std::string& key, float* value)
+void Material::AddFloat(const std::string& key, float value)
 {
 	floats.insert(std::make_pair(key, value));
 }
 
-void Material::AddInt(const std::string& key, int* value)
+void Material::AddInt(const std::string& key, int value)
 {
 	ints.insert(std::make_pair(key, value));
 }
@@ -74,7 +74,7 @@ Vector4f Material::GetVector4f(const std::string& key) const
 	if (index == vector4s.end())
 		return Vector4f(-1);
 
-	return *index->second;
+	return index->second;
 }
 
 Vector3f Material::GetVector3f(const std::string& key) const
@@ -83,7 +83,7 @@ Vector3f Material::GetVector3f(const std::string& key) const
 	if (index == vector3s.end())
 		return Vector3f(-1);
 
-	return *index->second;
+	return index->second;
 }
 
 Vector2f Material::GetVector2f(const std::string& key) const
@@ -92,7 +92,7 @@ Vector2f Material::GetVector2f(const std::string& key) const
 	if (index == vector2s.end())
 		return Vector2f(-1);
 
-	return *index->second;
+	return index->second;
 }
 
 float Material::GetFloat(const std::string& key) const
@@ -101,7 +101,7 @@ float Material::GetFloat(const std::string& key) const
 	if (index == floats.end())
 		return -1.0;
 
-	return *index->second;
+	return index->second;
 }
 
 int Material::GetInt(const std::string& key) const
@@ -110,5 +110,5 @@ int Material::GetInt(const std::string& key) const
 	if (index == ints.end())
 		return -1;
 
-	return *index->second;
+	return index->second;
 }

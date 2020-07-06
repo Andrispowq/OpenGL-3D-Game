@@ -12,11 +12,11 @@
 class VKInstance
 {
 public:
-	void CreateInstance();
-	void DeleteInstance();
+	VKInstance();
+	virtual ~VKInstance();
 
 	VkInstance GetInstance() const { return instance; }
-	VKDebugMessenger GetDebugMessenger() const { return messenger; }
+	VKDebugMessenger& GetDebugMessenger() { return *messenger; }
 
 	std::vector<const char*> GetValidationLayers() const { return validationLayers; }
 private:
@@ -26,7 +26,7 @@ private:
 	void ListExtensions() const;
 private:
 	VkInstance instance;
-	VKDebugMessenger messenger;
+	VKDebugMessenger* messenger;
 
 	std::vector<const char*> validationLayers;
 };

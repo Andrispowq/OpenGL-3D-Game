@@ -3,10 +3,17 @@
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-	if ((width == 0 || height == 0) && FrameworkConfig::api == Vulkan)
+	PR_LOG_MESSAGE("Size: %i * %i\n", width, height);
+
+	InputInstance.SetPause(false);
+
+	if (width == 0 || height == 0)
 	{
-		PR_LOG_RUNTIME_ERROR("Window minimalization is not supported!\n");
+		InputInstance.SetPause(true);
+		return;
 	}
+
+	PR_LOG_MESSAGE("Paused: %u\n", InputInstance.IsPause());
 
 	FrameworkConfig::windowWidth = width;
 	FrameworkConfig::windowHeight = height;

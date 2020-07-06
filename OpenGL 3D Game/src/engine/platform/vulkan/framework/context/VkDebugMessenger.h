@@ -6,13 +6,15 @@
 class VKDebugMessenger
 {
 public:
-	void CreateMessenger(VkInstance& instance);
-	void DeleteMessenger(VkInstance& instance);
+	VKDebugMessenger(VkInstance instnace);
+	virtual ~VKDebugMessenger();
 
 	static void CreateMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& messengerCreateInfo);
 
 	VkDebugUtilsMessengerEXT GetDebugMessenger() const { return debugMessenger; }
 private:
+	VkInstance instance;
+
 	VkDebugUtilsMessengerEXT debugMessenger;
 };
 

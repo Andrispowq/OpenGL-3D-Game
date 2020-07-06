@@ -3,10 +3,15 @@
 
 VKDescriptorSet::~VKDescriptorSet()
 {
+	for (auto& binding : bindings)
+	{
+		delete binding;
+	}
+
 	vkDestroyDescriptorSetLayout(device->GetDevice(), layout, nullptr);
 }
 
-void VKDescriptorSet::addBinding(const VKDescriptorSetBinding& binding)
+void VKDescriptorSet::addBinding(VKDescriptorSetBinding* binding)
 {
 	bindings.push_back(binding);
 }
@@ -18,8 +23,8 @@ void VKDescriptorSet::finalize()
 
 	for (auto& binding : bindings)
 	{
-		binding.finalize();
-		_bindings.push_back(binding.getBinding());
+		binding->finalize();
+		_bindings.push_back(binding->getBinding());
 	}
 
 	VkDescriptorSetLayoutCreateInfo _createInfo = {};

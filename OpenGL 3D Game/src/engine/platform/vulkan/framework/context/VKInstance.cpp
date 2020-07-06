@@ -3,7 +3,7 @@
 
 #include "engine/platform/Prehistoric.h"
 
-void VKInstance::CreateInstance()
+VKInstance::VKInstance()
 {
 	//Check for validation layer support, but we only use it in debug mode
 #if defined(PR_ENABLE_DEBUGGING) && defined(PR_VK_ENABLE_VALIDATION_LAYERS)
@@ -68,17 +68,17 @@ void VKInstance::CreateInstance()
 #if defined(PR_ENABLE_DEBUGGING) && defined(PR_VK_ENABLE_VALIDATION_LAYERS)
 	if (FrameworkConfig::apiVulkanUseValidationLayers)
 	{
-		messenger.CreateMessenger(instance);
+		messenger = new VKDebugMessenger(instance);
 	}
 #endif
 }
 
-void VKInstance::DeleteInstance()
+VKInstance::~VKInstance()
 {
 #if defined(PR_ENABLE_DEBUGGING) && defined(PR_VK_ENABLE_VALIDATION_LAYERS)
 	if (FrameworkConfig::apiVulkanUseValidationLayers)
 	{
-		messenger.DeleteMessenger(instance);
+		delete messenger;
 	}
 #endif
 

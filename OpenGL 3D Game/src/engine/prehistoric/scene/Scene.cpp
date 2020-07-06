@@ -40,16 +40,16 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 		material->AddTexture(METALLIC_MAP, TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_MET.png", window));
 		material->AddTexture(ROUGHNESS_MAP, TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_RGH.png", window));
 
-		//material->AddFloat(METALLIC, new float(1.0));
-		//material->AddFloat(ROUGHNESS, new float(0.3));
-		material->AddFloat(OCCLUSION, new float(1));
+		//material->AddFloat(METALLIC, 1.0);
+		//material->AddFloat(ROUGHNESS, 0.3);
+		material->AddFloat(OCCLUSION, 1);
 
 		Renderer* renderer = new Renderer(pipeline, material, window);
 
 		GameObject* obj = new GameObject();
 		obj->AddComponent(RENDERER_COMPONENT, renderer);
 		obj->Rotate({ 0, 0, 0 });
-		obj->Move({ 0, 0, 0 });
+		obj->Move({ 0, 0, -5 });
 		obj->SetScale({ 0.5f, 0.5f, 0.5f });
 		root->AddChild("OBJ", obj);
 

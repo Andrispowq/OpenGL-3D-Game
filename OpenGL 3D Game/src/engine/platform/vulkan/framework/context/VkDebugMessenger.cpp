@@ -141,8 +141,10 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 VkResult CreateDebugUtilsMessengerEXT(VkInstance& instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger);
 void DestroyDebugUtilsMessengerEXT(VkInstance& instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
 
-void VKDebugMessenger::CreateMessenger(VkInstance& instance)
+VKDebugMessenger::VKDebugMessenger(VkInstance instance)
 {
+	this->instance = instance;
+
 	debugMessenger = VK_NULL_HANDLE;
 	VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -156,6 +158,10 @@ void VKDebugMessenger::CreateMessenger(VkInstance& instance)
 		PR_LOG_RUNTIME_ERROR("Failed to set up debug messenger!");
 	}
 }
+VKDebugMessenger::~VKDebugMessenger()
+{
+	DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
+}
 
 void VKDebugMessenger::CreateMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& messengerCreateInfo)
 {
@@ -165,11 +171,6 @@ void VKDebugMessenger::CreateMessengerCreateInfo(VkDebugUtilsMessengerCreateInfo
 	messengerCreateInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
 	messengerCreateInfo.pfnUserCallback = DebugCallback;
 	//messengerCreateInfo.pUserData = nullptr;
-}
-
-void VKDebugMessenger::DeleteMessenger(VkInstance& instance)
-{
-	DestroyDebugUtilsMessengerEXT(instance, debugMessenger, nullptr);
 }
 
 VkResult CreateDebugUtilsMessengerEXT(VkInstance& instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger)

@@ -110,7 +110,9 @@ void CoreEngine::Run()
 			}
 
 			Input(std::max(passedTime / NANOSECOND, frameTime));
-			Update();
+
+			if(!InputInstance.IsPause())
+				Update();
 
 			if (frameCounter >= NANOSECOND)
 			{
@@ -121,7 +123,7 @@ void CoreEngine::Run()
 			}
 		}
 
-		if (render)
+		if (render && !InputInstance.IsPause())
 		{
 			Render();
 			frames++;

@@ -187,14 +187,14 @@ void VKShader::BindSet(void* commandBuffer, uint32_t set, uint32_t instance_inde
 
 	VKCommandBuffer* vkcmdbuff = reinterpret_cast<VKCommandBuffer*>(commandBuffer);
 	
-	VKDescriptorSet _set = descriptorPool->getSet(set, instance_index);
-	vkCmdBindDescriptorSets(vkcmdbuff->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, set, 1, &_set.getSets()[swapchain->GetAquiredImageIndex()], 0, nullptr);
+	VKDescriptorSet* _set = descriptorPool->getSet(set, instance_index);
+	vkCmdBindDescriptorSets(vkcmdbuff->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, set, 1, &_set->getSets()[swapchain->GetAquiredImageIndex()], 0, nullptr);
 }
 
 void VKShader::SetUniformi(const std::string& name, int value, size_t offset, uint32_t instance_index) const
 {
 	void* data;
-	const VkDeviceMemory& mem = descriptorPool->getUniform(name).getBuffer()->getMemory();
+	const VkDeviceMemory& mem = descriptorPool->getUniform(name)->getBuffer()->getMemory();
 
 	vkMapMemory(device->GetDevice(), mem, offset, sizeof(int), 0, &data);
 	memcpy(data, &value, sizeof(int));
@@ -204,7 +204,7 @@ void VKShader::SetUniformi(const std::string& name, int value, size_t offset, ui
 void VKShader::SetUniformf(const std::string& name, float value, size_t offset, uint32_t instance_index) const
 {
 	void* data;
-	const VkDeviceMemory& mem = descriptorPool->getUniform(name).getBuffer()->getMemory();
+	const VkDeviceMemory& mem = descriptorPool->getUniform(name)->getBuffer()->getMemory();
 
 	vkMapMemory(device->GetDevice(), mem, offset, sizeof(float), 0, &data);
 	memcpy(data, &value, sizeof(float));
@@ -214,7 +214,7 @@ void VKShader::SetUniformf(const std::string& name, float value, size_t offset, 
 void VKShader::SetUniform(const std::string& name, const Vector2f& value, size_t offset, uint32_t instance_index) const
 {
 	void* data;
-	const VkDeviceMemory& mem = descriptorPool->getUniform(name).getBuffer()->getMemory();
+	const VkDeviceMemory& mem = descriptorPool->getUniform(name)->getBuffer()->getMemory();
 
 	vkMapMemory(device->GetDevice(), mem, offset, Vector2f::size(), 0, &data);
 	memcpy(data, &value, Vector2f::size());
@@ -224,7 +224,7 @@ void VKShader::SetUniform(const std::string& name, const Vector2f& value, size_t
 void VKShader::SetUniform(const std::string& name, const Vector3f& value, size_t offset, uint32_t instance_index) const
 {
 	void* data;
-	const VkDeviceMemory& mem = descriptorPool->getUniform(name).getBuffer()->getMemory();
+	const VkDeviceMemory& mem = descriptorPool->getUniform(name)->getBuffer()->getMemory();
 
 	vkMapMemory(device->GetDevice(), mem, offset, Vector3f::size(), 0, &data);
 	memcpy(data, &value, Vector3f::size());
@@ -234,7 +234,7 @@ void VKShader::SetUniform(const std::string& name, const Vector3f& value, size_t
 void VKShader::SetUniform(const std::string& name, const Vector4f& value, size_t offset, uint32_t instance_index) const
 {
 	void* data;
-	const VkDeviceMemory& mem = descriptorPool->getUniform(name).getBuffer()->getMemory();
+	const VkDeviceMemory& mem = descriptorPool->getUniform(name)->getBuffer()->getMemory();
 
 	vkMapMemory(device->GetDevice(), mem, offset, Vector4f::size(), 0, &data);
 	memcpy(data, &value, Vector4f::size());
@@ -244,7 +244,7 @@ void VKShader::SetUniform(const std::string& name, const Vector4f& value, size_t
 void VKShader::SetUniform(const std::string& name, const Matrix4f& value, size_t offset, uint32_t instance_index) const
 {
 	void* data;
-	const VkDeviceMemory& mem = descriptorPool->getUniform(name).getBuffer()->getMemory();
+	const VkDeviceMemory& mem = descriptorPool->getUniform(name)->getBuffer()->getMemory();
 
 	float* dataF = value.m;
 
@@ -256,7 +256,7 @@ void VKShader::SetUniform(const std::string& name, const Matrix4f& value, size_t
 void VKShader::SetTexture(const std::string& name, Texture* value, uint32_t instance_index) const
 {
 	VKTexture* tex = (VKTexture*)value;
-	descriptorPool->getUniform(name).setTexture(tex);
+	descriptorPool->getUniform(name)->setTexture(tex);
 
 	std::pair<uint32_t, uint32_t> location = descriptorPool->getUniformLocation(name);
 
@@ -270,7 +270,7 @@ void VKShader::SetTexture(const std::string& name, Texture* value, uint32_t inst
 		imageInfo.sampler = tex->GetTextureSampler();
 
 		sets[i].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-		sets[i].dstSet = descriptorPool->getSet(location.first, instance_index).getSets()[i];
+		sets[i].dstSet = descriptorPool->getSet(location.first, instance_index)->getSets()[i];
 		sets[i].dstBinding = location.second;
 		sets[i].dstArrayElement = 0;
 		sets[i].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
@@ -284,7 +284,7 @@ void VKShader::SetTexture(const std::string& name, Texture* value, uint32_t inst
 void VKShader::SetUniform(const std::string& name, const void* value, size_t size, size_t offset, uint32_t instance_index) const
 {
 	void* data;
-	const VkDeviceMemory& mem = descriptorPool->getUniform(name).getBuffer()->getMemory();
+	const VkDeviceMemory& mem = descriptorPool->getUniform(name)->getBuffer()->getMemory();
 
 	vkMapMemory(device->GetDevice(), mem, offset, size, 0, &data);
 	memcpy(data, value, size);

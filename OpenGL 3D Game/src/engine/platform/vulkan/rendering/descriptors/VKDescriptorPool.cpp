@@ -8,17 +8,22 @@ VKDescriptorPool::VKDescriptorPool(VKPhysicalDevice* physicalDevice, VKDevice* d
 
 VKDescriptorPool::~VKDescriptorPool()
 {
+	for (auto& set : sets)
+	{
+		delete set;
+	}
+
 	vkDestroyDescriptorPool(device->GetDevice(), pool, nullptr);
 }
 
-void VKDescriptorPool::addSet(const VKDescriptorSet& set)
+void VKDescriptorPool::addSet(VKDescriptorSet* set)
 {
 	sets.push_back(set);
 }
 
 void VKDescriptorPool::addSet()
 {
-	VKDescriptorSet set(device, swapchain, (uint32_t)sets.size());
+	VKDescriptorSet* set = new VKDescriptorSet(device, swapchain, (uint32_t)sets.size());
 	sets.push_back(set);
 }
 
@@ -35,8 +40,8 @@ void VKDescriptorPool::finalize(VkPipelineLayout& layout)
 
 	for (auto& set : sets)
 	{
-		set.finalize();
-		layouts.push_back(set.getLayout());
+		set->finalize();
+		layouts.push_back(set->getLayout());
 	}
 
 	VkPipelineLayoutCreateInfo _layoutCreateInfo = {};
@@ -58,9 +63,9 @@ void VKDescriptorPool::finalize(VkPipelineLayout& layout)
 
 	for (auto& set : sets)
 	{
-		for (auto& binding : set.getBindings())
+		for (auto& binding : set->getBindings())
 		{
-			if (binding.getBuffer() == nullptr) //It's either a uniform buffer or a texture descriptor now
+			if (binding->getBuffer() == nullptr) //It's either a uniform buffer or a texture descriptor now
 				textureCount++;
 			else
 				uniformCount++;
@@ -111,7 +116,7 @@ void VKDescriptorPool::finalize(VkPipelineLayout& layout)
 	{
 		for (uint32_t im = 0; im < numImages; im++)
 		{
-			sets[i].getSets().push_back(_sets[i * numImages + im]);
+			sets[i]->getSets().push_back(_sets[i * numImages + im]);
 		}
 	}
 	
@@ -121,9 +126,9 @@ void VKDescriptorPool::finalize(VkPipelineLayout& layout)
 
 		size_t numberOfUniformBuffers = 0;
 
-		for (auto& binding : set.getBindings())
+		for (auto& binding : set->getBindings())
 		{
-			if (binding.getBuffer() != nullptr)
+			if (binding->getBuffer() != nullptr)
 				numberOfUniformBuffers++;
 		}
 
@@ -131,20 +136,20 @@ void VKDescriptorPool::finalize(VkPipelineLayout& layout)
 
 		for (uint32_t i = 0; i < numImages; i++)
 		{
-			for (auto& binding : set.getBindings())
+			for (auto& binding : set->getBindings())
 			{
-				if (binding.getBuffer() == nullptr)
+				if (binding->getBuffer() == nullptr)
 					continue;
 
 				VkDescriptorBufferInfo _bufferInfo = {};
-				_bufferInfo.buffer = binding.getBuffer()->getBuffer();
+				_bufferInfo.buffer = binding->getBuffer()->getBuffer();
 				_bufferInfo.offset = 0;
-				_bufferInfo.range = binding.getBuffer()->getSize();
+				_bufferInfo.range = binding->getBuffer()->getSize();
 
 				VkWriteDescriptorSet _writeSet = {};
 				_writeSet.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-				_writeSet.dstSet = set.getSets()[i];
-				_writeSet.dstBinding = binding.getBinding().binding;
+				_writeSet.dstSet = set->getSets()[i];
+				_writeSet.dstBinding = binding->getBinding().binding;
 				_writeSet.dstArrayElement = 0;
 				_writeSet.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER; //For now only uniform buffers are written
 				_writeSet.descriptorCount = 1;
@@ -160,7 +165,7 @@ void VKDescriptorPool::finalize(VkPipelineLayout& layout)
 
 void VKDescriptorPool::addUniform(const std::string& name, uint32_t stages, UniformType type, uint32_t set, uint32_t binding, uint32_t size, Texture* texture)
 {
-	VKDescriptorSetBinding _binding(type, binding, stages);
+	VKDescriptorSetBinding* _binding = new VKDescriptorSetBinding(type, binding, stages);
 
 	//Textures don't need to be pre-set, so they can be changed at runtime
 	/*if (size == 0 && texture == nullptr) 
@@ -170,23 +175,23 @@ void VKDescriptorPool::addUniform(const std::string& name, uint32_t stages, Unif
 
 	if (size == 0)
 	{
-		_binding.setTexture((VKTexture*)texture);
+		_binding->setTexture((VKTexture*)texture);
 	}
 	else
 	{
 		VKBuffer* buffer = new VKBuffer(physicalDevice, device, size, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
-		_binding.setBuffer(buffer);
+		_binding->setBuffer(buffer);
 	}
 
 	if (sets.size() == set)
 	{
-		VKDescriptorSet set(device, swapchain, set);
-		set.addBinding(_binding);
-		sets.push_back(set);
+		VKDescriptorSet* _set = new VKDescriptorSet(device, swapchain, set);
+		_set->addBinding(_binding);
+		sets.push_back(_set);
 	}
 	else if(sets.size() > set)
 	{
-		sets[set].addBinding(_binding);
+		sets[set]->addBinding(_binding);
 	}
 	else
 	{
@@ -196,7 +201,7 @@ void VKDescriptorPool::addUniform(const std::string& name, uint32_t stages, Unif
 	uniformLocations.insert(std::make_pair(name, std::make_pair(set, binding)));
 }
 
-VKDescriptorSetBinding& VKDescriptorPool::getUniform(const std::string& name)
+VKDescriptorSetBinding* VKDescriptorPool::getUniform(const std::string& name)
 {
 	auto setBinding = uniformLocations.find(name);
 	if (setBinding == uniformLocations.end())
@@ -206,5 +211,5 @@ VKDescriptorSetBinding& VKDescriptorPool::getUniform(const std::string& name)
 
 	std::pair<uint32_t, uint32_t> _setBinding = setBinding->second;
 
-	return sets[setBinding->second.first].getBindings()[setBinding->second.second];
+	return sets[setBinding->second.first]->getBindings()[setBinding->second.second];
 }

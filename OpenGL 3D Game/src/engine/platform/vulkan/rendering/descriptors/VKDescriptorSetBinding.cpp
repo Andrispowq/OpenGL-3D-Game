@@ -14,7 +14,7 @@ VKDescriptorSetBinding::~VKDescriptorSetBinding()
 		}
 		else
 		{
-			//delete buffer;
+			delete buffer;
 		}
 	}
 }

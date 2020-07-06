@@ -14,11 +14,11 @@ public:
 	static void CleanUp();
 
 	void AddTexture(const std::string& key, Texture* value);
-	void AddVector4f(const std::string& key, Vector4f* value);
-	void AddVector3f(const std::string& key, Vector3f* value);
-	void AddVector2f(const std::string& key, Vector2f* value);
-	void AddFloat(const std::string& key, float* value);
-	void AddInt(const std::string& key, int* value);
+	void AddVector4f(const std::string& key, Vector4f value);
+	void AddVector3f(const std::string& key, Vector3f value);
+	void AddVector2f(const std::string& key, Vector2f value);
+	void AddFloat(const std::string& key, float value);
+	void AddInt(const std::string& key, int value);
 
 	Texture* GetTexture(const std::string& key) const;
 
@@ -118,11 +118,11 @@ private:
 	static std::vector<Texture*> listOfTextures;
 	
 	std::unordered_map<std::string, Texture*> textures;
-	std::unordered_map<std::string, Vector4f*> vector4s;
-	std::unordered_map<std::string, Vector3f*> vector3s;
-	std::unordered_map<std::string, Vector2f*> vector2s;
-	std::unordered_map<std::string, float*> floats;
-	std::unordered_map<std::string, int*> ints;
+	std::unordered_map<std::string, Vector4f> vector4s;
+	std::unordered_map<std::string, Vector3f> vector3s;
+	std::unordered_map<std::string, Vector2f> vector2s;
+	std::unordered_map<std::string, float> floats;
+	std::unordered_map<std::string, int> ints;
 };
 
 #endif
