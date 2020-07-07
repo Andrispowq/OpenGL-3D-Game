@@ -4,6 +4,25 @@
 #include "engine/platform/opengl/framework/context/GLContext.h"
 #include "engine/platform/vulkan/framework/context/VKContext.h"
 
+#include "WindowsInput.h"
+
+static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+	InputInstance.SetPause(false);
+
+	if (width == 0 || height == 0)
+	{
+		InputInstance.SetPause(true);
+		return;
+	}
+
+	Window* wnd = (Window*)glfwGetWindowUserPointer(window);
+	wnd->SetWidth(width);
+	wnd->SetHeight(height);
+	wnd->SetResized(true);
+	wnd->GetSwapchain()->SetWindowSize((uint32_t)width, (uint32_t)height);
+}
+
 static void error_callback(int error, const char* description)
 {
 	PR_LOG_ERROR("Error: %s\n", description);
@@ -36,6 +55,7 @@ bool WindowsWindow::Create()
 	glfwWindowHint(GLFW_SAMPLES, FrameworkConfig::windowNumSamples);
 
 	window = glfwCreateWindow(width, height, title, fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
+	monitor = glfwGetWindowMonitor(window);
 
 	closed = false;
 
@@ -71,6 +91,8 @@ bool WindowsWindow::Create()
 	glfwShowWindow(window);
 	SetVSync(FrameworkConfig::windowVSync);
 
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
 	return true;
 }
 
@@ -98,7 +120,43 @@ void WindowsWindow::Input()
 
 void WindowsWindow::Render() const
 {
+	//Synchronize these values because it may change in a callback, and it's easier this way
+	FrameworkConfig::windowWidth = width;
+	FrameworkConfig::windowHeight = height;
+
 	swapchain->SwapBuffers();
+}
+
+void WindowsWindow::SetFullscreen(bool fullscreen)
+{
+	bool currFullscreen = glfwGetWindowMonitor(window) != nullptr;
+
+	if (currFullscreen == fullscreen)
+	{
+		return;
+	}
+
+	if (fullscreen)
+	{
+		glfwGetWindowPos(window, &oldX, &oldY);
+		glfwGetWindowSize(window, &oldWidth, &oldHeight);
+
+		const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+		
+		width = mode->width;
+		height = mode->height;
+
+		glfwSetWindowMonitor(window, monitor, 0, 0, width, height, 0);
+	}
+	else
+	{
+		width = oldWidth;
+		height = oldHeight;
+
+		glfwSetWindowMonitor(window, monitor, oldX, oldY, width, height, 0);
+	}
+
+	swapchain->SetWindowSize(width, height);
 }
 
 bool WindowsWindow::ShouldClose() const

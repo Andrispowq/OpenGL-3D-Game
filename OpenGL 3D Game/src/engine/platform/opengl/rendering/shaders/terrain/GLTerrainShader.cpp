@@ -69,6 +69,7 @@ GLTerrainShader::GLTerrainShader()
 
 	AddUniform("highDetailRange");
 	AddUniform("gamma");
+	AddUniform("exposure");
 	AddUniform("numberOfLights");
 
 	//AddUniform("irradianceMap");
@@ -126,6 +127,7 @@ void GLTerrainShader::UpdateShaderUniforms(Camera* camera, const std::vector<Lig
 
 	SetUniformi("highDetailRange", EngineConfig::rendererHighDetailRange);
 	SetUniformf("gamma", EngineConfig::rendererGamma);
+	SetUniformf("exposure", EngineConfig::rendererExposure);
 	SetUniformi("numberOfLights", nOfLights);
 
 	//Some other stuff that is terrain-related

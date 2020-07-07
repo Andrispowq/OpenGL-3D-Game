@@ -76,5 +76,4 @@ void Renderable::CleanUp()
 
 	Pipeline::CleanUp();
 	GraphicsPipeline::CleanUp();
-	
 }

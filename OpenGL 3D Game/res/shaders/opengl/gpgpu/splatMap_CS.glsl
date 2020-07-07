@@ -15,6 +15,7 @@ void main(void)
 	vec2 texCoord = gl_GlobalInvocationID.xy / float(N);
 	
 	vec3 normal = texture(normalmap, texCoord).rgb * 2 - 1;
+	normalize(normal);
 	
 	float slopeFactor = normal.z;
 	

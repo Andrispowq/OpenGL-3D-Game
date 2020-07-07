@@ -8,6 +8,7 @@
 
 #include "engine/prehistoric/modules/gui/GUIElement.h"
 #include "engine/prehistoric/modules/gui/button/GUIButton.h"
+#include "engine/prehistoric/modules/gui/slider/GUISlider.h"
 
 #include "engine/prehistoric/modules/atmosphere/Atmosphere.h"
 
@@ -15,7 +16,7 @@ Terrain* Scene::terrain;
 
 static void sun_move_function(GameObject* object, float frameTime)
 {
-	object->Move(Vector3f(0, 40, 0) * frameTime);
+	//object->Move(Vector3f(0, 40, 0) * frameTime);
 }
 
 void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
@@ -72,16 +73,21 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 		terrain = new Terrain(window, camera);
 		terrain->UpdateQuadtree();
 
-		//root->AddChild("Terrain", terrain);
+		root->AddChild("Terrain", terrain);
 
-		GameObject* button1 = new GUIButton(window, terrain->getMaps()->getSplatmap(), &EngineConfig::rendererExposure, sizeof(float), true);
-		button1->SetPosition({ 0.5f, 0.5f, 0 });
-		button1->SetScale({ 0.125f, 0.125f, 1 });
-		root->AddChild("button1", button1);
+		GameObject* slider = new GUISlider(window, 0.0f, 2.0f, terrain->getMaps()->getHeightmap(), &EngineConfig::rendererExposure, sizeof(float), true);
+		slider->SetPosition({ 0.5f, 0.5f, 0 });
+		slider->SetScale({ 0.125f, 0.05f, 1 });
+		root->AddChild("slider", slider);
+
+		GameObject* slider2 = new GUISlider(window, 0.0f, 2.0f, terrain->getMaps()->getHeightmap(), &EngineConfig::rendererGamma, sizeof(float), true);
+		slider2->SetPosition({ 0.5f, 0.25f, 0 });
+		slider2->SetScale({ 0.125f, 0.05f, 1 });
+		root->AddChild("slider2", slider2);
 
 		GameObject* sun = new GameObject();
 		sun->AddComponent(LIGHT_COMPONENT, new Light(Vector3f(1, 1, 1), Vector3f(200000000), true, sun_move_function));
-		sun->SetPosition({ -2000, -1000, 2000 });
+		sun->SetPosition({ -2000, 4000, 0 });
 		root->AddChild("sun", sun);
 
 		GameObject* light = new GameObject();
@@ -94,5 +100,4 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 void Scene::DeleteData()
 {
 	Renderer::CleanUp();
-	Renderable::CleanUp();
 }

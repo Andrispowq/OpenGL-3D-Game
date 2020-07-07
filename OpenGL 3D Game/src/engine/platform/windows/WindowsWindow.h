@@ -23,11 +23,17 @@ public:
 	virtual void Input() override;
 	virtual void Render() const override;
 
+	virtual void SetFullscreen(bool fullscreen) override;
+
 	virtual void* GetWindowHandle() const override { return window; }
 private:
 	bool initGLFW() const;
 private:
+	int oldWidth, oldHeight;
+	int oldX, oldY;
+
 	GLFWwindow* window;
+	GLFWmonitor* monitor;
 };
 
 #endif

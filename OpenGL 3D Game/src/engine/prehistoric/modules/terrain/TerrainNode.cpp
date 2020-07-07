@@ -22,10 +22,8 @@ TerrainNode::TerrainNode(Pipeline* pipeline, Pipeline* wireframePipeline, Terrai
 	worldTransform->SetScaling({ TerrainConfig::scaleXZ, TerrainConfig::scaleY, TerrainConfig::scaleXZ });
 	worldTransform->SetPosition({ -TerrainConfig::scaleXZ / 2.0f, 0, -TerrainConfig::scaleXZ / 2.0f });
 
-	Material* material = new Material(window);
-
-	renderer = new Renderer(pipeline, material, window);
-	wireframeRenderer = new Renderer(wireframePipeline, material, window);
+	renderer = new Renderer(pipeline, nullptr, window);
+	wireframeRenderer = new Renderer(wireframePipeline, nullptr, window);
 
 	AddComponent(RENDERER_COMPONENT, renderer);
 	AddComponent(WIREFRAME_RENDERER_COMPONENT, wireframeRenderer);

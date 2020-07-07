@@ -26,6 +26,8 @@ public:
 	virtual void Input() = 0;
 	virtual void Render() const = 0;
 
+	virtual void SetFullscreen(bool fullscreen) = 0;
+
 	inline bool GetClosed() const { return closed; }
 	inline void SetClosed(const bool& closed) { this->closed = closed; }
 

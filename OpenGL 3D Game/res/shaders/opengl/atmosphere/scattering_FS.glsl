@@ -27,13 +27,10 @@ uniform float mie;
 uniform float mieHeightScale;
 uniform float mieDirection;
 
-uniform float bloom;
 uniform float horizontalVerticalShift;
 uniform int width;
 uniform int height;
 uniform int isReflection;
-
-uniform float cameraHeight;
 
 uniform float gamma;
 uniform float exposure;

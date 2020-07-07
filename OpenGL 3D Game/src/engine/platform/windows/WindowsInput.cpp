@@ -1,28 +1,6 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "WindowsInput.h"
 
-static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
-	PR_LOG_MESSAGE("Size: %i * %i\n", width, height);
-
-	InputInstance.SetPause(false);
-
-	if (width == 0 || height == 0)
-	{
-		InputInstance.SetPause(true);
-		return;
-	}
-
-	PR_LOG_MESSAGE("Paused: %u\n", InputInstance.IsPause());
-
-	FrameworkConfig::windowWidth = width;
-	FrameworkConfig::windowHeight = height;
-
-	Window* wnd = (Window*) glfwGetWindowUserPointer(window);
-	wnd->SetResized(true);
-	wnd->GetSwapchain()->SetWindowSize((uint32_t)width, (uint32_t)height);
-}
-
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	auto pushedKeys = InputInstance.GetPushedKeys();
@@ -138,7 +116,6 @@ bool WindowsInput::Init(Window* window) const
 	//Input is static so we can use it in the callbacks, but window is not, so we need a way to get it
 	glfwSetWindowUserPointer(id, (void*) window);
 
-	glfwSetFramebufferSizeCallback(id, framebuffer_size_callback);
 	glfwSetKeyCallback(id, key_callback);
 	glfwSetMouseButtonCallback(id, mouse_callback);
 	glfwSetCursorPosCallback(id, cursor_pos_callback);

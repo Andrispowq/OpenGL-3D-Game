@@ -68,6 +68,11 @@ void RenderingEngine::Update(float delta)
 		window->SetClosed(true);
 	}
 
+	if (InputInstance.IsKeyPushed(PR_KEY_F11))
+	{
+		//window->SetFullscreen(true);
+	}
+
 	if (InputInstance.IsKeyPushed(PR_KEY_E))
 	{
 		wireframeMode = !wireframeMode;
@@ -75,6 +80,7 @@ void RenderingEngine::Update(float delta)
 
 	if (window->GetResized())
 	{
+		camera->SetProjection(camera->getFov(), window->GetWidth(), window->GetHeight());
 		Renderable::RecreatePipelines();
 		window->SetResized(false);
 	}

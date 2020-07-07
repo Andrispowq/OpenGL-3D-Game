@@ -60,6 +60,24 @@ void GUIElement::PreRender(RenderingEngine* renderingEngine)
 	GameObject::PreRender(renderingEngine);
 }
 
+bool GUIElement::inside(Vector2f position)
+{
+	position.y = window->GetHeight() - position.y;
+	position /= { (float)window->GetWidth(), (float)window->GetHeight() };
+	position *= 2;
+	position -= 1;
+
+	Vector2f start = worldTransform->GetPosition().xy() - worldTransform->GetScaling().xy();
+	Vector2f size = worldTransform->GetScaling().xy() * 2;
+
+	if (start <= position && (start + size) >= position)
+	{
+		return true;
+	}
+
+	return false;
+}
+
 GUIElement::~GUIElement()
 {
 	//this data is most likely getting a pointer to a stack variable, so it is not ideal to delete it

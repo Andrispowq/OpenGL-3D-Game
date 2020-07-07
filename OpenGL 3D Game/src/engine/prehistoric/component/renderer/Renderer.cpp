@@ -25,8 +25,16 @@ Renderer::Renderer(Pipeline* pipeline, Material* material, Window* window)
 Renderer::Renderer(Window* window)
 	: Renderable(window)
 {
-	materials.push_back(new Material(window));
-	this->materialIndex = materials.size() - 1;
+	size_t index;
+	if ((index = FindElement((Material*)nullptr, materials)) == 0xFFFFFFFF)
+	{
+		materials.push_back(nullptr);
+		this->materialIndex = materials.size() - 1;
+	}
+	else
+	{
+		this->materialIndex = index;
+	}
 }
 
 Renderer::~Renderer()
@@ -38,10 +46,12 @@ void Renderer::CleanUp()
 {
 	for (Material* material : materials)
 	{
-		delete material;
+		if(material != nullptr)
+			delete material;
 	}
 
 	Material::CleanUp();
+	Renderable::CleanUp();
 }
 
 void Renderer::PreRender(RenderingEngine* renderingEngine)

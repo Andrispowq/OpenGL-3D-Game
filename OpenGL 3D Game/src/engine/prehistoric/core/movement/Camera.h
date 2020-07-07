@@ -30,6 +30,8 @@ public:
 	inline Vector3f getForward() const { return forward; }
 	inline Vector3f getUp() const { return up; }
 
+    inline float getFov() const { return fovY; }
+
 	inline Matrix4f getViewMatrix() const { return viewMatrix; }
 	inline Matrix4f getProjectionMatrix() const { return projectionMatrix; }
 	inline Matrix4f getViewProjectionMatrix() const { return viewProjectionMatrix; }

@@ -29,13 +29,10 @@ GLAtmosphereScatteringShader::GLAtmosphereScatteringShader()
 	AddUniform("mieHeightScale");
 	AddUniform("mieDirection");
 
-	AddUniform("bloom");
 	AddUniform("horizontalVerticalShift");
 	AddUniform("width");
 	AddUniform("height");
 	AddUniform("isReflection");
-
-	AddUniform("cameraHeight");
 
 	AddUniform("gamma");
 	AddUniform("exposure");
@@ -59,13 +56,10 @@ void GLAtmosphereScatteringShader::UpdateShaderUniforms(Camera* camera, const st
 	SetUniformf("mieHeightScale", AtmosphereConfig::mieHeightScale);
 	SetUniformf("mieDirection", AtmosphereConfig::mieDirection);
 
-	SetUniformf("bloom", AtmosphereConfig::bloomFactor);
 	SetUniformf("horizontalVerticalShift", AtmosphereConfig::horizontalVerticalShift);
 	SetUniformi("width", FrameworkConfig::windowWidth);
 	SetUniformi("height", FrameworkConfig::windowHeight);
 	SetUniformi("isReflection", 0); //TODO: getting if it's a reflection or not from the RenderingEngine
-
-	SetUniformf("cameraHeight", camera->getPosition().y);
 
 	SetUniformf("gamma", EngineConfig::rendererGamma);
 	SetUniformf("exposure", EngineConfig::rendererExposure);

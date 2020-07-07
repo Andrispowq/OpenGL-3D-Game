@@ -40,6 +40,7 @@ uniform vec3 cameraPosition;
 uniform int highDetailRange;
 uniform int numberOfLights;
 uniform float gamma;
+uniform float exposure;
 
 //uniform samplerCube irradianceMap;
 //uniform samplerCube prefilterMap;
@@ -59,7 +60,7 @@ void main()
 	float dist = length(cameraPosition - position_FS);
 	float height = position_FS.y;
 
-	vec3 N = texture(normalmap, mapCoord_FS).rbg * 2 - 1;
+	vec3 N = normalize(texture(normalmap, mapCoord_FS).rbg * 2.0 - 1.0);
 	
 	vec4 blendValues = texture(splatmap, mapCoord_FS);
 	
@@ -149,7 +150,7 @@ void main()
             
         // add to outgoing radiance Lo
         float NdotL = max(dot(N, L), 0);
-		Lo += (kD * albedoColour / PI + specular) * radiance * NdotL;
+		Lo += (kD * albedoColour / PI/* + specular*/) * radiance * NdotL; //TODO: in the terrain_FS this is a temporary solution, as the specular part causes some visual bugs
     }
 	
 	/*vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0), F0, roughness);
@@ -172,7 +173,7 @@ void main()
 	
 	vec3 colour = ambient * albedoColour + Lo;
 	
-	colour /= colour + vec3(1);
+	colour = 1.0 - exp(-colour * exposure);
 	colour = pow(colour, vec3(1 / gamma));
 
 	outColour = vec4(colour, 1);

@@ -40,6 +40,7 @@ void GLBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light
 	SetUniform("m_projection", camera->getProjectionMatrix());
 	SetUniform("cameraPosition", camera->getPosition());
 
+	uint32_t nOfLights = EngineConfig::lightsMaxNumber > (uint32_t)lights.size() ? (uint32_t)lights.size() : EngineConfig::lightsMaxNumber;
 #if defined(PR_DEBUG)
 	for (unsigned int i = 0; i < EngineConfig::lightsMaxNumber; i++)
 	{

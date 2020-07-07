@@ -32,6 +32,8 @@ public:
 	virtual void PreUpdate(Engine* engine) override;
 	virtual void PreRender(RenderingEngine* renderingEngine) override;
 
+	bool inside(Vector2f position);
+
 	bool isVisible() const { return visible; }
 	bool hasChanged() const { return statusChanged; }
 
