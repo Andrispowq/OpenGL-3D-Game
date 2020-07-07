@@ -19,9 +19,7 @@ public:
 	VkRenderPass GetRenderPass() const { return renderpass; }
 private:
 	VkRenderPass renderpass;
-
-	VkDevice* device;
-	VkFormat* imageFormat;
+	VkDevice device;
 };
 
 #endif

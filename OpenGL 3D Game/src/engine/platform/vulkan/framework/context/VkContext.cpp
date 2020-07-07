@@ -4,8 +4,6 @@
 VKContext::VKContext(Window* window)
 	: Context(window)
 {
-	this->window = window;
-
 	surface.CreateSurface(window, &instance);
 
 	physicalDevice.PickPhysicalDevice(&surface, &instance);

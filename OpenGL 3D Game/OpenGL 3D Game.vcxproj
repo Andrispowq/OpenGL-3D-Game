@@ -114,6 +114,7 @@
     <ClCompile Include="src\engine\prehistoric\core\movement\Camera.cpp" />
     <ClCompile Include="src\engine\prehistoric\modules\gpgpu\SplatMapRenderer.cpp" />
     <ClCompile Include="src\engine\prehistoric\modules\gpgpu\TerrainHeightsQuery.cpp" />
+    <ClCompile Include="src\engine\prehistoric\modules\gui\slider\GUISlider.cpp" />
     <ClCompile Include="src\engine\prehistoric\modules\terrain\Terrain.cpp" />
     <ClCompile Include="src\engine\prehistoric\modules\terrain\TerrainMaps.cpp" />
     <ClCompile Include="src\engine\prehistoric\modules\terrain\TerrainNode.cpp" />
@@ -221,6 +222,7 @@
     <ClInclude Include="src\engine\prehistoric\modules\gpgpu\NormalMapRenderer.h" />
     <ClInclude Include="src\engine\prehistoric\modules\gpgpu\SplatMapRenderer.h" />
     <ClInclude Include="src\engine\prehistoric\modules\gpgpu\TerrainHeightsQuery.h" />
+    <ClInclude Include="src\engine\prehistoric\modules\gui\slider\GUISlider.h" />
     <ClInclude Include="src\engine\prehistoric\modules\terrain\Terrain.h" />
     <ClInclude Include="src\engine\prehistoric\modules\terrain\TerrainMaps.h" />
     <ClInclude Include="src\engine\prehistoric\modules\terrain\TerrainNode.h" />

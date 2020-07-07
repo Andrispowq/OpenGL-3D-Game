@@ -6,6 +6,8 @@
 std::vector<Shader*> Pipeline::shaders;
 
 Pipeline::Pipeline(Shader* shader)
+	: shader(shader), viewportStart{ 0, 0 }, viewportSize{ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight },
+		scissorStart{0, 0}, scissorSize{ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight }
 {
 	size_t index;
 	if ((index = FindElement(shader, shaders)) == 0xFFFFFFFF)
@@ -17,13 +19,6 @@ Pipeline::Pipeline(Shader* shader)
 	{
 		this->shaderIndex = index;
 	}
-
-	this->shader = shader;
-
-	viewportStart = { 0, 0 };
-	viewportSize = { (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight };
-	scissorStart = { 0, 0 };
-	scissorSize = { FrameworkConfig::windowWidth, FrameworkConfig::windowHeight };
 }
 
 Pipeline::~Pipeline()

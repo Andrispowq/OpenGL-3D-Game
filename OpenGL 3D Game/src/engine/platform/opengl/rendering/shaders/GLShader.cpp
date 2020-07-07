@@ -41,7 +41,8 @@ std::vector<char> ResourceLoader::LoadShaderGL(const std::string& filename)
 	return out;
 }
 
-GLShader::GLShader(const std::vector<char>* files, uint32_t length) : Shader()
+GLShader::GLShader(const std::vector<char>* files, uint32_t length) 
+	: Shader()
 {
 	program = glCreateProgram();
 

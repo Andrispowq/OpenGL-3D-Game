@@ -12,6 +12,7 @@ VBO* GUIElement::guiVbo = nullptr;
 Pipeline* GUIElement::pipeline = nullptr;
 
 GUIElement::GUIElement(Window* window, Texture* texture, void* data, size_t dataSize, bool visible)
+	: type(GUIType::Element)
 {
 	this->texture = texture;
 	this->data = data;
@@ -61,7 +62,8 @@ void GUIElement::PreRender(RenderingEngine* renderingEngine)
 
 GUIElement::~GUIElement()
 {
-	delete data;
+	//this data is most likely getting a pointer to a stack variable, so it is not ideal to delete it
+	//delete data;
 }
 
 void GUIElement::CleanUp()

@@ -18,6 +18,15 @@ namespace AtmosphereConfig
 	extern Vector3f fogColour;
 	extern float fogBrightness;
 
+	extern float planetRadius;
+	extern float atmosphereRadius;
+
+	extern Vector3f rayleigh;
+	extern float rayleighHeightScale;
+	extern float mie;
+	extern float mieHeightScale;
+	extern float mieDirection;
+
 	extern float sightRange;
 	extern float ambient;
 	extern float horizontalVerticalShift;

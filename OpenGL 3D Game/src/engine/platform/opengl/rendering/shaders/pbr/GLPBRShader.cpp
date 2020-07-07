@@ -41,6 +41,7 @@ GLPBRShader::GLPBRShader() : GLShader()
 	}
 
 	AddUniform("gamma");
+	AddUniform("exposure");
 	AddUniform("highDetailRange");
 	AddUniform("numberOfLights");
 }
@@ -87,6 +88,7 @@ void GLPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>
 #endif
 
 	SetUniformf("gamma", EngineConfig::rendererGamma);
+	SetUniformf("exposure", EngineConfig::rendererExposure);
 	SetUniformi("highDetailRange", EngineConfig::rendererHighDetailRange);
 }
 

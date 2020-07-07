@@ -4,6 +4,7 @@
 std::vector<VBO*> GraphicsPipeline::vbos;
 
 GraphicsPipeline::GraphicsPipeline(VBO* vbo)
+	: vbo(vbo)
 {
 	size_t index;
 	if ((index = FindElement(vbo, vbos)) == 0xFFFFFFFF)
@@ -16,7 +17,6 @@ GraphicsPipeline::GraphicsPipeline(VBO* vbo)
 		this->vboIndex = index;
 	}
 
-	this->vbo = vbo;
 	this->backfaceCulling = true;
 }
 

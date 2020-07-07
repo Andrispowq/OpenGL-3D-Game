@@ -6,8 +6,7 @@
 class GUIButton : public GUIElement
 {
 public:
-	GUIButton(Window* window, Texture* texture = nullptr, void* data = nullptr, size_t dataSize = 0, bool visible = true)
-		: GUIElement(window, texture, data, dataSize, visible) {}
+	GUIButton(Window* window, Texture* texture = nullptr, void* data = nullptr, size_t dataSize = 0, bool visible = true);
 
 	virtual void PreUpdate(Engine* engine) override;
 };

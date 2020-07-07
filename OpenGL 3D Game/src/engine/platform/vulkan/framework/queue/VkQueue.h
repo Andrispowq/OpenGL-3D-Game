@@ -6,7 +6,7 @@
 class VKQueue
 {
 public:
-	void SetupQueue(VkDevice& device, uint32_t family);
+	void SetupQueue(VkDevice device, uint32_t family);
 
 	VkQueue& GetQueue() { return queue; }
 private:

@@ -336,6 +336,9 @@
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\atmosphere\GLAtmosphereShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\prehistoric\modules\gui\slider\GUISlider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\rendering\shaders\Shader.h">
@@ -681,6 +684,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\atmosphere\GLAtmosphereShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\prehistoric\modules\gui\slider\GUISlider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

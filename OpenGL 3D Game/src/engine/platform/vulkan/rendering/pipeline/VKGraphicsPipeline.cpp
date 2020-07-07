@@ -5,7 +5,6 @@
 VKGraphicsPipeline::VKGraphicsPipeline(Shader* shader, VBO* vbo)
 	: VKPipeline(shader), GraphicsPipeline(vbo)
 {
-	this->pipelineLayout = &((VKShader*)shader)->GetPipelineLayout();
 }
 
 VKGraphicsPipeline::~VKGraphicsPipeline()

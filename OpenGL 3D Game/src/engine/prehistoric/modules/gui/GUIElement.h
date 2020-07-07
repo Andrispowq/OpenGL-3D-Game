@@ -16,6 +16,11 @@
 
 #include "engine/prehistoric/component/renderer/Renderer.h"
 
+enum class GUIType
+{
+	Element, Button, Slider
+};
+
 class GUIElement : public GameObject
 {
 public:
@@ -40,6 +45,8 @@ public:
 	void setData(void* data, size_t dataSize = 0) { this->data = data; this->dataSize = dataSize; }
 	void setTexture(Texture* texture) { this->texture = texture; }
 protected:
+	GUIType type;
+
 	bool visible;
 	bool statusChanged;
 

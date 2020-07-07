@@ -31,6 +31,7 @@ GLBasicShader::GLBasicShader() : GLShader()
 	AddUniform("material.roughness");
 
 	AddUniform("gamma");
+	AddUniform("exposure");
 }
 
 void GLBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index) const
@@ -74,6 +75,7 @@ void GLBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light
 #endif
 
 	SetUniformf("gamma", EngineConfig::rendererGamma);
+	SetUniformf("exposure", EngineConfig::rendererExposure);
 }
 
 void GLBasicShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const

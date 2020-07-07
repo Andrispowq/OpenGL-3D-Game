@@ -34,6 +34,7 @@ uniform Material material;
 
 uniform vec3 cameraPosition;
 uniform float gamma;
+uniform float exposure;
 
 float DistributionGGX(vec3 N, vec3 H, float roughness);
 float GeometrySchlickGGX(float NdotV, float roughness);
@@ -107,7 +108,7 @@ void main()
 
     vec3 colour = ambient * albedoColour + Lo;
 
-    colour /= colour + vec3(1.0);
+    colour = 1.0 - exp(-colour * exposure);
 	colour = pow(colour, vec3(1.0 / gamma));
 
 	out_Colour = vec4(colour, 1);

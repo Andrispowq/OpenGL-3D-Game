@@ -2,10 +2,9 @@
 #include "VKCommandPool.h"
 
 VKCommandPool::VKCommandPool(VKSurface& surface, VkPhysicalDevice& physicalDevice, VkDevice& device)
+	: physicalDevice(physicalDevice), device(device)
 {
 	this->surface = &surface;
-	this->physicalDevice = &physicalDevice;
-	this->device = &device;
 
 	QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface.GetSurface(), physicalDevice);
 
@@ -29,7 +28,7 @@ VKCommandPool::~VKCommandPool()
 
 	buffers.clear();
 
-	vkDestroyCommandPool(*device, commandPool, nullptr);
+	vkDestroyCommandPool(device, commandPool, nullptr);
 }
 
 
@@ -40,7 +39,7 @@ void VKCommandPool::AddCommandBuffer(VKCommandBuffer& buffer)
 
 void VKCommandPool::AddCommandBuffer()
 {
-	VKCommandBuffer* buffer = new VKCommandBuffer(*device, *this);
+	VKCommandBuffer* buffer = new VKCommandBuffer(device, *this);
 
 	buffers.push_back(buffer);
 }
@@ -66,7 +65,7 @@ void VKCommandPool::DeleteCommandBuffers()
 		buffs[i] = buffers[i]->GetCommandBuffer();
 	}
 
-	vkFreeCommandBuffers(*device, commandPool, (uint32_t) buffers.size(), buffs);
+	vkFreeCommandBuffers(device, commandPool, (uint32_t) buffers.size(), buffs);
 	buffers.clear();
 	delete[] buffs;
 }

@@ -3,6 +3,12 @@
 
 #include "engine/prehistoric/core/Engine.h"
 
+GUIButton::GUIButton(Window* window, Texture* texture, void* data, size_t dataSize, bool visible)
+	: GUIElement(window, texture, data, dataSize, visible)
+{
+	type = GUIType::Button;
+}
+
 void GUIButton::PreUpdate(Engine* engine)
 {
 	bool* val = (bool*)data;

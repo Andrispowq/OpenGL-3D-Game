@@ -18,11 +18,25 @@ uniform float sunRadius;
 uniform vec3 sunColour;
 uniform float sunIntensity;
 
+uniform float planetRadius;
+uniform float atmosphereRadius;
+
+uniform vec3 rayleigh;
+uniform float rayleighHeightScale;
+uniform float mie;
+uniform float mieHeightScale;
+uniform float mieDirection;
+
 uniform float bloom;
 uniform float horizontalVerticalShift;
 uniform int width;
 uniform int height;
 uniform int isReflection;
+
+uniform float cameraHeight;
+
+uniform float gamma;
+uniform float exposure;
 
 vec2 rsi(vec3 r0, vec3 rd, float sr)
 {
@@ -146,26 +160,28 @@ void main()
 	}
 	
 	vec3 out_LightScattering = vec3(0);
-	
+
     vec3 out_Color = atmosphere(
-        normalize(ray_world),        	// normalized ray direction
-        vec3(0, 6372e3, 0),            	// ray origin
-        sunPosition,                  	// position of the sun
-        sunIntensity,                   // intensity of the sun
-        6371e3,                         // radius of the planet in meters
-        6471e3,                         // radius of the atmosphere in meters
-        vec3(5.5e-6, 13.0e-6, 22.4e-6), // Rayleigh scattering coefficient
-        21e-6,                          // Mie scattering coefficient
-        8e3,                            // Rayleigh scale height
-        1.2e3,                          // Mie scale height
-        0.758                           // Mie preferred scattering direction
+        normalize(ray_world),        	        // normalized ray direction
+        vec3(0, planetRadius + 1000, 0),        // ray origin, originally: vec3(0, 6372e3, 0)
+        sunPosition,                  	        // position of the sun
+        sunIntensity,                           // intensity of the sun
+        planetRadius,                           // radius of the planet in meters
+        atmosphereRadius,                       // radius of the atmosphere in meters
+        rayleigh,                               // Rayleigh scattering coefficient
+        mie,                                    // Mie scattering coefficient
+        rayleighHeightScale,                    // Rayleigh scale height
+        mieHeightScale,                         // Mie scale height
+        mieDirection                            // Mie preferred direction
     );
 	
-	// Apply exposure.
-    out_Color = 1.0 - exp(-1.0 * out_Color);
-	
 	float sunradius = length(normalize(ray_world) - normalize(sunPosition));
-	
+
+    // Apply exposure.
+    out_Color = 1.0 - exp(-out_Color * exposure);
+    //out_Color = pow(out_Color, vec3(gamma));
+    //out_Color = pow(out_Color, vec3(1 / gamma));
+
 	// no sun rendering when scene reflection
 	if(sunradius < sunRadius && isReflection == 0)
 	{
@@ -173,7 +189,7 @@ void main()
 		float smoothRadius = smoothstep(0, 1, 0.1f / sunradius - 0.1f);
 		out_Color = mix(out_Color, sunColour * 4, smoothRadius);
 		
-		smoothRadius = smoothstep(0, 1, 0.18f / sunRadius - 0.2f);
+		smoothRadius = smoothstep(0, 1, 0.18f / sunradius - 0.2f);
 		out_LightScattering = mix(vec3(0), sunColour, smoothRadius);
 	}
 	

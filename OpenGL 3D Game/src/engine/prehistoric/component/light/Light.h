@@ -6,9 +6,10 @@
 class Light : public Component
 {
 public:
-	Light(const Vector3f& colour = 0, const Vector3f& intensity = 1, bool isSun = false) : Component(), colour(colour), intensity(intensity), isSun(isSun) {}
+	Light(const Vector3f& colour = 0, const Vector3f& intensity = 1, bool isSun = false, UpdateFunction function = nullptr);
 	virtual ~Light() {}
 
+	virtual void PreUpdate(Engine* engine) override;
 	virtual void PreRender(RenderingEngine* renderingEngine) override;
 
 	inline Vector3f GetColour() const { return colour; }

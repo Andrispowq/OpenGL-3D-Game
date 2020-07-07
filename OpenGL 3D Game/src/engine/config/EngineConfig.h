@@ -12,6 +12,7 @@ namespace EngineConfig
 
     extern uint32_t lightsMaxNumber;
     extern float rendererGamma;
+    extern float rendererExposure;
     extern int rendererHighDetailRange;
     extern float rendererNearPlane;
     extern float rendererFarPlane;

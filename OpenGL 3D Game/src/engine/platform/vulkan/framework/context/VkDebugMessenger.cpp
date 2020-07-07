@@ -142,9 +142,8 @@ VkResult CreateDebugUtilsMessengerEXT(VkInstance& instance, const VkDebugUtilsMe
 void DestroyDebugUtilsMessengerEXT(VkInstance& instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator);
 
 VKDebugMessenger::VKDebugMessenger(VkInstance instance)
+	: instance(instance)
 {
-	this->instance = instance;
-
 	debugMessenger = VK_NULL_HANDLE;
 	VkDebugUtilsMessengerCreateInfoEXT createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;

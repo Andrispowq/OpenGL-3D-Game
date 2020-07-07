@@ -3,12 +3,9 @@
 #include "engine/platform/vulkan/rendering/renderpass/VKRenderpass.h"
 
 VKFramebuffer::VKFramebuffer(VKRenderpass& renderpass, VkExtent2D& swapchainExtent, VkImageView& colourAttachment, VkImageView& depthAttachment, VkImageView& colourAttachmentResolve, VkDevice& device)
+	: device(device)
 {
-	this->renderpass = &renderpass;
-	this->swapchainExtent = &swapchainExtent;
-	this->device = &device;
-
-	attachments = new VkImageView[3]
+	VkImageView attachments[3] = 
 	{
 		colourAttachment,
 		depthAttachment,
@@ -32,5 +29,5 @@ VKFramebuffer::VKFramebuffer(VKRenderpass& renderpass, VkExtent2D& swapchainExte
 
 VKFramebuffer::~VKFramebuffer()
 {
-	vkDestroyFramebuffer(*device, framebuffer, nullptr);
+	vkDestroyFramebuffer(device, framebuffer, nullptr);
 }

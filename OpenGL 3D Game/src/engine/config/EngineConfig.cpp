@@ -5,6 +5,7 @@ namespace EngineConfig
 {
 	uint32_t EngineConfig::lightsMaxNumber;
 	float EngineConfig::rendererGamma;
+	float EngineConfig::rendererExposure;
 	int EngineConfig::rendererHighDetailRange;
 	float EngineConfig::rendererNearPlane;
 	float EngineConfig::rendererFarPlane;
@@ -41,6 +42,10 @@ namespace EngineConfig
 					if (nameTokens[1] == "gamma")
 					{
 						rendererGamma = (float) std::atof(tokens[1].c_str());
+					}
+					if (nameTokens[1] == "exposure")
+					{
+						rendererExposure = (float)std::atof(tokens[1].c_str());
 					}
 					if (nameTokens[1] == "highDetailRange")
 					{

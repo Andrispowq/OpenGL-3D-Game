@@ -42,6 +42,7 @@ uniform Material material;
 
 uniform vec3 cameraPosition;
 uniform float gamma;
+uniform float exposure;
 uniform int highDetailRange;
 uniform int numberOfLights;
 
@@ -151,7 +152,7 @@ void main()
 
 	vec3 colour = ambient + Lo + max(emission * emissionFactor, 0.0);
 	
-	colour /= colour + vec3(1.0);
+	colour = 1.0 - exp(-colour * exposure);
 	colour = pow(colour, vec3(1.0 / gamma));
 	
 	outColour = vec4(colour, 1);

@@ -11,6 +11,15 @@ namespace AtmosphereConfig
 	Vector3f AtmosphereConfig::fogColour;
 	float AtmosphereConfig::fogBrightness;
 
+	float AtmosphereConfig::planetRadius;
+	float AtmosphereConfig::atmosphereRadius;
+
+	Vector3f AtmosphereConfig::rayleigh;
+	float AtmosphereConfig::rayleighHeightScale;
+	float AtmosphereConfig::mie;
+	float AtmosphereConfig::mieHeightScale;
+	float AtmosphereConfig::mieDirection;
+
 	float AtmosphereConfig::sightRange;
 	float AtmosphereConfig::ambient;
 	float AtmosphereConfig::horizontalVerticalShift;
@@ -66,6 +75,39 @@ namespace AtmosphereConfig
 					if (nameTokens[1] == "brightness")
 					{
 						fogBrightness = (float)std::atof(tokens[1].c_str());
+					}
+				}
+
+				if (nameTokens[0] == "planetRadius")
+				{
+					planetRadius = (float)std::atof(tokens[1].c_str());
+				}
+				if (nameTokens[0] == "atmosphereRadius")
+				{
+					atmosphereRadius = (float)std::atof(tokens[1].c_str());
+				}
+
+				if (nameTokens[0] == "coefficients")
+				{
+					if (nameTokens[1] == "rayleigh")
+					{
+						rayleigh = Vector3f((float)std::atof(tokens[1].c_str()), (float)std::atof(tokens[2].c_str()), (float)std::atof(tokens[3].c_str()));
+					}
+					if (nameTokens[1] == "rayleighHeightScale")
+					{
+						rayleighHeightScale = (float)std::atof(tokens[1].c_str());
+					}
+					if (nameTokens[1] == "mie")
+					{
+						mie = (float)std::atof(tokens[1].c_str());
+					}
+					if (nameTokens[1] == "mieHeightScale")
+					{
+						mieHeightScale = (float)std::atof(tokens[1].c_str());
+					}
+					if (nameTokens[1] == "mieDirection")
+					{
+						mieDirection = (float)std::atof(tokens[1].c_str());
 					}
 				}
 

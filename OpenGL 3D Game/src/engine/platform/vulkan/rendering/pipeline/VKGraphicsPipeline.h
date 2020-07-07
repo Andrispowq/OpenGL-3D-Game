@@ -31,7 +31,6 @@ public:
 
 	VkPipeline& GetGraphicsPipeline() { return graphicsPipeline; }
 private:
-	VkPipelineLayout* pipelineLayout;
 	VKRenderpass* renderpass;
 
 	VkPipeline graphicsPipeline;

@@ -20,11 +20,25 @@ GLAtmosphereScatteringShader::GLAtmosphereScatteringShader()
 	AddUniform("sunColour");
 	AddUniform("sunIntensity");
 
+	AddUniform("planetRadius");
+	AddUniform("atmosphereRadius");
+
+	AddUniform("rayleigh");
+	AddUniform("rayleighHeightScale");
+	AddUniform("mie");
+	AddUniform("mieHeightScale");
+	AddUniform("mieDirection");
+
 	AddUniform("bloom");
 	AddUniform("horizontalVerticalShift");
 	AddUniform("width");
 	AddUniform("height");
 	AddUniform("isReflection");
+
+	AddUniform("cameraHeight");
+
+	AddUniform("gamma");
+	AddUniform("exposure");
 }
 
 void GLAtmosphereScatteringShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index) const
@@ -36,11 +50,25 @@ void GLAtmosphereScatteringShader::UpdateShaderUniforms(Camera* camera, const st
 	SetUniform("sunColour", AtmosphereConfig::sunColour);
 	SetUniformf("sunIntensity", AtmosphereConfig::sunIntensity);
 
+	SetUniformf("planetRadius", AtmosphereConfig::planetRadius);
+	SetUniformf("atmosphereRadius", AtmosphereConfig::atmosphereRadius);
+	
+	SetUniform("rayleigh", AtmosphereConfig::rayleigh);
+	SetUniformf("rayleighHeightScale", AtmosphereConfig::rayleighHeightScale);
+	SetUniformf("mie", AtmosphereConfig::mie);
+	SetUniformf("mieHeightScale", AtmosphereConfig::mieHeightScale);
+	SetUniformf("mieDirection", AtmosphereConfig::mieDirection);
+
 	SetUniformf("bloom", AtmosphereConfig::bloomFactor);
 	SetUniformf("horizontalVerticalShift", AtmosphereConfig::horizontalVerticalShift);
 	SetUniformi("width", FrameworkConfig::windowWidth);
 	SetUniformi("height", FrameworkConfig::windowHeight);
 	SetUniformi("isReflection", 0); //TODO: getting if it's a reflection or not from the RenderingEngine
+
+	SetUniformf("cameraHeight", camera->getPosition().y);
+
+	SetUniformf("gamma", EngineConfig::rendererGamma);
+	SetUniformf("exposure", EngineConfig::rendererExposure);
 }
 
 void GLAtmosphereScatteringShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const

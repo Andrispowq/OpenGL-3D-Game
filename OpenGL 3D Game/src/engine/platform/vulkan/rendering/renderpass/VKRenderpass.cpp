@@ -2,10 +2,8 @@
 #include "VKRenderpass.h"
 
 VKRenderpass::VKRenderpass(VKPhysicalDevice& physicalDevice, VkDevice& device, VkFormat& colourImageFormat)
+	: device(device)
 {
-	this->device = &device;
-	this->imageFormat = &colourImageFormat;
-
 	VkAttachmentDescription colorAttachment = {};
 	colorAttachment.format = colourImageFormat;
 	colorAttachment.samples = physicalDevice.getSampleCount();
@@ -87,7 +85,7 @@ VKRenderpass::VKRenderpass(VKPhysicalDevice& physicalDevice, VkDevice& device, V
 
 VKRenderpass::~VKRenderpass()
 {
-	vkDestroyRenderPass(*device, renderpass, nullptr);
+	vkDestroyRenderPass(device, renderpass, nullptr);
 }
 
 void VKRenderpass::BeginRenderpass(VKCommandBuffer& commandBuffer, VkExtent2D& swapchainExtent, VKFramebuffer& framebuffer, Vector4f clearColour)

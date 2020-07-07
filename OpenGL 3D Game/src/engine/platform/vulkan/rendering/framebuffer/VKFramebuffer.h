@@ -3,8 +3,6 @@
 
 #include <vulkan/vulkan.h>
 
-#include "engine/platform/vulkan/framework/device/VKDevice.h"
-
 class VKRenderpass;
 
 class VKFramebuffer
@@ -16,12 +14,7 @@ public:
 	VkFramebuffer GetFramebuffer() const { return framebuffer; }
 private:
 	VkFramebuffer framebuffer;
-	VkImageView* attachments;
-
-	VKRenderpass* renderpass;
-	VkExtent2D* swapchainExtent;
-
-	VkDevice* device;
+	VkDevice device;
 };
 
 #endif

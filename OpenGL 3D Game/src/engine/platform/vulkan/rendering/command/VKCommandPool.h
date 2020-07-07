@@ -30,8 +30,8 @@ public:
 	std::vector<VKCommandBuffer*> GetCommandBuffers() const { return buffers; }
 private:
 	VKSurface* surface;
-	VkPhysicalDevice* physicalDevice;
-	VkDevice* device;
+	VkPhysicalDevice physicalDevice;
+	VkDevice device;
 
 	VkCommandPool commandPool;
 	std::vector<VKCommandBuffer*> buffers;
