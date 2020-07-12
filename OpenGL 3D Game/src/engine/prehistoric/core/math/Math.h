@@ -58,10 +58,10 @@ public:
 		return reg.m128_f32[index];
 	}
 
-	inline bool operator<(const Vector2f& v) const { return x < v.x && y < v.x; }
-	inline bool operator>(const Vector2f& v) const { return x > v.x && y > v.x; }
-	inline bool operator<=(const Vector2f& v) const { return x <= v.x && y <= v.x; }
-	inline bool operator>=(const Vector2f& v) const { return x >= v.x && y >= v.x; }
+	inline bool operator<(const Vector2f& v) const { return x < v.x && y < v.y; }
+	inline bool operator>(const Vector2f& v) const { return x > v.x && y > v.y; }
+	inline bool operator<=(const Vector2f& v) const { return x <= v.x && y <= v.y; }
+	inline bool operator>=(const Vector2f& v) const { return x >= v.x && y >= v.y; }
 	inline bool operator==(const Vector2f& v) const { return x == v.x && y == v.y; }
 	inline bool operator!=(const Vector2f& v) const { return !(operator==(v)); }
 
@@ -132,10 +132,10 @@ public:
 		return reg.m128_f32[index];
 	}
 
-	inline bool operator<(const Vector3f& v) const { return x < v.x&& y < v.x&& z < v.z; }
-	inline bool operator>(const Vector3f& v) const { return x > v.x && y > v.x && z > v.z; }
-	inline bool operator<=(const Vector3f& v) const { return x <= v.x && y <= v.x && z <= v.z; }
-	inline bool operator>=(const Vector3f& v) const { return x >= v.x && y >= v.x && z >= v.z; }
+	inline bool operator<(const Vector3f& v) const { return x < v.x&& y < v.y && z < v.z; }
+	inline bool operator>(const Vector3f& v) const { return x > v.x && y > v.y && z > v.z; }
+	inline bool operator<=(const Vector3f& v) const { return x <= v.x && y <= v.y && z <= v.z; }
+	inline bool operator>=(const Vector3f& v) const { return x >= v.x && y >= v.y && z >= v.z; }
 	inline bool operator==(const Vector3f& v) const { return x == v.x && y == v.y && z == v.z; }
 	inline bool operator!=(const Vector3f& v) const { return !(operator==(v)); }
 
@@ -231,10 +231,10 @@ public:
 		return reg.m128_f32[index];
 	}
 
-	inline bool operator<(const Vector4f& v) const { return x < v.x&& y < v.x&& z < v.z&& w < v.w; }
-	inline bool operator>(const Vector4f& v) const { return x > v.x && y > v.x && z > v.z && w > v.w; }
-	inline bool operator<=(const Vector4f& v) const { return x <= v.x && y <= v.x && z <= v.z && w <= v.w; }
-	inline bool operator>=(const Vector4f& v) const { return x >= v.x && y >= v.x && z >= v.z && w >= v.w; }
+	inline bool operator<(const Vector4f& v) const { return x < v.x&& y < v.y && z < v.z&& w < v.w; }
+	inline bool operator>(const Vector4f& v) const { return x > v.x && y > v.y && z > v.z && w > v.w; }
+	inline bool operator<=(const Vector4f& v) const { return x <= v.x && y <= v.y && z <= v.z && w <= v.w; }
+	inline bool operator>=(const Vector4f& v) const { return x >= v.x && y >= v.y && z >= v.z && w >= v.w; }
 	inline bool operator==(const Vector4f& v) const { return x == v.x && y == v.y && z == v.z && w == v.w; }
 	inline bool operator!=(const Vector4f& v) const { return !(operator==(v)); }
 
@@ -328,10 +328,10 @@ public:
 		return reg.m128_f32[index];
 	}
 
-	inline bool operator<(const Quaternionf& v) const { return x < v.x && y < v.x && z < v.z && w < v.w; }
-	inline bool operator>(const Quaternionf& v) const { return x > v.x && y > v.x && z > v.z && w > v.w; }
-	inline bool operator<=(const Quaternionf& v) const { return x <= v.x && y <= v.x && z <= v.z && w <= v.w; }
-	inline bool operator>=(const Quaternionf& v) const { return x >= v.x && y >= v.x && z >= v.z && w >= v.w; }
+	inline bool operator<(const Quaternionf& v) const { return x < v.x && y < v.y && z < v.z && w < v.w; }
+	inline bool operator>(const Quaternionf& v) const { return x > v.x && y > v.y && z > v.z && w > v.w; }
+	inline bool operator<=(const Quaternionf& v) const { return x <= v.x && y <= v.y && z <= v.z && w <= v.w; }
+	inline bool operator>=(const Quaternionf& v) const { return x >= v.x && y >= v.y && z >= v.z && w >= v.w; }
 	inline bool operator==(const Quaternionf& v) const { return x == v.x && y == v.y && z == v.z && w == v.w; }
 	inline bool operator!=(const Quaternionf& v) const { return !(operator==(v)); }
 
@@ -564,10 +564,10 @@ public:
 			return 0;
 	}
 
-	inline bool operator<(const Vector3<T>& v) const { return x < v.x && y < v.x && z < v.z; }
-	inline bool operator>(const Vector3<T>& v) const { return x > v.x && y > v.x && z > v.z; }
-	inline bool operator<=(const Vector3<T>& v) const { return x <= v.x && y <= v.x && z <= v.z; }
-	inline bool operator>=(const Vector3<T>& v) const { return x >= v.x && y >= v.x && z >= v.z; }
+	inline bool operator<(const Vector3<T>& v) const { return x < v.x && y < v.y && z < v.z; }
+	inline bool operator>(const Vector3<T>& v) const { return x > v.x && y > v.y && z > v.z; }
+	inline bool operator<=(const Vector3<T>& v) const { return x <= v.x && y <= v.y && z <= v.z; }
+	inline bool operator>=(const Vector3<T>& v) const { return x >= v.x && y >= v.y && z >= v.z; }
 	inline bool operator==(const Vector3<T>& v) const { return x == v.x && y == v.y && z == v.z; }
 	inline bool operator!=(const Vector3<T>& v) const { return !(operator==(v)); }
 
@@ -691,10 +691,10 @@ public:
 			return 0;
 	}
 
-	inline bool operator<(const Vector4<T>& v) const { return x < v.x && y < v.x && z < v.z && w < v.w; }
-	inline bool operator>(const Vector4<T>& v) const { return x > v.x && y > v.x && z > v.z && w > v.w; }
-	inline bool operator<=(const Vector4<T>& v) const { return x <= v.x && y <= v.x && z <= v.z && w <= v.w; }
-	inline bool operator>=(const Vector4<T>& v) const { return x >= v.x && y >= v.x && z >= v.z && w >= v.w; }
+	inline bool operator<(const Vector4<T>& v) const { return x < v.x && y < v.y && z < v.z && w < v.w; }
+	inline bool operator>(const Vector4<T>& v) const { return x > v.x && y > v.y && z > v.z && w > v.w; }
+	inline bool operator<=(const Vector4<T>& v) const { return x <= v.x && y <= v.y && z <= v.z && w <= v.w; }
+	inline bool operator>=(const Vector4<T>& v) const { return x >= v.x && y >= v.y && z >= v.z && w >= v.w; }
 	inline bool operator==(const Vector4<T>& v) const { return x == v.x && y == v.y && z == v.z && w == v.w; }
 	inline bool operator!=(const Vector4<T>& v) const { return !(operator==(v)); }
 

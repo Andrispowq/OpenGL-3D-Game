@@ -10,6 +10,8 @@ public:
 
 	virtual void PreUpdate(Engine* engine) override;
 
+	float getProgress() const { return progress; }
+
 private:
 	float minValue;
 	float maxValue;

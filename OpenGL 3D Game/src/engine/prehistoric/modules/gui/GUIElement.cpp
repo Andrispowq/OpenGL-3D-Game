@@ -60,17 +60,20 @@ void GUIElement::PreRender(RenderingEngine* renderingEngine)
 	GameObject::PreRender(renderingEngine);
 }
 
-bool GUIElement::inside(Vector2f position)
+bool GUIElement::inside(Vector2f cursor)
 {
-	position.y = window->GetHeight() - position.y;
-	position /= { (float)window->GetWidth(), (float)window->GetHeight() };
-	position *= 2;
-	position -= 1;
+	cursor.y = window->GetHeight() - cursor.y;
+	cursor /= { (float)window->GetWidth(), (float)window->GetHeight() };
+	cursor *= 2;
+	cursor -= 1;
 
-	Vector2f start = worldTransform->GetPosition().xy() - worldTransform->GetScaling().xy();
-	Vector2f size = worldTransform->GetScaling().xy() * 2;
+	Vector2f pos = worldTransform->GetPosition().xy();
+	Vector2f scale = worldTransform->GetScaling().xy();
 
-	if (start <= position && (start + size) >= position)
+	Vector2f start = pos - scale;
+	Vector2f end = pos + scale;
+
+	if (start <= cursor && end >= cursor)
 	{
 		return true;
 	}

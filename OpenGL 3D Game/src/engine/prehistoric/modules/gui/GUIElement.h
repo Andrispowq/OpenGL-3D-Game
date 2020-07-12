@@ -32,7 +32,7 @@ public:
 	virtual void PreUpdate(Engine* engine) override;
 	virtual void PreRender(RenderingEngine* renderingEngine) override;
 
-	bool inside(Vector2f position);
+	bool inside(Vector2f cursor);
 
 	bool isVisible() const { return visible; }
 	bool hasChanged() const { return statusChanged; }
@@ -41,6 +41,8 @@ public:
 	size_t getDataSize() const { return dataSize; }
 
 	Texture* getTexture() { return texture; }
+
+	GUIType getType() const { return type; }
 
 	void setVisible(bool visible) { this->visible = visible; }
 

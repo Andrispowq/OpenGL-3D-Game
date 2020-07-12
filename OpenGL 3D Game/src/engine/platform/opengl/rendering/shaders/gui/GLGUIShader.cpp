@@ -2,6 +2,7 @@
 #include "GLGUIShader.h"
 
 #include "engine/prehistoric/modules/gui/GUIElement.h"
+#include "engine/prehistoric/modules/gui/slider/GUISlider.h"
 
 GLGUIShader::GLGUIShader()
 	: GLShader()
@@ -11,7 +12,9 @@ GLGUIShader::GLGUIShader()
 	CompileShader();
 
 	AddUniform("m_transform");
+
 	AddUniform("image");
+	AddUniform("progress");
 }
 
 void GLGUIShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
@@ -22,4 +25,13 @@ void GLGUIShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_ind
 
 	gui->getTexture()->Bind();
 	SetUniformi("image", 0);
+
+	if (gui->getType() == GUIType::Slider)
+	{
+		SetUniformf("progress", reinterpret_cast<GUISlider*>(object)->getProgress());
+	}
+	else
+	{
+		SetUniformf("progress", 1.0f);
+	}
 }

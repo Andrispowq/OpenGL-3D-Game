@@ -80,10 +80,25 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 		slider->SetScale({ 0.125f, 0.05f, 1 });
 		root->AddChild("slider", slider);
 
-		GameObject* slider2 = new GUISlider(window, 0.0f, 2.0f, terrain->getMaps()->getHeightmap(), &EngineConfig::rendererGamma, sizeof(float), true);
+		GameObject* slider2 = new GUISlider(window, 1.0f, 3.4f, terrain->getMaps()->getHeightmap(), &EngineConfig::rendererGamma, sizeof(float), true);
 		slider2->SetPosition({ 0.5f, 0.25f, 0 });
 		slider2->SetScale({ 0.125f, 0.05f, 1 });
 		root->AddChild("slider2", slider2);
+
+		/*GameObject* slider3 = new GUISlider(window, 2000.0f, 14000.0f, terrain->getMaps()->getHeightmap(), &AtmosphereConfig::rayleighHeightScale, sizeof(float), true);
+		slider3->SetPosition({ -0.5f, 0.5f, 0 });
+		slider3->SetScale({ 0.125f, 0.05f, 1 });
+		root->AddChild("slider3", slider3);
+
+		GameObject* slider4 = new GUISlider(window, 0.000021f / 2.0f , 0.000021f * 2.0f, terrain->getMaps()->getHeightmap(), &AtmosphereConfig::mie, sizeof(float), true);
+		slider4->SetPosition({ -0.5f, 0.25f, 0 });
+		slider4->SetScale({ 0.125f, 0.05f, 1 });
+		root->AddChild("slider4", slider4);
+
+		GameObject* slider5 = new GUISlider(window, 200.0f, 2200.0f, terrain->getMaps()->getHeightmap(), &AtmosphereConfig::mieHeightScale, sizeof(float), true);
+		slider5->SetPosition({ -0.5f, 0.0f, 0 });
+		slider5->SetScale({ 0.125f, 0.05f, 1 });
+		root->AddChild("slider5", slider5);*/
 
 		GameObject* sun = new GameObject();
 		sun->AddComponent(LIGHT_COMPONENT, new Light(Vector3f(1, 1, 1), Vector3f(200000000), true, sun_move_function));
