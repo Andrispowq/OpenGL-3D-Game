@@ -14,15 +14,23 @@ GLTerrainWireframeShader::GLTerrainWireframeShader()
 
 	AddUniform("heightmap");
 
-	AddUniform("localMatrix");
-	AddUniform("worldMatrix");
+	//AddUniform("localMatrix");
+	//AddUniform("worldMatrix");
 
 	AddUniform("cameraPosition");
-	AddUniform("location");
-	AddUniform("index");
+	//AddUniform("location");
+	//AddUniform("index");
 	AddUniform("scaleY");
-	AddUniform("gap");
-	AddUniform("lod");
+	//AddUniform("gap");
+	//AddUniform("lod");
+
+	location_localMatrix = glGetUniformLocation(program, "localMatrix");
+	location_worldMatrix = glGetUniformLocation(program, "worldMatrix");
+
+	location_location = glGetUniformLocation(program, "location");
+	location_index = glGetUniformLocation(program, "index");
+	location_gap = glGetUniformLocation(program, "gap");
+	location_lod = glGetUniformLocation(program, "lod");
 
 	for (unsigned int i = 0; i < 8; i++)
 	{
@@ -103,11 +111,11 @@ void GLTerrainWireframeShader::UpdateObjectUniforms(GameObject* object, uint32_t
 {
 	TerrainNode* node = (TerrainNode*)object;
 
-	SetUniform("localMatrix", node->getLocalTransform()->getTransformationMatrix());
-	SetUniform("worldMatrix", object->getWorldTransform()->getTransformationMatrix());
+	SetUniform(location_localMatrix, node->getLocalTransform()->getTransformationMatrix());
+	SetUniform(location_worldMatrix, object->getWorldTransform()->getTransformationMatrix());
 
-	SetUniform("location", node->getLocation());
-	SetUniform("index", node->getIndex());
-	SetUniformf("gap", node->getGap());
-	SetUniformi("lod", node->getLod());
+	SetUniform(location_location, node->getLocation());
+	SetUniform(location_index, node->getIndex());
+	SetUniformf(location_gap, node->getGap());
+	SetUniformi(location_lod, node->getLod());
 }

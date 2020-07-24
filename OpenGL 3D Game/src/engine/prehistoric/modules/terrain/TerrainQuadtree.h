@@ -11,8 +11,8 @@
 #include "engine/platform/opengl/rendering/shaders/terrain/GLTerrainShader.h"
 #include "engine/platform/opengl/rendering/shaders/terrain/GLTerrainWireframeShader.h"
 
-#include "engine/platform/opengl/buffer/GLPatchVBO.h"
-#include "engine/platform/vulkan/buffer/VKMeshVBO.h"
+#include "engine/platform/opengl/buffer/GLPatchVertexBuffer.h"
+#include "engine/platform/vulkan/buffer/VKMeshVertexBuffer.h"
 
 //#include "engine/platform/vulkan/rendering/shaders/terrain/VKTerrainShader.h"
 //#include "engine/platform/vulkan/rendering/shaders/terrain/VKTerrainWireframeShader.h"

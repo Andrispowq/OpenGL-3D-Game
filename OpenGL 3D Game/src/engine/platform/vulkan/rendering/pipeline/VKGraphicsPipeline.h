@@ -8,7 +8,7 @@
 
 #include "engine/platform/vulkan/framework/device/VKDevice.h"
 #include "engine/platform/vulkan/rendering/renderpass/VKRenderpass.h"
-#include "engine/platform/vulkan/buffer/VKMeshVBO.h"
+#include "engine/platform/vulkan/buffer/VKMeshVertexBuffer.h"
 #include "engine/platform/vulkan/rendering/shaders/VkShader.h"
 
 #include "engine/prehistoric/core/math/Math.h"
@@ -16,7 +16,7 @@
 class VKGraphicsPipeline : public VKPipeline, public GraphicsPipeline
 {
 public:
-	VKGraphicsPipeline(Shader* shader, VBO* vbo);
+	VKGraphicsPipeline(Shader* shader, VertexBuffer* vbo);
 	virtual ~VKGraphicsPipeline();
 
 	virtual void CreatePipeline(Window* window) override;

@@ -37,7 +37,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 			{
 				if (nameTokens[1] == "load")
 				{
-					MeshVBO* vbo = OBJLoader::LoadModel(directoryModels, tokens[2], "", window);
+					MeshVertexBuffer* vbo = OBJLoader::LoadModel(directoryModels, tokens[2], "", window);
 
 					if (tokens[3] == "clockwise")
 					{
@@ -219,7 +219,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 					{
  						std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
 
-						VBO* vbo = models.at(compTokens[0]);
+						VertexBuffer* vbo = models.at(compTokens[0]);
 						Material* material = materials.at(compTokens[2]);
 
 						Shader* shader = nullptr;
@@ -338,7 +338,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 							{
 								std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
 
-								VBO* vbo = models.at(compTokens[0]);
+								VertexBuffer* vbo = models.at(compTokens[0]);
 								Material* material = materials.at(compTokens[2]);
 								Shader* shader = nullptr;
 

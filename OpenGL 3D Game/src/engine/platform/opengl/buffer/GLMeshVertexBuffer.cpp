@@ -1,19 +1,19 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
-#include "GLMeshVBO.h"
+#include "GLMeshVertexBuffer.h"
 
-GLMeshVBO::GLMeshVBO(const Mesh& mesh) : MeshVBO()
+GLMeshVertexBuffer::GLMeshVertexBuffer(const Mesh& mesh) : MeshVertexBuffer()
 {
 	Store(mesh);
 }
 
-GLMeshVBO::~GLMeshVBO()
+GLMeshVertexBuffer::~GLMeshVertexBuffer()
 {
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ibo);
 }
 
-void GLMeshVBO::Store(const Mesh& mesh)
+void GLMeshVertexBuffer::Store(const Mesh& mesh)
 {
 	size = static_cast<uint32_t>(mesh.getIndices().size());
 
@@ -47,7 +47,7 @@ void GLMeshVBO::Store(const Mesh& mesh)
 	glBindVertexArray(0);
 }
 
-void GLMeshVBO::Bind(void* commandBuffer) const
+void GLMeshVertexBuffer::Bind(void* commandBuffer) const
 {
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
@@ -57,12 +57,12 @@ void GLMeshVBO::Bind(void* commandBuffer) const
 	glEnableVertexAttribArray(2);
 }
 
-void GLMeshVBO::Draw(void* commandBuffer) const
+void GLMeshVertexBuffer::Draw(void* commandBuffer) const
 {
 	glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_SHORT, (void*) 0);
 }
 
-void GLMeshVBO::Unbind() const
+void GLMeshVertexBuffer::Unbind() const
 {
 	glDisableVertexAttribArray(2);
 	glDisableVertexAttribArray(1);

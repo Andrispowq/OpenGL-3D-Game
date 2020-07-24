@@ -14,15 +14,23 @@ GLTerrainShader::GLTerrainShader()
 
 	AddUniform("heightmap");
 
-	AddUniform("localMatrix");
-	AddUniform("worldMatrix");
+	//AddUniform("localMatrix");
+	//AddUniform("worldMatrix");
 
 	AddUniform("cameraPosition");
-	AddUniform("location");
-	AddUniform("index");
+	//AddUniform("location");
+	//AddUniform("index");
 	AddUniform("scaleY");
-	AddUniform("gap");
-	AddUniform("lod");
+	//AddUniform("gap");
+	//AddUniform("lod");
+
+	location_localMatrix = glGetUniformLocation(program, "localMatrix");
+	location_worldMatrix = glGetUniformLocation(program, "worldMatrix");
+
+	location_location = glGetUniformLocation(program, "location");
+	location_index = glGetUniformLocation(program, "index");
+	location_gap = glGetUniformLocation(program, "gap");
+	location_lod = glGetUniformLocation(program, "lod");
 
 	for (unsigned int i = 0; i < 8; i++)
 	{
@@ -75,13 +83,6 @@ GLTerrainShader::GLTerrainShader()
 	//AddUniform("irradianceMap");
 	//AddUniform("prefilterMap");
 	//AddUniform("brdfLUT");
-
-	location_localMatrix = uniforms.at("localMatrix");
-	location_worldMatrix = uniforms.at("worldMatrix");
-	location_location = uniforms.at("location");
-	location_index = uniforms.at("index");
-	location_gap = uniforms.at("gap");
-	location_lod = uniforms.at("lod");
 }
 
 void GLTerrainShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index) const
@@ -196,20 +197,11 @@ void GLTerrainShader::UpdateObjectUniforms(GameObject* object, uint32_t instance
 {
 	TerrainNode* node = (TerrainNode*)object;
 
-	//This is an optimisation that is not necessary right now, it may be in the future though
-	/*glUniformMatrix4fv(location_localMatrix, 1, GL_FALSE, node->getLocalTransform()->getTransformationMatrix().m);
-	glUniformMatrix4fv(location_worldMatrix, 1, GL_FALSE, node->getWorldTransform()->getTransformationMatrix().m);
+	SetUniform(location_localMatrix, node->getLocalTransform()->getTransformationMatrix());
+	SetUniform(location_worldMatrix, object->getWorldTransform()->getTransformationMatrix());
 
-	glUniform2f(location_location, node->getLocation().x, node->getLocation().y);
-	glUniform2f(location_index, node->getIndex().x, node->getIndex().y);
-	glUniform1f(location_gap, node->getGap());
-	glUniform1i(location_lod, node->getLod());*/
-
-	SetUniform("localMatrix", node->getLocalTransform()->getTransformationMatrix());
-	SetUniform("worldMatrix", object->getWorldTransform()->getTransformationMatrix());
-
-	SetUniform("location", node->getLocation());
-	SetUniform("index", node->getIndex());
-	SetUniformf("gap", node->getGap());
-	SetUniformi("lod", node->getLod());
+	SetUniform(location_location, node->getLocation());
+	SetUniform(location_index, node->getIndex());
+	SetUniformf(location_gap, node->getGap());
+	SetUniformi(location_lod, node->getLod());
 }

@@ -1,7 +1,6 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
-#include "MeshVBO.h"
+#include "VertexBuffer.h"
 
-MeshVBO::~MeshVBO()
+VertexBuffer::~VertexBuffer()
 {
-
 }

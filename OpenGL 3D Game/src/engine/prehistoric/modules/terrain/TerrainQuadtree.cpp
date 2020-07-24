@@ -9,11 +9,11 @@ TerrainQuadtree::TerrainQuadtree(Window* window, Camera* camera, TerrainMaps* ma
 	Shader* wireframeShader = nullptr;
 	Pipeline* wireframePipeline = nullptr;
 
-	PatchVBO* vbo = nullptr;
+	PatchVertexBuffer* vbo = nullptr;
 
 	if (FrameworkConfig::api == OpenGL)
 	{
-		vbo = new GLPatchVBO();
+		vbo = new GLPatchVertexBuffer();
 		vbo->Store(generatePatch());
 
 		shader = new GLTerrainShader();

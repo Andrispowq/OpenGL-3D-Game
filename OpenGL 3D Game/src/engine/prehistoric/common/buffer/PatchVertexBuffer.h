@@ -1,15 +1,15 @@
-#ifndef PATCH_VBO_H
-#define PATCH_VBO_H
+#ifndef PATCH_VERTEX_BUFFER_H
+#define PATCH_VERTEX_BUFFER_H
 
 #include "engine/prehistoric/core/util/Includes.hpp"
 
-#include "VBO.h"
+#include "VertexBuffer.h"
 
-class PatchVBO : public VBO
+class PatchVertexBuffer : public VertexBuffer
 {
 public:
-	PatchVBO() {}
-	virtual ~PatchVBO() override = 0;
+	PatchVertexBuffer() {}
+	virtual ~PatchVertexBuffer() override = 0;
 
 	virtual void Store(const std::vector<Vector2f>& vertices) = 0;
 
@@ -17,7 +17,7 @@ public:
 	virtual void Draw(void* commandBuffer) const = 0;
 	virtual void Unbind() const override = 0;
 
-	virtual bool operator==(const VBO& other) override = 0;
+	virtual bool operator==(const VertexBuffer& other) override = 0;
 };
 
 #endif

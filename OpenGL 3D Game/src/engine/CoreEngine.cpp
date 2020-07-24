@@ -79,6 +79,13 @@ void CoreEngine::Stop()
 	}
 }*/
 
+#include <future>
+
+static void Update_func(Engine* engine)
+{
+	engine->Update();
+}
+
 void CoreEngine::Run()
 {
 	uint32_t frames = 0;
@@ -111,8 +118,10 @@ void CoreEngine::Run()
 
 			Input(std::max(passedTime / NANOSECOND, frameTime));
 
-			if(!InputInstance.IsPause())
+			if (!InputInstance.IsPause())
+			{
 				Update();
+			}
 
 			if (frameCounter >= NANOSECOND)
 			{

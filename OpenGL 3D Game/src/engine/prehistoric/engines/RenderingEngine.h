@@ -5,7 +5,7 @@
 #include "engine/prehistoric/core/movement/Camera.h"
 #include "engine/config/FrameworkConfig.h"
 
-#include "engine/prehistoric/common/buffer/VBO.h"
+#include "engine/prehistoric/common/buffer/VertexBuffer.h"
 #include "engine/prehistoric/common/rendering/pipeline/Pipeline.h"
 
 class GameObject;
@@ -38,7 +38,11 @@ public:
 	RenderingEngine(const RenderingEngine& engine) = delete;
 	RenderingEngine operator=(const RenderingEngine& engine) = delete;
 private:
-	std::unordered_map<Pipeline*, std::vector<Renderable*>> models;
+	//This we way we can ensure correct order in drawing
+	std::unordered_map<Pipeline*, std::vector<Renderable*>> models_3d;
+	std::unordered_map<Pipeline*, std::vector<Renderable*>> models_transparency;
+	std::unordered_map<Pipeline*, std::vector<Renderable*>> models_2d;
+
 	std::vector<Light*> lights;
 
 	Light* sun = nullptr;

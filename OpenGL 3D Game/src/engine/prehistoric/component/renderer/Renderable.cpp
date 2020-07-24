@@ -10,6 +10,7 @@
 std::vector<Pipeline*> Renderable::pipelines;
 
 Renderable::Renderable(Pipeline* pipeline, Window* window)
+	: priority(RenderPriority::_3D)
 {
 	this->window = window;
 
@@ -43,6 +44,7 @@ Renderable::Renderable(Pipeline* pipeline, Window* window)
 }
 
 Renderable::Renderable(Window* window)
+	: priority(RenderPriority::_3D)
 {
 	pipelineIndex = -1;
 

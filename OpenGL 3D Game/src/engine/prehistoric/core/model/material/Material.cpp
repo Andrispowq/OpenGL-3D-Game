@@ -1,37 +1,17 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "Material.h"
 
-std::vector<Texture*> Material::listOfTextures;
-
-Material::Material(Window* window)
+Material::Material(AssetManager* manager, Window* window)
 {
-	if (listOfTextures.size() == 0)
-	{
-		listOfTextures.push_back(TextureLoader::LoadTexture("res/textures/default.png", window));
-	}
+	this->manager = manager;
+
+	Texture* texture = TextureLoader::LoadTexture("res/textures/default.png", window);
+	textureIDs.insert(std::make_pair("DEFAULT_TEX", manager->addTexture(texture)));
 }
 
-Material::~Material()
+void Material::AddTexture(const std::string& key, size_t textureID)
 {
-}
-
-void Material::CleanUp()
-{
-	for (auto& tex : listOfTextures)
-	{
-		delete tex;
-	}
-}
-
-void Material::AddTexture(const std::string& key, Texture* value)
-{
-	auto index = std::find(listOfTextures.begin(), listOfTextures.end(), value);
-	if (index == listOfTextures.end())
-	{
-		listOfTextures.push_back(value);
-	}
-
-	textures.insert(std::make_pair(key, value));
+	textureIDs.insert(std::make_pair(key, textureID));
 }
 
 void Material::AddVector4f(const std::string& key, Vector4f value)
@@ -61,11 +41,11 @@ void Material::AddInt(const std::string& key, int value)
 
 Texture* Material::GetTexture(const std::string& key) const
 {
-	auto index = textures.find(key);
-	if (index == textures.end())
-		 return listOfTextures[0];
+	auto index = textureIDs.find(key);
+	if (index == textureIDs.end())
+		 return manager->getTexture(textureIDs.begin()->second);
 	
-	return index->second;
+	return manager->getTexture(index->second);
 }
 
 Vector4f Material::GetVector4f(const std::string& key) const

@@ -1,21 +1,21 @@
 #ifndef PIPELINE_H
 #define PIPELINE_H
 
-#include "engine/prehistoric/common/buffer/VBO.h"
+#include "engine/prehistoric/common/buffer/VertexBuffer.h"
 #include "engine/prehistoric/common/rendering/shaders/Shader.h"
 
 #include "engine/prehistoric/core/math/Math.h"
 #include "engine/prehistoric/common/framework/Window.h"
 
+#include "engine/prehistoric/assets/AssetManager.h"
+
 class Pipeline
 {
 public:
-	Pipeline(Shader* shader);
-	Pipeline() : shader(nullptr), samples(0), shaderIndex(-1) {}
+	Pipeline(AssetManager* manager, size_t shaderID);
+	Pipeline() : samples(0), shaderID(-1) {}
 
 	virtual ~Pipeline();
-
-	static void CleanUp();
 
 	virtual void CreatePipeline(Window* window) = 0;
 
@@ -27,10 +27,10 @@ public:
 
 	virtual void RecreatePipeline() {};
 
-	Shader* getShader() const { return shaders[shaderIndex]; }
-	void setShader(Shader* shader);
+	Shader* getShader() const { return assetManager->getShader(shaderID); }
 
-	size_t getShaderIndex() const { return shaderIndex; }
+	size_t getShaderID() const { return shaderID; }
+	void setShaderID(size_t shaderID);
 
 	Vector2f GetViewportStart() const { return viewportStart; }
 	Vector2f GetViewportSize() const { return viewportSize; }
@@ -46,10 +46,9 @@ public:
 
 	void SetSamples(int samples) { this->samples = samples; }
 public:
-	static std::vector<Shader*> shaders;
+	AssetManager* assetManager;
 
-	Shader* shader;
-	size_t shaderIndex;
+	size_t shaderID;
 	
 	Vector2f viewportStart;
 	Vector2f viewportSize;

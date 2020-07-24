@@ -1,9 +1,9 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include <glew.h>
-#include "VKMeshVBO.h"
+#include "VKMeshVertexBuffer.h"
 #include "engine/platform/vulkan/rendering/pipeline/VKGraphicsPipeline.h"
 
-VKMeshVBO::VKMeshVBO(const Mesh& mesh, Window* window)
+VKMeshVertexBuffer::VKMeshVertexBuffer(const Mesh& mesh, Window* window)
 {
 	this->physicalDevice = reinterpret_cast<VKPhysicalDevice*>(window->GetContext()->GetPhysicalDevice());
 	this->device = reinterpret_cast<VKDevice*>(window->GetContext()->GetDevice());
@@ -13,7 +13,7 @@ VKMeshVBO::VKMeshVBO(const Mesh& mesh, Window* window)
 	Store(mesh);
 }
 
-VKMeshVBO::VKMeshVBO(Window* window)
+VKMeshVertexBuffer::VKMeshVertexBuffer(Window* window)
 {
 	this->physicalDevice = reinterpret_cast<VKPhysicalDevice*>(window->GetContext()->GetPhysicalDevice());
 	this->device = reinterpret_cast<VKDevice*>(window->GetContext()->GetDevice());
@@ -21,13 +21,13 @@ VKMeshVBO::VKMeshVBO(Window* window)
 	this->swapchain = (VKSwapchain*)window->GetSwapchain();
 }
 
-VKMeshVBO::~VKMeshVBO()
+VKMeshVertexBuffer::~VKMeshVertexBuffer()
 {
 	delete vertexBuffer;
 	delete indexBuffer;
 }
 
-void VKMeshVBO::Store(const Mesh& mesh)
+void VKMeshVertexBuffer::Store(const Mesh& mesh)
 {
 	this->size = (uint32_t) mesh.getIndices().size();
 
@@ -62,7 +62,7 @@ void VKMeshVBO::Store(const Mesh& mesh)
 	delete stagingBuffer;
 }
 
-void VKMeshVBO::Bind(void* commandBuffer) const
+void VKMeshVertexBuffer::Bind(void* commandBuffer) const
 {
 	VKCommandBuffer* buffer = (VKCommandBuffer*)commandBuffer;
 
@@ -73,17 +73,17 @@ void VKMeshVBO::Bind(void* commandBuffer) const
 	vkCmdBindIndexBuffer(buffer->GetCommandBuffer(), indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
 }
 
-void VKMeshVBO::Draw(void* commandBuffer) const
+void VKMeshVertexBuffer::Draw(void* commandBuffer) const
 {
 	vkCmdDrawIndexed(((VKCommandBuffer*) commandBuffer)->GetCommandBuffer(), size, 1, 0, 0, 0);
 }
 
-void VKMeshVBO::Unbind() const
+void VKMeshVertexBuffer::Unbind() const
 {
 
 }
 
-VkVertexInputBindingDescription* VKMeshVBO::GetBindingDescription() const
+VkVertexInputBindingDescription* VKMeshVertexBuffer::GetBindingDescription() const
 {
     VkVertexInputBindingDescription* bindingDescription = new VkVertexInputBindingDescription;
 	bindingDescription->binding = 0;
@@ -93,7 +93,7 @@ VkVertexInputBindingDescription* VKMeshVBO::GetBindingDescription() const
     return bindingDescription;
 }  
 
-std::vector<VkVertexInputAttributeDescription> VKMeshVBO::GetAttributeDescriptions() const
+std::vector<VkVertexInputAttributeDescription> VKMeshVertexBuffer::GetAttributeDescriptions() const
 {
 	std::vector<VkVertexInputAttributeDescription> attributeDescriptions(3);
 

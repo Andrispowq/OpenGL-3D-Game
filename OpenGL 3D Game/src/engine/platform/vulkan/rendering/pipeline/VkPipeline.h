@@ -8,7 +8,7 @@
 #include "engine/platform/vulkan/framework/surface/VKSurface.h"
 #include "engine/platform/vulkan/framework/device/VKDevice.h"
 #include "engine/platform/vulkan/framework/swapchain/VKSwapchain.h"
-#include "engine/platform/vulkan/buffer/VKMeshVBO.h"
+#include "engine/platform/vulkan/buffer/VKMeshVertexBuffer.h"
 
 class VKPipeline : public Pipeline
 {

@@ -1,18 +1,18 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
-#include "GLPatchVBO.h"
+#include "GLPatchVertexBuffer.h"
 
-GLPatchVBO::GLPatchVBO(const std::vector<Vector2f>& vertices) : PatchVBO()
+GLPatchVertexBuffer::GLPatchVertexBuffer(const std::vector<Vector2f>& vertices) : PatchVertexBuffer()
 {
 	Store(vertices);
 }
 
-GLPatchVBO::~GLPatchVBO()
+GLPatchVertexBuffer::~GLPatchVertexBuffer()
 {
 	glDeleteVertexArrays(1, &vao);
 	glDeleteBuffers(1, &vbo);
 }
 
-void GLPatchVBO::Store(const std::vector<Vector2f>& vertices)
+void GLPatchVertexBuffer::Store(const std::vector<Vector2f>& vertices)
 {
 	size = (uint32_t) vertices.size();
 
@@ -41,18 +41,18 @@ void GLPatchVBO::Store(const std::vector<Vector2f>& vertices)
 	glBindVertexArray(0);
  }
 
-void GLPatchVBO::Bind(void* commandBuffer) const
+void GLPatchVertexBuffer::Bind(void* commandBuffer) const
 {
 	glBindVertexArray(vao);
 	glEnableVertexAttribArray(0);
 }
 
-void GLPatchVBO::Draw(void* commandBuffer) const
+void GLPatchVertexBuffer::Draw(void* commandBuffer) const
 {
 	glDrawArrays(GL_PATCHES, 0, size);
 }
 
-void GLPatchVBO::Unbind() const
+void GLPatchVertexBuffer::Unbind() const
 {
 	glDisableVertexAttribArray(0);
 	glBindVertexArray(0);

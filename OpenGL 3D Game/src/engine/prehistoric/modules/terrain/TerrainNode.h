@@ -5,7 +5,7 @@
 
 #include "TerrainMaps.h"
 
-#include "engine/prehistoric/common/buffer/PatchVBO.h"
+#include "engine/prehistoric/common/buffer/PatchVertexBuffer.h"
 #include "engine/prehistoric/core/math/Math.h"
 
 #include "engine/prehistoric/component/renderer/Renderer.h"

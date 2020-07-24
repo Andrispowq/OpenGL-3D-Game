@@ -42,8 +42,15 @@ public:
 	virtual void SetUniform(const std::string& name, const Matrix4f& matrix, size_t offset = 0, uint32_t instance_index = 0) const override { glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, matrix.m); }
 
 	virtual void SetTexture(const std::string& name, Texture* value, uint32_t instance_index = 0) const {};
-
 	virtual void SetUniform(const std::string& name, const void* value, size_t size, size_t offset = 0, uint32_t instance_index = 0) const override {}
+
+	void SetUniformi(int location, int value) const { glUniform1i(location, value); }
+	void SetUniformf(int location, float value) const { glUniform1f(location, value); }
+
+	void SetUniform(int location, const Vector2f& value) const { glUniform2f(location, value.x, value.y); }
+	void SetUniform(int location, const Vector3f& value) const { glUniform3f(location, value.x, value.y, value.z); }
+	void SetUniform(int location, const Vector4f& value) const { glUniform4f(location, value.x, value.y, value.z, value.w); }
+	void SetUniform(int location, const Matrix4f& value) const { glUniformMatrix4fv(location, 1, GL_FALSE, value.m); }
 
 	virtual void BindUniformBlock(const std::string& name, uint32_t binding, uint32_t instance_index = 0) const override { glUniformBlockBinding(program, getUniformLocation(name), binding); }
 

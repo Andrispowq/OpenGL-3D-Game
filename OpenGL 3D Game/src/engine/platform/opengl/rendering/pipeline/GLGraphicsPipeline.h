@@ -9,7 +9,7 @@
 class GLGraphicsPipeline : public GLPipeline, public GraphicsPipeline
 {
 public:
-	GLGraphicsPipeline(Shader* shader, VBO* vbo);
+	GLGraphicsPipeline(Shader* shader, VertexBuffer* vbo);
 	virtual ~GLGraphicsPipeline() {}
 
 	virtual void CreatePipeline(Window* window) override;

@@ -1,21 +1,21 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "ModelFabricator.h"
-#include "engine/platform/opengl/buffer/GLMeshVBO.h"
-#include "engine/platform/vulkan/buffer/VKMeshVBO.h"
+#include "engine/platform/opengl/buffer/GLMeshVertexBuffer.h"
+#include "engine/platform/vulkan/buffer/VKMeshVertexBuffer.h"
 
 namespace ModelFabricator
 {
-	MeshVBO* ModelFabricator::CreateQuad(Window* window)
+	MeshVertexBuffer* ModelFabricator::CreateQuad(Window* window)
 	{
-		MeshVBO* vbo = nullptr;
+		MeshVertexBuffer* vbo = nullptr;
 
 		if (FrameworkConfig::api == OpenGL)
 		{
-			vbo = new GLMeshVBO();
+			vbo = new GLMeshVertexBuffer();
 		}
 		else if (FrameworkConfig::api == Vulkan)
 		{
-			vbo = new VKMeshVBO(window);
+			vbo = new VKMeshVertexBuffer(window);
 		}
 
 		Mesh mesh;

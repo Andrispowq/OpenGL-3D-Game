@@ -14,8 +14,6 @@ public:
 private:
 	Scene() {}
 	virtual ~Scene() {}
-
-	static Terrain* terrain;
 };
 
 #endif

@@ -8,7 +8,7 @@
 
 #include "engine/prehistoric/core/Engine.h"
 
-VBO* GUIElement::guiVbo = nullptr;
+VertexBuffer* GUIElement::guiVertexBuffer = nullptr;
 Pipeline* GUIElement::pipeline = nullptr;
 
 GUIElement::GUIElement(Window* window, Texture* texture, void* data, size_t dataSize, bool visible)
@@ -21,10 +21,10 @@ GUIElement::GUIElement(Window* window, Texture* texture, void* data, size_t data
 
 	this->window = window;
 
-	if (guiVbo == nullptr)
+	if (guiVertexBuffer == nullptr)
 	{
-		guiVbo = ModelFabricator::CreateQuad(window);
-		guiVbo->SetFrontFace(FrontFace::CLOCKWISE);
+		guiVertexBuffer = ModelFabricator::CreateQuad(window);
+		guiVertexBuffer->SetFrontFace(FrontFace::CLOCKWISE);
 	}
 
 	if (pipeline == nullptr)
@@ -34,18 +34,21 @@ GUIElement::GUIElement(Window* window, Texture* texture, void* data, size_t data
 		if (FrameworkConfig::api == OpenGL)
 		{
 			shader = new GLGUIShader();
-			pipeline = new GLGraphicsPipeline(shader, guiVbo);
+			pipeline = new GLGraphicsPipeline(shader, guiVertexBuffer);
 		}
 		else if (FrameworkConfig::api == Vulkan)
 		{
 			shader = new VKBasicShader(window);
-			pipeline = new VKGraphicsPipeline(shader, guiVbo);
+			pipeline = new VKGraphicsPipeline(shader, guiVertexBuffer);
 		}
 
 		pipeline->CreatePipeline(window);
 	}
 
-	AddComponent(RENDERER_COMPONENT, new Renderer(pipeline, nullptr, window));
+	Renderer* renderer = new Renderer(pipeline, nullptr, window);
+	renderer->setPriority(RenderPriority::_2D);
+
+	AddComponent(RENDERER_COMPONENT, renderer);
 }
 
 void GUIElement::PreUpdate(Engine* engine)
@@ -89,6 +92,6 @@ GUIElement::~GUIElement()
 
 void GUIElement::CleanUp()
 {
-	delete guiVbo;
+	delete guiVertexBuffer;
 	delete pipeline;
 }

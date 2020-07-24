@@ -9,6 +9,14 @@
 
 #include "engine/prehistoric/core/util/Includes.hpp"
 
+enum class RenderPriority
+{
+	_3D = 0,
+	_TRANSPARENCY = 1,
+	_2D = 2,
+	_POST_PROCESSING = 3
+};
+
 class Renderable : public Component
 {
 public:
@@ -28,6 +36,9 @@ public:
 	inline size_t GetPipelineIndex() const { return pipelineIndex; }
 	inline Pipeline* GetPipeline() const { return pipelines.at(pipelineIndex); }
 
+	inline RenderPriority getPriority() const { return priority; }
+	inline void setPriority(RenderPriority priority) { this->priority = priority; }
+
 	Renderable(const Renderable& renderable) = delete;
 	Renderable operator=(const Renderable& renderable) = delete;
 protected:
@@ -37,6 +48,8 @@ protected:
 
 	size_t pipelineIndex;
 	uint32_t shader_instance_index;
+
+	RenderPriority priority;
 };
 
 #endif

@@ -6,23 +6,21 @@
 class GraphicsPipeline
 {
 public:
-	GraphicsPipeline(VBO* vbo);
-	GraphicsPipeline() : vbo(nullptr), backfaceCulling(false), vboIndex(-1) {}
+	GraphicsPipeline(AssetManager* manager, size_t vboID);
+	GraphicsPipeline() : backfaceCulling(false), vboID(-1) {}
 
 	virtual ~GraphicsPipeline();
 
-	static void CleanUp();
+	VertexBuffer* getVertexBuffer() const { return manager->getVertexBuffer(vboID); }
 
-	VBO* getVbo() const { return vbos[vboIndex]; }
-	void setVbo(VBO* vbo);
+	void setVertexBufferID(size_t vboID);
 
 	bool IsBackfaceCulling() const { return backfaceCulling; }
 	void SetBackfaceCulling(bool backfaceCulling) { this->backfaceCulling = backfaceCulling; }
 protected:
-	static std::vector<VBO*> vbos;
-
-	VBO* vbo;
-	size_t vboIndex;
+	AssetManager* manager;
+	
+	size_t vboID;
 
 	bool backfaceCulling;
 };

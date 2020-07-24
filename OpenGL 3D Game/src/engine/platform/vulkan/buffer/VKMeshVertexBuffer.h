@@ -1,7 +1,7 @@
-#ifndef VK_MESH_VBO_H
-#define VK_MESH_VBO_H
+#ifndef VK_MESH_VERTEX_BUFFER_H
+#define VK_MESH_VERTEX_BUFFER_H
 
-#include "engine/prehistoric/common/buffer/MeshVBO.h"
+#include "engine/prehistoric/common/buffer/MeshVertexBuffer.h"
 
 #include <vulkan/vulkan.h>
 
@@ -13,13 +13,13 @@
 #include "engine/platform/vulkan/framework/device/VKDevice.h"
 #include "engine/platform/vulkan/framework/swapchain/VKSwapchain.h"
 
-class VKMeshVBO : public MeshVBO
+class VKMeshVertexBuffer : public MeshVertexBuffer
 {
 public:
-	VKMeshVBO(const Mesh& mesh, Window* window);
-	VKMeshVBO(Window* window);
+	VKMeshVertexBuffer(const Mesh& mesh, Window* window);
+	VKMeshVertexBuffer(Window* window);
 
-	virtual ~VKMeshVBO() override;
+	virtual ~VKMeshVertexBuffer() override;
 
 	void Store(const Mesh& mesh) override;
 
@@ -30,9 +30,9 @@ public:
 	VkVertexInputBindingDescription* GetBindingDescription() const;
 	std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions() const;
 
-	virtual bool operator==(const VBO& other) override
+	virtual bool operator==(const VertexBuffer& other) override
 	{
-		return vertexBuffer->operator==(*(*reinterpret_cast<const VKMeshVBO*>(&other)).vertexBuffer) && indexBuffer->operator==(*(*reinterpret_cast<const VKMeshVBO*>(&other)).indexBuffer);
+		return vertexBuffer->operator==(*(*reinterpret_cast<const VKMeshVertexBuffer*>(&other)).vertexBuffer) && indexBuffer->operator==(*(*reinterpret_cast<const VKMeshVertexBuffer*>(&other)).indexBuffer);
 	}
 private:
 	VKBuffer* vertexBuffer;

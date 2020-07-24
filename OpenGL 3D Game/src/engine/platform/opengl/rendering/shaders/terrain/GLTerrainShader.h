@@ -18,12 +18,13 @@ public:
 	virtual void UpdateObjectUniforms(GameObject* object, uint32_t instance_index = 0) const override;
 
 private:
-	uint32_t location_localMatrix;
-	uint32_t location_worldMatrix;
-	uint32_t location_location;
-	uint32_t location_index;
-	uint32_t location_gap;
-	uint32_t location_lod;
+	int location_localMatrix;
+	int location_worldMatrix;
+
+	int location_location;
+	int location_index;
+	int location_gap;
+	int location_lod;
 };
 
 #endif

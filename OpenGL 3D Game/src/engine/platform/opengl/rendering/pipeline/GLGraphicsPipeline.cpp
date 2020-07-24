@@ -1,7 +1,7 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLGraphicsPipeline.h"
 
-GLGraphicsPipeline::GLGraphicsPipeline(Shader* shader, VBO* vbo)
+GLGraphicsPipeline::GLGraphicsPipeline(Shader* shader, VertexBuffer* vbo)
 	: GLPipeline(shader), GraphicsPipeline(vbo)
 {
 }

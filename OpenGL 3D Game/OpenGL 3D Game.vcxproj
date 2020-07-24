@@ -24,6 +24,7 @@
     <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorPool.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorSet.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorSetBinding.cpp" />
+    <ClCompile Include="src\engine\prehistoric\assets\AssetManager.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\buffer\ShaderStorageBuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\ComputePipeline.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\GraphicsPipeline.cpp" />
@@ -33,7 +34,7 @@
     <ClCompile Include="src\engine\prehistoric\modules\gpgpu\NormalMapRenderer.cpp" />
     <ClCompile Include="src\engine\config\EngineConfig.cpp" />
     <ClCompile Include="src\engine\config\TerrainConfig.cpp" />
-    <ClCompile Include="src\engine\platform\opengl\buffer\GLPatchVBO.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\buffer\GLPatchVertexBuffer.cpp" />
     <ClCompile Include="src\engine\platform\opengl\capabilities\GLCapabilities.cpp" />
     <ClCompile Include="src\engine\platform\opengl\framework\swapchain\GLSwapChain.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\pipeline\GLPipeline.cpp" />
@@ -42,7 +43,7 @@
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\terrain\GLTerrainShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\terrain\GLTerrainWireframeShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\texture\GLTexture.cpp" />
-    <ClCompile Include="src\engine\platform\vulkan\buffer\VKMeshVBO.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\buffer\VKMeshVertexBuffer.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\capabilities\VKCapabilities.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\framework\context\VKContext.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\framework\context\VKDebugMessenger.cpp" />
@@ -68,9 +69,9 @@
     <ClCompile Include="src\engine\platform\vulkan\util\VKUtil.cpp" />
     <ClCompile Include="src\engine\platform\windows\WindowsInput.cpp" />
     <ClCompile Include="src\engine\platform\windows\WindowsWindow.cpp" />
-    <ClCompile Include="src\engine\prehistoric\common\buffer\MeshVBO.cpp" />
-    <ClCompile Include="src\engine\prehistoric\common\buffer\PatchVBO.cpp" />
-    <ClCompile Include="src\engine\prehistoric\common\buffer\VBO.cpp" />
+    <ClCompile Include="src\engine\prehistoric\common\buffer\MeshVertexBuffer.cpp" />
+    <ClCompile Include="src\engine\prehistoric\common\buffer\PatchVertexBuffer.cpp" />
+    <ClCompile Include="src\engine\prehistoric\common\buffer\VertexBuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\capabilities\Capabilities.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\framework\context\Context.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\framework\Input.cpp" />
@@ -106,7 +107,7 @@
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\GLShader.cpp" />
     <ClCompile Include="src\engine\prehistoric\core\gameObject\Node.cpp" />
     <ClCompile Include="src\engine\config\FrameworkConfig.cpp" />
-    <ClCompile Include="src\engine\platform\opengl\buffer\GLMeshVBO.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\buffer\GLMeshVertexBuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\core\math\Math.cpp" />
     <ClCompile Include="src\engine\prehistoric\core\model\Mesh.cpp" />
     <ClCompile Include="src\engine\prehistoric\core\model\Transform.cpp" />
@@ -129,7 +130,7 @@
   <ItemGroup>
     <ClInclude Include="src\engine\config\AtmosphereConfig.h" />
     <ClInclude Include="src\engine\config\TerrainConfig.h" />
-    <ClInclude Include="src\engine\platform\opengl\buffer\GLPatchVBO.h" />
+    <ClInclude Include="src\engine\platform\opengl\buffer\GLPatchVertexBuffer.h" />
     <ClInclude Include="src\engine\platform\opengl\buffer\GLShaderStorageBuffer.h" />
     <ClInclude Include="src\engine\platform\opengl\capabilities\GLCapabilities.h" />
     <ClInclude Include="src\engine\platform\opengl\framework\swapchain\GLSwapChain.h" />
@@ -148,7 +149,7 @@
     <ClInclude Include="src\engine\platform\opengl\texture\GLTexture.h" />
     <ClInclude Include="src\engine\platform\Prehistoric.h" />
     <ClInclude Include="src\engine\platform\vulkan\buffer\VKBuffer.h" />
-    <ClInclude Include="src\engine\platform\vulkan\buffer\VKMeshVBO.h" />
+    <ClInclude Include="src\engine\platform\vulkan\buffer\VKMeshVertexBuffer.h" />
     <ClInclude Include="src\engine\platform\vulkan\capabilities\VKCapabilities.h" />
     <ClInclude Include="src\engine\platform\vulkan\framework\context\VKContext.h" />
     <ClInclude Include="src\engine\platform\vulkan\framework\context\VKDebugMessenger.h" />
@@ -177,10 +178,12 @@
     <ClInclude Include="src\engine\platform\vulkan\util\VKUtil.h" />
     <ClInclude Include="src\engine\platform\windows\WindowsInput.h" />
     <ClInclude Include="src\engine\platform\windows\WindowsWindow.h" />
-    <ClInclude Include="src\engine\prehistoric\common\buffer\MeshVBO.h" />
-    <ClInclude Include="src\engine\prehistoric\common\buffer\PatchVBO.h" />
+    <ClInclude Include="src\engine\prehistoric\assets\AssetManager.h" />
+    <ClInclude Include="src\engine\prehistoric\common\buffer\Framebuffer.h" />
+    <ClInclude Include="src\engine\prehistoric\common\buffer\MeshVertexBuffer.h" />
+    <ClInclude Include="src\engine\prehistoric\common\buffer\PatchVertexBuffer.h" />
     <ClInclude Include="src\engine\prehistoric\common\buffer\ShaderStorageBuffer.h" />
-    <ClInclude Include="src\engine\prehistoric\common\buffer\VBO.h" />
+    <ClInclude Include="src\engine\prehistoric\common\buffer\VertexBuffer.h" />
     <ClInclude Include="src\engine\prehistoric\common\capabilities\Capabilities.h" />
     <ClInclude Include="src\engine\prehistoric\common\framework\CameraInput.h" />
     <ClInclude Include="src\engine\prehistoric\common\framework\context\Context.h" />
@@ -194,6 +197,7 @@
     <ClInclude Include="src\engine\prehistoric\common\rendering\shaders\Shader.h" />
     <ClInclude Include="src\engine\prehistoric\common\util\DeviceProperties.h" />
     <ClInclude Include="src\engine\prehistoric\common\util\InitDevice.h" />
+    <ClInclude Include="src\engine\prehistoric\common\util\RenderUtils.h" />
     <ClInclude Include="src\engine\prehistoric\component\Component.h" />
     <ClInclude Include="src\engine\prehistoric\modules\atmosphere\Atmosphere.h" />
     <ClInclude Include="src\engine\prehistoric\modules\gui\button\GUIButton.h" />
@@ -232,7 +236,7 @@
     <ClInclude Include="src\engine\prehistoric\core\gameObject\Node.h" />
     <ClInclude Include="src\engine\config\EngineConfig.h" />
     <ClInclude Include="src\engine\config\FrameworkConfig.h" />
-    <ClInclude Include="src\engine\platform\opengl\buffer\GLMeshVBO.h" />
+    <ClInclude Include="src\engine\platform\opengl\buffer\GLMeshVertexBuffer.h" />
     <ClInclude Include="src\engine\prehistoric\core\util\Constants.h" />
     <ClInclude Include="src\engine\prehistoric\core\math\Math.h" />
     <ClInclude Include="src\engine\prehistoric\core\math\MathT.h" />

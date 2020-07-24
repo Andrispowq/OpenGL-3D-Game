@@ -4,7 +4,7 @@
 #include <fstream>
 
 #include "engine/prehistoric/core/gameObject/GameObject.h"
-#include "engine/prehistoric/common/buffer/MeshVBO.h"
+#include "engine/prehistoric/common/buffer/MeshVertexBuffer.h"
 #include "engine/prehistoric/core/model/material/Material.h"
 #include "engine/prehistoric/common/rendering/shaders/Shader.h"
 #include "engine/prehistoric/component/renderer/Renderer.h"
@@ -36,7 +36,7 @@ private:
 	std::unordered_map<std::string, Texture*> textures;
 	std::unordered_map<std::string, Material*> materials;
 
-	std::unordered_map<std::string, MeshVBO*> models;
+	std::unordered_map<std::string, MeshVertexBuffer*> models;
 	std::unordered_map<std::string, Shader*> shaders;
 	std::unordered_map<std::string, Pipeline*> pipelines;
 };

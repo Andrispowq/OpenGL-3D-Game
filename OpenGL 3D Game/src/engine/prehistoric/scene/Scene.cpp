@@ -2,7 +2,7 @@
 #include "Scene.h"
 
 #include "engine/platform/vulkan/rendering/pipeline/VKPipeline.h"
-#include "engine/platform/vulkan/buffer/VKMeshVBO.h"
+#include "engine/platform/vulkan/buffer/VKMeshVertexBuffer.h"
 #include "engine/platform/vulkan/texture/VkTexture.h"
 #include "engine/platform/vulkan/rendering/shaders/pbr/VKPBRShader.h"
 
@@ -12,21 +12,19 @@
 
 #include "engine/prehistoric/modules/atmosphere/Atmosphere.h"
 
-Terrain* Scene::terrain;
-
 static void sun_move_function(GameObject* object, float frameTime)
 {
-	//object->Move(Vector3f(0, 40, 0) * frameTime);
+	object->Move(Vector3f(0, 40, 0) * frameTime);
 }
 
 void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 {
 	WorldLoader loader;
-	loader.LoadWorld("res/world/testLevel.wrld", root, window);
+	//loader.LoadWorld("res/world/testLevel.wrld", root, window);
 
 	if (FrameworkConfig::api == Vulkan)
 	{
-		VKMeshVBO* vbo = (VKMeshVBO*)OBJLoader::LoadModel("res/models/", "quad.obj", "", window);
+		VKMeshVertexBuffer* vbo = (VKMeshVertexBuffer*)OBJLoader::LoadModel("res/models/", "quad.obj", "", window);
 		vbo->SetFrontFace(FrontFace::CLOCKWISE);
 
 		VKShader* shader = new VKPBRShader(window);
@@ -70,7 +68,7 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 	{
 		root->AddChild("Atmosphere", new Atmosphere(window));		
 
-		terrain = new Terrain(window, camera);
+		Terrain* terrain = new Terrain(window, camera);
 		terrain->UpdateQuadtree();
 
 		root->AddChild("Terrain", terrain);
@@ -102,7 +100,7 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 
 		GameObject* sun = new GameObject();
 		sun->AddComponent(LIGHT_COMPONENT, new Light(Vector3f(1, 1, 1), Vector3f(200000000), true, sun_move_function));
-		sun->SetPosition({ -2000, 4000, 0 });
+		sun->SetPosition({ -2000, -2000, 0 });
 		root->AddChild("sun", sun);
 
 		GameObject* light = new GameObject();

@@ -5,8 +5,8 @@
 
 #include "engine/prehistoric/common/model/Texture.h"
 
-#include "engine/platform/opengl/buffer/GLMeshVBO.h"
-#include "engine/platform/vulkan/buffer/VKMeshVBO.h"
+#include "engine/platform/opengl/buffer/GLMeshVertexBuffer.h"
+#include "engine/platform/vulkan/buffer/VKMeshVertexBuffer.h"
 
 #include "engine/platform/opengl/rendering/pipeline/GLGraphicsPipeline.h"
 #include "engine/platform/vulkan/rendering/pipeline/VKGraphicsPipeline.h"
@@ -57,7 +57,7 @@ protected:
 	void* data;
 	size_t dataSize;
 
-	static VBO* guiVbo;
+	static VertexBuffer* guiVertexBuffer;
 	static Pipeline* pipeline;
 	
 	Texture* texture;

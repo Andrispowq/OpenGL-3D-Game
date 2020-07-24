@@ -92,7 +92,7 @@ void RenderingEngine::Render(GameObject* root)
 {
 	window->GetSwapchain()->PrepareRendering();
 
-	for (auto pipeline : models)
+	for (auto pipeline : models_3d)
 	{
 		Pipeline* pl = pipeline.first;
 
@@ -109,28 +109,85 @@ void RenderingEngine::Render(GameObject* root)
 		pl->UnbindPipeline();
 	}
 
+	//TODO: enable alpha blending
+	for (auto pipeline : models_transparency)
+	{
+		Pipeline* pl = pipeline.first;
+
+		pl->BindPipeline();
+		pl->getShader()->UpdateShaderUniforms(camera, lights);
+		//The models array is guaranteed to contain at least on entry for each pipeline, so this is safe to get the first element
+		pl->getShader()->UpdateSharedUniforms(pipeline.second[0]->GetParent());
+
+		for (auto renderer : pipeline.second)
+		{
+			renderer->BatchRender(*this);
+		}
+
+		pl->UnbindPipeline();
+	}
+	//TODO: disable alpha blending and depth testing
+	for (auto pipeline : models_2d)
+	{
+		Pipeline* pl = pipeline.first;
+
+		pl->BindPipeline();
+		pl->getShader()->UpdateShaderUniforms(camera, lights);
+		//The models array is guaranteed to contain at least on entry for each pipeline, so this is safe to get the first element
+		pl->getShader()->UpdateSharedUniforms(pipeline.second[0]->GetParent());
+
+		for (auto renderer : pipeline.second)
+		{
+			renderer->BatchRender(*this);
+		}
+
+		pl->UnbindPipeline();
+	}
+	//TODO: enable depth testing 
+
 	window->GetSwapchain()->EndRendering();
 
 	window->Render();
-	//We clean up this data before rendering and not after rendering so that it can be used in the PreUpdate functions of the Atmosphere for examples
-	models.clear();
+
+	//Clear the lists for the next iteration
+	models_3d.clear();
+	models_transparency.clear();
+	models_2d.clear();
 	lights.clear();
 }
 
-void RenderingEngine::AddModel(Renderable* renderable)
+void register_model(std::unordered_map<Pipeline*, std::vector<Renderable*>>& map, Renderable* renderable)
 {
 	Pipeline* pipeline = renderable->GetPipeline();
 
-	if(models.find(pipeline) != models.end())
+	if (map.find(pipeline) != map.end())
 	{
-		auto& renderables = models[pipeline];
+		auto& renderables = map[pipeline];
 		renderables.push_back(renderable);
 	}
 	else
 	{
 		std::vector<Renderable*> renderers = { renderable };
-		models.insert(std::make_pair(pipeline, renderers));
+		map.insert(std::make_pair(pipeline, renderers));
 	}
+}
+
+void RenderingEngine::AddModel(Renderable* renderable)
+{
+	switch (renderable->getPriority())
+	{
+	case RenderPriority::_3D:
+		register_model(models_3d, renderable);
+		break;
+	case RenderPriority::_TRANSPARENCY:
+		register_model(models_transparency, renderable);
+		break;
+	case RenderPriority::_2D:
+		register_model(models_2d, renderable);
+		break;
+	default:
+		break;
+	}	
 }
 
 void RenderingEngine::AddLight(Light* light)

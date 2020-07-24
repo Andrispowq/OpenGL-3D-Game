@@ -1,16 +1,16 @@
-#ifndef MESH_VBO_H
-#define MESH_VBO_H
+#ifndef MESH_VERTEX_BUFFER_H
+#define MESH_VERTEX_BUFFER_H
 
-#include "VBO.h"
+#include "VertexBuffer.h"
 
 #include "engine/prehistoric/core/model/Mesh.h"
 
-class MeshVBO : public VBO
+class MeshVertexBuffer : public VertexBuffer
 {
 public:
-	MeshVBO() {}
+	MeshVertexBuffer() {}
 	
-	virtual ~MeshVBO() override = 0;
+	virtual ~MeshVertexBuffer() override = 0;
 
 	virtual void Store(const Mesh& mesh) override = 0;
 
@@ -18,7 +18,7 @@ public:
 	virtual void Draw(void* commandBuffer) const = 0;
 	virtual void Unbind() const override = 0;
 
-	virtual bool operator==(const VBO& other) override = 0;
+	virtual bool operator==(const VertexBuffer& other) override = 0;
 };
 
 #endif

@@ -8,7 +8,7 @@ Atmosphere::Atmosphere(Window* window)
 {
 	SetScale(Vector3f(EngineConfig::rendererFarPlane / 2.f));
 
-	MeshVBO* vbo = OBJLoader::LoadModel("res/models/dome/", "sphericalDome.obj", "", window);
+	MeshVertexBuffer* vbo = OBJLoader::LoadModel("res/models/dome/", "sphericalDome.obj", "", window);
 
 	Shader* shader = nullptr;
 	Pipeline* pipeline = nullptr;
