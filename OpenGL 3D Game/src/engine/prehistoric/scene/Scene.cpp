@@ -17,34 +17,29 @@ static void sun_move_function(GameObject* object, float frameTime)
 	object->Move(Vector3f(0, 40, 0) * frameTime);
 }
 
-void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
+void Scene::CreateScene(GameObject* root, Window* window, AssetManager* manager, Camera* camera)
 {
 	WorldLoader loader;
-	//loader.LoadWorld("res/world/testLevel.wrld", root, window);
+	//loader.LoadWorld("res/world/testLevel.wrld", root, window, manager);
 
 	if (FrameworkConfig::api == Vulkan)
 	{
-		VKMeshVertexBuffer* vbo = (VKMeshVertexBuffer*)OBJLoader::LoadModel("res/models/", "quad.obj", "", window);
+		VKMeshVertexBuffer* vbo = (VKMeshVertexBuffer*)OBJLoader::LoadModel("res/models/", "quad.obj", "", window, manager);
 		vbo->SetFrontFace(FrontFace::CLOCKWISE);
+		size_t vboID = manager->addVertexBuffer(vbo);
 
-		VKShader* shader = new VKPBRShader(window);
+		size_t shaderID = manager->addShader(new VKPBRShader(window));
 
-		VKGraphicsPipeline* pipeline = new VKGraphicsPipeline(shader, vbo);
+		VKGraphicsPipeline* pipeline = new VKGraphicsPipeline(manager, shaderID, vboID);
 
 		pipeline->SetBackfaceCulling(false);
-
-		pipeline->SetViewportStart({ 0, 0 });
-		pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
-		pipeline->SetScissorStart({ 0, 0 });
-		pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
-
 		pipeline->CreatePipeline(window);
 
-		Material* material = new Material(window);
-		material->AddTexture(ALBEDO_MAP, TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_DIF.png", window));
-		material->AddTexture(NORMAL_MAP, TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_NRM.png", window));
-		material->AddTexture(METALLIC_MAP, TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_MET.png", window));
-		material->AddTexture(ROUGHNESS_MAP, TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_RGH.png", window));
+		Material* material = new Material(manager, window);
+		material->AddTexture(ALBEDO_MAP, manager->addTexture(TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_DIF.png", window)));
+		material->AddTexture(NORMAL_MAP, manager->addTexture(TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_NRM.png", window)));
+		material->AddTexture(METALLIC_MAP, manager->addTexture(TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_MET.png", window)));
+		material->AddTexture(ROUGHNESS_MAP, manager->addTexture(TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_RGH.png", window)));
 
 		//material->AddFloat(METALLIC, 1.0);
 		//material->AddFloat(ROUGHNESS, 0.3);
@@ -66,34 +61,34 @@ void Scene::CreateScene(GameObject* root, Window* window, Camera* camera)
 	}
 	else
 	{
-		root->AddChild("Atmosphere", new Atmosphere(window));		
+		root->AddChild("Atmosphere", new Atmosphere(window, manager));		
 
-		Terrain* terrain = new Terrain(window, camera);
+		Terrain* terrain = new Terrain(window, manager, camera);
 		terrain->UpdateQuadtree();
 
 		root->AddChild("Terrain", terrain);
 
-		GameObject* slider = new GUISlider(window, 0.0f, 2.0f, terrain->getMaps()->getHeightmap(), &EngineConfig::rendererExposure, sizeof(float), true);
+		GameObject* slider = new GUISlider(window, manager, 0.0f, 2.0f, terrain->getMaps()->getHeightmap(), &EngineConfig::rendererExposure, sizeof(float), true);
 		slider->SetPosition({ 0.5f, 0.5f, 0 });
 		slider->SetScale({ 0.125f, 0.05f, 1 });
 		root->AddChild("slider", slider);
 
-		GameObject* slider2 = new GUISlider(window, 1.0f, 3.4f, terrain->getMaps()->getHeightmap(), &EngineConfig::rendererGamma, sizeof(float), true);
+		GameObject* slider2 = new GUISlider(window, manager, 1.0f, 3.4f, terrain->getMaps()->getHeightmap(), &EngineConfig::rendererGamma, sizeof(float), true);
 		slider2->SetPosition({ 0.5f, 0.25f, 0 });
 		slider2->SetScale({ 0.125f, 0.05f, 1 });
 		root->AddChild("slider2", slider2);
 
-		/*GameObject* slider3 = new GUISlider(window, 2000.0f, 14000.0f, terrain->getMaps()->getHeightmap(), &AtmosphereConfig::rayleighHeightScale, sizeof(float), true);
+		/*GameObject* slider3 = new GUISlider(window, manager, 2000.0f, 14000.0f, terrain->getMaps()->getHeightmap(), &AtmosphereConfig::rayleighHeightScale, sizeof(float), true);
 		slider3->SetPosition({ -0.5f, 0.5f, 0 });
 		slider3->SetScale({ 0.125f, 0.05f, 1 });
 		root->AddChild("slider3", slider3);
 
-		GameObject* slider4 = new GUISlider(window, 0.000021f / 2.0f , 0.000021f * 2.0f, terrain->getMaps()->getHeightmap(), &AtmosphereConfig::mie, sizeof(float), true);
+		GameObject* slider4 = new GUISlider(window, manager, 0.000021f / 2.0f , 0.000021f * 2.0f, terrain->getMaps()->getHeightmap(), &AtmosphereConfig::mie, sizeof(float), true);
 		slider4->SetPosition({ -0.5f, 0.25f, 0 });
 		slider4->SetScale({ 0.125f, 0.05f, 1 });
 		root->AddChild("slider4", slider4);
 
-		GameObject* slider5 = new GUISlider(window, 200.0f, 2200.0f, terrain->getMaps()->getHeightmap(), &AtmosphereConfig::mieHeightScale, sizeof(float), true);
+		GameObject* slider5 = new GUISlider(window, manager, 200.0f, 2200.0f, terrain->getMaps()->getHeightmap(), &AtmosphereConfig::mieHeightScale, sizeof(float), true);
 		slider5->SetPosition({ -0.5f, 0.0f, 0 });
 		slider5->SetScale({ 0.125f, 0.05f, 1 });
 		root->AddChild("slider5", slider5);*/

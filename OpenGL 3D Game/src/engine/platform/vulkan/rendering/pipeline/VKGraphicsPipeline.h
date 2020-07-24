@@ -16,7 +16,7 @@
 class VKGraphicsPipeline : public VKPipeline, public GraphicsPipeline
 {
 public:
-	VKGraphicsPipeline(Shader* shader, VertexBuffer* vbo);
+	VKGraphicsPipeline(AssetManager* manager, size_t shaderID, size_t vboID);
 	virtual ~VKGraphicsPipeline();
 
 	virtual void CreatePipeline(Window* window) override;

@@ -9,7 +9,7 @@
 class Scene
 {
 public:
-	static void CreateScene(GameObject* root, Window* window, Camera* camera);
+	static void CreateScene(GameObject* root, Window* window, AssetManager* manager, Camera* camera);
 	static void DeleteData();
 private:
 	Scene() {}

@@ -13,7 +13,7 @@
 class VKPipeline : public Pipeline
 {
 public:
-	VKPipeline(Shader* shader);
+	VKPipeline(AssetManager* manager, size_t shaderID);
 	virtual ~VKPipeline();
 
 	virtual void CreatePipeline(Window* window) override;

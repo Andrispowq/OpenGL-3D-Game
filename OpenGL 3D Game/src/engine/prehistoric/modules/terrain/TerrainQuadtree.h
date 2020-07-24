@@ -20,7 +20,7 @@
 class TerrainQuadtree : public Node
 {
 public:
-	TerrainQuadtree(Window* window, Camera* camera, TerrainMaps* maps);
+	TerrainQuadtree(Window* window, AssetManager* manager, Camera* camera, TerrainMaps* maps);
 	virtual ~TerrainQuadtree();
 
 	void UpdateQuadtree();

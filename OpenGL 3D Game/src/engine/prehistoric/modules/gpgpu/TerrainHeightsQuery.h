@@ -16,7 +16,7 @@
 class TerrainHeightsQuery
 {
 public:
-	TerrainHeightsQuery(Window* window, uint32_t N);
+	TerrainHeightsQuery(Window* window, AssetManager* manager, uint32_t N);
 	virtual ~TerrainHeightsQuery();
 
 	void Query(Texture* heightmap);

@@ -1,7 +1,7 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "TerrainHeightsQuery.h"
 
-TerrainHeightsQuery::TerrainHeightsQuery(Window* window, uint32_t N)
+TerrainHeightsQuery::TerrainHeightsQuery(Window* window, AssetManager* manager, uint32_t N)
 {
 	this->window = window;
 
@@ -10,17 +10,12 @@ TerrainHeightsQuery::TerrainHeightsQuery(Window* window, uint32_t N)
 	//TODO: Create the Vulkan equivalent of the GLComputePipeline
 	if (FrameworkConfig::api == OpenGL)
 	{
-		pipeline = new GLComputePipeline(new GLTerrainHeightsShader());
+		pipeline = new GLComputePipeline(manager, manager->addShader(new GLTerrainHeightsShader()));
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
 		//pipeline = new VKComputePipeline(new VKTerrainHeightsShader());
 	}
-
-	pipeline->SetViewportStart({ 0, 0 });
-	pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
-	pipeline->SetScissorStart({ 0, 0 });
-	pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
 
 	pipeline->CreatePipeline(window);
 

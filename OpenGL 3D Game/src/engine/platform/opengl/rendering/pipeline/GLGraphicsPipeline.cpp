@@ -1,8 +1,8 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLGraphicsPipeline.h"
 
-GLGraphicsPipeline::GLGraphicsPipeline(Shader* shader, VertexBuffer* vbo)
-	: GLPipeline(shader), GraphicsPipeline(vbo)
+GLGraphicsPipeline::GLGraphicsPipeline(AssetManager* manager, size_t shaderID, size_t vboID)
+	: GLPipeline(manager, shaderID), GraphicsPipeline(manager, vboID)
 {
 }
 
@@ -15,14 +15,16 @@ void GLGraphicsPipeline::BindPipeline() const
 {
 	GLPipeline::BindPipeline();
 
-	vbo->Bind(nullptr);
+	getVertexBuffer()->Bind(nullptr);
 }
 
 void GLGraphicsPipeline::RenderPipeline() const
 {
 	GLPipeline::RenderPipeline();
 
-	if (vbo->getFrontFace() == FrontFace::CLOCKWISE)
+	VertexBuffer* buff = getVertexBuffer();
+
+	if (buff->getFrontFace() == FrontFace::CLOCKWISE)
 	{
 		glFrontFace(GL_CW);
 	}
@@ -41,12 +43,12 @@ void GLGraphicsPipeline::RenderPipeline() const
 		glDisable(GL_CULL_FACE);
 	}
 
-	vbo->Draw(nullptr);
+	buff->Draw(nullptr);
 }
 
 void GLGraphicsPipeline::UnbindPipeline() const
 {
-	vbo->Unbind();
+	getVertexBuffer()->Unbind();
 
 	GLPipeline::UnbindPipeline();
 }

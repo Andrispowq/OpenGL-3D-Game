@@ -1,12 +1,12 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "TerrainQuadtree.h"
 
-TerrainQuadtree::TerrainQuadtree(Window* window, Camera* camera, TerrainMaps* maps)
+TerrainQuadtree::TerrainQuadtree(Window* window, AssetManager* manager, Camera* camera, TerrainMaps* maps)
 	: window(window), camera(camera), maps(maps)
 {
-	Shader* shader = nullptr;
+	size_t shaderID = -1;
 	Pipeline* pipeline = nullptr;
-	Shader* wireframeShader = nullptr;
+	size_t wireframeShaderID = -1;
 	Pipeline* wireframePipeline = nullptr;
 
 	PatchVertexBuffer* vbo = nullptr;
@@ -15,12 +15,13 @@ TerrainQuadtree::TerrainQuadtree(Window* window, Camera* camera, TerrainMaps* ma
 	{
 		vbo = new GLPatchVertexBuffer();
 		vbo->Store(generatePatch());
+		size_t vboID = manager->addVertexBuffer(vbo);
 
-		shader = new GLTerrainShader();
-		wireframeShader = new GLTerrainWireframeShader();
+		shaderID = manager->addShader(new GLTerrainShader());
+		wireframeShaderID = manager->addShader(new GLTerrainWireframeShader());
 
-		pipeline = new GLGraphicsPipeline(shader, vbo);
-		wireframePipeline = new GLGraphicsPipeline(wireframeShader, vbo);
+		pipeline = new GLGraphicsPipeline(manager, shaderID, vboID);
+		wireframePipeline = new GLGraphicsPipeline(manager, wireframeShaderID, vboID);
 
 		reinterpret_cast<GLGraphicsPipeline*>(pipeline)->SetBackfaceCulling(true);
 		reinterpret_cast<GLGraphicsPipeline*>(wireframePipeline)->SetBackfaceCulling(true);
@@ -30,18 +31,7 @@ TerrainQuadtree::TerrainQuadtree(Window* window, Camera* camera, TerrainMaps* ma
 		//TODO: implement terrains in Vulkan
 	}
 
-	pipeline->SetViewportStart({ 0, 0 });
-	pipeline->SetViewportSize({ (float) FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
-	pipeline->SetScissorStart({ 0, 0 });
-	pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
-
 	pipeline->CreatePipeline(window);
-
-	wireframePipeline->SetViewportStart({ 0, 0 });
-	wireframePipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
-	wireframePipeline->SetScissorStart({ 0, 0 });
-	wireframePipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
-
 	wireframePipeline->CreatePipeline(window);
 
 	for (int i = 0; i < rootNodes; i++)

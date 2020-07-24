@@ -72,7 +72,7 @@ void VKPBRShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_ind
 
 	SetUniform("material", material->GetVector3f(COLOUR), 0, instance_index);
 	SetUniform("material", material->GetVector3f(EMISSION), 16, instance_index);
-	SetUniformi("material", material->GetTexture(NORMAL_MAP)->getID() != Material::GetDefaultTexture()->getID(), 32, instance_index);
+	SetUniformi("material", material->exists(NORMAL_MAP), 32, instance_index);
 	SetUniformf("material", material->GetFloat(HEIGHT_SCALE), 36, instance_index);
 	SetUniformf("material", material->GetFloat(METALLIC), 40, instance_index);
 	SetUniformf("material", material->GetFloat(ROUGHNESS), 44, instance_index);

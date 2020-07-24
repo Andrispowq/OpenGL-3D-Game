@@ -5,8 +5,8 @@
 #include "engine/platform/vulkan/rendering/shaders/VkShader.h"
 #include "engine/platform/vulkan/framework/context/VKContext.h"
 
-VKPipeline::VKPipeline(Shader* shader)
-	: Pipeline(shader)
+VKPipeline::VKPipeline(AssetManager* manager, size_t shaderID)
+	: Pipeline(manager, shaderID)
 {
 }
 

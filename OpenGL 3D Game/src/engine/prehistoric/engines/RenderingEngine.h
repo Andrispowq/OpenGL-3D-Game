@@ -8,6 +8,8 @@
 #include "engine/prehistoric/common/buffer/VertexBuffer.h"
 #include "engine/prehistoric/common/rendering/pipeline/Pipeline.h"
 
+#include "engine/prehistoric/assets/AssetManager.h"
+
 class GameObject;
 class Renderable;
 class Light;
@@ -29,6 +31,8 @@ public:
 
 	inline Window* GetWindow() const { return window; }
 	inline Camera* GetCamera() const { return camera; }
+	inline AssetManager* GetAssetManager() const { return manager; }
+
 	inline std::vector<Light*> GetLights() const { return lights; }
 
 	inline bool isWireframeMode() const { return wireframeMode; }
@@ -46,6 +50,8 @@ private:
 	std::vector<Light*> lights;
 
 	Light* sun = nullptr;
+
+	AssetManager* manager;
 
 	Window* window;
 	Camera* camera;

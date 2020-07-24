@@ -18,7 +18,7 @@ namespace TerrainConfig
 	std::string TerrainConfig::heightmap;
 	std::vector<Material*> TerrainConfig::materials;
 
-	void TerrainConfig::LoadConfig(const std::string& path, Window* window)
+	void TerrainConfig::LoadConfig(const std::string& path, AssetManager* manager, Window* window)
 	{
 		std::ifstream file;
 		file.open(path.c_str());
@@ -96,7 +96,7 @@ namespace TerrainConfig
 				{
 					if (nameTokens[1] == "add")
 					{
-						materials.push_back(new Material(window));
+						materials.push_back(new Material(manager, window));
 					}
 					else
 					{
@@ -104,7 +104,7 @@ namespace TerrainConfig
 
 						if (nameTokens[2] == "texture")
 						{
-							material->AddTexture(tokens[1], TextureLoader::LoadTexture(tokens[2], window));
+							material->AddTexture(tokens[1], manager->addTexture(TextureLoader::LoadTexture(tokens[2], window)));
 						}
 						else if (nameTokens[2] == "vec4")
 						{

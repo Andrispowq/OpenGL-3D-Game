@@ -50,7 +50,6 @@ void Renderer::CleanUp()
 			delete material;
 	}
 
-	Material::CleanUp();
 	Renderable::CleanUp();
 }
 

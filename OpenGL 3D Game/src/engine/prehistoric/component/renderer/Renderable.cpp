@@ -75,7 +75,4 @@ void Renderable::CleanUp()
 		pipeline->DestroyPipeline();
 		delete pipeline;
 	}
-
-	Pipeline::CleanUp();
-	GraphicsPipeline::CleanUp();
 }

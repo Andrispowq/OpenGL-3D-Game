@@ -2,8 +2,8 @@
 #include <glew.h>
 #include "VKGraphicsPipeline.h"
 
-VKGraphicsPipeline::VKGraphicsPipeline(Shader* shader, VertexBuffer* vbo)
-	: VKPipeline(shader), GraphicsPipeline(vbo)
+VKGraphicsPipeline::VKGraphicsPipeline(AssetManager* manager, size_t shaderID, size_t vboID)
+	: VKPipeline(manager, shaderID), GraphicsPipeline(manager, vboID)
 {
 }
 
@@ -17,13 +17,16 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 
 	this->renderpass = &((VKSwapchain*)window->GetSwapchain())->getRenderpass();
 
+	VKMeshVertexBuffer* vbo = (VKMeshVertexBuffer*)getVertexBuffer();
+	VKShader* shader = (VKShader*)getShader();
+
 	//The actual creation
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 	vertexInputInfo.vertexBindingDescriptionCount = 1;
-	vertexInputInfo.pVertexBindingDescriptions = ((VKMeshVertexBuffer*)vbo)->GetBindingDescription();
+	vertexInputInfo.pVertexBindingDescriptions = vbo->GetBindingDescription();
 
-	auto description = ((VKMeshVertexBuffer*)vbo)->GetAttributeDescriptions();
+	auto description = vbo->GetAttributeDescriptions();
 	vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(description.size());
 	vertexInputInfo.pVertexAttributeDescriptions = description.data();
 
@@ -57,7 +60,7 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 	rasterizer.rasterizerDiscardEnable = VK_FALSE;
 	rasterizer.polygonMode = VK_POLYGON_MODE_FILL;// wireframe ? VK_POLYGON_MODE_LINE : VK_POLYGON_MODE_FILL;
 	rasterizer.lineWidth = 1.0f;
-	rasterizer.cullMode = GraphicsPipeline::backfaceCulling ? VK_CULL_MODE_BACK_BIT : VK_CULL_MODE_NONE;
+	rasterizer.cullMode = backfaceCulling ? VK_CULL_MODE_BACK_BIT : VK_CULL_MODE_NONE;
 	rasterizer.frontFace = vbo->getFrontFace() == FrontFace::COUNTER_CLOCKWISE ? VK_FRONT_FACE_COUNTER_CLOCKWISE : VK_FRONT_FACE_CLOCKWISE;
 	rasterizer.depthBiasEnable = VK_FALSE;
 	rasterizer.depthBiasConstantFactor = 0.0f; // Optional
@@ -67,8 +70,8 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 	VkPipelineMultisampleStateCreateInfo multisampling = {};
 	multisampling.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
 	multisampling.sampleShadingEnable = VK_TRUE;
-	//This is correct because VK_SAMPLE_COUNT_8_BIT for example has the value 8, so we can directly compare them
-	multisampling.rasterizationSamples = Pipeline::GetSamples() < (int) physicalDevice->getSampleCount() ? VK_SAMPLE_COUNT_1_BIT : physicalDevice->getSampleCount(); 
+	//This means that if the sampleCount is 1, 0 or -1, we disable multisampling, in all other cases, we use the max available sample count for MSAA
+	multisampling.rasterizationSamples = /*samples < 2 ? VK_SAMPLE_COUNT_1_BIT :*/ physicalDevice->getSampleCount();
 	multisampling.minSampleShading = 0.2f; // Optional
 	multisampling.pSampleMask = nullptr; // Optional
 	multisampling.alphaToCoverageEnable = VK_FALSE; // Optional
@@ -109,8 +112,8 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 
 	VkGraphicsPipelineCreateInfo pipelineInfo = {};
 	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
- 	pipelineInfo.stageCount = ((VKShader*)Pipeline::shader)->getModuleCount();
-	pipelineInfo.pStages = ((VKShader*)Pipeline::shader)->GetShaderStages();
+ 	pipelineInfo.stageCount = shader->getModuleCount();
+	pipelineInfo.pStages = shader->GetShaderStages();
 	pipelineInfo.pVertexInputState = &vertexInputInfo;
 	pipelineInfo.pInputAssemblyState = &inputAssembly;
 	pipelineInfo.pTessellationState = nullptr;
@@ -120,7 +123,7 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 	pipelineInfo.pDepthStencilState = &depthStencil;
 	pipelineInfo.pColorBlendState = &colorBlending;
 	pipelineInfo.pDynamicState = nullptr; // Optional
-	pipelineInfo.layout = ((VKShader*)Pipeline::shader)->GetPipelineLayout();
+	pipelineInfo.layout = shader->GetPipelineLayout();
 	pipelineInfo.renderPass = renderpass->GetRenderPass();
 	pipelineInfo.subpass = 0;
 	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
@@ -137,19 +140,19 @@ void VKGraphicsPipeline::BindPipeline() const
 	//VKPipeline::BindPipeline();
 
 	vkCmdBindPipeline(((VKCommandBuffer*) swapchain->GetDrawCommandBuffer())->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
-	vbo->Bind(swapchain->GetDrawCommandBuffer());
+	getVertexBuffer()->Bind(swapchain->GetDrawCommandBuffer());
 }
 
 void VKGraphicsPipeline::RenderPipeline() const
 {
 	//VKPipeline::RenderPipeline(); //does nothing
 
-	vbo->Draw(swapchain->GetDrawCommandBuffer());
+	getVertexBuffer()->Draw(swapchain->GetDrawCommandBuffer());
 }
 
 void VKGraphicsPipeline::UnbindPipeline() const
 {
-	//vbo->Unbind();
+	//getVertexBuffer()->Unbind();
 
 	//VKPipeline::UnbindPipeline();
 }

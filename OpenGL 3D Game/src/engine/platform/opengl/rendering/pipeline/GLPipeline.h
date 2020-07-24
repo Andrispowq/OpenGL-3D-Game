@@ -9,7 +9,7 @@
 class GLPipeline : public Pipeline
 {
 public:
-	GLPipeline(Shader* shader);
+	GLPipeline(AssetManager* manager, size_t shaderID);
 	virtual ~GLPipeline() {}
 
 	void CreatePipeline(Window* window) override;

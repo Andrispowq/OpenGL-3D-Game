@@ -1,7 +1,7 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "WorldLoader.h"
 
-void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Window* window)
+void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Window* window, AssetManager* manager)
 {
 	std::ifstream file;
 	file.open(worldFile.c_str());
@@ -37,7 +37,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 			{
 				if (nameTokens[1] == "load")
 				{
-					MeshVertexBuffer* vbo = OBJLoader::LoadModel(directoryModels, tokens[2], "", window);
+					MeshVertexBuffer* vbo = OBJLoader::LoadModel(directoryModels, tokens[2], "", window, manager);
 
 					if (tokens[3] == "clockwise")
 					{
@@ -53,7 +53,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 						vbo->SetFrontFace(FrontFace::DOUBLE_SIDED);
 					}
 
-					models.emplace(tokens[1], vbo);
+					models.insert(std::make_pair(tokens[2], manager->addVertexBuffer(vbo)));
 				}
 			}
 			if (nameTokens[0] == "textures")
@@ -61,7 +61,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 				if (nameTokens[1] == "load")
 				{
 					Texture* texture = TextureLoader::LoadTexture(directoryTextures + tokens[2], window);
-					textures.emplace(tokens[1], texture);
+					textures.insert(std::make_pair(tokens[1], manager->addTexture(texture)));
 				}
 			}
 
@@ -70,8 +70,8 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 			{
 				if (nameTokens[1] == "add")
 				{
-					Material* material = new Material(window);
-					materials.emplace(tokens[1], material);
+					Material* material = new Material(manager, window);
+					materials.insert(std::make_pair(tokens[1], material));
 				}
 				else
 				{
@@ -219,19 +219,21 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 					{
  						std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
 
-						VertexBuffer* vbo = models.at(compTokens[0]);
-						Material* material = materials.at(compTokens[2]);
+						size_t vboID = models.at(compTokens[0]);
+						size_t shaderID = -1;
 
-						Shader* shader = nullptr;
+						Material* material = materials.at(compTokens[2]);
 						Pipeline* pipeline = nullptr;
 
 						auto shaderIndex = shaders.find(compTokens[1]);
 						if (shaderIndex != shaders.end())
 						{
-							shader = shaderIndex->second;
+							shaderID = shaderIndex->second;
 						}
 						else
 						{
+							Shader* shader = nullptr;
+
 							if (FrameworkConfig::api == OpenGL)
 							{
 								if (compTokens[1] == "pbr")
@@ -255,7 +257,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 								}
 							}
 
-							shaders.insert(std::make_pair(compTokens[1], shader));
+							shaders.insert(std::make_pair(compTokens[1], manager->addShader(shader)));
 						}
 
 						auto pipelineIndex = pipelines.find(compTokens[0] + "," + compTokens[1]);
@@ -265,15 +267,17 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 						}
 						else
 						{
+							Pipeline* pipeline = nullptr;
+
 							if (FrameworkConfig::api == OpenGL)
 							{
-								pipeline = new GLGraphicsPipeline(shader, vbo);
+								pipeline = new GLGraphicsPipeline(manager, shaderID, vboID);
 
 								reinterpret_cast<GLGraphicsPipeline*>(pipeline)->SetBackfaceCulling(true);
 							}
 							else if (FrameworkConfig::api == Vulkan)
 							{
-								pipeline = new VKGraphicsPipeline(shader, vbo);
+								pipeline = new VKGraphicsPipeline(manager, shaderID, vboID);
 
 								reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);;
 							}
@@ -287,11 +291,6 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 							pipelines.insert(std::make_pair(compTokens[0] + "," + compTokens[1], pipeline));
 						}
-
-						pipeline->SetViewportStart({ 0, 0 });
-						pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
-						pipeline->SetScissorStart({ 0, 0 });
-						pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
 
 						pipeline->CreatePipeline(window);
 
@@ -338,59 +337,21 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 							{
 								std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
 
-								VertexBuffer* vbo = models.at(compTokens[0]);
+								size_t vboID = models.at(compTokens[0]);
+								size_t shaderID = -1;
+
 								Material* material = materials.at(compTokens[2]);
-								Shader* shader = nullptr;
-
 								Pipeline* pipeline = nullptr;
-
-								//Checking for shader types
-								/*if (compTokens[1] == "basic")
-								{
-									if (FrameworkConfig::api == OpenGL)
-									{
-										shader = new GLBasicShader();
-									}
-									else
-									{
-										shader = new VKBasicShader(window);
-									}
-								}
-								else if (compTokens[1] == "pbr")
-								{
-									if (FrameworkConfig::api == OpenGL)
-									{
-										shader = new GLPBRShader();
-									}
-									else
-									{
-										shader = new VKPBRShader(window);
-									}
-								}
-
-								if (FrameworkConfig::api == OpenGL)
-								{
-									pipeline = new GLGraphicsPipeline(shader, vbo);
-								}
-								else if (FrameworkConfig::api == Vulkan)
-								{
-									pipeline = new VKGraphicsPipeline(shader, vbo);
-								}
-
-								pipeline->SetViewportStart({ 0, 0 });
-								pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
-								pipeline->SetScissorStart({ 0, 0 });
-								pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
-
-								pipeline->CreatePipeline(window);*/
 
 								auto shaderIndex = shaders.find(compTokens[1]);
 								if (shaderIndex != shaders.end())
 								{
-									shader = shaderIndex->second;
+									shaderID = shaderIndex->second;
 								}
 								else
 								{
+									Shader* shader = nullptr;
+
 									if (FrameworkConfig::api == OpenGL)
 									{
 										if (compTokens[1] == "pbr")
@@ -414,7 +375,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 										}
 									}
 
-									shaders.insert(std::make_pair(compTokens[1], shader));
+									shaders.insert(std::make_pair(compTokens[1], manager->addShader(shader)));
 								}
 
 								auto pipelineIndex = pipelines.find(compTokens[0] + "," + compTokens[1]);
@@ -424,17 +385,19 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 								}
 								else
 								{
+									Pipeline* pipeline = nullptr;
+
 									if (FrameworkConfig::api == OpenGL)
 									{
-										pipeline = new GLGraphicsPipeline(shader, vbo);
+										pipeline = new GLGraphicsPipeline(manager, shaderID, vboID);
 
 										reinterpret_cast<GLGraphicsPipeline*>(pipeline)->SetBackfaceCulling(true);
 									}
 									else if (FrameworkConfig::api == Vulkan)
 									{
-										pipeline = new VKGraphicsPipeline(shader, vbo);
+										pipeline = new VKGraphicsPipeline(manager, shaderID, vboID);
 
-										reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);
+										reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);;
 									}
 
 									pipeline->SetViewportStart({ 0, 0 });
@@ -446,6 +409,8 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 									pipelines.insert(std::make_pair(compTokens[0] + "," + compTokens[1], pipeline));
 								}
+
+								pipeline->CreatePipeline(window);
 
 								Renderer* renderer = new Renderer(pipeline, material, window);
 

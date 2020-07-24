@@ -3,34 +3,34 @@
 
 #include "engine/prehistoric/core/Engine.h"
 
-Atmosphere::Atmosphere(Window* window)
+Atmosphere::Atmosphere(Window* window, AssetManager* manager)
 	: window(window)
 {
 	SetScale(Vector3f(EngineConfig::rendererFarPlane / 2.f));
 
-	MeshVertexBuffer* vbo = OBJLoader::LoadModel("res/models/dome/", "sphericalDome.obj", "", window);
+	size_t vboID = manager->addVertexBuffer(OBJLoader::LoadModel("res/models/dome/", "sphericalDome.obj", "", window, manager));
 
-	Shader* shader = nullptr;
+	size_t shaderID = -1;
 	Pipeline* pipeline = nullptr;
 
 	if (FrameworkConfig::api == OpenGL)
 	{
 		if (AtmosphereConfig::scatteringEnabled)
-			shader = new GLAtmosphereScatteringShader();
+			shaderID = manager->addShader(new GLAtmosphereScatteringShader());
 		else
-			shader = new GLAtmosphereShader();
+			shaderID = manager->addShader(new GLAtmosphereShader());
 
-		pipeline = new GLGraphicsPipeline(shader, vbo);
+		pipeline = new GLGraphicsPipeline(manager, shaderID, vboID);
 		reinterpret_cast<GLGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
 		/*if (AtmosphereConfig::scatteringEnabled)
-			shader = new VKAtmosphereScatteringShader();
+			shaderID = manager->addShader(new VKAtmosphereScatteringShader());
 		else
-			shader = new VKAtmosphereShader();*/
+			shaderID = manager->addShader(new VKAtmosphereShader());*/
 
-		pipeline = new VKGraphicsPipeline(shader, vbo);
+		pipeline = new VKGraphicsPipeline(manager, shaderID, vboID);
 		reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);
 	}
 

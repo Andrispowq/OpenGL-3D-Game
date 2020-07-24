@@ -13,7 +13,7 @@
 class SplatMapRenderer
 {
 public:
-	SplatMapRenderer(Window* window, uint32_t N);
+	SplatMapRenderer(Window* window, AssetManager* manager, uint32_t N);
 	virtual ~SplatMapRenderer();
 
 	void Render(Texture* normalmap);

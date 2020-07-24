@@ -27,17 +27,17 @@ public:
 	WorldLoader() {}
 	virtual ~WorldLoader() {}
 
-	void LoadWorld(const std::string& worldFile, GameObject* root, Window* window);
+	void LoadWorld(const std::string& worldFile, GameObject* root, Window* window, AssetManager* manager);
 private:
 	std::string directoryModels;
 	std::string directoryTextures;
 
 	//Rendering stuff
-	std::unordered_map<std::string, Texture*> textures;
+	std::unordered_map<std::string, size_t> textures;
 	std::unordered_map<std::string, Material*> materials;
 
-	std::unordered_map<std::string, MeshVertexBuffer*> models;
-	std::unordered_map<std::string, Shader*> shaders;
+	std::unordered_map<std::string, size_t> models;
+	std::unordered_map<std::string, size_t> shaders;
 	std::unordered_map<std::string, Pipeline*> pipelines;
 };
 

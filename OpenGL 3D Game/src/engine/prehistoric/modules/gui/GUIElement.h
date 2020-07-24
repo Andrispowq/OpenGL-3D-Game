@@ -24,7 +24,7 @@ enum class GUIType
 class GUIElement : public GameObject
 {
 public:
-	GUIElement(Window* window, Texture* texture = nullptr, void* data = nullptr, size_t dataSize = 0, bool visible = true);
+	GUIElement(Window* window, AssetManager* manager, Texture* texture = nullptr, void* data = nullptr, size_t dataSize = 0, bool visible = true);
 	virtual ~GUIElement();
 
 	static void CleanUp();
@@ -57,7 +57,7 @@ protected:
 	void* data;
 	size_t dataSize;
 
-	static VertexBuffer* guiVertexBuffer;
+	static size_t vboID;
 	static Pipeline* pipeline;
 	
 	Texture* texture;

@@ -38,12 +38,15 @@ RenderingEngine::RenderingEngine()
 	}
 
 	camera->LogStage();
-
 	camera->setSpeedControl({ MOUSE_SCROLL, PR_KEY_UNKNOWN, PR_JOYSTICK_1 });
+
+	manager = new AssetManager(window);
 }
 
 RenderingEngine::~RenderingEngine()
 {
+	delete manager;
+
 	delete window;
 	delete camera;
 }
@@ -80,7 +83,7 @@ void RenderingEngine::Update(float delta)
 
 	if (window->GetResized())
 	{
-		camera->SetProjection(camera->getFov(), window->GetWidth(), window->GetHeight());
+		camera->SetProjection(camera->getFov(), (float)window->GetWidth(), (float)window->GetHeight());
 		Renderable::RecreatePipelines();
 		window->SetResized(false);
 	}

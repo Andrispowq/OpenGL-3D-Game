@@ -19,7 +19,7 @@
 class Atmosphere : public GameObject
 {
 public:
-	Atmosphere(Window* window);
+	Atmosphere(Window* window, AssetManager* manager);
 	virtual ~Atmosphere() {}
 
 	virtual void PreUpdate(Engine* engine) override;

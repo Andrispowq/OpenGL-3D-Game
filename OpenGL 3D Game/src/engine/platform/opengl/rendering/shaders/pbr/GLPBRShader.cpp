@@ -115,8 +115,7 @@ void GLPBRShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_ind
 	SetUniformi("material.emissionMap", 6);
 
 	SetUniform("material.colour", material->GetVector3f("colour"));
-	SetUniformi("material.usesNormalMap", dynamic_cast<GLTexture*>(material->GetTexture("normalMap"))->getID() != 
-										dynamic_cast<GLTexture*>(Material::GetDefaultTexture())->getID());
+	SetUniformi("material.usesNormalMap", material->exists("normalMap"));
 	SetUniformf("material.heightScale", material->GetFloat("heightScale"));
 	SetUniformf("material.metallic", material->GetFloat("metallic"));
 	SetUniformf("material.roughness", material->GetFloat("roughness"));

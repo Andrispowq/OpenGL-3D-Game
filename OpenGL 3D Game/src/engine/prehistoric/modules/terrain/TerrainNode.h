@@ -14,7 +14,7 @@ class TerrainNode : public GameObject
 {
 public:
 	TerrainNode(Pipeline* pipeline, Pipeline* wireframePipeline, TerrainMaps* maps,
-		Window* window, Camera* camera,	const Vector2f& location, 
+		Window* window, Camera* camera, const Vector2f& location,
 		int lod, const Vector2f& index);
 	virtual ~TerrainNode();
 

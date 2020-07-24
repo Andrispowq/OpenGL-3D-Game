@@ -13,7 +13,7 @@
 class TerrainMaps
 {
 public:
-	TerrainMaps(Window* window);
+	TerrainMaps(Window* window, AssetManager* manager);
 	virtual ~TerrainMaps();
 
 	Texture* getHeightmap() const { return heightmap; }

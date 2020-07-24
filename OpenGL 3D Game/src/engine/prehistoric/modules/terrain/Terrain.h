@@ -8,7 +8,7 @@
 class Terrain : public Node
 {
 public:
-	Terrain(Window* window, Camera* camera);
+	Terrain(Window* window, AssetManager* manager, Camera* camera);
 	virtual ~Terrain();
 
 	void PreRender(RenderingEngine* renderingEngine) override;

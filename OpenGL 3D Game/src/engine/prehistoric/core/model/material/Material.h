@@ -28,6 +28,9 @@ public:
 
 	float GetFloat(const std::string& key) const;
 	int GetInt(const std::string& key) const;
+
+	Texture* getDefault() const { return manager->getTexture(textureIDs.at("DEFAULT_TEX")); }
+	bool exists(const std::string& key) const { return textureIDs.find(key) != textureIDs.end(); }
 private:
 	AssetManager* manager;
 

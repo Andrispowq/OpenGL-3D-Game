@@ -7,7 +7,7 @@ TerrainNode::TerrainNode(Pipeline* pipeline, Pipeline* wireframePipeline, Terrai
 	Window* window, Camera* camera, const Vector2f& location,
 	int lod, const Vector2f& index)
 	: renderer(renderer), wireframeRenderer(wireframeRenderer), maps(maps),
-	window(window), camera(camera),	location(location), lod(lod), index(index)
+	window(window), camera(camera), location(location), lod(lod), index(index)
 {
 	this->gap = 1.0f / float(TerrainQuadtree::rootNodes * pow(2, lod));
 

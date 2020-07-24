@@ -21,8 +21,8 @@ Engine::Engine()
 	renderingEngine->Init();
 	
 	//Loading configs that depend on some engine feature like the window
-	TerrainConfig::LoadConfig("res/config/terrain.cfg", renderingEngine->GetWindow());
-	Scene::CreateScene(root, renderingEngine->GetWindow(), renderingEngine->GetCamera());
+	TerrainConfig::LoadConfig("res/config/terrain.cfg", renderingEngine->GetAssetManager(), renderingEngine->GetWindow());
+	Scene::CreateScene(root, renderingEngine->GetWindow(), renderingEngine->GetAssetManager(), renderingEngine->GetCamera());
 }
 
 Engine::~Engine()

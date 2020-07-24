@@ -11,7 +11,7 @@
 class GLComputePipeline : public GLPipeline, public ComputePipeline
 {
 public:
-	GLComputePipeline(Shader* shader);
+	GLComputePipeline(AssetManager* manager, size_t shaderID);
 	virtual ~GLComputePipeline() {}
 
 	virtual void CreatePipeline(Window* window) override;

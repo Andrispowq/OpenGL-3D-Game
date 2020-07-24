@@ -10,7 +10,7 @@
 
 namespace TerrainConfig
 {
-	void LoadConfig(const std::string& path, Window* window);
+	void LoadConfig(const std::string& path, AssetManager* manager, Window* window);
 	int UpdateMorphingArea(int lod);
 
 	extern float scaleY;

@@ -13,7 +13,7 @@
 class NormalMapRenderer
 {
 public:
-	NormalMapRenderer(Window* window, float strength, uint32_t N);
+	NormalMapRenderer(Window* window, AssetManager* manager, float strength, uint32_t N);
 	virtual ~NormalMapRenderer();
 
 	void Render(Texture* heightmap);

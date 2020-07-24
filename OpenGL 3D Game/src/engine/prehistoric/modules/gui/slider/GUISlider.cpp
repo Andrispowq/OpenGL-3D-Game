@@ -1,8 +1,8 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GUISlider.h"
 
-GUISlider::GUISlider(Window* window, float minValue, float maxValue, Texture* texture, void* data, size_t dataSize, bool visible)
-	: GUIElement(window, texture, data, dataSize, visible), minValue(minValue), maxValue(maxValue), progress(0.5f)
+GUISlider::GUISlider(Window* window, AssetManager* manager, float minValue, float maxValue, Texture* texture, void* data, size_t dataSize, bool visible)
+	: GUIElement(window, manager, texture, data, dataSize, visible), minValue(minValue), maxValue(maxValue), progress(0.5f)
 {
 	type = GUIType::Slider;
 }

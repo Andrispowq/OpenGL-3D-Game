@@ -8,10 +8,10 @@
 
 #include "engine/prehistoric/core/Engine.h"
 
-VertexBuffer* GUIElement::guiVertexBuffer = nullptr;
+size_t GUIElement::vboID = -1;
 Pipeline* GUIElement::pipeline = nullptr;
 
-GUIElement::GUIElement(Window* window, Texture* texture, void* data, size_t dataSize, bool visible)
+GUIElement::GUIElement(Window* window, AssetManager* manager, Texture* texture, void* data, size_t dataSize, bool visible)
 	: type(GUIType::Element)
 {
 	this->texture = texture;
@@ -21,25 +21,25 @@ GUIElement::GUIElement(Window* window, Texture* texture, void* data, size_t data
 
 	this->window = window;
 
-	if (guiVertexBuffer == nullptr)
+	if (vboID == -1)
 	{
-		guiVertexBuffer = ModelFabricator::CreateQuad(window);
-		guiVertexBuffer->SetFrontFace(FrontFace::CLOCKWISE);
+		vboID = manager->addVertexBuffer(ModelFabricator::CreateQuad(window));
+		manager->getVertexBuffer(vboID)->SetFrontFace(FrontFace::CLOCKWISE);
 	}
 
 	if (pipeline == nullptr)
 	{
-		Shader* shader;
+		size_t shaderID;
 
 		if (FrameworkConfig::api == OpenGL)
 		{
-			shader = new GLGUIShader();
-			pipeline = new GLGraphicsPipeline(shader, guiVertexBuffer);
+			shaderID = manager->addShader(new GLGUIShader());
+			pipeline = new GLGraphicsPipeline(manager, shaderID, vboID);
 		}
 		else if (FrameworkConfig::api == Vulkan)
 		{
-			shader = new VKBasicShader(window);
-			pipeline = new VKGraphicsPipeline(shader, guiVertexBuffer);
+			shaderID = manager->addShader(new VKBasicShader(window));
+			pipeline = new VKGraphicsPipeline(manager, shaderID, vboID);
 		}
 
 		pipeline->CreatePipeline(window);
@@ -92,6 +92,5 @@ GUIElement::~GUIElement()
 
 void GUIElement::CleanUp()
 {
-	delete guiVertexBuffer;
 	delete pipeline;
 }

@@ -1,7 +1,7 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "NormalMapRenderer.h"
 
-NormalMapRenderer::NormalMapRenderer(Window* window, float strength, uint32_t N)
+NormalMapRenderer::NormalMapRenderer(Window* window, AssetManager* manager, float strength, uint32_t N)
 {
 	this->window = window;
 
@@ -11,17 +11,12 @@ NormalMapRenderer::NormalMapRenderer(Window* window, float strength, uint32_t N)
 	//TODO: Create the Vulkan equivalent of the GLComputePipeline
 	if (FrameworkConfig::api == OpenGL)
 	{
-		pipeline = new GLComputePipeline(new GLNormalMapShader());
+		pipeline = new GLComputePipeline(manager, manager->addShader(new GLNormalMapShader()));
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
 		//pipeline = new VKComputePipeline(new VKNormalMapShader());
 	}
-
-	pipeline->SetViewportStart({ 0, 0 });
-	pipeline->SetViewportSize({ (float) FrameworkConfig::windowWidth, (float) FrameworkConfig::windowHeight });
-	pipeline->SetScissorStart({ 0, 0 });
-	pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
 
 	pipeline->CreatePipeline(window);
 
