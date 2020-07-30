@@ -33,7 +33,7 @@ void GameObject::PreRender(RenderingEngine* renderingEngine)
 
 GameObject* GameObject::AddComponent(const std::string& name, Component* component)
 {
-	component->SetParent(this);
+	component->setParent(this);
 	components.emplace(name, component);
 	return this;
 }

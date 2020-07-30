@@ -13,7 +13,7 @@ VKDescriptorPool::~VKDescriptorPool()
 		delete set;
 	}
 
-	vkDestroyDescriptorPool(device->GetDevice(), pool, nullptr);
+	vkDestroyDescriptorPool(device->getDevice(), pool, nullptr);
 }
 
 void VKDescriptorPool::addSet(VKDescriptorSet* set)
@@ -51,7 +51,7 @@ void VKDescriptorPool::finalize(VkPipelineLayout& layout)
 	_layoutCreateInfo.pushConstantRangeCount = 0; // For now
 	_layoutCreateInfo.pPushConstantRanges = nullptr; // For now
 
-	if (vkCreatePipelineLayout(device->GetDevice(), &_layoutCreateInfo, nullptr, &layout) != VK_SUCCESS)
+	if (vkCreatePipelineLayout(device->getDevice(), &_layoutCreateInfo, nullptr, &layout) != VK_SUCCESS)
 	{
 		PR_LOG_RUNTIME_ERROR("Failed to create the pipeline layout in VkDescriptorPool::finalize(void)!\n");
 	}
@@ -85,7 +85,7 @@ void VKDescriptorPool::finalize(VkPipelineLayout& layout)
 	_poolCreateInfo.maxSets = (uint32_t)sets.size() * numImages;
 	_poolCreateInfo.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 
-	if (vkCreateDescriptorPool(device->GetDevice(), &_poolCreateInfo, nullptr, &pool) != VK_SUCCESS)
+	if (vkCreateDescriptorPool(device->getDevice(), &_poolCreateInfo, nullptr, &pool) != VK_SUCCESS)
 	{
 		PR_LOG_RUNTIME_ERROR("Failed to create the descriptor pool in VkDescriptorPool::finalize(void)!\n");
 	}
@@ -107,7 +107,7 @@ void VKDescriptorPool::finalize(VkPipelineLayout& layout)
 	_setAllocInfo.pSetLayouts = _layouts.data();
 	_setAllocInfo.pNext = nullptr;
 
-	if (vkAllocateDescriptorSets(device->GetDevice(), &_setAllocInfo, _sets.data()) != VK_SUCCESS)
+	if (vkAllocateDescriptorSets(device->getDevice(), &_setAllocInfo, _sets.data()) != VK_SUCCESS)
 	{
 		PR_LOG_RUNTIME_ERROR("Failed to allocate %i descriptor sets from Descriptor Pool at location %p in function VKDescriptorPool::finalize(void)!\n", _setAllocInfo.descriptorSetCount, &pool);
 	}
@@ -159,7 +159,7 @@ void VKDescriptorPool::finalize(VkPipelineLayout& layout)
 			}
 		}
 
-		vkUpdateDescriptorSets(device->GetDevice(), (uint32_t)_writeSets.size(), _writeSets.data(), 0, nullptr);
+		vkUpdateDescriptorSets(device->getDevice(), (uint32_t)_writeSets.size(), _writeSets.data(), 0, nullptr);
 	}
 }
 

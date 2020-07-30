@@ -50,8 +50,8 @@ TerrainQuadtree::TerrainQuadtree(Window* window, AssetManager* manager, Camera* 
 		}
 	}
 
-	worldTransform->SetScaling({ TerrainConfig::scaleXZ, TerrainConfig::scaleY, TerrainConfig::scaleXZ });
-	worldTransform->SetPosition({ -TerrainConfig::scaleXZ / 2.0f, 0, -TerrainConfig::scaleXZ / 2.0f });
+	worldTransform->setScaling({ TerrainConfig::scaleXZ, TerrainConfig::scaleY, TerrainConfig::scaleXZ });
+	worldTransform->setPosition({ -TerrainConfig::scaleXZ / 2.0f, 0, -TerrainConfig::scaleXZ / 2.0f });
 }
 
 TerrainQuadtree::~TerrainQuadtree()

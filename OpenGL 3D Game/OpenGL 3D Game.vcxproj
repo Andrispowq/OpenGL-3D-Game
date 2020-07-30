@@ -36,7 +36,7 @@
     <ClCompile Include="src\engine\config\TerrainConfig.cpp" />
     <ClCompile Include="src\engine\platform\opengl\buffer\GLPatchVertexBuffer.cpp" />
     <ClCompile Include="src\engine\platform\opengl\capabilities\GLCapabilities.cpp" />
-    <ClCompile Include="src\engine\platform\opengl\framework\swapchain\GLSwapChain.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\framework\swapchain\GLSwapchain.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\pipeline\GLPipeline.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\gui\GLGUIShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\pbr\GLPBRShader.cpp" />
@@ -133,7 +133,7 @@
     <ClInclude Include="src\engine\platform\opengl\buffer\GLPatchVertexBuffer.h" />
     <ClInclude Include="src\engine\platform\opengl\buffer\GLShaderStorageBuffer.h" />
     <ClInclude Include="src\engine\platform\opengl\capabilities\GLCapabilities.h" />
-    <ClInclude Include="src\engine\platform\opengl\framework\swapchain\GLSwapChain.h" />
+    <ClInclude Include="src\engine\platform\opengl\framework\swapchain\GLSwapchain.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLComputePipeline.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLGraphicsPipeline.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLPipeline.h" />

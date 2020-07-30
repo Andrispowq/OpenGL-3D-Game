@@ -4,7 +4,7 @@
 VKCommandPool::VKCommandPool(VkPhysicalDevice physicalDevice, VkDevice device, VKSurface* surface)
 	: physicalDevice(physicalDevice), device(device), surface(surface)
 {
-	QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface->getSurface(), physicalDevice);
+	QueueFamilyIndices indices = VKUtil::FindQueueFamilies(physicalDevice, surface->getSurface());
 
 	VkCommandPoolCreateInfo poolInfo = {};
 	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -34,7 +34,7 @@ void VKCommandPool::AddCommandBuffer(VKCommandBuffer& buffer)
 
 void VKCommandPool::AddCommandBuffer()
 {
-	VKCommandBuffer* buffer = new VKCommandBuffer(device, *this);
+	VKCommandBuffer* buffer = new VKCommandBuffer(this, device);
 
 	buffers.push_back(buffer);
 }

@@ -79,12 +79,12 @@ void GLTerrainWireframeShader::UpdateShaderUniforms(Camera* camera, const std::v
 
 		Material* material = TerrainConfig::materials[i];
 
-		material->GetTexture(DISPLACEMENT_MAP)->Bind(texUnit);
+		material->getTexture(DISPLACEMENT_MAP)->Bind(texUnit);
 		SetUniformi(uniformName + DISPLACEMENT_MAP, texUnit);
 		texUnit++;
 
-		SetUniformf(uniformName + HEIGHT_SCALE, material->GetFloat(HEIGHT_SCALE));
-		SetUniformf(uniformName + HORIZONTAL_SCALE, material->GetFloat(HORIZONTAL_SCALE));
+		SetUniformf(uniformName + HEIGHT_SCALE, material->getFloat(HEIGHT_SCALE));
+		SetUniformf(uniformName + HORIZONTAL_SCALE, material->getFloat(HORIZONTAL_SCALE));
 	}
 
 	for (unsigned int i = 0; i < 8; i++)

@@ -25,7 +25,7 @@ void Scene::CreateScene(GameObject* root, Window* window, AssetManager* manager,
 	if (FrameworkConfig::api == Vulkan)
 	{
 		VKMeshVertexBuffer* vbo = (VKMeshVertexBuffer*)OBJLoader::LoadModel("res/models/", "quad.obj", "", window, manager);
-		vbo->SetFrontFace(FrontFace::CLOCKWISE);
+		vbo->setFrontFace(FrontFace::CLOCKWISE);
 		size_t vboID = manager->addVertexBuffer(vbo);
 
 		size_t shaderID = manager->addShader(new VKPBRShader(window));
@@ -36,14 +36,14 @@ void Scene::CreateScene(GameObject* root, Window* window, AssetManager* manager,
 		pipeline->CreatePipeline(window);
 
 		Material* material = new Material(manager, window);
-		material->AddTexture(ALBEDO_MAP, manager->addTexture(TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_DIF.png", window)));
-		material->AddTexture(NORMAL_MAP, manager->addTexture(TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_NRM.png", window)));
-		material->AddTexture(METALLIC_MAP, manager->addTexture(TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_MET.png", window)));
-		material->AddTexture(ROUGHNESS_MAP, manager->addTexture(TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_RGH.png", window)));
+		material->addTexture(ALBEDO_MAP, manager->addTexture(TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_DIF.png", window)));
+		material->addTexture(NORMAL_MAP, manager->addTexture(TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_NRM.png", window)));
+		material->addTexture(METALLIC_MAP, manager->addTexture(TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_MET.png", window)));
+		material->addTexture(ROUGHNESS_MAP, manager->addTexture(TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_RGH.png", window)));
 
 		//material->AddFloat(METALLIC, 1.0);
 		//material->AddFloat(ROUGHNESS, 0.3);
-		material->AddFloat(OCCLUSION, 1);
+		material->addFloat(OCCLUSION, 1);
 
 		Renderer* renderer = new Renderer(pipeline, material, window);
 

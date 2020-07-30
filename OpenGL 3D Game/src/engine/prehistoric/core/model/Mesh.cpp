@@ -15,7 +15,7 @@ Mesh::~Mesh()
 
 float* Mesh::GetVertexData() const
 {
-	constexpr size_t numFloats = Vertex::GetNumberOfFloats();
+	constexpr size_t numFloats = Vertex::getNumberOfFloats();
 
 	float* data = new float[vertices.size() * numFloats];
 	int counter = 0;

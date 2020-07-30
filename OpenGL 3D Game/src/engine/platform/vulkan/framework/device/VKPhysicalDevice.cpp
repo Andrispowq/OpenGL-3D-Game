@@ -68,14 +68,14 @@ bool VKPhysicalDevice::IsDeviceSuitable(VKSurface* surface, VkPhysicalDevice dev
 
 	if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
 	{
-		QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface->GetSurface(), device);
+		QueueFamilyIndices indices = VKUtil::FindQueueFamilies(device, surface->getSurface());
 
 		bool extensionsSupported = CheckDeviceExtensionSupport(device);
 
 		bool swapChainAdequate = false;
 		if (extensionsSupported) 
 		{
-			SwapChainSupportDetails swapChainSupport = VKUtil::QuerySwapChainSupport(surface->GetSurface(), device);
+			SwapChainSupportDetails swapChainSupport = VKUtil::QuerySwapChainSupport(device, surface->getSurface());
 			swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
 		}
 		

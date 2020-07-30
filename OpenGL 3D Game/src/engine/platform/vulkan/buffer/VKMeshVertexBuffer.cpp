@@ -40,8 +40,8 @@ void VKMeshVertexBuffer::Store(const Mesh& mesh)
 	this->indexBuffer = new VKBuffer(physicalDevice, device, iBufferSize,
 		VK_BUFFER_USAGE_TRANSFER_DST_BIT | VK_BUFFER_USAGE_INDEX_BUFFER_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
-	float* vData = mesh.getVertexData();
-	uint16_t* iData = mesh.getIndexData();
+	float* vData = mesh.GetVertexData();
+	uint16_t* iData = mesh.GetIndexData();
 
 	//Creation of the vertex buffer
 	VKBuffer* stagingBuffer = new VKBuffer(physicalDevice, device, vBufferSize,

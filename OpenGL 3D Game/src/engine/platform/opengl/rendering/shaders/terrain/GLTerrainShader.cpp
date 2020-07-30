@@ -101,9 +101,9 @@ void GLTerrainShader::UpdateShaderUniforms(Camera* camera, const std::vector<Lig
 		{
 			Light* light = lights[i];
 
-			SetUniform(uniformName + "position", light->GetParent()->getWorldTransform()->GetPosition());
-			SetUniform(uniformName + "colour", light->GetColour());
-			SetUniform(uniformName + "intensity", light->GetIntensity());
+			SetUniform(uniformName + "position", light->getParent()->getWorldTransform()->getPosition());
+			SetUniform(uniformName + "colour", light->getColour());
+			SetUniform(uniformName + "intensity", light->getIntensity());
 		}
 		else
 		{
@@ -120,9 +120,9 @@ void GLTerrainShader::UpdateShaderUniforms(Camera* camera, const std::vector<Lig
 
 		Light* light = lights[i];
 
-		SetUniform(uniformName + "position", light->GetParent()->getWorldTransform()->GetPosition());
-		SetUniform(uniformName + "colour", light->GetColour());
-		SetUniform(uniformName + "intensity", light->GetIntensity());
+		SetUniform(uniformName + "position", light->getParent()->getWorldTransform()->getPosition());
+		SetUniform(uniformName + "colour", light->getColour());
+		SetUniform(uniformName + "intensity", light->getIntensity());
 	}
 #endif
 
@@ -153,31 +153,31 @@ void GLTerrainShader::UpdateShaderUniforms(Camera* camera, const std::vector<Lig
 
 		Material* material = TerrainConfig::materials[i];
 
-		material->GetTexture(ALBEDO_MAP)->Bind(texUnit);
+		material->getTexture(ALBEDO_MAP)->Bind(texUnit);
 		SetUniformi(uniformName + ALBEDO_MAP, texUnit);
 		texUnit++;
 
-		material->GetTexture(NORMAL_MAP)->Bind(texUnit);
+		material->getTexture(NORMAL_MAP)->Bind(texUnit);
 		SetUniformi(uniformName + NORMAL_MAP, texUnit);
 		texUnit++;
 
-		material->GetTexture(DISPLACEMENT_MAP)->Bind(texUnit);
+		material->getTexture(DISPLACEMENT_MAP)->Bind(texUnit);
 		SetUniformi(uniformName + DISPLACEMENT_MAP, texUnit);
 		texUnit++;
 
-		material->GetTexture(METALLIC_MAP)->Bind(texUnit);
+		material->getTexture(METALLIC_MAP)->Bind(texUnit);
 		SetUniformi(uniformName + METALLIC_MAP, texUnit);
 		texUnit++;
 
-		material->GetTexture(ROUGHNESS_MAP)->Bind(texUnit);
+		material->getTexture(ROUGHNESS_MAP)->Bind(texUnit);
 		SetUniformi(uniformName + ROUGHNESS_MAP, texUnit);
 		texUnit++;
 
-		SetUniformf(uniformName + HEIGHT_SCALE, material->GetFloat(HEIGHT_SCALE));
-		SetUniformf(uniformName + HORIZONTAL_SCALE, material->GetFloat(HORIZONTAL_SCALE));
-		SetUniformf(uniformName + METALLIC, material->GetFloat(METALLIC));
-		SetUniformf(uniformName + ROUGHNESS, material->GetFloat(ROUGHNESS));
-		//SetUniformf(uniformName + OCCLUSION, material->GetFloat(OCCLUSION));
+		SetUniformf(uniformName + HEIGHT_SCALE, material->getFloat(HEIGHT_SCALE));
+		SetUniformf(uniformName + HORIZONTAL_SCALE, material->getFloat(HORIZONTAL_SCALE));
+		SetUniformf(uniformName + METALLIC, material->getFloat(METALLIC));
+		SetUniformf(uniformName + ROUGHNESS, material->getFloat(ROUGHNESS));
+		//SetUniformf(uniformName + OCCLUSION, material->getFloat(OCCLUSION));
 	}
 }
 

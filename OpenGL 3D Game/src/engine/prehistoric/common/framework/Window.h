@@ -6,6 +6,8 @@
 #include "engine/prehistoric/common/framework/swapchain/Swapchain.h"
 #include "engine/prehistoric/common/framework/context/Context.h"
 
+#include "engine/config/FrameworkConfig.h"
+
 class Window
 {
 public:

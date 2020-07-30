@@ -1,10 +1,10 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "VkTexture.h"
 
-VKTexture::VKTexture(VKPhysicalDevice* physicalDevice, VKDevice& device, uint32_t width, uint32_t height)
+VKTexture::VKTexture(VKPhysicalDevice* physicalDevice, VKDevice* device, uint32_t width, uint32_t height)
 {
 	this->physicalDevice = physicalDevice;
-	this->device = &device;
+	this->device = device;
 
 	this->width = width;
 	this->height = height;

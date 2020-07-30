@@ -15,7 +15,7 @@ void GUIButton::PreUpdate(Engine* engine)
 
 	if (InputInstance.IsButtonHeld(PR_MOUSE_LEFT_BUTTON))
 	{
-		if (inside(InputInstance.GetCursorPosition()))
+		if (inside(InputInstance.getCursorPosition()))
 		{
 			(*val) = true;
 		}

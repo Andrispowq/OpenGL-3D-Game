@@ -10,9 +10,9 @@ void VKCapabilities::QueryCapabilities(void* physicalDevice)
 	VkPhysicalDeviceFeatures deviceFeatures;
 	VkPhysicalDeviceMemoryProperties memoryProps;
 
-	vkGetPhysicalDeviceProperties(physicalDev->GetPhysicalDevice(), &properties);
-	vkGetPhysicalDeviceFeatures(physicalDev->GetPhysicalDevice(), &deviceFeatures);
-	vkGetPhysicalDeviceMemoryProperties(physicalDev->GetPhysicalDevice(), &memoryProps);
+	vkGetPhysicalDeviceProperties(physicalDev->getPhysicalDevice(), &properties);
+	vkGetPhysicalDeviceFeatures(physicalDev->getPhysicalDevice(), &deviceFeatures);
+	vkGetPhysicalDeviceMemoryProperties(physicalDev->getPhysicalDevice(), &memoryProps);
 
 	//Getting extension features:
 	/*VkPhysicalDeviceRayTracingPropertiesNV rtProps;
@@ -22,7 +22,7 @@ void VKCapabilities::QueryCapabilities(void* physicalDevice)
 	props.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
 	props.pNext = &rtProps;
 
-	vkGetPhysicalDeviceProperties2(physicalDev->GetPhysicalDevice(), &props);
+	vkGetPhysicalDeviceProperties2(physicalDev->getPhysicalDevice(), &props);
 
 	PR_LOG_MESSAGE("Recursion depth: %u\n", rtProps.maxRecursionDepth);*/
 
@@ -54,10 +54,10 @@ void VKCapabilities::QueryCapabilities(void* physicalDevice)
 	shaderCaps.computeShaderSupported = false;
 
 	uint32_t queueFamilyCount = 0;
-	vkGetPhysicalDeviceQueueFamilyProperties(physicalDev->GetPhysicalDevice(), &queueFamilyCount, nullptr);
+	vkGetPhysicalDeviceQueueFamilyProperties(physicalDev->getPhysicalDevice(), &queueFamilyCount, nullptr);
 
 	std::vector<VkQueueFamilyProperties> queueFamilies(queueFamilyCount);
-	vkGetPhysicalDeviceQueueFamilyProperties(physicalDev->GetPhysicalDevice(), &queueFamilyCount, queueFamilies.data());
+	vkGetPhysicalDeviceQueueFamilyProperties(physicalDev->getPhysicalDevice(), &queueFamilyCount, queueFamilies.data());
 
 	for (uint32_t i = 0; i < queueFamilyCount; i++)
 	{
@@ -73,10 +73,10 @@ void VKCapabilities::QueryCapabilities(void* physicalDevice)
 	shaderCaps.rayTracingSupported = false;
 
 	uint32_t extensionCount;
-	vkEnumerateDeviceExtensionProperties(physicalDev->GetPhysicalDevice(), nullptr, &extensionCount, nullptr);
+	vkEnumerateDeviceExtensionProperties(physicalDev->getPhysicalDevice(), nullptr, &extensionCount, nullptr);
 
 	std::vector<VkExtensionProperties> availableExtensions(extensionCount);
-	vkEnumerateDeviceExtensionProperties(physicalDev->GetPhysicalDevice(), nullptr, &extensionCount, availableExtensions.data());
+	vkEnumerateDeviceExtensionProperties(physicalDev->getPhysicalDevice(), nullptr, &extensionCount, availableExtensions.data());
 
 	for (uint32_t i = 0; i < extensionCount; i++)
 	{

@@ -24,7 +24,7 @@ GUIElement::GUIElement(Window* window, AssetManager* manager, Texture* texture, 
 	if (vboID == -1)
 	{
 		vboID = manager->addVertexBuffer(ModelFabricator::CreateQuad(window));
-		manager->getVertexBuffer(vboID)->SetFrontFace(FrontFace::CLOCKWISE);
+		manager->getVertexBuffer(vboID)->setFrontFace(FrontFace::CLOCKWISE);
 	}
 
 	if (pipeline == nullptr)
@@ -65,13 +65,13 @@ void GUIElement::PreRender(RenderingEngine* renderingEngine)
 
 bool GUIElement::inside(Vector2f cursor)
 {
-	cursor.y = window->GetHeight() - cursor.y;
-	cursor /= { (float)window->GetWidth(), (float)window->GetHeight() };
+	cursor.y = window->getHeight() - cursor.y;
+	cursor /= { (float)window->getWidth(), (float)window->getHeight() };
 	cursor *= 2;
 	cursor -= 1;
 
-	Vector2f pos = worldTransform->GetPosition().xy();
-	Vector2f scale = worldTransform->GetScaling().xy();
+	Vector2f pos = worldTransform->getPosition().xy();
+	Vector2f scale = worldTransform->getScaling().xy();
 
 	Vector2f start = pos - scale;
 	Vector2f end = pos + scale;

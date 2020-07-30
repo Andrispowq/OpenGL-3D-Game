@@ -37,10 +37,10 @@ Renderable::Renderable(Pipeline* pipeline, Window* window)
 	}
 
 	//Just in case, but this might be added as optional because it resets the viewport and the scissor
-	pipeline->SetViewportStart(0);
-	pipeline->SetViewportSize({ (float) FrameworkConfig::windowWidth, (float) FrameworkConfig::windowHeight });
-	pipeline->SetScissorStart(0);
-	pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
+	pipeline->setViewportStart(0);
+	pipeline->setViewportSize({ (float) FrameworkConfig::windowWidth, (float) FrameworkConfig::windowHeight });
+	pipeline->setScissorStart(0);
+	pipeline->setScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
 }
 
 Renderable::Renderable(Window* window)
@@ -59,10 +59,10 @@ void Renderable::RecreatePipelines()
 {
 	for (Pipeline* pipeline : pipelines)
 	{
-		pipeline->SetViewportStart(0);
-		pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
-		pipeline->SetScissorStart(0);
-		pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
+		pipeline->setViewportStart(0);
+		pipeline->setViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
+		pipeline->setScissorStart(0);
+		pipeline->setScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
 
 		pipeline->RecreatePipeline();
 	}

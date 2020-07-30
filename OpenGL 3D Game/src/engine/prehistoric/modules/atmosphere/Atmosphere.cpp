@@ -45,5 +45,5 @@ void Atmosphere::PreUpdate(Engine* engine)
 {
 	//sun logic can go in here
 	if(engine->GetRenderingEngine()->getSun() != nullptr)
-		sunPosition = engine->GetRenderingEngine()->getSun()->GetParent()->getWorldTransform()->GetPosition();
+		sunPosition = engine->GetRenderingEngine()->getSun()->getParent()->getWorldTransform()->getPosition();
 }

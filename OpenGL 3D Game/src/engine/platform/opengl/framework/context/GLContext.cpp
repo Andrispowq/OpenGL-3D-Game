@@ -105,7 +105,7 @@ GLContext::GLContext(Window* window)
 {
 	this->window = window;
 
-	glfwMakeContextCurrent(reinterpret_cast<GLFWwindow*>(window->GetWindowHandle()));
+	glfwMakeContextCurrent(reinterpret_cast<GLFWwindow*>(window->getWindowHandle()));
 
 	GLenum error = glewInit();
 

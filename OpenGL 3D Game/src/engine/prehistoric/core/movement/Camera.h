@@ -14,7 +14,7 @@ public:
 	virtual ~Camera();
 
 	void LogStage() const;
-	void SetProjection(const float& fov, const float& width, const float& height);
+	void SetProjection(float fov, float width, float height);
 
     void AddCameraInput(CameraInput* input) { inputs.push_back(input); }
 
@@ -23,8 +23,8 @@ public:
 	void RotateX(const float& angle);
 	void RotateY(const float& angle);
 
-	Vector3f GetLeft() const { return forward.cross(up).normalize(); }
-	Vector3f GetRight() const { return up.cross(forward).normalize(); }
+	Vector3f getLeft() const { return forward.cross(up).normalize(); }
+	Vector3f getRight() const { return up.cross(forward).normalize(); }
 
 	inline Vector3f getPosition() const { return position; }
 	inline Vector3f getForward() const { return forward; }

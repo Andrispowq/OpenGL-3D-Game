@@ -63,9 +63,9 @@ void GLPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>
 		{
 			Light* light = lights[i];
 
-			SetUniform(uniformName + "position", light->GetParent()->getWorldTransform()->GetPosition());
-			SetUniform(uniformName + "colour", light->GetColour());
-			SetUniform(uniformName + "intensity", light->GetIntensity());
+			SetUniform(uniformName + "position", light->getParent()->getWorldTransform()->getPosition());
+			SetUniform(uniformName + "colour", light->getColour());
+			SetUniform(uniformName + "intensity", light->getIntensity());
 		}
 		else
 		{
@@ -82,9 +82,9 @@ void GLPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>
 
 		Light* light = lights[i];
 
-		SetUniform(uniformName + "position", light->GetParent()->getWorldTransform()->GetPosition());
-		SetUniform(uniformName + "colour", light->GetColour());
-		SetUniform(uniformName + "intensity", light->GetIntensity());
+		SetUniform(uniformName + "position", light->getParent()->getWorldTransform()->getPosition());
+		SetUniform(uniformName + "colour", light->getColour());
+		SetUniform(uniformName + "intensity", light->getIntensity());
 	}
 #endif
 
@@ -95,30 +95,30 @@ void GLPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>
 
 void GLPBRShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
 {
-	Material* material = dynamic_cast<Renderer*>(object->GetComponent(RENDERER_COMPONENT))->GetMaterial();
+	Material* material = dynamic_cast<Renderer*>(object->GetComponent(RENDERER_COMPONENT))->getMaterial();
 
 	SetUniform("m_transform", object->getWorldTransform()->getTransformationMatrix());
 
-	material->GetTexture("albedoMap")->Bind(0);
+	material->getTexture("albedoMap")->Bind(0);
 	SetUniformi("material.albedoMap", 0);
-	material->GetTexture("normalMap")->Bind(1);
+	material->getTexture("normalMap")->Bind(1);
 	SetUniformi("material.normalMap", 1);
-	material->GetTexture("displacementMap")->Bind(2);
+	material->getTexture("displacementMap")->Bind(2);
 	SetUniformi("material.displacementMap", 2);
-	material->GetTexture("metallicMap")->Bind(3);
+	material->getTexture("metallicMap")->Bind(3);
 	SetUniformi("material.metallicMap", 3);
-	material->GetTexture("roughnessMap")->Bind(4);
+	material->getTexture("roughnessMap")->Bind(4);
 	SetUniformi("material.roughnessMap", 4);
-	material->GetTexture("occlusionMap")->Bind(5);
+	material->getTexture("occlusionMap")->Bind(5);
 	SetUniformi("material.occlusionMap", 5);
-	material->GetTexture("emissionMap")->Bind(6);
+	material->getTexture("emissionMap")->Bind(6);
 	SetUniformi("material.emissionMap", 6);
 
-	SetUniform("material.colour", material->GetVector3f("colour"));
+	SetUniform("material.colour", material->getVector3f("colour"));
 	SetUniformi("material.usesNormalMap", material->exists("normalMap"));
-	SetUniformf("material.heightScale", material->GetFloat("heightScale"));
-	SetUniformf("material.metallic", material->GetFloat("metallic"));
-	SetUniformf("material.roughness", material->GetFloat("roughness"));
-	SetUniformf("material.ambientOcclusion", material->GetFloat("ambientOcclusion"));
-	SetUniform("material.emission", material->GetVector3f("emission"));
+	SetUniformf("material.heightScale", material->getFloat("heightScale"));
+	SetUniformf("material.metallic", material->getFloat("metallic"));
+	SetUniformf("material.roughness", material->getFloat("roughness"));
+	SetUniformf("material.ambientOcclusion", material->getFloat("ambientOcclusion"));
+	SetUniform("material.emission", material->getVector3f("emission"));
 }

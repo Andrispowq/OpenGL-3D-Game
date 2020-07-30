@@ -2,7 +2,7 @@
 #include <glew.h>
 #include "VKPBRShader.h"
 
-VKPBRShader::VKPBRShader(Window* window) : VKShader(window->GetContext(), window->GetSwapchain())
+VKPBRShader::VKPBRShader(Window* window) : VKShader(window->getContext(), window->getSwapchain())
 {
 	AddShader(ResourceLoader::LoadShaderVK("vulkan/pbr/pbr_VS.spv"), VERTEX_SHADER);
 	AddShader(ResourceLoader::LoadShaderVK("vulkan/pbr/pbr_GS.spv"), GEOMETRY_SHADER);
@@ -48,9 +48,9 @@ void VKPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>
 		{
 			Light* light = lights[i];
 
-			SetUniform("lights", Vector4f(light->GetParent()->getWorldTransform()->GetPosition(), 0), baseOffset * 0 + currentOffset, instance_index);
-			SetUniform("lights", Vector4f(light->GetColour(), 0), baseOffset * 1 + currentOffset, instance_index);
-			SetUniform("lights", Vector4f(light->GetIntensity(), 0), baseOffset * 2 + currentOffset, instance_index);
+			SetUniform("lights", Vector4f(light->getParent()->getWorldTransform()->getPosition(), 0), baseOffset * 0 + currentOffset, instance_index);
+			SetUniform("lights", Vector4f(light->getColour(), 0), baseOffset * 1 + currentOffset, instance_index);
+			SetUniform("lights", Vector4f(light->getIntensity(), 0), baseOffset * 2 + currentOffset, instance_index);
 		}
 		else
 		{
@@ -60,32 +60,32 @@ void VKPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>
 		}
 	}
 
-  	BindSet(swapchain->GetDrawCommandBuffer(), 0, instance_index);
+  	BindSet(swapchain->getDrawCommandBuffer(), 0, instance_index);
 }
 
 void VKPBRShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
 {
-	Material* material = ((Renderer*)object->GetComponent(RENDERER_COMPONENT))->GetMaterial();
+	Material* material = ((Renderer*)object->GetComponent(RENDERER_COMPONENT))->getMaterial();
 
 	//Offset values are copied from shaders
 	SetUniform("m_transform", object->getWorldTransform()->getTransformationMatrix(), instance_index);
 
-	SetUniform("material", material->GetVector3f(COLOUR), 0, instance_index);
-	SetUniform("material", material->GetVector3f(EMISSION), 16, instance_index);
+	SetUniform("material", material->getVector3f(COLOUR), 0, instance_index);
+	SetUniform("material", material->getVector3f(EMISSION), 16, instance_index);
 	SetUniformi("material", material->exists(NORMAL_MAP), 32, instance_index);
-	SetUniformf("material", material->GetFloat(HEIGHT_SCALE), 36, instance_index);
-	SetUniformf("material", material->GetFloat(METALLIC), 40, instance_index);
-	SetUniformf("material", material->GetFloat(ROUGHNESS), 44, instance_index);
-	SetUniformf("material", material->GetFloat(OCCLUSION), 48, instance_index);
+	SetUniformf("material", material->getFloat(HEIGHT_SCALE), 36, instance_index);
+	SetUniformf("material", material->getFloat(METALLIC), 40, instance_index);
+	SetUniformf("material", material->getFloat(ROUGHNESS), 44, instance_index);
+	SetUniformf("material", material->getFloat(OCCLUSION), 48, instance_index);
 
-	SetTexture(ALBEDO_MAP, material->GetTexture(ALBEDO_MAP), instance_index);
-	SetTexture(DISPLACEMENT_MAP, material->GetTexture(DISPLACEMENT_MAP), instance_index);
-	SetTexture(NORMAL_MAP, material->GetTexture(NORMAL_MAP), instance_index);
-	SetTexture(METALLIC_MAP, material->GetTexture(METALLIC_MAP), instance_index);
-	SetTexture(ROUGHNESS_MAP, material->GetTexture(ROUGHNESS_MAP), instance_index);
-	SetTexture(OCCLUSION_MAP, material->GetTexture(OCCLUSION_MAP), instance_index);
-	SetTexture(EMISSION_MAP, material->GetTexture(EMISSION_MAP), instance_index);
+	SetTexture(ALBEDO_MAP, material->getTexture(ALBEDO_MAP), instance_index);
+	SetTexture(DISPLACEMENT_MAP, material->getTexture(DISPLACEMENT_MAP), instance_index);
+	SetTexture(NORMAL_MAP, material->getTexture(NORMAL_MAP), instance_index);
+	SetTexture(METALLIC_MAP, material->getTexture(METALLIC_MAP), instance_index);
+	SetTexture(ROUGHNESS_MAP, material->getTexture(ROUGHNESS_MAP), instance_index);
+	SetTexture(OCCLUSION_MAP, material->getTexture(OCCLUSION_MAP), instance_index);
+	SetTexture(EMISSION_MAP, material->getTexture(EMISSION_MAP), instance_index);
 
-	BindSet(swapchain->GetDrawCommandBuffer(), 1, instance_index);
-	BindSet(swapchain->GetDrawCommandBuffer(), 2, instance_index);
+	BindSet(swapchain->getDrawCommandBuffer(), 1, instance_index);
+	BindSet(swapchain->getDrawCommandBuffer(), 2, instance_index);
 }

@@ -48,7 +48,7 @@ namespace TextureLoader
 		}
 		else if (FrameworkConfig::api == Vulkan)
 		{
-			texture = new VKTexture(*((VKPhysicalDevice*)window->GetContext()->GetPhysicalDevice()), *((VKDevice*)window->GetContext()->GetDevice()), width, height);
+			texture = new VKTexture((VKPhysicalDevice*)window->getContext()->getPhysicalDevice(), (VKDevice*)window->getContext()->getDevice(), width, height);
 
 			texture->UploadTextureData((size_t)width * height * 4, channels, data, format);
 

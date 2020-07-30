@@ -26,7 +26,7 @@ void GLMeshVertexBuffer::Store(const Mesh& mesh)
 	float* vdata = mesh.GetVertexData();
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, mesh.getVertices().size() * Vertex::GetSize(), vdata, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, mesh.getVertices().size() * Vertex::getSize(), vdata, GL_STATIC_DRAW);
 
 	uint16_t* idata = mesh.GetIndexData();
 
@@ -37,10 +37,10 @@ void GLMeshVertexBuffer::Store(const Mesh& mesh)
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::GetNumberOfFloats()), (void*) (sizeof(float) * 0));
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::GetNumberOfFloats()), (void*) (sizeof(float) * 3));
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::GetNumberOfFloats()), (void*) (sizeof(float) * 5));
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::GetNumberOfFloats()), (void*) (sizeof(float) * 8));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::getNumberOfFloats()), (void*) (sizeof(float) * 0));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::getNumberOfFloats()), (void*) (sizeof(float) * 3));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::getNumberOfFloats()), (void*) (sizeof(float) * 5));
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::getNumberOfFloats()), (void*) (sizeof(float) * 8));
 
 	delete[] vdata;
 	delete[] idata;

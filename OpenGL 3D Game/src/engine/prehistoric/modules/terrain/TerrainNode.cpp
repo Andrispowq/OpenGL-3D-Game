@@ -16,11 +16,11 @@ TerrainNode::TerrainNode(Pipeline* pipeline, Pipeline* wireframePipeline, Terrai
 
 	localTransform = new Transform();
 
-	localTransform->SetScaling(localScaling);
-	localTransform->SetPosition(localPosition);
+	localTransform->setScaling(localScaling);
+	localTransform->setPosition(localPosition);
 
-	worldTransform->SetScaling({ TerrainConfig::scaleXZ, TerrainConfig::scaleY, TerrainConfig::scaleXZ });
-	worldTransform->SetPosition({ -TerrainConfig::scaleXZ / 2.0f, 0, -TerrainConfig::scaleXZ / 2.0f });
+	worldTransform->setScaling({ TerrainConfig::scaleXZ, TerrainConfig::scaleY, TerrainConfig::scaleXZ });
+	worldTransform->setPosition({ -TerrainConfig::scaleXZ / 2.0f, 0, -TerrainConfig::scaleXZ / 2.0f });
 
 	renderer = new Renderer(pipeline, nullptr, window);
 	wireframeRenderer = new Renderer(wireframePipeline, nullptr, window);
@@ -103,7 +103,7 @@ void TerrainNode::AddChildNodes(int lod)
 				ss << ", lod: ";
 				ss << lod;
 
-				AddChild(ss.str(), new TerrainNode(renderer->GetPipeline(), wireframeRenderer->GetPipeline(), maps,
+				AddChild(ss.str(), new TerrainNode(renderer->getPipeline(), wireframeRenderer->getPipeline(), maps,
 					window, camera, location + Vector2f(float(i), float(j)) * (gap / 2.f), lod, { float(i), float(j) }));
 			}
 		}

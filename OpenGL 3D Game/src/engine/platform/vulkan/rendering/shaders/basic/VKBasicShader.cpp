@@ -2,7 +2,7 @@
 #include <glew.h>
 #include "VKBasicShader.h"
 
-VKBasicShader::VKBasicShader(Window* window) : VKShader(window->GetContext(), window->GetSwapchain())
+VKBasicShader::VKBasicShader(Window* window) : VKShader(window->getContext(), window->getSwapchain())
 {
 	AddShader(ResourceLoader::LoadShaderVK("vulkan/basic/basic_VS.spv"), VERTEX_SHADER);
 	AddShader(ResourceLoader::LoadShaderVK("vulkan/basic/basic_FS.spv"), FRAGMENT_SHADER);
@@ -39,9 +39,9 @@ void VKBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light
 		{
 			Light* light = lights[i];
 
-			SetUniform("lights", Vector4f(light->GetParent()->getWorldTransform()->GetPosition(), 0), baseOffset * 0 + currentOffset, instance_index);
-			SetUniform("lights", Vector4f(light->GetColour(), 0), baseOffset * 1 + currentOffset, instance_index);
-			SetUniform("lights", Vector4f(light->GetIntensity(), 0), baseOffset * 2 + currentOffset, instance_index);
+			SetUniform("lights", Vector4f(light->getParent()->getWorldTransform()->getPosition(), 0), baseOffset * 0 + currentOffset, instance_index);
+			SetUniform("lights", Vector4f(light->getColour(), 0), baseOffset * 1 + currentOffset, instance_index);
+			SetUniform("lights", Vector4f(light->getIntensity(), 0), baseOffset * 2 + currentOffset, instance_index);
 		}
 		else
 		{
@@ -51,23 +51,23 @@ void VKBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light
 		}
 	}
 
-	BindSet(swapchain->GetDrawCommandBuffer(), 0, instance_index);
+	BindSet(swapchain->getDrawCommandBuffer(), 0, instance_index);
 }
 
 void VKBasicShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
 {
 	SetUniform("model", object->getWorldTransform()->getTransformationMatrix(), instance_index);
 
-	Material* material = ((Renderer*)object->GetComponent(RENDERER_COMPONENT))->GetMaterial();
+	Material* material = ((Renderer*)object->GetComponent(RENDERER_COMPONENT))->getMaterial();
 
-	SetTexture(ALBEDO_MAP, material->GetTexture(ALBEDO_MAP), instance_index);
-	SetTexture(METALLIC_MAP, material->GetTexture(METALLIC_MAP), instance_index);
-	SetTexture(ROUGHNESS_MAP, material->GetTexture(ROUGHNESS_MAP), instance_index);
+	SetTexture(ALBEDO_MAP, material->getTexture(ALBEDO_MAP), instance_index);
+	SetTexture(METALLIC_MAP, material->getTexture(METALLIC_MAP), instance_index);
+	SetTexture(ROUGHNESS_MAP, material->getTexture(ROUGHNESS_MAP), instance_index);
 	
-	SetUniform("material", material->GetVector3f(COLOUR), instance_index);
-	SetUniformf("material", material->GetFloat(METALLIC), Vector3f::size() + sizeof(float), instance_index);
-	SetUniformf("material", material->GetFloat(ROUGHNESS), Vector3f::size() + 2 * sizeof(float), instance_index);
+	SetUniform("material", material->getVector3f(COLOUR), instance_index);
+	SetUniformf("material", material->getFloat(METALLIC), Vector3f::size() + sizeof(float), instance_index);
+	SetUniformf("material", material->getFloat(ROUGHNESS), Vector3f::size() + 2 * sizeof(float), instance_index);
 	SetUniformf("material", EngineConfig::rendererGamma, Vector3f::size() + 3 * sizeof(float), instance_index);
 
-	BindSet(swapchain->GetDrawCommandBuffer(), 1);
+	BindSet(swapchain->getDrawCommandBuffer(), 1);
 }

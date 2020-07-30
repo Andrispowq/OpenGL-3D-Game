@@ -11,19 +11,19 @@ void GUISlider::PreUpdate(Engine* engine)
 {
 	float* _data = (float*)data;
 
-	if (InputInstance.IsButtonHeld(PR_MOUSE_BUTTON_LEFT) && inside(InputInstance.GetCursorPosition()))
+	if (InputInstance.IsButtonHeld(PR_MOUSE_BUTTON_LEFT) && inside(InputInstance.getCursorPosition()))
 	{
 		if (cursorOldPositionX == -1)
 		{
-			cursorOldPositionX = InputInstance.GetCursorPosition().x;
+			cursorOldPositionX = InputInstance.getCursorPosition().x;
 		}
 		else
 		{
-			float newPosition = InputInstance.GetCursorPosition().x;
+			float newPosition = InputInstance.getCursorPosition().x;
 
 			float diff = newPosition - cursorOldPositionX;
 			
-			float dX = std::min(diff / (worldTransform->GetScaling().x * window->GetWidth() * 2), 1.0f);
+			float dX = std::min(diff / (worldTransform->getScaling().x * window->getWidth() * 2), 1.0f);
 			progress += dX;
 			progress = std::max(std::min(progress, 1.0f), 0.0f);
 			cursorOldPositionX = newPosition;

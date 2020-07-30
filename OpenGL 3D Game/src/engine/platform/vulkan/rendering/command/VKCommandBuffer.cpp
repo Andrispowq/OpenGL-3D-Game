@@ -40,5 +40,5 @@ void VKCommandBuffer::UnbindBuffer() const
 
 void VKCommandBuffer::DeleteBuffer()
 {
-	vkFreeCommandBuffers(device, commandPool->GetCommandPool(), 1, &commandBuffer);
+	vkFreeCommandBuffers(device, commandPool->getCommandPool(), 1, &commandBuffer);
 }

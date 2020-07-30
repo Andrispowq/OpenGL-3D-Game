@@ -41,16 +41,16 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 					if (tokens[3] == "clockwise")
 					{
-						vbo->SetFrontFace(FrontFace::CLOCKWISE);
+						vbo->setFrontFace(FrontFace::CLOCKWISE);
 					}
 					else if (tokens[3] == "counter-clockwise")
 					{
-						vbo->SetFrontFace(FrontFace::COUNTER_CLOCKWISE);
+						vbo->setFrontFace(FrontFace::COUNTER_CLOCKWISE);
 					}
 					else
 					{
 						PR_LOG_ERROR("Double-sided meshes are not yet supported!\n");
-						vbo->SetFrontFace(FrontFace::DOUBLE_SIDED);
+						vbo->setFrontFace(FrontFace::DOUBLE_SIDED);
 					}
 
 					models.insert(std::make_pair(tokens[2], manager->addVertexBuffer(vbo)));
@@ -95,7 +95,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 							continue;
 						}
 
-						material->AddTexture(tokens[1] + "Map", textures.at(tokens[2]));
+						material->addTexture(tokens[1] + "Map", textures.at(tokens[2]));
 					}
 
 					if (nameTokens[2] == "vec4")
@@ -103,32 +103,32 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 						std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
 
 						Vector4f value = Vector4f((float) std::atof(compTokens[0].c_str()), (float) std::atof(compTokens[1].c_str()), (float) std::atof(compTokens[2].c_str()), (float) std::atof(compTokens[3].c_str()));
-						material->AddVector4f(tokens[1], value);
+						material->addVector4f(tokens[1], value);
 					}
 					if (nameTokens[2] == "vec3")
 					{
 						std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
 
 						Vector3f value = Vector3f((float) std::atof(compTokens[0].c_str()), (float) std::atof(compTokens[1].c_str()), (float) std::atof(compTokens[2].c_str()));
-						material->AddVector3f(tokens[1], value);
+						material->addVector3f(tokens[1], value);
 					}
 					if (nameTokens[2] == "vec2")
 					{
 						std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
 
 						Vector2f value = Vector2f((float) std::atof(compTokens[0].c_str()), (float) std::atof(compTokens[1].c_str()));
-						material->AddVector2f(tokens[1], value);
+						material->addVector2f(tokens[1], value);
 					}
 
 					if (nameTokens[2] == "float")
 					{
 						float value = static_cast<float>(std::atof(tokens[2].c_str()));
-						material->AddFloat(tokens[1], value);
+						material->addFloat(tokens[1], value);
 					}
 					if (nameTokens[2] == "int")
 					{
 						int value = std::atoi(tokens[2].c_str());
-						material->AddInt(tokens[1], value);
+						material->addInt(tokens[1], value);
 					}
 				}
 			}
@@ -166,7 +166,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 						GameObject* objToAdd = root;
 						while (true)
 						{
-							objToAdd = reinterpret_cast<GameObject*>(objToAdd->GetChildren()[nameTokens[i]]);
+							objToAdd = reinterpret_cast<GameObject*>(objToAdd->getChildren()[nameTokens[i]]);
 							i++;
 
 							if(nameTokens.size() < (size_t(i) + 1))
@@ -201,7 +201,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 			//Adding components to objects
 			if (nameTokens[0] == "object")
 			{
-				auto list = root->GetChildren();
+				auto list = root->getChildren();
 
 				auto index = list.find(nameTokens[1]);
 
@@ -282,10 +282,10 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 								reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);;
 							}
 
-							pipeline->SetViewportStart({ 0, 0 });
-							pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
-							pipeline->SetScissorStart({ 0, 0 });
-							pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
+							pipeline->setViewportStart({ 0, 0 });
+							pipeline->setViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
+							pipeline->setScissorStart({ 0, 0 });
+							pipeline->setScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
 
 							pipeline->CreatePipeline(window);
 
@@ -305,9 +305,9 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 						Light* light = new Light();
 
 						std::vector<std::string> posTokens = Util::Split(compTokens[0], ',');
-						light->SetColour({ (float) std::atof(posTokens[0].c_str()), (float)std::atof(posTokens[1].c_str()), (float)std::atof(posTokens[2].c_str()) });
+						light->setColour({ (float) std::atof(posTokens[0].c_str()), (float)std::atof(posTokens[1].c_str()), (float)std::atof(posTokens[2].c_str()) });
 
-						light->SetIntensity((float) std::atof(compTokens[1].c_str()));
+						light->setIntensity((float) std::atof(compTokens[1].c_str()));
 
 						obj->AddComponent("Light", light);
 					}
@@ -318,7 +318,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 					GameObject* objToAdd = obj;
 					while (true)
 					{
-						auto list = objToAdd->GetChildren();
+						auto list = objToAdd->getChildren();
 
 						auto index = list.find(nameTokens[i]);
 
@@ -400,11 +400,11 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 										reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);;
 									}
 
-									pipeline->SetViewportStart({ 0, 0 });
-									pipeline->SetViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
-									pipeline->SetScissorStart({ 0, 0 });
-									pipeline->SetScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
-
+									pipeline->setViewportStart({ 0, 0 });
+									pipeline->setViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
+									pipeline->setScissorStart({ 0, 0 });
+									pipeline->setScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
+									
 									pipeline->CreatePipeline(window);
 
 									pipelines.insert(std::make_pair(compTokens[0] + "," + compTokens[1], pipeline));
@@ -425,9 +425,9 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 								Light* light = new Light();
 
 								std::vector<std::string> posTokens = Util::Split(compTokens[0], ',');
-								light->SetColour({ (float)std::atof(posTokens[0].c_str()), (float)std::atof(posTokens[1].c_str()), (float)std::atof(posTokens[2].c_str()) });
+								light->setColour({ (float)std::atof(posTokens[0].c_str()), (float)std::atof(posTokens[1].c_str()), (float)std::atof(posTokens[2].c_str()) });
 
-								light->SetIntensity((float)std::atof(compTokens[1].c_str()));
+								light->setIntensity((float)std::atof(compTokens[1].c_str()));
 
 								objToAdd->AddComponent("Light", light);
 

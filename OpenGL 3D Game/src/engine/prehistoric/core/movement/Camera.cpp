@@ -69,9 +69,9 @@ void Camera::LogStage() const
 	PR_LOG_MESSAGE("\tUp direction: ");
 	up.print();
 	PR_LOG_MESSAGE("\tRight direction: ");
-	GetRight().print();
+	getRight().print();
 	PR_LOG_MESSAGE("\tLeft direction: ");
-	GetLeft().print();
+	getLeft().print();
 }
 
 void Camera::Update(Window* window, float delta)
@@ -88,82 +88,82 @@ void Camera::Update(Window* window, float delta)
 	bool movedForward = false, movedBackward = false, movedRight = false, movedLeft = false,
 		rotUp = false, rotDown = false, rotRight = false, rotLeft = false;
 
-	//PR_LOG_MESSAGE("Forward: %f\n", inputs[1]->IsForward());
+	//PR_LOG_MESSAGE("Forward: %f\n", inputs[1]->isForward());
 
 	for (CameraInput* in : inputs)
 	{
-		if (in->IsForward() != 0 && !movedForward)
+		if (in->isForward() != 0 && !movedForward)
 		{
-			Move(forward, movAmt * in->IsForward() * delta);
+			Move(forward, movAmt * in->isForward() * delta);
 			movedForward = true;
 		}
-		if (in->IsBackward() != 0 && !movedBackward)
+		if (in->isBackward() != 0 && !movedBackward)
 		{
-			Move(forward, -movAmt * in->IsBackward() * delta);
+			Move(forward, -movAmt * in->isBackward() * delta);
 			movedBackward = true;
 		}
-		if (in->IsLeft() != 0 && !movedLeft)
+		if (in->isLeft() != 0 && !movedLeft)
 		{
-			Move(GetLeft(), movAmt * in->IsLeft() * delta);
+			Move(getLeft(), movAmt * in->isLeft() * delta);
 			movedLeft = true;
 		}
-		if (in->IsRight() != 0 && !movedRight)
+		if (in->isRight() != 0 && !movedRight)
 		{
-			Move(GetLeft(), -movAmt * in->IsRight() * delta);
+			Move(getLeft(), -movAmt * in->isRight() * delta);
 			movedRight = true;
 		}
 
-		if (in->IsUp() != 0 && !rotUp)
+		if (in->isUp() != 0 && !rotUp)
 		{
-			RotateX(static_cast<float>(-rotAmt * 2.0 * in->IsUp() * delta));
+			RotateX(static_cast<float>(-rotAmt * 2.0 * in->isUp() * delta));
 			rotUp = true;
 		}
-		if (in->IsDown() != 0 && !rotDown)
+		if (in->isDown() != 0 && !rotDown)
 		{
-			RotateX(static_cast<float>(rotAmt * 2.0 * in->IsDown() * delta));
+			RotateX(static_cast<float>(rotAmt * 2.0 * in->isDown() * delta));
 			rotDown = true;
 		}
-		if (in->IsRightRot() != 0 && !rotRight)
+		if (in->isRightRot() != 0 && !rotRight)
 		{
 			if (FrameworkConfig::api == Vulkan)
-				RotateY(static_cast<float>(-rotAmt * 2.0 * in->IsRightRot() * delta));
+				RotateY(static_cast<float>(-rotAmt * 2.0 * in->isRightRot() * delta));
 			else if(FrameworkConfig::api == OpenGL)
-				RotateY(static_cast<float>(rotAmt * 2.0 * in->IsRightRot() * delta));
+				RotateY(static_cast<float>(rotAmt * 2.0 * in->isRightRot() * delta));
 			rotRight = true;
 		}
-		if (in->IsLeftRot() != 0 && !rotLeft)
+		if (in->isLeftRot() != 0 && !rotLeft)
 		{
 			if (FrameworkConfig::api == Vulkan)
-				RotateY(static_cast<float>(rotAmt * 2.0 * in->IsLeftRot() * delta));
+				RotateY(static_cast<float>(rotAmt * 2.0 * in->isLeftRot() * delta));
 			else if (FrameworkConfig::api == OpenGL)
-				RotateY(static_cast<float>(-rotAmt * 2.0 * in->IsLeftRot() * delta));
+				RotateY(static_cast<float>(-rotAmt * 2.0 * in->isLeftRot() * delta));
 			rotLeft = true;
 		}
 	}
 
-	/*if (InputInstance.IsKeyHeld(PR_KEY_W))
+	/*if (InputInstance.isKeyHeld(PR_KEY_W))
 		Move(forward, movAmt);
-	if (InputInstance.IsKeyHeld(PR_KEY_S))
+	if (InputInstance.isKeyHeld(PR_KEY_S))
 		Move(forward, -movAmt);
-	if (InputInstance.IsKeyHeld(PR_KEY_A))
-		Move(GetLeft(), movAmt);
-	if (InputInstance.IsKeyHeld(PR_KEY_D))
-		Move(GetLeft(), -movAmt);
+	if (InputInstance.isKeyHeld(PR_KEY_A))
+		Move(getLeft(), movAmt);
+	if (InputInstance.isKeyHeld(PR_KEY_D))
+		Move(getLeft(), -movAmt);
 
-	if (InputInstance.IsKeyHeld(PR_KEY_UP))
+	if (InputInstance.isKeyHeld(PR_KEY_UP))
 		RotateX(-rotAmt / 8.0);
-	if (InputInstance.IsKeyHeld(PR_KEY_DOWN))
+	if (InputInstance.isKeyHeld(PR_KEY_DOWN))
 		RotateX(rotAmt / 8.0);
-	if (InputInstance.IsKeyHeld(PR_KEY_LEFT))
+	if (InputInstance.isKeyHeld(PR_KEY_LEFT))
 		RotateY(-rotAmt / 8.0);
-	if (InputInstance.IsKeyHeld(PR_KEY_RIGHT))
+	if (InputInstance.isKeyHeld(PR_KEY_RIGHT))
 		RotateY(rotAmt / 8.0);*/
 
 	//Free mouse rotation
 	if (InputInstance.IsButtonHeld((InputCode) 2))
 	{
-		float dy = InputInstance.GetLockedCursorPosition().y - InputInstance.GetCursorPosition().y;
-		float dx = InputInstance.GetLockedCursorPosition().x - InputInstance.GetCursorPosition().x;
+		float dy = InputInstance.getLockedCursorPosition().y - InputInstance.getCursorPosition().y;
+		float dx = InputInstance.getLockedCursorPosition().x - InputInstance.getCursorPosition().x;
 
 		//y-axis rotation
 		if (dy != 0)
@@ -253,7 +253,7 @@ void Camera::Update(Window* window, float delta)
 			}
 		}
 
-		InputInstance.SetCursorPositionOnScreen(window, InputInstance.GetLockedCursorPosition());
+		InputInstance.setCursorPositionOnScreen(window, InputInstance.getLockedCursorPosition());
 	}
 
 	if (position != previousPosition)
@@ -289,7 +289,7 @@ void Camera::RotateY(const float& angle)
 	this->up = forward.cross(hAxis).normalize();
 }
 
-void Camera::SetProjection(const float& fov, const float& width, const float& height)
+void Camera::SetProjection(float fov, float width, float height)
 {
 	this->fovY = fov;
 	this->width = width;

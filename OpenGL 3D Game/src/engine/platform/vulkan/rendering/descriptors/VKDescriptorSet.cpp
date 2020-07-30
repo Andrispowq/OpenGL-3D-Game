@@ -8,7 +8,7 @@ VKDescriptorSet::~VKDescriptorSet()
 		delete binding;
 	}
 
-	vkDestroyDescriptorSetLayout(device->GetDevice(), layout, nullptr);
+	vkDestroyDescriptorSetLayout(device->getDevice(), layout, nullptr);
 }
 
 void VKDescriptorSet::addBinding(VKDescriptorSetBinding* binding)
@@ -32,7 +32,7 @@ void VKDescriptorSet::finalize()
 	_createInfo.bindingCount = (uint32_t)_bindings.size();
 	_createInfo.pBindings = _bindings.data();
 
-	if (vkCreateDescriptorSetLayout(device->GetDevice(), &_createInfo, nullptr, &layout) != VK_SUCCESS)
+	if (vkCreateDescriptorSetLayout(device->getDevice(), &_createInfo, nullptr, &layout) != VK_SUCCESS)
 	{
 		PR_LOG_RUNTIME_ERROR("VKDescriptorSet couldn't create a VkDescriptorSetLayout object!\n");
 	}

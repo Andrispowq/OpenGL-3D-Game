@@ -20,9 +20,9 @@ RenderingEngine::RenderingEngine()
 		PR_LOG_RUNTIME_ERROR("The creation of the window has failed!\n");
 	}
 
-	Capabilities::GetInstance()->QueryCapabilities(window->GetContext()->GetPhysicalDevice());
+	Capabilities::getInstance()->QueryCapabilities(window->getContext()->getPhysicalDevice());
 	DeviceProperties properties;
-	properties.ListProperties(*Capabilities::GetInstance());
+	properties.ListProperties(*Capabilities::getInstance());
 
 	window->SetClearColor(0.23f, 0.78f, 0.88f, 1.0f);
 
@@ -64,7 +64,7 @@ void RenderingEngine::Update(float delta)
 {
 	if (InputInstance.IsKeyPushed(PR_KEY_ESCAPE))
 	{
-		window->SetClosed(true);
+		window->setClosed(true);
 	}
 
 	if (InputInstance.IsKeyPushed(PR_KEY_F11))
@@ -77,11 +77,11 @@ void RenderingEngine::Update(float delta)
 		wireframeMode = !wireframeMode;
 	}
 
-	if (window->GetResized())
+	if (window->getResized())
 	{
-		camera->SetProjection(camera->getFov(), (float)window->GetWidth(), (float)window->GetHeight());
+		camera->SetProjection(camera->getFov(), (float)window->getWidth(), (float)window->getHeight());
 		Renderable::RecreatePipelines();
-		window->SetResized(false);
+		window->setResized(false);
 	}
 
 	camera->Update(window, delta);
@@ -89,7 +89,7 @@ void RenderingEngine::Update(float delta)
 
 void RenderingEngine::Render(GameObject* root)
 {
-	window->GetSwapchain()->PrepareRendering();
+	window->getSwapchain()->PrepareRendering();
 
 	for (auto pipeline : models_3d)
 	{
@@ -98,7 +98,7 @@ void RenderingEngine::Render(GameObject* root)
 		pl->BindPipeline();
 		pl->getShader()->UpdateShaderUniforms(camera, lights);
 		//The models array is guaranteed to contain at least on entry for each pipeline, so this is safe to get the first element
-		pl->getShader()->UpdateSharedUniforms(pipeline.second[0]->GetParent()); 
+		pl->getShader()->UpdateSharedUniforms(pipeline.second[0]->getParent()); 
 
 		for (auto renderer : pipeline.second)
 		{
@@ -116,7 +116,7 @@ void RenderingEngine::Render(GameObject* root)
 		pl->BindPipeline();
 		pl->getShader()->UpdateShaderUniforms(camera, lights);
 		//The models array is guaranteed to contain at least on entry for each pipeline, so this is safe to get the first element
-		pl->getShader()->UpdateSharedUniforms(pipeline.second[0]->GetParent());
+		pl->getShader()->UpdateSharedUniforms(pipeline.second[0]->getParent());
 
 		for (auto renderer : pipeline.second)
 		{
@@ -133,7 +133,7 @@ void RenderingEngine::Render(GameObject* root)
 		pl->BindPipeline();
 		pl->getShader()->UpdateShaderUniforms(camera, lights);
 		//The models array is guaranteed to contain at least on entry for each pipeline, so this is safe to get the first element
-		pl->getShader()->UpdateSharedUniforms(pipeline.second[0]->GetParent());
+		pl->getShader()->UpdateSharedUniforms(pipeline.second[0]->getParent());
 
 		for (auto renderer : pipeline.second)
 		{
@@ -144,7 +144,7 @@ void RenderingEngine::Render(GameObject* root)
 	}
 	//TODO: enable depth testing 
 
-	window->GetSwapchain()->EndRendering();
+	window->getSwapchain()->EndRendering();
 
 	window->Render();
 
@@ -157,7 +157,7 @@ void RenderingEngine::Render(GameObject* root)
 
 void register_model(std::unordered_map<Pipeline*, std::vector<Renderable*>>& map, Renderable* renderable)
 {
-	Pipeline* pipeline = renderable->GetPipeline();
+	Pipeline* pipeline = renderable->getPipeline();
 
 	if (map.find(pipeline) != map.end())
 	{
@@ -191,7 +191,7 @@ void RenderingEngine::AddModel(Renderable* renderable)
 
 void RenderingEngine::AddLight(Light* light)
 {
-	if (light->IsSun())
+	if (light->isSun())
 		sun = light;
 
 	lights.push_back(light);

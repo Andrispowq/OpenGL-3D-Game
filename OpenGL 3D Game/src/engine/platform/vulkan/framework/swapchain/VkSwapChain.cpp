@@ -242,7 +242,7 @@ void VKSwapchain::SetWindowSize(uint32_t width, uint32_t height)
     vkDestroySwapchainKHR(device->getDevice(), swapchain, nullptr);
 
     //Then we create new of them
-    SwapChainSupportDetails swapchainSupport = VKUtil::QuerySwapChainSupport(surface->getSurface(), physicalDevice->getPhysicalDevice());
+    SwapChainSupportDetails swapchainSupport = VKUtil::QuerySwapChainSupport(physicalDevice->getPhysicalDevice(), surface->getSurface());
 
     VkSurfaceFormatKHR surfaceFormat = VKUtil::ChooseSwapSurfaceFormat(swapchainSupport.formats);
     VkPresentModeKHR presentMode = VKUtil::ChooseSwapPresentMode(swapchainSupport.presentModes);
@@ -265,7 +265,7 @@ void VKSwapchain::SetWindowSize(uint32_t width, uint32_t height)
     createInfo.imageArrayLayers = 1;
     createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-    QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface->getSurface(), physicalDevice->getPhysicalDevice());
+    QueueFamilyIndices indices = VKUtil::FindQueueFamilies(physicalDevice->getPhysicalDevice(), surface->getSurface());
     uint32_t queueFamilyIndices[] = { indices.graphicsFamily, indices.presentFamily };
 
     if (indices.graphicsFamily != indices.presentFamily)
@@ -344,7 +344,7 @@ void VKSwapchain::SetWindowSize(uint32_t width, uint32_t height)
     }
 }
 
-void VKSwapchain::SetClearColor(const float& red, const float& green, const float& blue, const float& alpha)
+void VKSwapchain::SetClearColor(float red, float green, float blue, float alpha)
 {
     clearColor = { red, green, blue, alpha };
 }

@@ -266,8 +266,8 @@ void VKShader::SetTexture(const std::string& name, Texture* value, uint32_t inst
 	{
 		VkDescriptorImageInfo imageInfo = {};
 		imageInfo.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-		imageInfo.imageView = tex->GetTextureImageView();
-		imageInfo.sampler = tex->GetTextureSampler();
+		imageInfo.imageView = tex->getTextureImageView();
+		imageInfo.sampler = tex->getTextureSampler();
 
 		sets[i].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
 		sets[i].dstSet = descriptorPool->getSet(location.first, instance_index)->getSets()[i];

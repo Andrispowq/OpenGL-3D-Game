@@ -50,9 +50,9 @@ void GLBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light
 		{
 			Light* light = lights[i];
 
-			SetUniform(uniformName + "position", light->GetParent()->getWorldTransform()->GetPosition());
-			SetUniform(uniformName + "colour", light->GetColour());
-			SetUniform(uniformName + "intensity", light->GetIntensity());
+			SetUniform(uniformName + "position", light->getParent()->getWorldTransform()->getPosition());
+			SetUniform(uniformName + "colour", light->getColour());
+			SetUniform(uniformName + "intensity", light->getIntensity());
 		}
 		else
 		{
@@ -69,9 +69,9 @@ void GLBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light
 
 		Light* light = lights[i];
 
-		SetUniform(uniformName + "position", light->GetParent()->getWorldTransform()->GetPosition());
-		SetUniform(uniformName + "colour", light->GetColour());
-		SetUniform(uniformName + "intensity", light->GetIntensity());
+		SetUniform(uniformName + "position", light->getParent()->getWorldTransform()->getPosition());
+		SetUniform(uniformName + "colour", light->getColour());
+		SetUniform(uniformName + "intensity", light->getIntensity());
 	}
 #endif
 
@@ -81,18 +81,18 @@ void GLBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light
 
 void GLBasicShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
 {
-	Material* material = dynamic_cast<Renderer*>(object->GetComponent("Renderer"))->GetMaterial();
+	Material* material = dynamic_cast<Renderer*>(object->GetComponent("Renderer"))->getMaterial();
 
 	SetUniform("m_transform", object->getWorldTransform()->getTransformationMatrix());
 
-	material->GetTexture("albedoMap")->Bind(0);
+	material->getTexture("albedoMap")->Bind(0);
 	SetUniformi("material.albedoMap", 0);
-	material->GetTexture("metallicMap")->Bind(1);
+	material->getTexture("metallicMap")->Bind(1);
 	SetUniformi("material.metallicMap", 2);
-	material->GetTexture("roughnessMap")->Bind(2);
+	material->getTexture("roughnessMap")->Bind(2);
 	SetUniformi("material.roughnessMap", 2);
 
-	SetUniform("material.colour", material->GetVector3f("colour"));
-	SetUniformf("material.metallic", material->GetFloat("metallic"));
-	SetUniformf("material.roughness", material->GetFloat("roughness"));
+	SetUniform("material.colour", material->getVector3f("colour"));
+	SetUniformf("material.metallic", material->getFloat("metallic"));
+	SetUniformf("material.roughness", material->getFloat("roughness"));
 }
