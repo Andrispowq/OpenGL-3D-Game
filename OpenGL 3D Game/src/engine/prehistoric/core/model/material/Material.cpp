@@ -9,37 +9,37 @@ Material::Material(AssetManager* manager, Window* window)
 	textureIDs.insert(std::make_pair("DEFAULT_TEX", manager->addTexture(texture)));
 }
 
-void Material::AddTexture(const std::string& key, size_t textureID)
+void Material::addTexture(const std::string& key, size_t textureID)
 {
 	textureIDs.insert(std::make_pair(key, textureID));
 }
 
-void Material::AddVector4f(const std::string& key, Vector4f value)
+void Material::addVector4f(const std::string& key, Vector4f value)
 {
 	vector4s.insert(std::make_pair(key, value));
 }
 
-void Material::AddVector3f(const std::string& key, Vector3f value)
+void Material::addVector3f(const std::string& key, Vector3f value)
 {
 	vector3s.insert(std::make_pair(key, value));
 }
 
-void Material::AddVector2f(const std::string& key, Vector2f value)
+void Material::addVector2f(const std::string& key, Vector2f value)
 {
 	vector2s.insert(std::make_pair(key, value));
 }
 
-void Material::AddFloat(const std::string& key, float value)
+void Material::addFloat(const std::string& key, float value)
 {
 	floats.insert(std::make_pair(key, value));
 }
 
-void Material::AddInt(const std::string& key, int value)
+void Material::addInt(const std::string& key, int value)
 {
 	ints.insert(std::make_pair(key, value));
 }
 
-Texture* Material::GetTexture(const std::string& key) const
+Texture* Material::getTexture(const std::string& key) const
 {
 	auto index = textureIDs.find(key);
 	if (index == textureIDs.end())
@@ -48,7 +48,7 @@ Texture* Material::GetTexture(const std::string& key) const
 	return manager->getTexture(index->second);
 }
 
-Vector4f Material::GetVector4f(const std::string& key) const
+Vector4f Material::getVector4f(const std::string& key) const
 {
 	auto index = vector4s.find(key);
 	if (index == vector4s.end())
@@ -57,7 +57,7 @@ Vector4f Material::GetVector4f(const std::string& key) const
 	return index->second;
 }
 
-Vector3f Material::GetVector3f(const std::string& key) const
+Vector3f Material::getVector3f(const std::string& key) const
 {
 	auto index = vector3s.find(key);
 	if (index == vector3s.end())
@@ -66,7 +66,7 @@ Vector3f Material::GetVector3f(const std::string& key) const
 	return index->second;
 }
 
-Vector2f Material::GetVector2f(const std::string& key) const
+Vector2f Material::getVector2f(const std::string& key) const
 {
 	auto index = vector2s.find(key);
 	if (index == vector2s.end())
@@ -75,7 +75,7 @@ Vector2f Material::GetVector2f(const std::string& key) const
 	return index->second;
 }
 
-float Material::GetFloat(const std::string& key) const
+float Material::getFloat(const std::string& key) const
 {
 	auto index = floats.find(key);
 	if (index == floats.end())
@@ -84,7 +84,7 @@ float Material::GetFloat(const std::string& key) const
 	return index->second;
 }
 
-int Material::GetInt(const std::string& key) const
+int Material::getInt(const std::string& key) const
 {
 	auto index = ints.find(key);
 	if (index == ints.end())

@@ -6,7 +6,7 @@
 
 namespace VKUtil
 {
-	void VKUtil::Init(VkPhysicalDevice& physicalDevice, VkDevice& device)
+	void VKUtil::Init(VkPhysicalDevice physicalDevice, VkDevice device)
 	{
 		VkCommandPoolCreateInfo info = {};
 		info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -17,12 +17,12 @@ namespace VKUtil
 		}
 	}
 
-	void VKUtil::CleanUp(VkDevice& device)
+	void VKUtil::CleanUp(VkDevice device)
 	{
 		vkDestroyCommandPool(device, copyCommandPool, nullptr);
 	}
 
-	QueueFamilyIndices VKUtil::FindQueueFamilies(VkSurfaceKHR& surface, VkPhysicalDevice& device)
+	QueueFamilyIndices VKUtil::FindQueueFamilies(VkPhysicalDevice device, VkSurfaceKHR surface)
 	{
 		QueueFamilyIndices indices = { 0, false };
 
@@ -62,7 +62,7 @@ namespace VKUtil
 		return indices;
 	}
 
-	SwapChainSupportDetails VKUtil::QuerySwapChainSupport(VkSurfaceKHR& surface, VkPhysicalDevice& device)
+	SwapChainSupportDetails VKUtil::QuerySwapChainSupport(VkPhysicalDevice device, VkSurfaceKHR surface)
 	{
 		SwapChainSupportDetails details;
 		vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device, surface, &details.capabilities);
@@ -131,7 +131,7 @@ namespace VKUtil
 		}
 	}
 
-	VkFormat VKUtil::FindSupportedFormat(VkPhysicalDevice& physicalDevice, const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
+	VkFormat VKUtil::FindSupportedFormat(VkPhysicalDevice physicalDevice, const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
 	{
 		for (VkFormat format : candidates) 
 		{
@@ -152,7 +152,7 @@ namespace VKUtil
 		return VK_FORMAT_R8G8B8A8_SRGB;
 	}
 
-	uint32_t VKUtil::FindMemoryType(uint32_t typeFilter, VkPhysicalDevice& physicalDevice, VkMemoryPropertyFlags properties)
+	uint32_t VKUtil::FindMemoryType(VkPhysicalDevice physicalDevice, uint32_t typeFilter, VkMemoryPropertyFlags properties)
 	{
 		VkPhysicalDeviceMemoryProperties memProperties;
 		vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memProperties);
@@ -169,7 +169,7 @@ namespace VKUtil
 		return 0;
 	}
 
-	void VKUtil::CreateBuffer(VkPhysicalDevice& physicalDevice, VkDevice& device, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
+	void VKUtil::CreateBuffer(VkPhysicalDevice physicalDevice, VkDevice device, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory)
 	{
 		VkBufferCreateInfo bufferInfo = {};
 		bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
@@ -188,7 +188,7 @@ namespace VKUtil
 		VkMemoryAllocateInfo allocInfo = {};
 		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 		allocInfo.allocationSize = memRequirements.size;
-		allocInfo.memoryTypeIndex = FindMemoryType(memRequirements.memoryTypeBits, physicalDevice, properties);
+		allocInfo.memoryTypeIndex = FindMemoryType(physicalDevice, memRequirements.memoryTypeBits, properties);
 
 		if (vkAllocateMemory(device, &allocInfo, nullptr, &bufferMemory) != VK_SUCCESS)
 		{
@@ -198,7 +198,7 @@ namespace VKUtil
 		vkBindBufferMemory(device, buffer, bufferMemory, 0);
 	}
 
-	void VKUtil::CopyBuffer(VKDevice& device, VkBuffer& srcBuffer, VkBuffer& dstBuffer, VkDeviceSize& size)
+	void VKUtil::CopyBuffer(VKDevice* device, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size)
 	{
 		VkCommandBufferAllocateInfo copyBufferAI = {};
 		copyBufferAI.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -207,7 +207,7 @@ namespace VKUtil
 		copyBufferAI.commandBufferCount = 1;
 
 		VkCommandBuffer commandBuffer;
-		vkAllocateCommandBuffers(device.GetDevice(), &copyBufferAI, &commandBuffer);
+		vkAllocateCommandBuffers(device->getDevice(), &copyBufferAI, &commandBuffer);
 
 		VkCommandBufferBeginInfo beginInfo = {};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -229,13 +229,13 @@ namespace VKUtil
 		submitInfo.commandBufferCount = 1;
 		submitInfo.pCommandBuffers = &commandBuffer;
 
-		vkQueueSubmit(device.GetGraphicsQueue().GetQueue(), 1, &submitInfo, VK_NULL_HANDLE);
-		vkQueueWaitIdle(device.GetGraphicsQueue().GetQueue());
+		vkQueueSubmit(device->getGraphicsQueue().getQueue(), 1, &submitInfo, VK_NULL_HANDLE);
+		vkQueueWaitIdle(device->getGraphicsQueue().getQueue());
 
-		vkFreeCommandBuffers(device.GetDevice(), copyCommandPool, 1, &commandBuffer);
+		vkFreeCommandBuffers(device->getDevice(), copyCommandPool, 1, &commandBuffer);
 	}
 
-	void VKUtil::CopyBuffer(VKDevice& device, VkBuffer& srcBuffer, VkBuffer& dstBuffer, VkDeviceSize& size, VkCommandBuffer& buffer)
+	void VKUtil::CopyBuffer(VKDevice* device, VkBuffer srcBuffer, VkBuffer dstBuffer, VkDeviceSize size, VkCommandBuffer buffer)
 	{
 		VkCommandBufferBeginInfo beginInfo = {};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -257,11 +257,11 @@ namespace VKUtil
 		submitInfo.commandBufferCount = 1;
 		submitInfo.pCommandBuffers = &buffer;
 
-		vkQueueSubmit(device.GetGraphicsQueue().GetQueue(), 1, &submitInfo, VK_NULL_HANDLE);
-		vkQueueWaitIdle(device.GetGraphicsQueue().GetQueue());
+		vkQueueSubmit(device->getGraphicsQueue().getQueue(), 1, &submitInfo, VK_NULL_HANDLE);
+		vkQueueWaitIdle(device->getGraphicsQueue().getQueue());
 	}
 
-	void VKUtil::TransitionImageLayout(VKDevice& device, VkImage& image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels)
+	void VKUtil::TransitionImageLayout(VKDevice* device, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout, uint32_t mipLevels)
 	{
 		VkCommandBufferAllocateInfo allocInfo = {};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -270,7 +270,7 @@ namespace VKUtil
 		allocInfo.commandBufferCount = 1;
 
 		VkCommandBuffer commandBuffer;
-		vkAllocateCommandBuffers(device.GetDevice(), &allocInfo, &commandBuffer);
+		vkAllocateCommandBuffers(device->getDevice(), &allocInfo, &commandBuffer);
 
 		VkCommandBufferBeginInfo beginInfo = {};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -346,13 +346,13 @@ namespace VKUtil
 		submitInfo.commandBufferCount = 1;
 		submitInfo.pCommandBuffers = &commandBuffer;
 
-		vkQueueSubmit(device.GetGraphicsQueue().GetQueue(), 1, &submitInfo, VK_NULL_HANDLE);
-		vkQueueWaitIdle(device.GetGraphicsQueue().GetQueue());
+		vkQueueSubmit(device->getGraphicsQueue().getQueue(), 1, &submitInfo, VK_NULL_HANDLE);
+		vkQueueWaitIdle(device->getGraphicsQueue().getQueue());
 
-		vkFreeCommandBuffers(device.GetDevice(), copyCommandPool, 1, &commandBuffer);
+		vkFreeCommandBuffers(device->getDevice(), copyCommandPool, 1, &commandBuffer);
 	}
 
-	void VKUtil::CopyBufferToImage(VKDevice& device, VkBuffer& buffer, VkImage& image, uint32_t width, uint32_t height)
+	void VKUtil::CopyBufferToImage(VKDevice* device, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height)
 	{
 		VkCommandBufferAllocateInfo allocInfo = {};
 		allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -361,7 +361,7 @@ namespace VKUtil
 		allocInfo.commandBufferCount = 1;
 
 		VkCommandBuffer commandBuffer;
-		vkAllocateCommandBuffers(device.GetDevice(), &allocInfo, &commandBuffer);
+		vkAllocateCommandBuffers(device->getDevice(), &allocInfo, &commandBuffer);
 
 		VkCommandBufferBeginInfo beginInfo = {};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -391,13 +391,13 @@ namespace VKUtil
 		submitInfo.commandBufferCount = 1;
 		submitInfo.pCommandBuffers = &commandBuffer;
 
-		vkQueueSubmit(device.GetGraphicsQueue().GetQueue(), 1, &submitInfo, VK_NULL_HANDLE);
-		vkQueueWaitIdle(device.GetGraphicsQueue().GetQueue());
+		vkQueueSubmit(device->getGraphicsQueue().getQueue(), 1, &submitInfo, VK_NULL_HANDLE);
+		vkQueueWaitIdle(device->getGraphicsQueue().getQueue());
 
-		vkFreeCommandBuffers(device.GetDevice(), copyCommandPool, 1, &commandBuffer);
+		vkFreeCommandBuffers(device->getDevice(), copyCommandPool, 1, &commandBuffer);
 	}
 
-	void VKUtil::GenerateMipmaps(VkPhysicalDevice& physicalDevice, VKDevice& device, VkImage& image, VkFormat format, uint32_t width, uint32_t height, uint32_t mipLevels)
+	void VKUtil::GenerateMipmaps(VkPhysicalDevice physicalDevice, VKDevice* device, VkImage image, VkFormat format, uint32_t width, uint32_t height, uint32_t mipLevels)
 	{
 		VkFormatProperties formatProperties;
 		vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &formatProperties);
@@ -414,7 +414,7 @@ namespace VKUtil
 		allocInfo.commandBufferCount = 1;
 
 		VkCommandBuffer commandBuffer;
-		vkAllocateCommandBuffers(device.GetDevice(), &allocInfo, &commandBuffer);
+		vkAllocateCommandBuffers(device->getDevice(), &allocInfo, &commandBuffer);
 
 		VkCommandBufferBeginInfo beginInfo = {};
 		beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
@@ -503,19 +503,19 @@ namespace VKUtil
 		submitInfo.commandBufferCount = 1;
 		submitInfo.pCommandBuffers = &commandBuffer;
 
-		vkQueueSubmit(device.GetGraphicsQueue().GetQueue(), 1, &submitInfo, VK_NULL_HANDLE);
-		vkQueueWaitIdle(device.GetGraphicsQueue().GetQueue());
+		vkQueueSubmit(device->getGraphicsQueue().getQueue(), 1, &submitInfo, VK_NULL_HANDLE);
+		vkQueueWaitIdle(device->getGraphicsQueue().getQueue());
 
-		vkFreeCommandBuffers(device.GetDevice(), copyCommandPool, 1, &commandBuffer);
+		vkFreeCommandBuffers(device->getDevice(), copyCommandPool, 1, &commandBuffer);
 	}
 
-	std::vector<VkFormat> VKUtil::GetAvailableFormats(const VkPhysicalDevice& physicalDevice)
+	std::vector<VkFormat> VKUtil::GetAvailableFormats(VkPhysicalDevice physicalDevice)
 	{
 		//TODO: query available VkFormats
 		return {};
 	}
 
-	void VKUtil::CreateImage(VKPhysicalDevice& physicalDevice, VKDevice& device, uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits samples,
+	void VKUtil::CreateImage(VkPhysicalDevice physicalDevice, VKDevice* device, uint32_t width, uint32_t height, uint32_t mipLevels, VkSampleCountFlagBits samples,
 		VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags memoryFlags, VkImage& image, VkDeviceMemory& memory)
 	{
 		VkImageCreateInfo imageInfo = {};
@@ -534,28 +534,28 @@ namespace VKUtil
 		imageInfo.samples = samples;
 		imageInfo.flags = 0; // Optional
 
-		if (vkCreateImage(device.GetDevice(), &imageInfo, nullptr, &image) != VK_SUCCESS)
+		if (vkCreateImage(device->getDevice(), &imageInfo, nullptr, &image) != VK_SUCCESS)
 		{
 			PR_LOG_RUNTIME_ERROR("Failed to create image!\n");
 		}
 
 		VkMemoryRequirements memRequirements;
-		vkGetImageMemoryRequirements(device.GetDevice(), image, &memRequirements);
+		vkGetImageMemoryRequirements(device->getDevice(), image, &memRequirements);
 
 		VkMemoryAllocateInfo allocInfo = {};
 		allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
 		allocInfo.allocationSize = memRequirements.size;
-		allocInfo.memoryTypeIndex = VKUtil::FindMemoryType(memRequirements.memoryTypeBits, physicalDevice.GetPhysicalDevice(), memoryFlags);
+		allocInfo.memoryTypeIndex = VKUtil::FindMemoryType(physicalDevice, memRequirements.memoryTypeBits, memoryFlags);
 
-		if (vkAllocateMemory(device.GetDevice(), &allocInfo, nullptr, &memory) != VK_SUCCESS)
+		if (vkAllocateMemory(device->getDevice(), &allocInfo, nullptr, &memory) != VK_SUCCESS)
 		{
 			PR_LOG_RUNTIME_ERROR("Failed to allocate image memory!\n");
 		}
 
-		vkBindImageMemory(device.GetDevice(), image, memory, 0);
+		vkBindImageMemory(device->getDevice(), image, memory, 0);
 	}
 
-	void VKUtil::CreateImageView(VKDevice& device, VkImage& image, VkFormat format, VkImageAspectFlagBits aspect, uint32_t mipLevels, VkImageView& imageView)
+	void VKUtil::CreateImageView(VKDevice* device, VkImage image, VkFormat format, VkImageAspectFlagBits aspect, uint32_t mipLevels, VkImageView& imageView)
 	{
 		VkImageViewCreateInfo colorImageViewCreateInfo = {};
 		colorImageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
@@ -574,7 +574,7 @@ namespace VKUtil
 		colorImageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
 		colorImageViewCreateInfo.subresourceRange.layerCount = 1;
 
-		if (vkCreateImageView(device.GetDevice(), &colorImageViewCreateInfo, nullptr, &imageView) != VK_SUCCESS)
+		if (vkCreateImageView(device->getDevice(), &colorImageViewCreateInfo, nullptr, &imageView) != VK_SUCCESS)
 		{
 			PR_LOG_RUNTIME_ERROR("Failed to create image views!\n");
 		}

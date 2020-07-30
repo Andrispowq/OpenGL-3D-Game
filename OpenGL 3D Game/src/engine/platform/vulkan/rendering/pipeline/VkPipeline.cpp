@@ -20,12 +20,12 @@ void VKPipeline::CreatePipeline(Window* window)
 {
 	exists = true;
 
-	VKSwapchain* swapchain = static_cast<VKSwapchain*>(window->GetSwapchain());
-	VKContext* context = static_cast<VKContext*>(window->GetContext());
+	VKSwapchain* swapchain = static_cast<VKSwapchain*>(window->getSwapchain());
+	VKContext* context = static_cast<VKContext*>(window->getContext());
 
-	this->surface = &context->GetSurface();
-	this->physicalDevice = (VKPhysicalDevice*) context->GetPhysicalDevice();
-	this->device = (VKDevice*) context->GetDevice();
+	this->surface = &context->getSurface();
+	this->physicalDevice = (VKPhysicalDevice*) context->getPhysicalDevice();
+	this->device = (VKDevice*) context->getDevice();
 
 	this->window = window;
 	this->swapchain = swapchain;

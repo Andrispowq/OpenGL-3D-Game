@@ -7,12 +7,12 @@ void VKSwapchain::SetupSwapchain(Window* window)
 {
     this->window = window;
 
-    this->physicalDevice = (VKPhysicalDevice*) window->GetContext()->GetPhysicalDevice();
-    this->device = (VKDevice*)window->GetContext()->GetDevice();
+    this->physicalDevice = (VKPhysicalDevice*) window->getContext()->getPhysicalDevice();
+    this->device = (VKDevice*)window->getContext()->getDevice();
 
-    this->surface = &((VKContext*)window->GetContext())->GetSurface();
+    this->surface = &((VKContext*)window->getContext())->getSurface();
 
-    SwapChainSupportDetails swapchainSupport = VKUtil::QuerySwapChainSupport(surface->GetSurface(), physicalDevice->GetPhysicalDevice());
+    SwapChainSupportDetails swapchainSupport = VKUtil::QuerySwapChainSupport(physicalDevice->getPhysicalDevice(), surface->getSurface());
 
     VkSurfaceFormatKHR surfaceFormat = VKUtil::ChooseSwapSurfaceFormat(swapchainSupport.formats);
     VkPresentModeKHR presentMode = VKUtil::ChooseSwapPresentMode(swapchainSupport.presentModes);
@@ -27,7 +27,7 @@ void VKSwapchain::SetupSwapchain(Window* window)
 
     VkSwapchainCreateInfoKHR createInfo = {};
     createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-    createInfo.surface = surface->GetSurface();
+    createInfo.surface = surface->getSurface();
     createInfo.minImageCount = NumImages;
     createInfo.imageFormat = surfaceFormat.format;
     createInfo.imageColorSpace = surfaceFormat.colorSpace;
@@ -35,7 +35,7 @@ void VKSwapchain::SetupSwapchain(Window* window)
     createInfo.imageArrayLayers = 1;
     createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-    QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface->GetSurface(), physicalDevice->GetPhysicalDevice());
+    QueueFamilyIndices indices = VKUtil::FindQueueFamilies(physicalDevice->getPhysicalDevice(), surface->getSurface());
     uint32_t queueFamilyIndices[] = { indices.graphicsFamily, indices.presentFamily };
 
     if (indices.graphicsFamily != indices.presentFamily)
@@ -57,16 +57,16 @@ void VKSwapchain::SetupSwapchain(Window* window)
     createInfo.clipped = VK_TRUE;
     createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-    if (vkCreateSwapchainKHR(device->GetDevice(), &createInfo, nullptr, &swapchain) != VK_SUCCESS)
+    if (vkCreateSwapchainKHR(device->getDevice(), &createInfo, nullptr, &swapchain) != VK_SUCCESS)
     {
         PR_LOG_RUNTIME_ERROR("Failed to create swap chain!\n");
     }
 
     //Create images and image views
-    vkGetSwapchainImagesKHR(device->GetDevice(), swapchain, &NumImages, nullptr);
+    vkGetSwapchainImagesKHR(device->getDevice(), swapchain, &NumImages, nullptr);
 
     swapchainImages.resize(NumImages);
-    vkGetSwapchainImagesKHR(device->GetDevice(), swapchain, &NumImages, swapchainImages.data());
+    vkGetSwapchainImagesKHR(device->getDevice(), swapchain, &NumImages, swapchainImages.data());
 
     swapchainImageFormat = surfaceFormat.format;
     swapchainExtent = extent;
@@ -75,40 +75,40 @@ void VKSwapchain::SetupSwapchain(Window* window)
 
     for (size_t i = 0; i < NumImages; i++)
     {
-        VKUtil::CreateImageView(*device, swapchainImages[i], swapchainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1, swapchainImageViews[i]);
+        VKUtil::CreateImageView(device, swapchainImages[i], swapchainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1, swapchainImageViews[i]);
     }
 
     //Create multisampled image
-    VKUtil::CreateImage(*physicalDevice, *device, swapchainExtent.width, swapchainExtent.height, 1, physicalDevice->getSampleCount(), swapchainImageFormat,
+    VKUtil::CreateImage(physicalDevice->getPhysicalDevice(), device, swapchainExtent.width, swapchainExtent.height, 1, physicalDevice->getSampleCount(), swapchainImageFormat,
         VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
         colorImage, colorImageMemory);
-    VKUtil::CreateImageView(*device, colorImage, swapchainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1, colorImageView);
+    VKUtil::CreateImageView(device, colorImage, swapchainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1, colorImageView);
 
     //Create depth buffer
     VkFormat depthFormat = VKUtil::FindSupportedFormat(
-        physicalDevice->GetPhysicalDevice(),
+        physicalDevice->getPhysicalDevice(),
         { VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
         VK_IMAGE_TILING_OPTIMAL,
         VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
         );
 
-    VKUtil::CreateImage(*physicalDevice, *device, swapchainExtent.width, swapchainExtent.height, 1, physicalDevice->getSampleCount(), depthFormat, VK_IMAGE_TILING_OPTIMAL, 
+    VKUtil::CreateImage(physicalDevice->getPhysicalDevice(), device, swapchainExtent.width, swapchainExtent.height, 1, physicalDevice->getSampleCount(), depthFormat, VK_IMAGE_TILING_OPTIMAL, 
         VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);
-    VKUtil::CreateImageView(*device, depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1, depthImageView);
+    VKUtil::CreateImageView(device, depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1, depthImageView);
 
-    VKUtil::TransitionImageLayout(*device, depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
+    VKUtil::TransitionImageLayout(device, depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
 
     //Create framebuffers and renderpass
-    renderpass = new VKRenderpass(*physicalDevice, device->GetDevice(), swapchainImageFormat);
+    renderpass = new VKRenderpass(physicalDevice, device->getDevice(), swapchainImageFormat);
     
     swapchainFramebuffers.resize(swapchainImageViews.size());
     for (size_t i = 0; i < swapchainImageViews.size(); i++)
     {
-        swapchainFramebuffers[i] = new VKFramebuffer(*renderpass, swapchainExtent, colorImageView, depthImageView, swapchainImageViews[i], device->GetDevice());
+        swapchainFramebuffers[i] = new VKFramebuffer(renderpass, device->getDevice(), swapchainExtent, colorImageView, depthImageView, swapchainImageViews[i]);
     }
 
     //Create command pool
-    commandPool = new VKCommandPool(*surface, physicalDevice->GetPhysicalDevice(), device->GetDevice());
+    commandPool = new VKCommandPool(physicalDevice->getPhysicalDevice(), device->getDevice(), surface);
 
     for (size_t i = 0; i < NumImages; i++)
     {
@@ -122,48 +122,48 @@ void VKSwapchain::SetupSwapchain(Window* window)
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
     {
-        imageAvailableSemaphores[i] = new VKSemaphore(device->GetDevice());
-        renderFinishedSemaphores[i] = new VKSemaphore(device->GetDevice());
-        inFlightFences[i] = new VKFence(device->GetDevice());
+        imageAvailableSemaphores[i] = new VKSemaphore(device->getDevice());
+        renderFinishedSemaphores[i] = new VKSemaphore(device->getDevice());
+        inFlightFences[i] = new VKFence(device->getDevice());
     }
 
-    vkAcquireNextImageKHR(device->GetDevice(), swapchain, UINT64_MAX, imageAvailableSemaphores[currentFrame]->GetSemaphore(), VK_NULL_HANDLE, &aquiredImageIndex);
+    vkAcquireNextImageKHR(device->getDevice(), swapchain, UINT64_MAX, imageAvailableSemaphores[currentFrame]->getSemaphore(), VK_NULL_HANDLE, &aquiredImageIndex);
     
     if (imagesInFlight[aquiredImageIndex] != VK_NULL_HANDLE)
     {
-        vkWaitForFences(device->GetDevice(), 1, &imagesInFlight[aquiredImageIndex], VK_TRUE, UINT64_MAX);
+        vkWaitForFences(device->getDevice(), 1, &imagesInFlight[aquiredImageIndex], VK_TRUE, UINT64_MAX);
     }
 
-    imagesInFlight[aquiredImageIndex] = inFlightFences[currentFrame]->GetFence();
+    imagesInFlight[aquiredImageIndex] = inFlightFences[currentFrame]->getFence();
 }
 
 void VKSwapchain::PrepareRendering()
 {
-    //Get the next available image to render to
-    vkWaitForFences(device->GetDevice(), 1, &(inFlightFences[currentFrame]->GetFence()), VK_TRUE, UINT64_MAX);
+    //get the next available image to render to
+    vkWaitForFences(device->getDevice(), 1, &(inFlightFences[currentFrame]->getFence()), VK_TRUE, UINT64_MAX);
 
-    VkResult res = vkAcquireNextImageKHR(device->GetDevice(), swapchain, UINT64_MAX, imageAvailableSemaphores[currentFrame]->GetSemaphore(), VK_NULL_HANDLE, &aquiredImageIndex);
+    VkResult res = vkAcquireNextImageKHR(device->getDevice(), swapchain, UINT64_MAX, imageAvailableSemaphores[currentFrame]->getSemaphore(), VK_NULL_HANDLE, &aquiredImageIndex);
 
     if (res == VK_ERROR_OUT_OF_DATE_KHR || res == VK_SUBOPTIMAL_KHR)
     {
-        SetWindowSize(window->GetWidth(), window->GetHeight());
+        SetWindowSize(window->getWidth(), window->getHeight());
     }
 
     if (imagesInFlight[aquiredImageIndex] != VK_NULL_HANDLE)
     {
-        vkWaitForFences(device->GetDevice(), 1, &imagesInFlight[aquiredImageIndex], VK_TRUE, UINT64_MAX);
+        vkWaitForFences(device->getDevice(), 1, &imagesInFlight[aquiredImageIndex], VK_TRUE, UINT64_MAX);
     }
 
-    imagesInFlight[aquiredImageIndex] = inFlightFences[currentFrame]->GetFence();
+    imagesInFlight[aquiredImageIndex] = inFlightFences[currentFrame]->getFence();
 
-    commandPool->GetCommandBuffer(aquiredImageIndex)->BindBuffer();
-    renderpass->BeginRenderpass(*commandPool->GetCommandBuffer(aquiredImageIndex), swapchainExtent, *swapchainFramebuffers[aquiredImageIndex], clearColor);
+    commandPool->getCommandBuffer(aquiredImageIndex)->BindBuffer();
+    renderpass->BeginRenderpass(commandPool->getCommandBuffer(aquiredImageIndex), swapchainFramebuffers[aquiredImageIndex], swapchainExtent, clearColor);
 }
 
 void VKSwapchain::EndRendering()
 {
-    renderpass->EndRenderpass(*commandPool->GetCommandBuffer(aquiredImageIndex));
-    commandPool->GetCommandBuffer(aquiredImageIndex)->UnbindBuffer();
+    renderpass->EndRenderpass(commandPool->getCommandBuffer(aquiredImageIndex));
+    commandPool->getCommandBuffer(aquiredImageIndex)->UnbindBuffer();
 }
 
 void VKSwapchain::SwapBuffers()
@@ -172,21 +172,21 @@ void VKSwapchain::SwapBuffers()
     VkSubmitInfo submitInfo = {};
     submitInfo.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
 
-    VkSemaphore waitSemaphores[] = { imageAvailableSemaphores[currentFrame]->GetSemaphore() };
+    VkSemaphore waitSemaphores[] = { imageAvailableSemaphores[currentFrame]->getSemaphore() };
     VkPipelineStageFlags waitStages[] = { VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT };
     submitInfo.waitSemaphoreCount = 1;
     submitInfo.pWaitSemaphores = waitSemaphores;
     submitInfo.pWaitDstStageMask = waitStages;
     submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &commandPool->GetCommandBuffer(aquiredImageIndex)->GetCommandBuffer();
+    submitInfo.pCommandBuffers = &commandPool->getCommandBuffer(aquiredImageIndex)->getCommandBuffer();
 
-    VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame]->GetSemaphore() };
+    VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame]->getSemaphore() };
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = signalSemaphores;
 
     inFlightFences[currentFrame]->ResetFence();
 
-    if (vkQueueSubmit(device->GetGraphicsQueue().GetQueue(), 1, &submitInfo, inFlightFences[currentFrame]->GetFence()) != VK_SUCCESS)
+    if (vkQueueSubmit(device->getGraphicsQueue().getQueue(), 1, &submitInfo, inFlightFences[currentFrame]->getFence()) != VK_SUCCESS)
     {
         PR_LOG_RUNTIME_ERROR("Failed to submit draw command buffer!\n");
     }
@@ -201,8 +201,8 @@ void VKSwapchain::SwapBuffers()
     presentInfo.pImageIndices = &aquiredImageIndex;
     presentInfo.pResults = nullptr; // Optional
 
-    vkQueuePresentKHR(device->GetPresentQueue().GetQueue(), &presentInfo);
-    vkQueueWaitIdle(device->GetPresentQueue().GetQueue());
+    vkQueuePresentKHR(device->getPresentQueue().getQueue(), &presentInfo);
+    vkQueueWaitIdle(device->getPresentQueue().getQueue());
 
     currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
 }
@@ -214,16 +214,16 @@ void VKSwapchain::SetVSync(bool vSync) const
 
 void VKSwapchain::SetWindowSize(uint32_t width, uint32_t height)
 {
-    vkDeviceWaitIdle(device->GetDevice());
+    vkDeviceWaitIdle(device->getDevice());
 
     //We destroy some objects that should be destroyed
-    vkDestroyImageView(device->GetDevice(), depthImageView, nullptr);
-    vkDestroyImage(device->GetDevice(), depthImage, nullptr);
-    vkFreeMemory(device->GetDevice(), depthImageMemory, nullptr);
+    vkDestroyImageView(device->getDevice(), depthImageView, nullptr);
+    vkDestroyImage(device->getDevice(), depthImage, nullptr);
+    vkFreeMemory(device->getDevice(), depthImageMemory, nullptr);
 
-    vkDestroyImageView(device->GetDevice(), colorImageView, nullptr);
-    vkDestroyImage(device->GetDevice(), colorImage, nullptr);
-    vkFreeMemory(device->GetDevice(), colorImageMemory, nullptr);
+    vkDestroyImageView(device->getDevice(), colorImageView, nullptr);
+    vkDestroyImage(device->getDevice(), colorImage, nullptr);
+    vkFreeMemory(device->getDevice(), colorImageMemory, nullptr);
 
     for (auto framebuffer : swapchainFramebuffers)
     {
@@ -236,13 +236,13 @@ void VKSwapchain::SetWindowSize(uint32_t width, uint32_t height)
 
     for (size_t i = 0; i < NumImages; i++)
     {
-        vkDestroyImageView(device->GetDevice(), swapchainImageViews[i], nullptr);
+        vkDestroyImageView(device->getDevice(), swapchainImageViews[i], nullptr);
     }
 
-    vkDestroySwapchainKHR(device->GetDevice(), swapchain, nullptr);
+    vkDestroySwapchainKHR(device->getDevice(), swapchain, nullptr);
 
     //Then we create new of them
-    SwapChainSupportDetails swapchainSupport = VKUtil::QuerySwapChainSupport(surface->GetSurface(), physicalDevice->GetPhysicalDevice());
+    SwapChainSupportDetails swapchainSupport = VKUtil::QuerySwapChainSupport(surface->getSurface(), physicalDevice->getPhysicalDevice());
 
     VkSurfaceFormatKHR surfaceFormat = VKUtil::ChooseSwapSurfaceFormat(swapchainSupport.formats);
     VkPresentModeKHR presentMode = VKUtil::ChooseSwapPresentMode(swapchainSupport.presentModes);
@@ -257,7 +257,7 @@ void VKSwapchain::SetWindowSize(uint32_t width, uint32_t height)
 
     VkSwapchainCreateInfoKHR createInfo = {};
     createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-    createInfo.surface = surface->GetSurface();
+    createInfo.surface = surface->getSurface();
     createInfo.minImageCount = NumImages;
     createInfo.imageFormat = surfaceFormat.format;
     createInfo.imageColorSpace = surfaceFormat.colorSpace;
@@ -265,7 +265,7 @@ void VKSwapchain::SetWindowSize(uint32_t width, uint32_t height)
     createInfo.imageArrayLayers = 1;
     createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-    QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface->GetSurface(), physicalDevice->GetPhysicalDevice());
+    QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface->getSurface(), physicalDevice->getPhysicalDevice());
     uint32_t queueFamilyIndices[] = { indices.graphicsFamily, indices.presentFamily };
 
     if (indices.graphicsFamily != indices.presentFamily)
@@ -287,16 +287,16 @@ void VKSwapchain::SetWindowSize(uint32_t width, uint32_t height)
     createInfo.clipped = VK_TRUE;
     createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-    if (vkCreateSwapchainKHR(device->GetDevice(), &createInfo, nullptr, &swapchain) != VK_SUCCESS)
+    if (vkCreateSwapchainKHR(device->getDevice(), &createInfo, nullptr, &swapchain) != VK_SUCCESS)
     {
         PR_LOG_RUNTIME_ERROR("Failed to create swap chain!\n");
     }
 
     //Create images and image views
-    vkGetSwapchainImagesKHR(device->GetDevice(), swapchain, &NumImages, nullptr);
+    vkGetSwapchainImagesKHR(device->getDevice(), swapchain, &NumImages, nullptr);
 
     swapchainImages.resize(NumImages);
-    vkGetSwapchainImagesKHR(device->GetDevice(), swapchain, &NumImages, swapchainImages.data());
+    vkGetSwapchainImagesKHR(device->getDevice(), swapchain, &NumImages, swapchainImages.data());
 
     swapchainImageFormat = surfaceFormat.format;
     swapchainExtent = extent;
@@ -305,36 +305,36 @@ void VKSwapchain::SetWindowSize(uint32_t width, uint32_t height)
 
     for (size_t i = 0; i < NumImages; i++)
     {
-        VKUtil::CreateImageView(*device, swapchainImages[i], swapchainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1, swapchainImageViews[i]);
+        VKUtil::CreateImageView(device, swapchainImages[i], swapchainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1, swapchainImageViews[i]);
     }
 
     //Create multisampled image
-    VKUtil::CreateImage(*physicalDevice, *device, swapchainExtent.width, swapchainExtent.height, 1, physicalDevice->getSampleCount(), swapchainImageFormat,
+    VKUtil::CreateImage(physicalDevice->getPhysicalDevice(), device, swapchainExtent.width, swapchainExtent.height, 1, physicalDevice->getSampleCount(), swapchainImageFormat,
         VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
         colorImage, colorImageMemory);
-    VKUtil::CreateImageView(*device, colorImage, swapchainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1, colorImageView);
+    VKUtil::CreateImageView(device, colorImage, swapchainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1, colorImageView);
 
     //Create depth buffer
     VkFormat depthFormat = VKUtil::FindSupportedFormat(
-        physicalDevice->GetPhysicalDevice(),
+        physicalDevice->getPhysicalDevice(),
         { VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT },
         VK_IMAGE_TILING_OPTIMAL,
         VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT
         );
 
-    VKUtil::CreateImage(*physicalDevice, *device, swapchainExtent.width, swapchainExtent.height, 1, physicalDevice->getSampleCount(), depthFormat, VK_IMAGE_TILING_OPTIMAL,
+    VKUtil::CreateImage(physicalDevice->getPhysicalDevice(), device, swapchainExtent.width, swapchainExtent.height, 1, physicalDevice->getSampleCount(), depthFormat, VK_IMAGE_TILING_OPTIMAL,
         VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);
-    VKUtil::CreateImageView(*device, depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1, depthImageView);
+    VKUtil::CreateImageView(device, depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1, depthImageView);
 
-    VKUtil::TransitionImageLayout(*device, depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
+    VKUtil::TransitionImageLayout(device, depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
 
     //Recreate renderpass
-    renderpass = new VKRenderpass(*physicalDevice, device->GetDevice(), swapchainImageFormat);
+    renderpass = new VKRenderpass(physicalDevice, device->getDevice(), swapchainImageFormat);
 
     swapchainFramebuffers.resize(swapchainImageViews.size());
     for (size_t i = 0; i < swapchainImageViews.size(); i++)
     {
-        swapchainFramebuffers[i] = new VKFramebuffer(*renderpass, swapchainExtent, colorImageView, depthImageView, swapchainImageViews[i], device->GetDevice());
+        swapchainFramebuffers[i] = new VKFramebuffer(renderpass, device->getDevice(), swapchainExtent, colorImageView, depthImageView, swapchainImageViews[i]);
     }
 
     //Reattach command buffers
@@ -358,16 +358,16 @@ void VKSwapchain::ClearScreen()
     range.levelCount = 1;
     range.layerCount = 1;
 
-    commandPool->GetCommandBuffer(aquiredImageIndex)->BindBuffer();
-    vkCmdClearColorImage(commandPool->GetCommandBuffer(aquiredImageIndex)->GetCommandBuffer(), swapchainImages[aquiredImageIndex], VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, &value, 1, &range);
-    commandPool->GetCommandBuffer(aquiredImageIndex)->UnbindBuffer();*/
+    commandPool->getCommandBuffer(aquiredImageIndex)->BindBuffer();
+    vkCmdClearColorImage(commandPool->getCommandBuffer(aquiredImageIndex)->getCommandBuffer(), swapchainImages[aquiredImageIndex], VK_IMAGE_LAYOUT_PRESENT_SRC_KHR, &value, 1, &range);
+    commandPool->getCommandBuffer(aquiredImageIndex)->UnbindBuffer();*/
 }
 
 void VKSwapchain::DeleteSwapchain(void* device)
 {
     VKDevice* dev = reinterpret_cast<VKDevice*>(device);
 
-    vkDeviceWaitIdle(dev->GetDevice());
+    vkDeviceWaitIdle(dev->getDevice());
 
     for (auto framebuffer : swapchainFramebuffers)
     {
@@ -385,18 +385,18 @@ void VKSwapchain::DeleteSwapchain(void* device)
 
     delete commandPool;
 
-    vkDestroyImageView(dev->GetDevice(), depthImageView, nullptr);
-    vkDestroyImage(dev->GetDevice(), depthImage, nullptr);
-    vkFreeMemory(dev->GetDevice(), depthImageMemory, nullptr);
+    vkDestroyImageView(dev->getDevice(), depthImageView, nullptr);
+    vkDestroyImage(dev->getDevice(), depthImage, nullptr);
+    vkFreeMemory(dev->getDevice(), depthImageMemory, nullptr);
 
-    vkDestroyImageView(dev->GetDevice(), colorImageView, nullptr);
-    vkDestroyImage(dev->GetDevice(), colorImage, nullptr);
-    vkFreeMemory(dev->GetDevice(), colorImageMemory, nullptr);
+    vkDestroyImageView(dev->getDevice(), colorImageView, nullptr);
+    vkDestroyImage(dev->getDevice(), colorImage, nullptr);
+    vkFreeMemory(dev->getDevice(), colorImageMemory, nullptr);
 
     for (auto imageView : swapchainImageViews)
     {
-        vkDestroyImageView(dev->GetDevice(), imageView, nullptr);
+        vkDestroyImageView(dev->getDevice(), imageView, nullptr);
     }
 
-    vkDestroySwapchainKHR(dev->GetDevice(), swapchain, nullptr);
+    vkDestroySwapchainKHR(dev->getDevice(), swapchain, nullptr);
 }

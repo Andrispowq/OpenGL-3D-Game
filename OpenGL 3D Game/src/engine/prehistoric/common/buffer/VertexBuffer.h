@@ -20,10 +20,8 @@ public:
 	virtual void Draw(void* commandBuffer) const = 0;
 	virtual void Unbind() const = 0;
 
-	virtual bool operator==(const VertexBuffer& other) = 0;
-
 	FrontFace getFrontFace() const { return frontFace; }
-	void SetFrontFace(FrontFace frontFace) { this->frontFace = frontFace; }
+	void setFrontFace(FrontFace frontFace) { this->frontFace = frontFace; }
 protected:
 	uint32_t size;
 	bool indexed;

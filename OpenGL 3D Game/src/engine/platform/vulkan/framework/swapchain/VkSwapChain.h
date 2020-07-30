@@ -27,13 +27,13 @@ public:
 	virtual void SetVSync(bool vSync) const override;
 	virtual void SetWindowSize(uint32_t width, uint32_t height) override;
 
-	virtual void SetClearColor(const float& red, const float& green, const float& blue, const float& alpha) override;
+	virtual void SetClearColor(float red, float green, float blue, float alpha) override;
 	virtual void ClearScreen() override;
 
 	virtual void DeleteSwapchain(void* device) override;
 
-	virtual uint32_t GetAquiredImageIndex() const override { return aquiredImageIndex; }
-	virtual void* GetDrawCommandBuffer() const override { return commandPool->GetCommandBuffer(aquiredImageIndex); }
+	virtual uint32_t getAquiredImageIndex() const override { return aquiredImageIndex; }
+	virtual void* getDrawCommandBuffer() const override { return commandPool->getCommandBuffer(aquiredImageIndex); }
 
 	virtual void PrepareRendering() override;
 	virtual void EndRendering() override;	
@@ -41,15 +41,15 @@ public:
 	VkSwapchainKHR getSwapchain() const { return swapchain; }
 	std::vector<VkImage> getSwapchainImages() const { return swapchainImages; }
 	std::vector<VkImageView> getSwapchainImageViews() const { return swapchainImageViews; }
+
 	VkImageView& getDepthImageView() { return depthImageView; }
 	VkFormat getSwapchainImageFormat() const { return swapchainImageFormat; }
-	VkExtent2D& getSwapchainExtent() { return swapchainExtent; }
+	VkExtent2D getSwapchainExtent() const { return swapchainExtent; }
 
 	VKCommandPool& getCommandPool() { return *commandPool; }
-
 	VKRenderpass& getRenderpass() { return *renderpass; }
 
-	void RegisterSurface(VKSurface& surface) { this->surface = &surface; }
+	void setSurface(VKSurface& surface) { this->surface = &surface; }
 private:
 	//External
 	VKPhysicalDevice* physicalDevice;

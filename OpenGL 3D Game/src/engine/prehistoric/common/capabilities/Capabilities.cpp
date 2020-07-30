@@ -6,7 +6,7 @@
 
 Capabilities* Capabilities::instance = nullptr;
 
-Capabilities* Capabilities::GetInstance()
+Capabilities* Capabilities::getInstance()
 {
 	if (instance == nullptr)
 	{

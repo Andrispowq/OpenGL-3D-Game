@@ -19,7 +19,7 @@ void GLSwapchain::SetupSwapchain(Window* window)
 
 void GLSwapchain::SwapBuffers()
 {
-	glfwSwapBuffers((GLFWwindow*)window->GetWindowHandle());
+	glfwSwapBuffers((GLFWwindow*)window->getWindowHandle());
 }
 
 void GLSwapchain::SetVSync(bool vSync) const
@@ -34,7 +34,7 @@ void GLSwapchain::SetWindowSize(uint32_t width, uint32_t height)
 	FrameworkConfig::windowHeight = height;
 }
 
-void GLSwapchain::SetClearColor(const float& red, const float& green, const float& blue, const float& alpha)
+void GLSwapchain::SetClearColor(float red, float green, float blue, float alpha)
 {
 	glClearColor(red, green, blue, alpha);
 }

@@ -6,14 +6,14 @@
 #include "engine/config/FrameworkConfig.h"
 #include "Window.h"
 
-#define InputInstance Input::GetInstance()
+#define InputInstance Input::getInstance()
 
 #define MAX_NUM_JOYSTICKS 2
 
 class Input
 {
 public:
-	static Input& GetInstance();
+	static Input& getInstance();
 	static void DeleteInstance();
 
 	virtual bool Init(Window* window) const = 0;
@@ -28,37 +28,37 @@ public:
 	bool IsButtonReleased(const InputCode& button) const { return std::find(releasedButtons.begin(), releasedButtons.end(), (uint32_t)button) != releasedButtons.end(); }
 
 	bool IsJoystickButtonPushed(const InputCode& key, const JoystickID& joystick) const;
-	float GetJoystickAxisOffset(const InputCode& axis, const JoystickID& joystick) const;
+	float getJoystickAxisOffset(const InputCode& axis, const JoystickID& joystick) const;
 
 	bool IsPause() const { return pause; }
-	void SetPause(bool pause) { Input::pause = pause; }
+	void setPause(bool pause) { Input::pause = pause; }
 
-	Vector2f GetCursorPosition() const { return cursorPosition; }
-	void SetCursorPosition(const Vector2f& cursorPosition) { Input::cursorPosition = cursorPosition; }
+	Vector2f getCursorPosition() const { return cursorPosition; }
+	void setCursorPosition(const Vector2f& cursorPosition) { Input::cursorPosition = cursorPosition; }
 
-	virtual void SetCursorPositionOnScreen(Window* window, const Vector2f& cursorPosition) = 0;
+	virtual void setCursorPositionOnScreen(Window* window, const Vector2f& cursorPosition) = 0;
 
-	Vector2f GetLockedCursorPosition() const { return lockedCursorPosition; }
-	void SetLockedCursorPosition(const Vector2f& lockedCursorPosition) { Input::lockedCursorPosition = lockedCursorPosition; }
+	Vector2f getLockedCursorPosition() const { return lockedCursorPosition; }
+	void setLockedCursorPosition(const Vector2f& lockedCursorPosition) { Input::lockedCursorPosition = lockedCursorPosition; }
 
-	float GetScrollOffset() const { return scrollOffset; }
-	void SetScrollOffset(float scrollOffset) { Input::scrollOffset = scrollOffset; }
+	float getScrollOffset() const { return scrollOffset; }
+	void setScrollOffset(float scrollOffset) { Input::scrollOffset = scrollOffset; }
 
-	inline std::vector<int> GetPushedKeys() const { return pushedKeys; }
-	inline std::vector<int> GetKeysHolding() const { return keysHolding; }
-	inline std::vector<int> GetReleasedKeys() const { return releasedKeys; }
+	inline std::vector<int> getPushedKeys() const { return pushedKeys; }
+	inline std::vector<int> getKeysHolding() const { return keysHolding; }
+	inline std::vector<int> getReleasedKeys() const { return releasedKeys; }
 
-	inline std::vector<int> GetPushedButtons() const { return pushedButtons; }
-	inline std::vector<int> GetButtonsHolding() const { return buttonsHolding; }
-	inline std::vector<int> GetReleasedButtons() const { return releasedButtons; }
+	inline std::vector<int> getPushedButtons() const { return pushedButtons; }
+	inline std::vector<int> getButtonsHolding() const { return buttonsHolding; }
+	inline std::vector<int> getReleasedButtons() const { return releasedButtons; }
 
-	inline void SetPushedKeys(const std::vector<int>& pushedKeys) { this->pushedKeys = pushedKeys; }
-	inline void SetKeysHolding(const std::vector<int>& keysHolding) { this->keysHolding = keysHolding; }
-	inline void SetReleasedKeys(const std::vector<int>& releasedKeys) { this->releasedKeys = releasedKeys; }
+	inline void setPushedKeys(const std::vector<int>& pushedKeys) { this->pushedKeys = pushedKeys; }
+	inline void setKeysHolding(const std::vector<int>& keysHolding) { this->keysHolding = keysHolding; }
+	inline void setReleasedKeys(const std::vector<int>& releasedKeys) { this->releasedKeys = releasedKeys; }
 
-	inline void SetPushedButtons(const std::vector<int>& pushedButtons) { this->pushedButtons = pushedButtons; }
-	inline void SetButtonsHolding(const std::vector<int>& buttonsHolding) { this->buttonsHolding = buttonsHolding; }
-	inline void SetReleasedButtons(const std::vector<int>& releasedButtons) { this->releasedButtons = releasedButtons; }
+	inline void setPushedButtons(const std::vector<int>& pushedButtons) { this->pushedButtons = pushedButtons; }
+	inline void setButtonsHolding(const std::vector<int>& buttonsHolding) { this->buttonsHolding = buttonsHolding; }
+	inline void setReleasedButtons(const std::vector<int>& releasedButtons) { this->releasedButtons = releasedButtons; }
 protected:
 	Input() : scrollOffset(0.0f), pause(false) {};
 	virtual ~Input() {}

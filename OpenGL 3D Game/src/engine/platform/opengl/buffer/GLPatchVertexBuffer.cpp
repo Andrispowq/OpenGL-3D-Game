@@ -37,6 +37,8 @@ void GLPatchVertexBuffer::Store(const std::vector<Vector2f>& vertices)
 
 	glPatchParameteri(GL_PATCH_VERTICES, size);
 
+	delete[] vdata;
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
  }

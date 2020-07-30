@@ -12,9 +12,9 @@ VKDevice::~VKDevice()
 	device = VK_NULL_HANDLE;
 }
 
-void VKDevice::CreateLogicalDevice(VKSurface* surface, VKPhysicalDevice* physicalDevice, const std::vector<const char*>& validationLayers, const std::vector<const char*>& deviceExtensions)
+void VKDevice::CreateLogicalDevice(VKPhysicalDevice* physicalDevice, VKSurface* surface, const std::vector<const char*>& validationLayers)
 {
-	QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface->GetSurface(), physicalDevice->GetPhysicalDevice());
+	QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface->GetSurface(), physicalDevice->getPhysicalDevice());
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 	std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily, indices.presentFamily };
@@ -43,8 +43,8 @@ void VKDevice::CreateLogicalDevice(VKSurface* surface, VKPhysicalDevice* physica
 
 	createInfo.pEnabledFeatures = &deviceFeatures;
 
-	createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
-	createInfo.ppEnabledExtensionNames = deviceExtensions.data();
+	createInfo.enabledExtensionCount = static_cast<uint32_t>(physicalDevice->getDeviceExtensions().size());
+	createInfo.ppEnabledExtensionNames = physicalDevice->getDeviceExtensions().data();
 
 #if defined(PR_VK_ENABLE_VALIDATION_LAYERS)
 	if (FrameworkConfig::apiVulkanUseValidationLayers) 
@@ -60,7 +60,7 @@ void VKDevice::CreateLogicalDevice(VKSurface* surface, VKPhysicalDevice* physica
 	createInfo.enabledLayerCount = 0;
 #endif
 
-	if (vkCreateDevice(physicalDevice->GetPhysicalDevice(), &createInfo, nullptr, &device) != VK_SUCCESS) 
+	if (vkCreateDevice(physicalDevice->getPhysicalDevice(), &createInfo, nullptr, &device) != VK_SUCCESS) 
 	{
 		PR_LOG_RUNTIME_ERROR("Failed to create logical device!");
 	}

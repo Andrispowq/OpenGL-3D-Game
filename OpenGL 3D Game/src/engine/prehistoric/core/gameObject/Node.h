@@ -20,7 +20,7 @@ public:
 
     inline Transform* getWorldTransform() const { return worldTransform; }
 
-    inline std::unordered_map<std::string, Node*> GetChildren() const { return children; }
+    inline std::unordered_map<std::string, Node*> getChildren() const { return children; }
 
     inline void Move(const Vector3f& d) { worldTransform->SetPosition(worldTransform->GetPosition() + d);}
     inline void Rotate(const Vector3f& d) { worldTransform->SetRotation(worldTransform->GetRotation() + d);}

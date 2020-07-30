@@ -7,16 +7,15 @@ VKContext::VKContext(Window* window)
 	surface.CreateSurface(window, &instance);
 
 	physicalDevice.PickPhysicalDevice(&surface, &instance);
-	logicalDevice.CreateLogicalDevice(&surface, &physicalDevice, instance.GetValidationLayers(), physicalDevice.GetDeviceExtensions());
+	logicalDevice.CreateLogicalDevice(&physicalDevice, &surface, instance.GetValidationLayers()));
 
-	VKUtil::Init(physicalDevice.GetPhysicalDevice(), logicalDevice.GetDevice());
+	VKUtil::Init(physicalDevice.getPhysicalDevice(), logicalDevice.getDevice());
 }
 
 VKContext::~VKContext()
 {
-	VKUtil::CleanUp(logicalDevice.GetDevice());
+	VKUtil::CleanUp(logicalDevice.getDevice());
 
 	logicalDevice.DestroyLogicalDevice();
-
 	surface.DeleteSurface();
 }

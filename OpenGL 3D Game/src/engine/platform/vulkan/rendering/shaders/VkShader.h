@@ -68,8 +68,8 @@ private:
 
 protected:
 	//Outside data
-	VKDevice* device;
 	VKPhysicalDevice* physicalDevice;
+	VKDevice* device;
 	VKSwapchain* swapchain;
 
 	uint32_t instance_counter = 0;

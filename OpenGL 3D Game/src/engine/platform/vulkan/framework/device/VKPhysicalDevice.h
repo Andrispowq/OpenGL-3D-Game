@@ -15,9 +15,10 @@ public:
 	virtual ~VKPhysicalDevice();
 
 	void PickPhysicalDevice(VKSurface* surface, VKInstance* instance);
-
-	VkPhysicalDevice& GetPhysicalDevice() { return physicalDevice; }
-	std::vector<const char*> GetDeviceExtensions() const { return deviceExtensions; }
+	
+	//This needs to return a reference because the memory address of this variable is taken
+	VkPhysicalDevice& getPhysicalDevice() { return physicalDevice; }
+	std::vector<const char*> getDeviceExtensions() const { return deviceExtensions; }
 
 	VkSampleCountFlagBits getSampleCount() const { return msaaSamples; }
 private:
@@ -28,7 +29,6 @@ private:
 	VkPhysicalDevice physicalDevice;
 
 	std::vector<const char*> deviceExtensions;
-
 	VkSampleCountFlagBits msaaSamples = VK_SAMPLE_COUNT_1_BIT;
 };
 

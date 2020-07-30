@@ -16,8 +16,8 @@ public:
 
 	~Vertex() { /*delete duplicateVertex;*/ }
 
-	static size_t GetNumberOfFloats() { return 8; }
-	static size_t GetSize() { return GetNumberOfFloats() * sizeof(float); }
+	constexpr static size_t GetNumberOfFloats() { return 8; }
+	constexpr static size_t GetSize() { return GetNumberOfFloats() * sizeof(float); }
 
 	inline Vector3f getPosition() const { return position; }
 	inline Vector2f getTexture() const { return texture; }

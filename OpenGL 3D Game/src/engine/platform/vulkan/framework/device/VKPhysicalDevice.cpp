@@ -17,7 +17,7 @@ VKPhysicalDevice::~VKPhysicalDevice()
 void VKPhysicalDevice::PickPhysicalDevice(VKSurface* surface, VKInstance* instance)
 {
 	uint32_t deviceCount = 0;
-	vkEnumeratePhysicalDevices(instance->GetInstance(), &deviceCount, nullptr);
+	vkEnumeratePhysicalDevices(instance->getInstance(), &deviceCount, nullptr);
 
 	if (deviceCount == 0) 
 	{
@@ -25,7 +25,7 @@ void VKPhysicalDevice::PickPhysicalDevice(VKSurface* surface, VKInstance* instan
 	}
 
 	std::vector<VkPhysicalDevice> devices(deviceCount);
-	vkEnumeratePhysicalDevices(instance->GetInstance(), &deviceCount, devices.data());
+	vkEnumeratePhysicalDevices(instance->getInstance(), &deviceCount, devices.data());
 
 	VkPhysicalDeviceFeatures deviceFeatures = {};
 	deviceFeatures.samplerAnisotropy = VK_TRUE;

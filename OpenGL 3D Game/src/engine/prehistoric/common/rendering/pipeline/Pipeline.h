@@ -7,7 +7,7 @@
 #include "engine/prehistoric/core/math/Math.h"
 #include "engine/prehistoric/common/framework/Window.h"
 
-#include "engine/prehistoric/assets/AssetManager.h"
+#include "engine/prehistoric/resources/AssetManager.h"
 
 class Pipeline
 {
@@ -32,19 +32,19 @@ public:
 	size_t getShaderID() const { return shaderID; }
 	void setShaderID(size_t shaderID);
 
-	Vector2f GetViewportStart() const { return viewportStart; }
-	Vector2f GetViewportSize() const { return viewportSize; }
-	Vector2u GetScissorStart() const { return scissorStart; }
-	Vector2u GetScissorSize() const { return scissorSize; }
+	Vector2f getViewportStart() const { return viewportStart; }
+	Vector2f getViewportSize() const { return viewportSize; }
+	Vector2u getScissorStart() const { return scissorStart; }
+	Vector2u getScissorSize() const { return scissorSize; }
 
-	int GetSamples() const { return samples; }
+	int getSamples() const { return samples; }
 
-	void SetViewportStart(const Vector2f& viewportStart) { this->viewportStart = viewportStart; }
-	void SetViewportSize(const Vector2f& viewportSize) { this->viewportSize = viewportSize; }
-	void SetScissorStart(const Vector2u& scissorStart) { this->scissorStart = scissorStart; }
-	void SetScissorSize(const Vector2u& scissorSize) { this->scissorSize = scissorSize; }
+	void setViewportStart(const Vector2f& viewportStart) { this->viewportStart = viewportStart; }
+	void setViewportSize(const Vector2f& viewportSize) { this->viewportSize = viewportSize; }
+	void setScissorStart(const Vector2u& scissorStart) { this->scissorStart = scissorStart; }
+	void setScissorSize(const Vector2u& scissorSize) { this->scissorSize = scissorSize; }
 
-	void SetSamples(int samples) { this->samples = samples; }
+	void setSamples(int samples) { this->samples = samples; }
 public:
 	AssetManager* assetManager;
 

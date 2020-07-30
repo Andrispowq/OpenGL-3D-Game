@@ -15,7 +15,7 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 {
 	VKPipeline::CreatePipeline(window);
 
-	this->renderpass = &((VKSwapchain*)window->GetSwapchain())->getRenderpass();
+	this->renderpass = &((VKSwapchain*)window->getSwapchain())->getRenderpass();
 
 	VKMeshVertexBuffer* vbo = (VKMeshVertexBuffer*)getVertexBuffer();
 	VKShader* shader = (VKShader*)getShader();
@@ -24,9 +24,9 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 	vertexInputInfo.vertexBindingDescriptionCount = 1;
-	vertexInputInfo.pVertexBindingDescriptions = vbo->GetBindingDescription();
+	vertexInputInfo.pVertexBindingDescriptions = vbo->getBindingDescription();
 
-	auto description = vbo->GetAttributeDescriptions();
+	auto description = vbo->getAttributeDescriptions();
 	vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(description.size());
 	vertexInputInfo.pVertexAttributeDescriptions = description.data();
 
@@ -124,12 +124,12 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 	pipelineInfo.pColorBlendState = &colorBlending;
 	pipelineInfo.pDynamicState = nullptr; // Optional
 	pipelineInfo.layout = shader->GetPipelineLayout();
-	pipelineInfo.renderPass = renderpass->GetRenderPass();
+	pipelineInfo.renderPass = renderpass->getRenderPass();
 	pipelineInfo.subpass = 0;
 	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
 	pipelineInfo.basePipelineIndex = -1; // Optional
 
-	if (vkCreateGraphicsPipelines(device->GetDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS)
+	if (vkCreateGraphicsPipelines(device->getDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &graphicsPipeline) != VK_SUCCESS)
 	{
 		PR_LOG_RUNTIME_ERROR("Graphics pipeline creation has failed!\n");
 	}
@@ -139,15 +139,15 @@ void VKGraphicsPipeline::BindPipeline() const
 {
 	//VKPipeline::BindPipeline();
 
-	vkCmdBindPipeline(((VKCommandBuffer*) swapchain->GetDrawCommandBuffer())->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
-	getVertexBuffer()->Bind(swapchain->GetDrawCommandBuffer());
+	vkCmdBindPipeline(((VKCommandBuffer*) swapchain->getDrawCommandBuffer())->getCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+	getVertexBuffer()->Bind(swapchain->getDrawCommandBuffer());
 }
 
 void VKGraphicsPipeline::RenderPipeline() const
 {
 	//VKPipeline::RenderPipeline(); //does nothing
 
-	getVertexBuffer()->Draw(swapchain->GetDrawCommandBuffer());
+	getVertexBuffer()->Draw(swapchain->getDrawCommandBuffer());
 }
 
 void VKGraphicsPipeline::UnbindPipeline() const
@@ -161,7 +161,7 @@ void VKGraphicsPipeline::DestroyPipeline()
 {
 	VKPipeline::DestroyPipeline();
 
-	vkDestroyPipeline(device->GetDevice(), graphicsPipeline, nullptr);
+	vkDestroyPipeline(device->getDevice(), graphicsPipeline, nullptr);
 }
 
 void VKGraphicsPipeline::RecreatePipeline()

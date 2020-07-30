@@ -107,6 +107,8 @@ public:
 	//Shaders cannot be copied, they are stored as pointers in the Renderer component, and referenced with a shaderIndex
 	Shader(const Shader&) = delete;
 	Shader operator=(const Shader&) = delete;
+	Shader(const Shader&&) = delete;
+	Shader operator=(const Shader&&) = delete;
 protected:
 	mutable uint32_t counter;
 };

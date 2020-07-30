@@ -1,12 +1,12 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "VKRenderpass.h"
 
-VKRenderpass::VKRenderpass(VKPhysicalDevice& physicalDevice, VkDevice& device, VkFormat& colourImageFormat)
+VKRenderpass::VKRenderpass(VKPhysicalDevice* physicalDevice, VkDevice device, VkFormat colourImageFormat)
 	: device(device)
 {
 	VkAttachmentDescription colorAttachment = {};
 	colorAttachment.format = colourImageFormat;
-	colorAttachment.samples = physicalDevice.getSampleCount();
+	colorAttachment.samples = physicalDevice->getSampleCount();
 	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 	colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -19,10 +19,10 @@ VKRenderpass::VKRenderpass(VKPhysicalDevice& physicalDevice, VkDevice& device, V
 	colorAttachmentRef.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
 	VkAttachmentDescription depthAttachment = {};
-	depthAttachment.format = VKUtil::FindSupportedFormat(physicalDevice.GetPhysicalDevice(),
+	depthAttachment.format = VKUtil::FindSupportedFormat(physicalDevice->getPhysicalDevice(),
 		{ VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT }, VK_IMAGE_TILING_OPTIMAL,
 		VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
-	depthAttachment.samples = physicalDevice.getSampleCount();
+	depthAttachment.samples = physicalDevice->getSampleCount();
 	depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 	depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
 	depthAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -88,7 +88,7 @@ VKRenderpass::~VKRenderpass()
 	vkDestroyRenderPass(device, renderpass, nullptr);
 }
 
-void VKRenderpass::BeginRenderpass(VKCommandBuffer& commandBuffer, VkExtent2D& swapchainExtent, VKFramebuffer& framebuffer, Vector4f clearColour)
+void VKRenderpass::BeginRenderpass(VKCommandBuffer* commandBuffer, VKFramebuffer* framebuffer, VkExtent2D swapchainExtent, Vector4f clearColour)
 {
 	VkClearValue clearValues[2] = {};
 	clearValues[0].color = { clearColour.x, clearColour.y, clearColour.z, clearColour.w };
@@ -97,16 +97,16 @@ void VKRenderpass::BeginRenderpass(VKCommandBuffer& commandBuffer, VkExtent2D& s
 	VkRenderPassBeginInfo renderPassInfo = {};
 	renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
 	renderPassInfo.renderPass = renderpass;
-	renderPassInfo.framebuffer = framebuffer.GetFramebuffer();
+	renderPassInfo.framebuffer = framebuffer->getFramebuffer();
 	renderPassInfo.renderArea.offset = { 0, 0 };
 	renderPassInfo.renderArea.extent = swapchainExtent;
 	renderPassInfo.clearValueCount = 2;
 	renderPassInfo.pClearValues = clearValues;
 
-	vkCmdBeginRenderPass(commandBuffer.GetCommandBuffer(), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+	vkCmdBeginRenderPass(commandBuffer->getCommandBuffer(), &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 }
 
-void VKRenderpass::EndRenderpass(VKCommandBuffer& commandBuffer)
+void VKRenderpass::EndRenderpass(VKCommandBuffer* commandBuffer)
 {
-	vkCmdEndRenderPass(commandBuffer.GetCommandBuffer());
+	vkCmdEndRenderPass(commandBuffer->getCommandBuffer());
 }

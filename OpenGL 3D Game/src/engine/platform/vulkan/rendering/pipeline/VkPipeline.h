@@ -27,9 +27,9 @@ public:
 	virtual void RecreatePipeline();
 protected:
 	//External
-	VKSurface* surface;
 	VKPhysicalDevice* physicalDevice;
 	VKDevice* device;
+	VKSurface* surface;
 
 	Window* window;
 	VKSwapchain* swapchain;

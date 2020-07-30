@@ -2,14 +2,12 @@
 #include "VKCommandBuffer.h"
 #include "VKCommandPool.h"
 
-VKCommandBuffer::VKCommandBuffer(VkDevice& device, VKCommandPool& commandPool)
+VKCommandBuffer::VKCommandBuffer(VKCommandPool* commandPool, VkDevice device)
+	: commandPool(commandPool), device(device)
 {
-	this->commandPool = &commandPool;
-	this->device = &device;
-
 	VkCommandBufferAllocateInfo allocInfo = {};
 	allocInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-	allocInfo.commandPool = commandPool.GetCommandPool();
+	allocInfo.commandPool = commandPool->getCommandPool();
 	allocInfo.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
 	allocInfo.commandBufferCount = 1;
 
@@ -42,9 +40,5 @@ void VKCommandBuffer::UnbindBuffer() const
 
 void VKCommandBuffer::DeleteBuffer()
 {
-	vkFreeCommandBuffers(*device, commandPool->GetCommandPool(), 1, &commandBuffer);
-}
-
-VKCommandBuffer::~VKCommandBuffer()
-{
+	vkFreeCommandBuffers(device, commandPool->GetCommandPool(), 1, &commandBuffer);
 }

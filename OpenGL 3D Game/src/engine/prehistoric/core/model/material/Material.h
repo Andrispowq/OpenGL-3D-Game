@@ -5,7 +5,7 @@
 #include "engine/prehistoric/core/math/Math.h"
 #include "engine/prehistoric/core/util/loader/TextureLoader.h"
 
-#include "engine/prehistoric/assets/AssetManager.h"
+#include "engine/prehistoric/resources/AssetManager.h"
 
 class Material
 {
@@ -13,21 +13,21 @@ public:
 	Material(AssetManager* manager, Window* window);
 	~Material() {}
 
-	void AddTexture(const std::string& key, size_t textureID);
-	void AddVector4f(const std::string& key, Vector4f value);
-	void AddVector3f(const std::string& key, Vector3f value);
-	void AddVector2f(const std::string& key, Vector2f value);
-	void AddFloat(const std::string& key, float value);
-	void AddInt(const std::string& key, int value);
+	void addTexture(const std::string& key, size_t textureID);
+	void addVector4f(const std::string& key, Vector4f value);
+	void addVector3f(const std::string& key, Vector3f value);
+	void addVector2f(const std::string& key, Vector2f value);
+	void addFloat(const std::string& key, float value);
+	void addInt(const std::string& key, int value);
 
-	Texture* GetTexture(const std::string& key) const;
+	Texture* getTexture(const std::string& key) const;
 
-	Vector4f GetVector4f(const std::string& key) const;
-	Vector3f GetVector3f(const std::string& key) const;
-	Vector2f GetVector2f(const std::string& key) const;
+	Vector4f getVector4f(const std::string& key) const;
+	Vector3f getVector3f(const std::string& key) const;
+	Vector2f getVector2f(const std::string& key) const;
 
-	float GetFloat(const std::string& key) const;
-	int GetInt(const std::string& key) const;
+	float getFloat(const std::string& key) const;
+	int getInt(const std::string& key) const;
 
 	Texture* getDefault() const { return manager->getTexture(textureIDs.at("DEFAULT_TEX")); }
 	bool exists(const std::string& key) const { return textureIDs.find(key) != textureIDs.end(); }

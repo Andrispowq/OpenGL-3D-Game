@@ -31,16 +31,18 @@ public:
 	virtual void Render(const RenderingEngine& renderingEngine) const = 0;
 	virtual void BatchRender(const RenderingEngine& renderingEngine) const = 0;
 
-	static std::vector<Pipeline*> GetPipelines() { return pipelines; }
+	static std::vector<Pipeline*> getPipelines() { return pipelines; }
 
-	inline size_t GetPipelineIndex() const { return pipelineIndex; }
-	inline Pipeline* GetPipeline() const { return pipelines.at(pipelineIndex); }
+	inline size_t getPipelineIndex() const { return pipelineIndex; }
+	inline Pipeline* getPipeline() const { return pipelines.at(pipelineIndex); }
 
 	inline RenderPriority getPriority() const { return priority; }
 	inline void setPriority(RenderPriority priority) { this->priority = priority; }
 
 	Renderable(const Renderable& renderable) = delete;
 	Renderable operator=(const Renderable& renderable) = delete;
+	Renderable(const Renderable&& renderable) = delete;
+	Renderable operator=(const Renderable&& renderable) = delete;
 protected:
 	static std::vector<Pipeline*> pipelines;
 

@@ -10,7 +10,7 @@
 class VKTexture : public Texture
 {
 public:
-	VKTexture(VKPhysicalDevice& physicalDevice, VKDevice& device, uint32_t width, uint32_t height);
+	VKTexture(VKPhysicalDevice* physicalDevice, VKDevice* device, uint32_t width, uint32_t height);
 	virtual ~VKTexture();
 
 	virtual void UploadTextureData(size_t size, uint8_t channels, unsigned char* pixels, ImageFormat format) override;
@@ -22,10 +22,10 @@ public:
 
 	virtual void SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode) override;
 
-	VkImageView& GetTextureImageView() { return textureImageView; }
-	VkSampler& GetTextureSampler() { return textureSampler; }
+	VkImageView& getTextureImageView() { return textureImageView; }
+	VkSampler& getTextureSampler() { return textureSampler; }
 private:
-	VkFormat GetFormat(ImageFormat format) const;
+	VkFormat getFormat(ImageFormat format) const;
 private:
 	VKDevice* device;
 	VKPhysicalDevice* physicalDevice;

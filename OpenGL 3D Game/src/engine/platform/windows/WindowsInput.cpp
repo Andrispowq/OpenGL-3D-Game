@@ -3,9 +3,9 @@
 
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	auto pushedKeys = InputInstance.GetPushedKeys();
-	auto keysHolding = InputInstance.GetKeysHolding();
-	auto releasedKeys = InputInstance.GetReleasedKeys();
+	auto pushedKeys = InputInstance.getPushedKeys();
+	auto keysHolding = InputInstance.getKeysHolding();
+	auto releasedKeys = InputInstance.getReleasedKeys();
 
 	if (action == GLFW_PRESS)
 	{
@@ -34,15 +34,15 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 		}
 	}
 
-	InputInstance.SetPushedKeys(pushedKeys);
-	InputInstance.SetKeysHolding(keysHolding);
+	InputInstance.setPushedKeys(pushedKeys);
+	InputInstance.setKeysHolding(keysHolding);
 }
 
 static void mouse_callback(GLFWwindow* window, int button, int action, int mods)
 {
 	if (button == 2 && action == GLFW_PRESS)
 	{
-		InputInstance.SetLockedCursorPosition(InputInstance.GetCursorPosition());
+		InputInstance.setLockedCursorPosition(InputInstance.getCursorPosition());
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	}
 
@@ -51,9 +51,9 @@ static void mouse_callback(GLFWwindow* window, int button, int action, int mods)
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
 
-	auto pushedButtons = InputInstance.GetPushedButtons();
-	auto buttonsHolding = InputInstance.GetButtonsHolding();
-	auto releasedButtons = InputInstance.GetReleasedButtons();
+	auto pushedButtons = InputInstance.getPushedButtons();
+	auto buttonsHolding = InputInstance.getButtonsHolding();
+	auto releasedButtons = InputInstance.getReleasedButtons();
 
 	if (action == GLFW_PRESS)
 	{
@@ -82,36 +82,36 @@ static void mouse_callback(GLFWwindow* window, int button, int action, int mods)
 		}
 	}
 
-	InputInstance.SetPushedButtons(pushedButtons);
-	InputInstance.SetButtonsHolding(buttonsHolding);
-	InputInstance.SetReleasedButtons(releasedButtons);
+	InputInstance.setPushedButtons(pushedButtons);
+	InputInstance.setButtonsHolding(buttonsHolding);
+	InputInstance.setReleasedButtons(releasedButtons);
 }
 
 static void cursor_pos_callback(GLFWwindow* window, double xPos, double yPos)
 {
-	InputInstance.SetCursorPosition(Vector2f(static_cast<float>(xPos), static_cast<float>(yPos)));
+	InputInstance.setCursorPosition(Vector2f(static_cast<float>(xPos), static_cast<float>(yPos)));
 }
 
 static void scroll_callback(GLFWwindow* window, double xOffset, double yOffset)
 {
-	InputInstance.SetScrollOffset(static_cast<float>(yOffset));
+	InputInstance.setScrollOffset(static_cast<float>(yOffset));
 }
 
 static void focus_callback(GLFWwindow* window, int iconified)
 {
 	if (iconified == GLFW_TRUE)
 	{
-		InputInstance.SetPause(true);
+		InputInstance.setPause(true);
 	}
 	else
 	{
-		InputInstance.SetPause(false);
+		InputInstance.setPause(false);
 	}
 }
 
 bool WindowsInput::Init(Window* window) const
 {
-	auto id = static_cast<GLFWwindow*>(window->GetWindowHandle());
+	GLFWwindow* id = reinterpret_cast<GLFWwindow*>(window->getWindowHandle());
 
 	//Input is static so we can use it in the callbacks, but window is not, so we need a way to get it
 	glfwSetWindowUserPointer(id, (void*) window);
@@ -174,7 +174,7 @@ bool WindowsInput::Update()
 	return true;
 }
 
-void WindowsInput::SetCursorPositionOnScreen(Window* window, const Vector2f& cursorPosition)
+void WindowsInput::setCursorPositionOnScreen(Window* window, const Vector2f& cursorPosition)
 {
-	glfwSetCursorPos(static_cast<GLFWwindow*>(window->GetWindowHandle()), cursorPosition.x, cursorPosition.y);
+	glfwSetCursorPos(static_cast<GLFWwindow*>(window->getWindowHandle()), cursorPosition.x, cursorPosition.y);
 }

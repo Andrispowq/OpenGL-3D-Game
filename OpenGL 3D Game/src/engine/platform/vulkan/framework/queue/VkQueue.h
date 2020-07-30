@@ -8,7 +8,7 @@ class VKQueue
 public:
 	void SetupQueue(VkDevice device, uint32_t family);
 
-	VkQueue& GetQueue() { return queue; }
+	VkQueue getQueue() const { return queue; }
 private:
 	VkQueue queue;
 };

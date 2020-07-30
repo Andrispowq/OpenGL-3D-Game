@@ -45,7 +45,7 @@ struct CapabilityLimits
 class Capabilities
 {
 public:
-	static Capabilities* GetInstance();
+	static Capabilities* getInstance();
 
 	virtual void QueryCapabilities(void* physicalDevice) = 0;
 public:

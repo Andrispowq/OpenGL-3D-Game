@@ -17,8 +17,8 @@ public:
 	virtual void PreUpdate(Engine* engine) {}
 	virtual void PreRender(RenderingEngine* renderingEngine) {}
 
-	inline GameObject* GetParent() const { return parent; }
-	inline void SetParent(GameObject* parent) { this->parent = parent; }
+	inline GameObject* getParent() const { return parent; }
+	inline void setParent(GameObject* parent) { this->parent = parent; }
 protected:
 	GameObject* parent;
 	UpdateFunction updateFunction; //An optional script for every component to run, which does not apply to a component type but a specific component, like the sun's movement

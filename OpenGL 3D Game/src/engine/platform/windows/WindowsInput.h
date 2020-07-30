@@ -13,7 +13,7 @@ public:
 	bool Init(Window* window) const override;
 	bool Update() override;
 
-	void SetCursorPositionOnScreen(Window* window, const Vector2f& cursorPosition) override;
+	void setCursorPositionOnScreen(Window* window, const Vector2f& cursorPosition) override;
 };
 
 #endif

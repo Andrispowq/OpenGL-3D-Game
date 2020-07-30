@@ -8,19 +8,19 @@
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
-	InputInstance.SetPause(false);
+	InputInstance.setPause(false);
 
 	if (width == 0 || height == 0)
 	{
-		InputInstance.SetPause(true);
+		InputInstance.setPause(true);
 		return;
 	}
 
 	Window* wnd = (Window*)glfwGetWindowUserPointer(window);
-	wnd->SetWidth(width);
-	wnd->SetHeight(height);
-	wnd->SetResized(true);
-	wnd->GetSwapchain()->SetWindowSize((uint32_t)width, (uint32_t)height);
+	wnd->setWidth(width);
+	wnd->setHeight(height);
+	wnd->setResized(true);
+	wnd->getSwapchain()->SetWindowSize((uint32_t)width, (uint32_t)height);
 }
 
 static void error_callback(int error, const char* description)
@@ -120,10 +120,6 @@ void WindowsWindow::Input()
 
 void WindowsWindow::Render() const
 {
-	//Synchronize these values because it may change in a callback, and it's easier this way
-	FrameworkConfig::windowWidth = width;
-	FrameworkConfig::windowHeight = height;
-
 	swapchain->SwapBuffers();
 }
 

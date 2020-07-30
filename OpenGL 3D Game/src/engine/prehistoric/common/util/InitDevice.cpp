@@ -3,7 +3,7 @@
 
 InitDevice* InitDevice::instance;
 
-InitDevice& InitDevice::GetInstance()
+InitDevice& InitDevice::getInstance()
 {
 	if (instance == nullptr)
 	{
@@ -18,4 +18,9 @@ InitDevice& InitDevice::GetInstance()
 	}
 
 	return *instance;
+}
+
+void InitDevice::DeleteInstance()
+{
+	delete instance;
 }

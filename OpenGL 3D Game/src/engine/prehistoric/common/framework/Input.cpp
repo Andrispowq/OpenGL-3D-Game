@@ -5,7 +5,7 @@
 
 Input* Input::instance = nullptr;
 
-Input& Input::GetInstance()
+Input& Input::getInstance()
 {
 	if (instance == nullptr)
 	{
@@ -34,7 +34,7 @@ bool Input::IsJoystickButtonPushed(const InputCode& key, const JoystickID& joyst
 	return false;
 }
 
-float Input::GetJoystickAxisOffset(const InputCode& axis, const JoystickID& joystick) const
+float Input::getJoystickAxisOffset(const InputCode& axis, const JoystickID& joystick) const
 {
 	auto axes = joystickAxes[(uint32_t)joystick];
 	

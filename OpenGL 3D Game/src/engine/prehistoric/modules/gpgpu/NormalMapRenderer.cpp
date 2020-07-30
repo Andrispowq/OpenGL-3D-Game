@@ -45,10 +45,7 @@ NormalMapRenderer::NormalMapRenderer(Window* window, AssetManager* manager, floa
 
 NormalMapRenderer::~NormalMapRenderer()
 {
-	pipeline->DestroyPipeline();
-
 	delete pipeline;
-	delete normalmap;
 }
 
 void NormalMapRenderer::Render(Texture* heightmap)

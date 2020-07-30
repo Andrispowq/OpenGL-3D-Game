@@ -7,7 +7,7 @@
 #include "engine/platform/opengl/framework/context/GLContext.h"
 #include "engine/platform/vulkan/framework/context/VKContext.h"
 
-Window::Window(const int& width, const int& height, const char* title, const bool& fullscreen)
+Window::Window(uint32_t width, uint32_t height, const char* title, bool fullscreen)
 {
 	this->width = width;
 	this->height = height;
@@ -55,7 +55,7 @@ Window::Window()
 
 Window::~Window()
 {
-	swapchain->DeleteSwapchain(context->GetDevice());
+	swapchain->DeleteSwapchain(context->getDevice());
 	
 	delete swapchain;
 	delete context;

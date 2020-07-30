@@ -6,26 +6,26 @@
 class Light : public Component
 {
 public:
-	Light(const Vector3f& colour = 0, const Vector3f& intensity = 1, bool isSun = false, UpdateFunction function = nullptr);
+	Light(const Vector3f& colour = 0, const Vector3f& intensity = 1, bool sun = false, UpdateFunction function = nullptr);
 	virtual ~Light() {}
 
 	virtual void PreUpdate(Engine* engine) override;
 	virtual void PreRender(RenderingEngine* renderingEngine) override;
 
-	inline Vector3f GetColour() const { return colour; }
-	inline Vector3f GetIntensity() const { return intensity; }
+	inline Vector3f getColour() const { return colour; }
+	inline Vector3f getIntensity() const { return intensity; }
 
-	inline bool IsSun() const { return isSun; }
+	inline bool isSun() const { return sun; }
 
-	inline void SetColour(const Vector3f& colour) { this->colour = colour; }
-	inline void SetIntensity(const Vector3f& intensity) { this->intensity = intensity; }
+	inline void setColour(const Vector3f& colour) { this->colour = colour; }
+	inline void setIntensity(const Vector3f& intensity) { this->intensity = intensity; }
 
-	inline void SetSun(bool sun) { this->isSun = sun; }
+	inline void setSun(bool sun) { this->sun = sun; }
 private:
 	Vector3f colour;
 	Vector3f intensity;
 
-	bool isSun;
+	bool sun;
 };
 
 #endif

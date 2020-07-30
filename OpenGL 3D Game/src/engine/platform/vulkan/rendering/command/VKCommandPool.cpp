@@ -1,12 +1,10 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "VKCommandPool.h"
 
-VKCommandPool::VKCommandPool(VKSurface& surface, VkPhysicalDevice& physicalDevice, VkDevice& device)
-	: physicalDevice(physicalDevice), device(device)
+VKCommandPool::VKCommandPool(VkPhysicalDevice physicalDevice, VkDevice device, VKSurface* surface)
+	: physicalDevice(physicalDevice), device(device), surface(surface)
 {
-	this->surface = &surface;
-
-	QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface.GetSurface(), physicalDevice);
+	QueueFamilyIndices indices = VKUtil::FindQueueFamilies(surface->getSurface(), physicalDevice);
 
 	VkCommandPoolCreateInfo poolInfo = {};
 	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -26,11 +24,8 @@ VKCommandPool::~VKCommandPool()
 		delete buffer;
 	}
 
-	buffers.clear();
-
 	vkDestroyCommandPool(device, commandPool, nullptr);
 }
-
 
 void VKCommandPool::AddCommandBuffer(VKCommandBuffer& buffer)
 {
@@ -62,7 +57,7 @@ void VKCommandPool::DeleteCommandBuffers()
 
 	for (size_t i = 0; i < buffers.size(); i++)
 	{
-		buffs[i] = buffers[i]->GetCommandBuffer();
+		buffs[i] = buffers[i]->getCommandBuffer();
 	}
 
 	vkFreeCommandBuffers(device, commandPool, (uint32_t) buffers.size(), buffs);

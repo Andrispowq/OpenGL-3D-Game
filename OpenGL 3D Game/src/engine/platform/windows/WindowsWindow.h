@@ -14,7 +14,7 @@ class WindowsWindow : public Window
 {
 public:
 	WindowsWindow() : Window(), window(nullptr) {}
-	WindowsWindow(const int& width, const int& height, const char* title, const bool& fullscreen) : Window(width, height, title, fullscreen), window(nullptr) {}
+	WindowsWindow(uint32_t width, uint32_t height, const char* title, bool fullscreen) : Window(width, height, title, fullscreen), window(nullptr) {}
 
 	virtual ~WindowsWindow();
 
@@ -25,7 +25,7 @@ public:
 
 	virtual void SetFullscreen(bool fullscreen) override;
 
-	virtual void* GetWindowHandle() const override { return window; }
+	virtual void* getWindowHandle() const override { return window; }
 private:
 	bool initGLFW() const;
 private:

@@ -42,6 +42,9 @@ void GLMeshVertexBuffer::Store(const Mesh& mesh)
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::GetNumberOfFloats()), (void*) (sizeof(float) * 5));
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::GetNumberOfFloats()), (void*) (sizeof(float) * 8));
 
+	delete[] vdata;
+	delete[] idata;
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);

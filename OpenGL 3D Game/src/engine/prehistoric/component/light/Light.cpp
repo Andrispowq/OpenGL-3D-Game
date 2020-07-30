@@ -3,8 +3,8 @@
 
 #include "engine/prehistoric/core/Engine.h"
 
-Light::Light(const Vector3f& colour, const Vector3f& intensity, bool isSun, UpdateFunction function)
-	: Component(), colour(colour), intensity(intensity), isSun(isSun)
+Light::Light(const Vector3f& colour, const Vector3f& intensity, bool sun, UpdateFunction function)
+	: Component(), colour(colour), intensity(intensity), sun(sun)
 {
 	this->updateFunction = function;
 }

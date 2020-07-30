@@ -11,7 +11,7 @@ public:
 
 	static void CreateMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& messengerCreateInfo);
 
-	VkDebugUtilsMessengerEXT GetDebugMessenger() const { return debugMessenger; }
+	VkDebugUtilsMessengerEXT getDebugMessenger() const { return debugMessenger; }
 private:
 	VkInstance instance;
 

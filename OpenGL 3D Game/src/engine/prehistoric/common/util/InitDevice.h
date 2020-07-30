@@ -6,7 +6,7 @@
 class InitDevice
 {
 public:
-	static InitDevice& GetInstance();
+	static InitDevice& getInstance();
 	static void DeleteInstance();
 
 	virtual void InitiateDevice() const = 0;

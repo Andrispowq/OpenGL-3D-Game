@@ -6,15 +6,16 @@
 class VKFence
 {
 public:
-	VKFence(VkDevice& device);
+	VKFence(VkDevice device);
 	virtual ~VKFence();
 
 	void WaitForFence();
 	void ResetFence();
 
-	VkFence& GetFence() { return fence; }
+	//Needs to return a reference
+	VkFence& getFence() { return fence; }
 private:
-	VkDevice* device;
+	VkDevice device;
 
 	VkFence fence;
 };

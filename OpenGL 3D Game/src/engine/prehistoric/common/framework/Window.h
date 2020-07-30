@@ -9,12 +9,12 @@
 class Window
 {
 public:
-	Window(const int& width, const int& height, const char* title, const bool& fullscreen);
+	Window(uint32_t width, uint32_t height, const char* title, bool fullscreen);
 	Window();
 	
 	virtual ~Window() = 0;
 
-	void SetClearColor(const float& red, const float& green, const float& blue, const float& alpha) const { swapchain->SetClearColor(red, green, blue, alpha); }
+	void SetClearColor(float red, float green, float blue, float alpha) const { swapchain->SetClearColor(red, green, blue, alpha); }
 	void ClearScreen() const { swapchain->ClearScreen(); }
 
 	void SetVSync(bool vsync) const { swapchain->SetVSync(vsync); }
@@ -28,25 +28,25 @@ public:
 
 	virtual void SetFullscreen(bool fullscreen) = 0;
 
-	inline bool GetClosed() const { return closed; }
-	inline void SetClosed(const bool& closed) { this->closed = closed; }
+	bool getClosed() const { return closed; }
+	void setClosed(const bool& closed) { this->closed = closed; }
 
-	int GetWidth() const { return width; }
-	int GetHeight() const { return height; }
+	uint32_t getWidth() const { return width; }
+	uint32_t getHeight() const { return height; }
+	bool getResized() const { return resized; }
 
-	void SetWidth(int width) { this->width = width; }
-	void SetHeight(int height) { this->height = height; }
+	Swapchain* getSwapchain() const { return swapchain; }
+	Context* getContext() const { return context; }
 
-	inline Swapchain* GetSwapchain() const { return swapchain; }
-	inline Context* GetContext() const { return context; }
+	virtual void* getWindowHandle() const = 0;
 
-	virtual void* GetWindowHandle() const = 0;
+	void setWidth(int width) { this->width = width; FrameworkConfig::windowWidth = width; }
+	void setHeight(int height) { this->height = height; FrameworkConfig::windowHeight = height; }
+	void setResized(bool resized) { this->resized = resized; }
 
-	bool& GetResized() { return resized; }
-	void SetResized(bool resized) { this->resized = resized; }
 protected:
-	int width;
-	int height;
+	uint32_t width;
+	uint32_t height;
 	const char* title;
 	bool fullscreen;
 	bool closed;

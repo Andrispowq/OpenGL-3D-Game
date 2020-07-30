@@ -7,7 +7,7 @@ void VKSurface::CreateSurface(Window* window, VKInstance* instance)
 	this->instance = instance;
 
 	VkResult res;
-	if ((res = glfwCreateWindowSurface(instance->GetInstance(), (GLFWwindow*) window->GetWindowHandle(), nullptr, &surface)) != VK_SUCCESS)
+	if ((res = glfwCreateWindowSurface(instance->getInstance(), (GLFWwindow*) window->GetWindowHandle(), nullptr, &surface)) != VK_SUCCESS)
 	{
 		PR_LOG_RUNTIME_ERROR("The creation of VkSurfaceKHR has failed! Error: %i\n", res);
 	}
@@ -15,5 +15,5 @@ void VKSurface::CreateSurface(Window* window, VKInstance* instance)
 
 void VKSurface::DeleteSurface()
 {
-	vkDestroySurfaceKHR(instance->GetInstance(), surface, nullptr);
+	vkDestroySurfaceKHR(instance->getInstance(), surface, nullptr);
 }

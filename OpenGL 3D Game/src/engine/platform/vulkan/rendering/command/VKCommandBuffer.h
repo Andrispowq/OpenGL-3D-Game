@@ -10,18 +10,19 @@ class VKCommandPool;
 class VKCommandBuffer
 {
 public:
-	VKCommandBuffer(VkDevice& device, VKCommandPool& commandPool);
-	virtual ~VKCommandBuffer();
+	VKCommandBuffer(VKCommandPool* commandPool, VkDevice device);
+	virtual ~VKCommandBuffer() {}
 
 	void BindBuffer() const;
 	void UnbindBuffer() const;
 
 	void DeleteBuffer();
 
-	VkCommandBuffer& GetCommandBuffer() { return commandBuffer; }
+	//Needs to return a reference
+	VkCommandBuffer& getCommandBuffer() { return commandBuffer; }
 private:
 	VKCommandPool* commandPool;
-	VkDevice* device;
+	VkDevice device;
 
 	VkCommandBuffer commandBuffer;
 };

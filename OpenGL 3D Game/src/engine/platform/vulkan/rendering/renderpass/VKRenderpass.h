@@ -10,13 +10,13 @@
 class VKRenderpass
 {
 public:
-	VKRenderpass(VKPhysicalDevice& physicalDevice, VkDevice& device, VkFormat& colourImageFormat);
+	VKRenderpass(VKPhysicalDevice* physicalDevice, VkDevice device, VkFormat colourImageFormat);
 	virtual ~VKRenderpass();
 
-	void BeginRenderpass(VKCommandBuffer& commandBuffer, VkExtent2D& swapchainExtent, VKFramebuffer& framebuffer, Vector4f clearColour);
-	void EndRenderpass(VKCommandBuffer& commandBuffer);
+	void BeginRenderpass(VKCommandBuffer* commandBuffer, VKFramebuffer* framebuffer, VkExtent2D swapchainExtent, Vector4f clearColour);
+	void EndRenderpass(VKCommandBuffer* commandBuffer);
 
-	VkRenderPass GetRenderPass() const { return renderpass; }
+	VkRenderPass getRenderPass() const { return renderpass; }
 private:
 	VkRenderPass renderpass;
 	VkDevice device;

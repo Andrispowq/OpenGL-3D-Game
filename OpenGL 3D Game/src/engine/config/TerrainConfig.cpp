@@ -18,7 +18,7 @@ namespace TerrainConfig
 	std::string TerrainConfig::heightmap;
 	std::vector<Material*> TerrainConfig::materials;
 
-	void TerrainConfig::LoadConfig(const std::string& path, AssetManager* manager, Window* window)
+	void TerrainConfig::LoadConfig(const std::string& path, Window* window, AssetManager* manager)
 	{
 		std::ifstream file;
 		file.open(path.c_str());

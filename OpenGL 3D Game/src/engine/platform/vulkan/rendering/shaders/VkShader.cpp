@@ -36,8 +36,8 @@ VKShader::VKShader(Context* context, Swapchain* swapchain, const std::vector<cha
 	modules = new VkShaderModule[5];
 	shaderStages = new VkPipelineShaderStageCreateInfo[5];
 
-	this->physicalDevice = (VKPhysicalDevice*) context->GetPhysicalDevice();
-	this->device = (VKDevice*) context->GetDevice();
+	this->physicalDevice = (VKPhysicalDevice*) context->getPhysicalDevice();
+	this->device = (VKDevice*) context->getDevice();
 	counter = 0;
 
 	if (length == 1) //Compute shader
@@ -84,8 +84,8 @@ VKShader::VKShader(Context* context, Swapchain* swapchain)
 	modules = new VkShaderModule[5];
 	shaderStages = new VkPipelineShaderStageCreateInfo[5];
 
-	this->physicalDevice = (VKPhysicalDevice*) context->GetPhysicalDevice();
-	this->device = (VKDevice*) context->GetDevice();
+	this->physicalDevice = (VKPhysicalDevice*) context->getPhysicalDevice();
+	this->device = (VKDevice*) context->getDevice();
 	counter = 0;
 
 	this->swapchain = (VKSwapchain*)swapchain;
@@ -94,13 +94,13 @@ VKShader::VKShader(Context* context, Swapchain* swapchain)
 
 VKShader::~VKShader()
 {
-	vkDestroyPipelineLayout(device->GetDevice(), pipelineLayout, nullptr);
+	vkDestroyPipelineLayout(device->getDevice(), pipelineLayout, nullptr);
 
 	delete descriptorPool;
 
 	for (size_t i = 0; i < counter; i++)
 	{
-		vkDestroyShaderModule(device->GetDevice(), modules[i], nullptr);
+		vkDestroyShaderModule(device->getDevice(), modules[i], nullptr);
 	}
 
 	delete[] modules;
@@ -188,7 +188,7 @@ void VKShader::BindSet(void* commandBuffer, uint32_t set, uint32_t instance_inde
 	VKCommandBuffer* vkcmdbuff = reinterpret_cast<VKCommandBuffer*>(commandBuffer);
 	
 	VKDescriptorSet* _set = descriptorPool->getSet(set, instance_index);
-	vkCmdBindDescriptorSets(vkcmdbuff->GetCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, set, 1, &_set->getSets()[swapchain->GetAquiredImageIndex()], 0, nullptr);
+	vkCmdBindDescriptorSets(vkcmdbuff->getCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, set, 1, &_set->getSets()[swapchain->getAquiredImageIndex()], 0, nullptr);
 }
 
 void VKShader::SetUniformi(const std::string& name, int value, size_t offset, uint32_t instance_index) const
@@ -196,9 +196,9 @@ void VKShader::SetUniformi(const std::string& name, int value, size_t offset, ui
 	void* data;
 	const VkDeviceMemory& mem = descriptorPool->getUniform(name)->getBuffer()->getMemory();
 
-	vkMapMemory(device->GetDevice(), mem, offset, sizeof(int), 0, &data);
+	vkMapMemory(device->getDevice(), mem, offset, sizeof(int), 0, &data);
 	memcpy(data, &value, sizeof(int));
-	vkUnmapMemory(device->GetDevice(), mem);
+	vkUnmapMemory(device->getDevice(), mem);
 }
 
 void VKShader::SetUniformf(const std::string& name, float value, size_t offset, uint32_t instance_index) const
@@ -206,9 +206,9 @@ void VKShader::SetUniformf(const std::string& name, float value, size_t offset, 
 	void* data;
 	const VkDeviceMemory& mem = descriptorPool->getUniform(name)->getBuffer()->getMemory();
 
-	vkMapMemory(device->GetDevice(), mem, offset, sizeof(float), 0, &data);
+	vkMapMemory(device->getDevice(), mem, offset, sizeof(float), 0, &data);
 	memcpy(data, &value, sizeof(float));
-	vkUnmapMemory(device->GetDevice(), mem);
+	vkUnmapMemory(device->getDevice(), mem);
 }
 
 void VKShader::SetUniform(const std::string& name, const Vector2f& value, size_t offset, uint32_t instance_index) const
@@ -216,9 +216,9 @@ void VKShader::SetUniform(const std::string& name, const Vector2f& value, size_t
 	void* data;
 	const VkDeviceMemory& mem = descriptorPool->getUniform(name)->getBuffer()->getMemory();
 
-	vkMapMemory(device->GetDevice(), mem, offset, Vector2f::size(), 0, &data);
+	vkMapMemory(device->getDevice(), mem, offset, Vector2f::size(), 0, &data);
 	memcpy(data, &value, Vector2f::size());
-	vkUnmapMemory(device->GetDevice(), mem);
+	vkUnmapMemory(device->getDevice(), mem);
 }
 
 void VKShader::SetUniform(const std::string& name, const Vector3f& value, size_t offset, uint32_t instance_index) const
@@ -226,9 +226,9 @@ void VKShader::SetUniform(const std::string& name, const Vector3f& value, size_t
 	void* data;
 	const VkDeviceMemory& mem = descriptorPool->getUniform(name)->getBuffer()->getMemory();
 
-	vkMapMemory(device->GetDevice(), mem, offset, Vector3f::size(), 0, &data);
+	vkMapMemory(device->getDevice(), mem, offset, Vector3f::size(), 0, &data);
 	memcpy(data, &value, Vector3f::size());
-	vkUnmapMemory(device->GetDevice(), mem);
+	vkUnmapMemory(device->getDevice(), mem);
 }
 
 void VKShader::SetUniform(const std::string& name, const Vector4f& value, size_t offset, uint32_t instance_index) const
@@ -236,9 +236,9 @@ void VKShader::SetUniform(const std::string& name, const Vector4f& value, size_t
 	void* data;
 	const VkDeviceMemory& mem = descriptorPool->getUniform(name)->getBuffer()->getMemory();
 
-	vkMapMemory(device->GetDevice(), mem, offset, Vector4f::size(), 0, &data);
+	vkMapMemory(device->getDevice(), mem, offset, Vector4f::size(), 0, &data);
 	memcpy(data, &value, Vector4f::size());
-	vkUnmapMemory(device->GetDevice(), mem);
+	vkUnmapMemory(device->getDevice(), mem);
 }
 
 void VKShader::SetUniform(const std::string& name, const Matrix4f& value, size_t offset, uint32_t instance_index) const
@@ -248,9 +248,9 @@ void VKShader::SetUniform(const std::string& name, const Matrix4f& value, size_t
 
 	float* dataF = value.m;
 
-	vkMapMemory(device->GetDevice(), mem, offset, sizeof(float) * 16, 0, &data);
+	vkMapMemory(device->getDevice(), mem, offset, sizeof(float) * 16, 0, &data);
 	memcpy(data, dataF, sizeof(float) * 16);
-	vkUnmapMemory(device->GetDevice(), mem);
+	vkUnmapMemory(device->getDevice(), mem);
 }
 
 void VKShader::SetTexture(const std::string& name, Texture* value, uint32_t instance_index) const
@@ -278,7 +278,7 @@ void VKShader::SetTexture(const std::string& name, Texture* value, uint32_t inst
 		sets[i].pImageInfo = &imageInfo;
 	}
 
-	vkUpdateDescriptorSets(device->GetDevice(), (uint32_t)sets.size(), sets.data(), 0, nullptr);
+	vkUpdateDescriptorSets(device->getDevice(), (uint32_t)sets.size(), sets.data(), 0, nullptr);
 }
 
 void VKShader::SetUniform(const std::string& name, const void* value, size_t size, size_t offset, uint32_t instance_index) const
@@ -286,9 +286,9 @@ void VKShader::SetUniform(const std::string& name, const void* value, size_t siz
 	void* data;
 	const VkDeviceMemory& mem = descriptorPool->getUniform(name)->getBuffer()->getMemory();
 
-	vkMapMemory(device->GetDevice(), mem, offset, size, 0, &data);
+	vkMapMemory(device->getDevice(), mem, offset, size, 0, &data);
 	memcpy(data, value, size);
-	vkUnmapMemory(device->GetDevice(), mem);
+	vkUnmapMemory(device->getDevice(), mem);
 }
 
 void VKShader::RegisterInstance()
@@ -304,7 +304,7 @@ VkShaderModule VKShader::CreateShaderModule(const std::vector<char>& code) const
 	createInfo.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
 	VkShaderModule shaderModule;
-	if (vkCreateShaderModule(device->GetDevice(), &createInfo, nullptr, &shaderModule) != VK_SUCCESS) 
+	if (vkCreateShaderModule(device->getDevice(), &createInfo, nullptr, &shaderModule) != VK_SUCCESS) 
 	{
 		PR_LOG_RUNTIME_ERROR("Failed to create shader module!\n");
 		return VK_NULL_HANDLE;

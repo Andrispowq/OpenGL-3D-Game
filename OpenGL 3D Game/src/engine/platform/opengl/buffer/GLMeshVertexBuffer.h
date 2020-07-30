@@ -18,12 +18,6 @@ public:
 	void Bind(void* commandBuffer) const override;
 	void Draw(void* commandBuffer) const override;
 	void Unbind() const override;
-
-	virtual bool operator==(const VertexBuffer& other) override
-	{
-		return vao == (*reinterpret_cast<const GLMeshVertexBuffer*>(&other)).vao && vbo == (*reinterpret_cast<const GLMeshVertexBuffer*>(&other)).vbo
-			&& ibo == (*reinterpret_cast<const GLMeshVertexBuffer*>(&other)).ibo;
-	}
 private:
 	GLuint vao;
 	GLuint vbo;

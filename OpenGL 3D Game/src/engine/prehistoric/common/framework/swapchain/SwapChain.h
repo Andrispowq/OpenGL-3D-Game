@@ -13,13 +13,13 @@ public:
 	virtual void SetVSync(bool vSync) const = 0;
 	virtual void SetWindowSize(uint32_t width, uint32_t height) = 0;
 
-	virtual void SetClearColor(const float& red, const float& green, const float& blue, const float& alpha) = 0;
+	virtual void SetClearColor(float red, float green, float blue, float alpha) = 0;
 	virtual void ClearScreen() = 0;
 
 	virtual void DeleteSwapchain(void* device) = 0;
 
-	virtual uint32_t GetAquiredImageIndex() const { return -1; };
-	virtual void* GetDrawCommandBuffer() const { return nullptr; };
+	virtual uint32_t getAquiredImageIndex() const { return -1; };
+	virtual void* getDrawCommandBuffer() const { return nullptr; };
 
 	virtual void PrepareRendering() {};
 	virtual void EndRendering() {};

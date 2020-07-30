@@ -3,6 +3,8 @@
 
 #include "Vertex.h"
 
+#include <memory>
+
 class Mesh
 {
 public:
@@ -12,7 +14,8 @@ public:
 	Mesh() {}
 
 	virtual ~Mesh();
-
+	
+	//They return a pointer as returning a vector would result in a huge copy, but they should get deleted later on
 	float* GetVertexData() const;
 	uint16_t* GetIndexData() const;
 

@@ -1,10 +1,9 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "VKSemaphore.h"
 
-VKSemaphore::VKSemaphore(VkDevice& device)
+VKSemaphore::VKSemaphore(VkDevice device)
+	: device(device)
 {
-	this->device = &device;
-
 	VkSemaphoreCreateInfo info = {};
 	info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
@@ -16,5 +15,5 @@ VKSemaphore::VKSemaphore(VkDevice& device)
 
 VKSemaphore::~VKSemaphore()
 {
-	vkDestroySemaphore(*device, semaphore, nullptr);
+	vkDestroySemaphore(device, semaphore, nullptr);
 }

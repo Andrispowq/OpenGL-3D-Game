@@ -6,12 +6,13 @@
 class VKSemaphore
 {
 public:
-	VKSemaphore(VkDevice& device);
+	VKSemaphore(VkDevice device);
 	virtual ~VKSemaphore();
 
-	VkSemaphore& GetSemaphore() { return semaphore; }
+	//Needs to return a reference
+	VkSemaphore& getSemaphore() { return semaphore; }
 private:
-	VkDevice* device;
+	VkDevice device;
 
 	VkSemaphore semaphore;
 };

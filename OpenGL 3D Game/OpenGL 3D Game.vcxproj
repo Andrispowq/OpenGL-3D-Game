@@ -24,7 +24,7 @@
     <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorPool.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorSet.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorSetBinding.cpp" />
-    <ClCompile Include="src\engine\prehistoric\assets\AssetManager.cpp" />
+    <ClCompile Include="src\engine\prehistoric\resources\AssetManager.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\buffer\ShaderStorageBuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\ComputePipeline.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\GraphicsPipeline.cpp" />
@@ -64,8 +64,8 @@
     <ClCompile Include="src\engine\platform\vulkan\rendering\shaders\pbr\VKPBRShader.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\synchronization\VKFence.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\synchronization\VKSemaphore.cpp" />
-    <ClCompile Include="src\engine\platform\vulkan\rendering\shaders\VkShader.cpp" />
-    <ClCompile Include="src\engine\platform\vulkan\texture\VkTexture.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\rendering\shaders\VKShader.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\texture\VKTexture.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\util\VKUtil.cpp" />
     <ClCompile Include="src\engine\platform\windows\WindowsInput.cpp" />
     <ClCompile Include="src\engine\platform\windows\WindowsWindow.cpp" />
@@ -173,12 +173,12 @@
     <ClInclude Include="src\engine\platform\vulkan\rendering\shaders\pbr\VKPBRShader.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\synchronization\VKFence.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\synchronization\VKSemaphore.h" />
-    <ClInclude Include="src\engine\platform\vulkan\rendering\shaders\VkShader.h" />
-    <ClInclude Include="src\engine\platform\vulkan\texture\VkTexture.h" />
+    <ClInclude Include="src\engine\platform\vulkan\rendering\shaders\VKShader.h" />
+    <ClInclude Include="src\engine\platform\vulkan\texture\VKTexture.h" />
     <ClInclude Include="src\engine\platform\vulkan\util\VKUtil.h" />
     <ClInclude Include="src\engine\platform\windows\WindowsInput.h" />
     <ClInclude Include="src\engine\platform\windows\WindowsWindow.h" />
-    <ClInclude Include="src\engine\prehistoric\assets\AssetManager.h" />
+    <ClInclude Include="src\engine\prehistoric\resources\AssetManager.h" />
     <ClInclude Include="src\engine\prehistoric\common\buffer\Framebuffer.h" />
     <ClInclude Include="src\engine\prehistoric\common\buffer\MeshVertexBuffer.h" />
     <ClInclude Include="src\engine\prehistoric\common\buffer\PatchVertexBuffer.h" />

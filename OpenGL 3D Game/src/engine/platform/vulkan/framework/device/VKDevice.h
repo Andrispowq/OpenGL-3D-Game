@@ -13,13 +13,14 @@ public:
 	VKDevice();
 	virtual ~VKDevice();
 
-	void CreateLogicalDevice(VKSurface* surface, VKPhysicalDevice* physicalDevice, const std::vector<const char*>& validationLayers, const std::vector<const char*>& deviceExtensions);
+	void CreateLogicalDevice(VKPhysicalDevice* physicalDevice, VKSurface* surface, const std::vector<const char*>& validationLayers);
 	void DestroyLogicalDevice();
 
-	VkDevice& GetDevice() { return device; }
+	//This needs to return a reference
+	VkDevice& getDevice() { return device; }
 
-	VKQueue& GetGraphicsQueue() { return graphicsQueue; }
-	VKQueue& GetPresentQueue() { return presentQueue; }
+	VKQueue& getGraphicsQueue() { return graphicsQueue; }
+	VKQueue& getPresentQueue() { return presentQueue; }
 private:
 	VkDevice device;
 

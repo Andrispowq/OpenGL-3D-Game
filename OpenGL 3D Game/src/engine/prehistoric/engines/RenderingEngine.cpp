@@ -39,14 +39,10 @@ RenderingEngine::RenderingEngine()
 
 	camera->LogStage();
 	camera->setSpeedControl({ MOUSE_SCROLL, PR_KEY_UNKNOWN, PR_JOYSTICK_1 });
-
-	manager = new AssetManager(window);
 }
 
 RenderingEngine::~RenderingEngine()
 {
-	delete manager;
-
 	delete window;
 	delete camera;
 }

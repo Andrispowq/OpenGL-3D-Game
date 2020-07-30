@@ -54,7 +54,7 @@ TerrainHeightsQuery::~TerrainHeightsQuery()
 	pipeline->DestroyPipeline();
 
 	delete pipeline;
-	delete buffer; //This deletes the mapping to heights*
+	delete buffer;
 }
 
 void TerrainHeightsQuery::Query(Texture* heightmap)

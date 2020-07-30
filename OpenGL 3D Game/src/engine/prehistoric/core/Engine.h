@@ -24,6 +24,9 @@ public:
 	void Render();
 
 	inline RenderingEngine* GetRenderingEngine() const { return renderingEngine; }
+	inline AudioEngine* GetAudioEngine() const { return audioEngine; }
+
+	inline AssetManager* GetAssetManager() const { return manager; }
 
 	inline float getFrameTime() const { return frameTime; }
 
@@ -34,6 +37,9 @@ public:
 private:
 	//Root object
 	GameObject* root;
+
+	//The asset manager
+	AssetManager* manager;
 
 	//Engines
 	RenderingEngine* renderingEngine;

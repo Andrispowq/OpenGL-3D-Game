@@ -14,7 +14,7 @@ public:
 	void CreateSurface(Window* window, VKInstance* instance);
 	void DeleteSurface();
 
-	VkSurfaceKHR& GetSurface() { return surface; }
+	VkSurfaceKHR getSurface() const { return surface; }
 private:
 	VKInstance* instance;
 

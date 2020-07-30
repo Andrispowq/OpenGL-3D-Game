@@ -19,16 +19,20 @@ Engine::Engine()
 
 	InputInstance.Init(renderingEngine->GetWindow());
 	renderingEngine->Init();
+
+	manager = new AssetManager(renderingEngine->GetWindow());
 	
 	//Loading configs that depend on some engine feature like the window
-	TerrainConfig::LoadConfig("res/config/terrain.cfg", renderingEngine->GetAssetManager(), renderingEngine->GetWindow());
-	Scene::CreateScene(root, renderingEngine->GetWindow(), renderingEngine->GetAssetManager(), renderingEngine->GetCamera());
+	TerrainConfig::LoadConfig("res/config/terrain.cfg", renderingEngine->GetWindow(), manager);
+	Scene::CreateScene(root, renderingEngine->GetWindow(), manager, renderingEngine->GetCamera());
 }
 
 Engine::~Engine()
 {
 	Scene::DeleteData();
 	Input::DeleteInstance();
+
+	delete manager;
 
 	delete renderingEngine;
 	delete audioEngine;

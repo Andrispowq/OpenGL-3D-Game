@@ -27,13 +27,8 @@ public:
 	void Draw(void* commandBuffer) const override;
 	void Unbind() const override;
 
-	VkVertexInputBindingDescription* GetBindingDescription() const;
-	std::vector<VkVertexInputAttributeDescription> GetAttributeDescriptions() const;
-
-	virtual bool operator==(const VertexBuffer& other) override
-	{
-		return vertexBuffer->operator==(*(*reinterpret_cast<const VKMeshVertexBuffer*>(&other)).vertexBuffer) && indexBuffer->operator==(*(*reinterpret_cast<const VKMeshVertexBuffer*>(&other)).indexBuffer);
-	}
+	VkVertexInputBindingDescription* getBindingDescription() const;
+	std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions() const;
 private:
 	VKBuffer* vertexBuffer;
 	VKBuffer* indexBuffer;

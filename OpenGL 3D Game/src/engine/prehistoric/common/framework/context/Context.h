@@ -9,11 +9,11 @@ public:
 	Context(Window* window) : window(window) {}
 	virtual ~Context() = 0;
 
-	virtual void* GetNativePhysicalDevice() { return nullptr; };
-	virtual void* GetNativeDevice() { return nullptr; };
+	virtual void* getNativePhysicalDevice() { return nullptr; };
+	virtual void* getNativeDevice() { return nullptr; };
 
-	virtual void* GetPhysicalDevice() { return nullptr; };
-	virtual void* GetDevice() { return nullptr; };
+	virtual void* getPhysicalDevice() { return nullptr; };
+	virtual void* getDevice() { return nullptr; };
 
 protected:
 	Window* window;

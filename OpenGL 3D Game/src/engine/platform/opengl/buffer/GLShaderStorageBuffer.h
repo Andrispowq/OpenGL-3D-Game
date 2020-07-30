@@ -8,7 +8,7 @@
 class GLShaderStorageBuffer : public ShaderStorageBuffer
 {
 public:
-	GLShaderStorageBuffer() : id(0xffffffff) {}
+	GLShaderStorageBuffer() : id(0) {}
 	GLShaderStorageBuffer(void* data, const Layout& layout);
 
 	virtual ~GLShaderStorageBuffer() override;
@@ -20,14 +20,6 @@ public:
 
 	virtual void MapBuffer() override;
 	virtual void UnmapBuffer() override;
-
-	virtual bool operator==(const ShaderStorageBuffer& other) override
-	{
-		if (id == reinterpret_cast<const GLShaderStorageBuffer*>(&other)->id)
-			return true;
-
-		return false;
-	}
 private:
 	GLuint id;
 };

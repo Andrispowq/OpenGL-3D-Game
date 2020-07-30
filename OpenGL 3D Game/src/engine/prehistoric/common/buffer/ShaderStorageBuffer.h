@@ -28,20 +28,26 @@ struct LayoutMember
 	size_t count;
 };
 
-struct Layout
+class Layout
 {
+public:
 	constexpr static size_t MAX_MEMBERS = 10;
 
 	LayoutMember* members = nullptr;
 	size_t memberCount = 0;
 
+	Layout()
+	{
+		members = new LayoutMember[MAX_MEMBERS];
+	}
+
+	~Layout()
+	{
+		delete[] members;
+	}
+
 	void addLayoutMember(LayoutType type, LayoutTypeInfo typeInfo, size_t count)
 	{
-		if (members == nullptr)
-		{
-			members = new LayoutMember[MAX_MEMBERS];
-		}
-
 		members[memberCount].count = count;
 		members[memberCount].type = type;
 		members[memberCount].typeInfo = typeInfo;
@@ -103,8 +109,6 @@ public:
 	virtual void UnmapBuffer() = 0;
 
 	void* getMappedData() const { return data; }
-
-	virtual bool operator==(const ShaderStorageBuffer& other) = 0;
 protected:
 	void* data;
 	Layout layout;

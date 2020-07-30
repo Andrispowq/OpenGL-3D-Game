@@ -15,12 +15,12 @@ Mesh::~Mesh()
 
 float* Mesh::GetVertexData() const
 {
-	const size_t numFloats = Vertex::GetNumberOfFloats();
+	constexpr size_t numFloats = Vertex::GetNumberOfFloats();
 
 	float* data = new float[vertices.size() * numFloats];
 	int counter = 0;
 
-	for (unsigned int i = 0; i < vertices.size(); i++)
+	for (size_t i = 0; i < vertices.size(); i++)
 	{
 		counter = 0;
 

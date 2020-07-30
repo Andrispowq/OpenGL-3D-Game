@@ -17,15 +17,15 @@ public:
 	VKContext(Window* window);
 	virtual ~VKContext();
 
-	VKInstance GetInstance() const { return instance; }
+	VKInstance getInstance() const { return instance; }
 
-	void* GetNativePhysicalDevice() override { return &physicalDevice.GetPhysicalDevice(); }
-	void* GetNativeDevice() override { return &logicalDevice.GetDevice(); }
+	void* getNativePhysicalDevice() override { return &physicalDevice.getPhysicalDevice(); }
+	void* getNativeDevice() override { return &logicalDevice.getDevice(); }
 
-	void* GetPhysicalDevice() override { return &physicalDevice; }
-	void* GetDevice() override { return &logicalDevice; }
+	void* getPhysicalDevice() override { return &physicalDevice; }
+	void* getDevice() override { return &logicalDevice; }
 
-	VKSurface& GetSurface() { return surface; }
+	VKSurface& getSurface() { return surface; }
 private:
 	VKInstance instance;
 

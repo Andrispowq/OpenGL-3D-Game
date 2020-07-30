@@ -15,8 +15,8 @@ public:
 	VKInstance();
 	virtual ~VKInstance();
 
-	VkInstance GetInstance() const { return instance; }
-	VKDebugMessenger& GetDebugMessenger() { return *messenger; }
+	VkInstance getInstance() const { return instance; }
+	VKDebugMessenger& getDebugMessenger() { return *messenger; }
 
 	std::vector<const char*> GetValidationLayers() const { return validationLayers; }
 private:

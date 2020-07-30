@@ -29,7 +29,7 @@ public:
 
 	virtual void RecreatePipeline();
 
-	VkPipeline& GetGraphicsPipeline() { return graphicsPipeline; }
+	VkPipeline getGraphicsPipeline() const { return graphicsPipeline; }
 private:
 	VKRenderpass* renderpass;
 

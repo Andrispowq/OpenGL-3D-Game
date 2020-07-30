@@ -22,10 +22,10 @@ public:
 	void Render(const RenderingEngine& renderingEngine) const override;
 	void BatchRender(const RenderingEngine& renderingEngine) const override;
 
-	static std::vector<Material*> GetMaterials() { return materials; }
+	static std::vector<Material*> getMaterials() { return materials; }
 
-	inline size_t GetMaterialIndex() const { return materialIndex; }
-	inline Material* GetMaterial() const { return materials.at(materialIndex); }
+	inline size_t getMaterialIndex() const { return materialIndex; }
+	inline Material* getMaterial() const { return materials.at(materialIndex); }
 private:
 	static std::vector<Material*> materials;
 

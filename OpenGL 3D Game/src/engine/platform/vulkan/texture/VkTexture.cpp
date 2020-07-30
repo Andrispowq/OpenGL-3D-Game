@@ -1,9 +1,9 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "VkTexture.h"
 
-VKTexture::VKTexture(VKPhysicalDevice& physicalDevice, VKDevice& device, uint32_t width, uint32_t height)
+VKTexture::VKTexture(VKPhysicalDevice* physicalDevice, VKDevice& device, uint32_t width, uint32_t height)
 {
-	this->physicalDevice = &physicalDevice;
+	this->physicalDevice = physicalDevice;
 	this->device = &device;
 
 	this->width = width;
@@ -14,54 +14,52 @@ VKTexture::VKTexture(VKPhysicalDevice& physicalDevice, VKDevice& device, uint32_
 
 VKTexture::~VKTexture()
 {
-	vkDestroySampler(device->GetDevice(), textureSampler, nullptr);
-	vkDestroyImageView(device->GetDevice(), textureImageView, nullptr);
+	vkDestroySampler(device->getDevice(), textureSampler, nullptr);
+	vkDestroyImageView(device->getDevice(), textureImageView, nullptr);
 
-	vkDestroyImage(device->GetDevice(), textureImage, nullptr);
-	vkFreeMemory(device->GetDevice(), textureImageMemory, nullptr);
+	vkDestroyImage(device->getDevice(), textureImage, nullptr);
+	vkFreeMemory(device->getDevice(), textureImageMemory, nullptr);
 }
 
 void VKTexture::UploadTextureData(size_t size, uint8_t channels, unsigned char* pixels, ImageFormat format)
 {
- 	VKUtil::CreateBuffer(physicalDevice->GetPhysicalDevice(), device->GetDevice(), size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
+ 	VKUtil::CreateBuffer(physicalDevice->getPhysicalDevice(), device->getDevice(), size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
 	this->format = format;
 
 	void* data;
-	vkMapMemory(device->GetDevice(), stagingBufferMemory, 0, size, 0, &data);
+	vkMapMemory(device->getDevice(), stagingBufferMemory, 0, size, 0, &data);
 	memcpy(data, pixels, size);
-	vkUnmapMemory(device->GetDevice(), stagingBufferMemory);
+	vkUnmapMemory(device->getDevice(), stagingBufferMemory);
 }
 
 void VKTexture::Bind(uint32_t slot) const
 {
-
 }
 
 void VKTexture::Unbind() const
 {
-
 }
 
 void VKTexture::Generate()
 {
 	//We can create the image new based on the staging buffer's data
-	VKUtil::CreateImage(*physicalDevice, *device, width, height, mipLevels, VK_SAMPLE_COUNT_1_BIT, GetFormat(format), VK_IMAGE_TILING_OPTIMAL,
+	VKUtil::CreateImage(physicalDevice->getPhysicalDevice(), device, width, height, mipLevels, VK_SAMPLE_COUNT_1_BIT, getFormat(format), VK_IMAGE_TILING_OPTIMAL,
 		VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, 
 		textureImage, textureImageMemory);
 
-	VKUtil::TransitionImageLayout(*device, textureImage, /*GetFormat(format)*/VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
-	VKUtil::CopyBufferToImage(*device, stagingBuffer, textureImage, width, height);
+	VKUtil::TransitionImageLayout(device, textureImage, /*GetFormat(format)*/VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mipLevels);
+	VKUtil::CopyBufferToImage(device, stagingBuffer, textureImage, width, height);
 	//VKUtil::TransitionImageLayout(*device, textureImage, GetFormat(format), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL, mipLevels);
-	VKUtil::GenerateMipmaps(physicalDevice->GetPhysicalDevice(), *device, textureImage, GetFormat(format), width, height, mipLevels);
+	VKUtil::GenerateMipmaps(physicalDevice->getPhysicalDevice(), device, textureImage, getFormat(format), width, height, mipLevels);
 	
 	//We're no longer in need of the staging buffers
-	vkDestroyBuffer(device->GetDevice(), stagingBuffer, nullptr);
-	vkFreeMemory(device->GetDevice(), stagingBufferMemory, nullptr);
+	vkDestroyBuffer(device->getDevice(), stagingBuffer, nullptr);
+	vkFreeMemory(device->getDevice(), stagingBufferMemory, nullptr);
 
 	//We can now create the image view
-	VKUtil::CreateImageView(*device, textureImage, GetFormat(format), VK_IMAGE_ASPECT_COLOR_BIT, mipLevels, textureImageView);
+	VKUtil::CreateImageView(device, textureImage, getFormat(format), VK_IMAGE_ASPECT_COLOR_BIT, mipLevels, textureImageView);
 	
 	//Creating the sampler, which is based on bilinear sampling with 16x anisotropy filtering, which is a mode likely to be used, but at any time it can be
 	//recreate with the method SamplerProperties(SamplerFilter, TextureWrapMode)
@@ -83,7 +81,7 @@ void VKTexture::Generate()
 	samplerInfo.maxLod = (float) mipLevels;
 	samplerInfo.mipLodBias = 0;
 
-	if (vkCreateSampler(device->GetDevice(), &samplerInfo, nullptr, &textureSampler) != VK_SUCCESS) 
+	if (vkCreateSampler(device->getDevice(), &samplerInfo, nullptr, &textureSampler) != VK_SUCCESS) 
 	{
 		PR_LOG_RUNTIME_ERROR("Failed to create texture sampler!\n");
 	}
@@ -92,7 +90,7 @@ void VKTexture::Generate()
 void VKTexture::SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode)
 {
 	//We recreate the sampler
-	vkDestroySampler(device->GetDevice(), textureSampler, nullptr);
+	vkDestroySampler(device->getDevice(), textureSampler, nullptr);
 
 	VkSamplerCreateInfo samplerInfo = {};
 	samplerInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO;
@@ -173,13 +171,13 @@ void VKTexture::SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode
 		break;
 	}
 
-	if (vkCreateSampler(device->GetDevice(), &samplerInfo, nullptr, &textureSampler) != VK_SUCCESS)
+	if (vkCreateSampler(device->getDevice(), &samplerInfo, nullptr, &textureSampler) != VK_SUCCESS)
 	{
 		PR_LOG_RUNTIME_ERROR("Failed to create texture sampler!\n");
 	}
 }
 
-VkFormat VKTexture::GetFormat(ImageFormat format) const
+VkFormat VKTexture::getFormat(ImageFormat format) const
 {
 	//TODO: See which formats are available, return if it is, and return VK_FORMAT_R8G8B8A8_SRGB if it's not
 	switch (format)

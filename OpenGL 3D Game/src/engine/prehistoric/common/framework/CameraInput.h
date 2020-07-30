@@ -51,26 +51,26 @@ public:
 	virtual ~CameraInput() {}
 
 	//Getters
-	float IsForward() const { return GetKey(forward); }
-	float IsBackward() const { return GetKey(backward); }
-	float IsRight() const { return GetKey(right); }
-	float IsLeft() const { return GetKey(left); }
+	float isForward() const { return GetKey(forward); }
+	float isBackward() const { return GetKey(backward); }
+	float isRight() const { return GetKey(right); }
+	float isLeft() const { return GetKey(left); }
 
-	float IsUp() const { return GetKey(up); }
-	float IsDown() const { return GetKey(down); }
-	float IsRightRot() const { return GetKey(rightRot); }
-	float IsLeftRot() const { return GetKey(leftRot); }
+	float isUp() const { return GetKey(up); }
+	float isDown() const { return GetKey(down); }
+	float isRightRot() const { return GetKey(rightRot); }
+	float isLeftRot() const { return GetKey(leftRot); }
 
 	//Setters
-	void SetForward(const InputData& forward) { this->forward = forward; }
-	void SetBackward(const InputData& backward) { this->backward = backward; }
-	void SetRight(const InputData& right) { this->right = right; }
-	void SetLeft(const InputData& left) { this->left = left; }
+	void setForward(const InputData& forward) { this->forward = forward; }
+	void setBackward(const InputData& backward) { this->backward = backward; }
+	void setRight(const InputData& right) { this->right = right; }
+	void setLeft(const InputData& left) { this->left = left; }
 
-	void SetUp(const InputData& up) { this->up = up; }
-	void SetDowny(const InputData& down) { this->down = down; }
-	void SetRightRot(const InputData& rightRot) { this->rightRot = rightRot; }
-	void SetLeftRot(const InputData& leftRot) { this->leftRot = leftRot; }
+	void setUp(const InputData& up) { this->up = up; }
+	void setDowny(const InputData& down) { this->down = down; }
+	void setRightRot(const InputData& rightRot) { this->rightRot = rightRot; }
+	void setLeftRot(const InputData& leftRot) { this->leftRot = leftRot; }
 
 	static float GetKey(const InputData& data)
 	{
@@ -90,14 +90,14 @@ public:
 		case MOUSE_RELEASED:
 			return (float)InputInstance.IsButtonReleased(data.code);
 		case MOUSE_SCROLL:
-			return InputInstance.GetScrollOffset();
+			return InputInstance.getScrollOffset();
 
 		case JOYSTICK_BUTTON_PRESSED:
 			return (float)InputInstance.IsJoystickButtonPushed(data.code, data.joystickNumber);
 		case JOYSTICK_AXIS_MOVED_NEGATIVE:
-			return clamp(-InputInstance.GetJoystickAxisOffset(data.code, data.joystickNumber), -1.0f, 0.0f);
+			return clamp(-InputInstance.getJoystickAxisOffset(data.code, data.joystickNumber), -1.0f, 0.0f);
 		case JOYSTICK_AXIS_MOVED_POSITIVE:
-			return clamp(-InputInstance.GetJoystickAxisOffset(data.code, data.joystickNumber), 0.0f, 1.0f);
+			return clamp(-InputInstance.getJoystickAxisOffset(data.code, data.joystickNumber), 0.0f, 1.0f);
 
 		default:
 			return 0;

@@ -27,7 +27,7 @@ void GLCapabilities::QueryCapabilities(void* physicalDevice)
 
 	int32_t size;
 	glGetIntegerv(GL_GPU_MEM_INFO_TOTAL_AVAILABLE_MEM_NVX, &size);
-	memoryCaps.vramSize = size * 1024;
+	memoryCaps.vramSize = (size) * 1024;
 	memoryCaps.sharedRamSize = 0;
 
 	int32_t maxTexSlots;
