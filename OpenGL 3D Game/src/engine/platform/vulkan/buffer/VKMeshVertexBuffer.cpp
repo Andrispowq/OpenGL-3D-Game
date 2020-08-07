@@ -83,15 +83,14 @@ void VKMeshVertexBuffer::Draw(void* commandBuffer) const
 
 void VKMeshVertexBuffer::Unbind() const
 {
-
 }
 
-VkVertexInputBindingDescription* VKMeshVertexBuffer::getBindingDescription() const
+VkVertexInputBindingDescription VKMeshVertexBuffer::getBindingDescription() const
 {
-    VkVertexInputBindingDescription* bindingDescription = new VkVertexInputBindingDescription;
-	bindingDescription->binding = 0;
-	bindingDescription->stride = (uint32_t) Vertex::getSize();
-	bindingDescription->inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+    VkVertexInputBindingDescription bindingDescription;
+	bindingDescription.binding = 0;
+	bindingDescription.stride = (uint32_t) Vertex::getSize();
+	bindingDescription.inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
 
     return bindingDescription;
 }  

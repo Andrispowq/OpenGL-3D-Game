@@ -701,5 +701,8 @@
     <ClInclude Include="src\engine\prehistoric\resources\AssetManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\engine\prehistoric\resources\Factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

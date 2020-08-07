@@ -27,7 +27,7 @@ public:
 	void Draw(void* commandBuffer) const override;
 	void Unbind() const override;
 
-	VkVertexInputBindingDescription* getBindingDescription() const;
+	VkVertexInputBindingDescription getBindingDescription() const;
 	std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions() const;
 private:
 	VKBuffer* vertexBuffer;

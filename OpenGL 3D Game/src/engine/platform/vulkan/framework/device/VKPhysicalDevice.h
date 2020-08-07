@@ -18,7 +18,7 @@ public:
 	
 	//This needs to return a reference because the memory address of this variable is taken
 	VkPhysicalDevice& getPhysicalDevice() { return physicalDevice; }
-	std::vector<const char*> getDeviceExtensions() const { return deviceExtensions; }
+	std::vector<const char*>& getDeviceExtensions() { return deviceExtensions; }
 
 	VkSampleCountFlagBits getSampleCount() const { return msaaSamples; }
 private:

@@ -94,7 +94,8 @@ void Scene::CreateScene(GameObject* root, Window* window, AssetManager* manager,
 		root->AddChild("slider5", slider5);*/
 
 		GameObject* sun = new GameObject();
-		sun->AddComponent(LIGHT_COMPONENT, new Light(Vector3f(1, 1, 1), Vector3f(200000000), true, sun_move_function));
+		sun->setUpdateFunction(sun_move_function);
+		sun->AddComponent(LIGHT_COMPONENT, new Light(Vector3f(1, 1, 1), Vector3f(200000000), true));
 		sun->SetPosition({ -2000, -2000, 0 });
 		root->AddChild("sun", sun);
 

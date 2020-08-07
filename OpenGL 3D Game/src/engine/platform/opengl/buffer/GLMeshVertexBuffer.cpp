@@ -1,7 +1,8 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLMeshVertexBuffer.h"
 
-GLMeshVertexBuffer::GLMeshVertexBuffer(const Mesh& mesh) : MeshVertexBuffer()
+GLMeshVertexBuffer::GLMeshVertexBuffer(const Mesh& mesh)
+	: MeshVertexBuffer()
 {
 	Store(mesh);
 }

@@ -49,6 +49,10 @@ public:
 	inline void setID(uint32_t id) { this->ID = id; }
 
 	inline void setFormat(ImageFormat format) { this->format = format; }
+
+	Texture(Texture&) = delete;
+	Texture(Texture&&) = delete;
+	Texture& operator=(Texture) = delete;
 protected:
 	uint32_t width, height;
 	uint32_t ID;

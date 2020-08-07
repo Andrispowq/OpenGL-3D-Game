@@ -3,16 +3,13 @@
 
 #include "engine/prehistoric/core/Engine.h"
 
-Light::Light(const Vector3f& colour, const Vector3f& intensity, bool sun, UpdateFunction function)
+Light::Light(const Vector3f& colour, const Vector3f& intensity, bool sun)
 	: Component(), colour(colour), intensity(intensity), sun(sun)
 {
-	this->updateFunction = function;
 }
 
 void Light::PreUpdate(Engine* engine)
 {
-	if(updateFunction != nullptr) //non-suns can have move scripts
-		updateFunction(parent, engine->getFrameTime());
 }
 
 void Light::PreRender(RenderingEngine* renderingEngine)

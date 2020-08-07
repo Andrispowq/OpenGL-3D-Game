@@ -10,13 +10,20 @@
 
 #include "engine/prehistoric/component/renderer/Renderer.h"
 
+#include "engine/prehistoric/resources/Factory.h"
+
 class TerrainNode : public GameObject
 {
 public:
-	TerrainNode(Pipeline* pipeline, Pipeline* wireframePipeline, TerrainMaps* maps,
+	TerrainNode() {}
+	TerrainNode(Factory<TerrainNode>* factory, Pipeline* pipeline, Pipeline* wireframePipeline, TerrainMaps* maps,
 		Window* window, Camera* camera, const Vector2f& location,
 		int lod, const Vector2f& index);
 	virtual ~TerrainNode();
+
+	void Init(Factory<TerrainNode>* factory, Pipeline* pipeline, Pipeline* wireframePipeline, TerrainMaps* maps,
+		Window* window, Camera* camera, const Vector2f& location,
+		int lod, const Vector2f& index);
 
 	void PreRender(RenderingEngine* renderingEngine) override;
 
@@ -38,7 +45,33 @@ public:
 	float getGap() const { return gap; }
 
 	Transform* getLocalTransform() const { return localTransform; }
+
+	//Overloaded new and delete comes here:
+	void* operator new(size_t size, Factory<TerrainNode>& factory)
+	{
+		return factory.allocate();
+	}
+
+	void* operator new(size_t size)
+	{
+		void* ptr = malloc(size);
+		return ptr;
+	}
+
+	void operator delete(void* ptr, Factory<TerrainNode>& factory)
+	{
+		TerrainNode* _ptr = (TerrainNode*)ptr;
+		_ptr->~TerrainNode();
+		factory.deallocate(_ptr);
+	}
+
+	void operator delete(void* ptr)
+	{
+		free(ptr);
+	}
 private:
+	Factory<TerrainNode>* factory;
+
 	Window* window;
 	Camera* camera;
 	

@@ -19,6 +19,9 @@ void GameObject::PreUpdate(Engine* engine)
 	}
 
 	Node::PreUpdate(engine);
+
+	if (updateFunction)
+		updateFunction(this, engine->getFrameTime());
 }
 
 void GameObject::PreRender(RenderingEngine* renderingEngine)

@@ -24,7 +24,8 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 	VkPipelineVertexInputStateCreateInfo vertexInputInfo = {};
 	vertexInputInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
 	vertexInputInfo.vertexBindingDescriptionCount = 1;
-	vertexInputInfo.pVertexBindingDescriptions = vbo->getBindingDescription();
+	VkVertexInputBindingDescription desc = vbo->getBindingDescription();
+	vertexInputInfo.pVertexBindingDescriptions = &desc;
 
 	auto description = vbo->getAttributeDescriptions();
 	vertexInputInfo.vertexAttributeDescriptionCount = static_cast<uint32_t>(description.size());

@@ -22,6 +22,11 @@ public:
 
 	FrontFace getFrontFace() const { return frontFace; }
 	void setFrontFace(FrontFace frontFace) { this->frontFace = frontFace; }
+
+	//We should avoid copying this class, because it manages some objects' lifetimes
+	VertexBuffer(VertexBuffer&) = delete;
+	VertexBuffer(VertexBuffer&&) = delete;
+	VertexBuffer& operator=(VertexBuffer) = delete;
 protected:
 	uint32_t size;
 	bool indexed;

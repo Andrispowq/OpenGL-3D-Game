@@ -58,11 +58,6 @@ public:
 	{
 		glBindFragDataLocation(program, index, name.c_str());
 	}
-
-	virtual bool operator==(const Shader& other)
-	{
-		return program == (*reinterpret_cast<const GLShader*>(&other)).program;
-	}
 private:
 	bool AddProgram(const std::vector<char>& code, GLenum type) const;
 

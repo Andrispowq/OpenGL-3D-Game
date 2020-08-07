@@ -231,6 +231,7 @@
     <ClInclude Include="src\engine\prehistoric\modules\terrain\TerrainMaps.h" />
     <ClInclude Include="src\engine\prehistoric\modules\terrain\TerrainNode.h" />
     <ClInclude Include="src\engine\prehistoric\modules\terrain\TerrainQuadtree.h" />
+    <ClInclude Include="src\engine\prehistoric\resources\Factory.h" />
     <ClInclude Include="src\engine\prehistoric\world\WorldLoader.h" />
     <ClInclude Include="src\engine\rendering\RenderingEngine.h" />
     <ClInclude Include="src\engine\prehistoric\core\gameObject\Node.h" />

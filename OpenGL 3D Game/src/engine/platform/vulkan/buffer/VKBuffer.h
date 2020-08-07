@@ -10,6 +10,11 @@ class VKBuffer
 {
 public:
 	VKBuffer(VKPhysicalDevice* physicalDevice, VKDevice* device, size_t size, VkBufferUsageFlags buFlags, VkMemoryPropertyFlags mpFlags);
+
+	//We allow for copying and moving in this case because it is meant to be used in a platform-agnostic way
+	VKBuffer(VKBuffer& other);
+	VKBuffer(VKBuffer&& other) noexcept;
+
 	virtual ~VKBuffer();
 
 	void MapMemory(void* data_to_map);
@@ -27,7 +32,7 @@ public:
 	inline void setPhysicalDevice(void* physicalDev) { this->physicalDevice = (VKPhysicalDevice*)physicalDev; }
 	inline void setDevice(void* dev) { this->device = (VKDevice*)dev; }
 
-	bool operator==(const VKBuffer& other) { return data == other.data && size == other.size; }
+	VKBuffer& operator=(VKBuffer other);
 private:
 	VkBuffer buffer;
 	VkDeviceMemory memory;

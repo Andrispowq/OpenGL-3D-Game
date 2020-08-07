@@ -31,6 +31,8 @@ private:
 	Window* window;
 	Camera* camera;
 
+	Factory<TerrainNode>* factory;
+
 	TerrainMaps* maps;
 
 	Renderer* renderer;

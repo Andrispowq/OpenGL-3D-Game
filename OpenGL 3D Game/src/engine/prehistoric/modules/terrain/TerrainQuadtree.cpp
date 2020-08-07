@@ -4,6 +4,8 @@
 TerrainQuadtree::TerrainQuadtree(Window* window, AssetManager* manager, Camera* camera, TerrainMaps* maps)
 	: window(window), camera(camera), maps(maps)
 {
+	factory = new Factory<TerrainNode>(512);
+
 	size_t shaderID = -1;
 	Pipeline* pipeline = nullptr;
 	size_t wireframeShaderID = -1;
@@ -44,7 +46,7 @@ TerrainQuadtree::TerrainQuadtree(Window* window, AssetManager* manager, Camera* 
 			ss << ", ";
 			ss << j;
 
-			AddChild(ss.str(), new TerrainNode(pipeline, wireframePipeline,
+			AddChild(ss.str(), new/*(*factory)*/ TerrainNode(factory, pipeline, wireframePipeline,
 				maps, window, camera, { i / (float)rootNodes, j / (float)rootNodes },
 				0, { float(i), float(j) }));
 		}
@@ -56,6 +58,15 @@ TerrainQuadtree::TerrainQuadtree(Window* window, AssetManager* manager, Camera* 
 
 TerrainQuadtree::~TerrainQuadtree()
 {
+	//Custom allocator -> custom deletion
+	/*for (auto& child : children)
+	{
+		TerrainNode::operator delete(child.second, *factory);
+	}
+
+	children.clear();*/
+
+	delete factory;
 }
 
 void TerrainQuadtree::UpdateQuadtree()

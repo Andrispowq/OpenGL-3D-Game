@@ -6,8 +6,6 @@ class Engine;
 
 #include "engine/prehistoric/core/gameObject/Node.h"
 
-typedef void(*UpdateFunction)(GameObject*, float); //The object, and the delta time
-
 class Component
 {
 public:
@@ -21,7 +19,6 @@ public:
 	inline void setParent(GameObject* parent) { this->parent = parent; }
 protected:
 	GameObject* parent;
-	UpdateFunction updateFunction; //An optional script for every component to run, which does not apply to a component type but a specific component, like the sun's movement
 };
 
 #endif
