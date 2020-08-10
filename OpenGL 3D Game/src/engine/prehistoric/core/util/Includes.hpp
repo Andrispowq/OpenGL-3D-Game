@@ -9,6 +9,8 @@
 #include <set>
 #include <unordered_map>
 #include <vector>
+#include <array>
+#include <memory>
 #include <string>
 #include <sstream>
 
@@ -16,6 +18,10 @@
 #include "engine/prehistoric/core/util/time/Time.h"
 
 #include "codes/InputCode.h"
+
+#define MODEL_PATH "res/models/"
+#define TEXTURE_PATH "res/textures/"
+#define SHADER_PATH "res/shaders/"
 
 template<typename T>
 size_t FindElement(T* element, std::vector<T*> list)

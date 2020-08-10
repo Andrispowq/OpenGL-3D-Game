@@ -1,6 +1,6 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
-#include "Swapchain.h"
+#include "Framebuffer.h"
 
-Swapchain::~Swapchain()
+Framebuffer::~Framebuffer()
 {
 }

@@ -58,7 +58,7 @@ void VKBasicShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_i
 {
 	SetUniform("model", object->getWorldTransform()->getTransformationMatrix(), instance_index);
 
-	Material* material = ((Renderer*)object->GetComponent(RENDERER_COMPONENT))->getMaterial();
+	Material* material = ((RendererComponent*)object->GetComponent(RENDERER_COMPONENT))->getMaterial();
 
 	SetTexture(ALBEDO_MAP, material->getTexture(ALBEDO_MAP), instance_index);
 	SetTexture(METALLIC_MAP, material->getTexture(METALLIC_MAP), instance_index);

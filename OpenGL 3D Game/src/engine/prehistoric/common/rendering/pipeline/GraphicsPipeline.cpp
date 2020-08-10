@@ -10,6 +10,7 @@ GraphicsPipeline::GraphicsPipeline(AssetManager* manager, size_t vboID)
 
 GraphicsPipeline::~GraphicsPipeline()
 {
+	manager->removeReference<VertexBuffer>(vboID);
 	vboID = -1;
 }
 

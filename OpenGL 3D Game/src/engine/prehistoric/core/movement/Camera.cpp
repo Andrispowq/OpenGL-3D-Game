@@ -49,11 +49,6 @@ Camera::Camera(const Vector3f& position, float fov)
 
 Camera::~Camera()
 {
-	for (uint32_t i = 0; i < inputs.size(); i++)
-	{
-		delete inputs[i];
-	}
-
 	delete[] frustumPlanes;
 	delete[] frustumCorners;
 }

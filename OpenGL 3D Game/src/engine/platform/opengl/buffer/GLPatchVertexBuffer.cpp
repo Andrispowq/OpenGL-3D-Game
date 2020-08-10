@@ -21,7 +21,7 @@ void GLPatchVertexBuffer::Store(const std::vector<Vector2f>& vertices)
 
 	glBindVertexArray(vao);
 
-	float* vdata = new float[vertices.size() * 2];
+	std::vector<float> vdata(vertices.size() * 2);
 
 	for (size_t i = 0; i < vertices.size(); i++)
 	{
@@ -30,14 +30,12 @@ void GLPatchVertexBuffer::Store(const std::vector<Vector2f>& vertices)
 	}
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * Vector2f::size(), vdata, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * Vector2f::size(), vdata.data(), GL_DYNAMIC_DRAW);
 
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glPatchParameteri(GL_PATCH_VERTICES, size);
-
-	delete[] vdata;
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);

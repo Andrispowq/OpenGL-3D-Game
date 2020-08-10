@@ -81,7 +81,7 @@ void GLBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light
 
 void GLBasicShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
 {
-	Material* material = dynamic_cast<Renderer*>(object->GetComponent("Renderer"))->getMaterial();
+	Material* material = dynamic_cast<RendererComponent*>(object->GetComponent("RendererComponent"))->getMaterial();
 
 	SetUniform("m_transform", object->getWorldTransform()->getTransformationMatrix());
 

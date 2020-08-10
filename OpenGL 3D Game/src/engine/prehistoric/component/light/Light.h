@@ -10,7 +10,7 @@ public:
 	virtual ~Light() {}
 
 	virtual void PreUpdate(Engine* engine) override;
-	virtual void PreRender(RenderingEngine* renderingEngine) override;
+	virtual void PreRender(Renderer* renderer) override;
 
 	inline Vector3f getColour() const { return colour; }
 	inline Vector3f getIntensity() const { return intensity; }

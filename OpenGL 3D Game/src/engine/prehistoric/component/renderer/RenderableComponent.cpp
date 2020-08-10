@@ -1,5 +1,5 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
-#include "Renderable.h"
+#include "RenderableComponent.h"
 #include "engine/prehistoric/core/model/material/Material.h"
 #include "engine/prehistoric/common/rendering/pipeline/Pipeline.h"
 #include "engine/prehistoric/common/rendering/pipeline/GraphicsPipeline.h"
@@ -7,9 +7,9 @@
 
 #include "engine/platform/vulkan/rendering/shaders/VkShader.h"
 
-std::vector<Pipeline*> Renderable::pipelines;
+std::vector<Pipeline*> RenderableComponent::pipelines;
 
-Renderable::Renderable(Pipeline* pipeline, Window* window)
+RenderableComponent::RenderableComponent(Pipeline* pipeline, Window* window)
 	: priority(RenderPriority::_3D)
 {
 	this->window = window;
@@ -25,17 +25,6 @@ Renderable::Renderable(Pipeline* pipeline, Window* window)
 		this->pipelineIndex = index;
 	}
 
-	shader_instance_index = 0;
-
-	//This is ugly code but there is no good workaround without some overhead, maybe if I find a way this will be removed
-	//Please also note that VKShader::RegisterInstance() considers the Shader pipeline constant, 
-	//which implies that you cannot add further uniforms, as they'd only affect the lastest instance
-	if (FrameworkConfig::api == Vulkan)
-	{
-		shader_instance_index = reinterpret_cast<VKShader*>(pipeline->getShader())->getInstanceIndex();
-		reinterpret_cast<VKShader*>(pipeline->getShader())->RegisterInstance();
-	}
-
 	//Just in case, but this might be added as optional because it resets the viewport and the scissor
 	pipeline->setViewportStart(0);
 	pipeline->setViewportSize({ (float) FrameworkConfig::windowWidth, (float) FrameworkConfig::windowHeight });
@@ -43,7 +32,7 @@ Renderable::Renderable(Pipeline* pipeline, Window* window)
 	pipeline->setScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
 }
 
-Renderable::Renderable(Window* window)
+RenderableComponent::RenderableComponent(Window* window)
 	: priority(RenderPriority::_3D)
 {
 	pipelineIndex = -1;
@@ -51,11 +40,11 @@ Renderable::Renderable(Window* window)
 	this->window = window;
 }
 
-Renderable::~Renderable()
+RenderableComponent::~RenderableComponent()
 {
 }
 
-void Renderable::RecreatePipelines()
+void RenderableComponent::RecreatePipelines()
 {
 	for (Pipeline* pipeline : pipelines)
 	{
@@ -68,11 +57,10 @@ void Renderable::RecreatePipelines()
 	}
 }
 
-void Renderable::CleanUp()
+void RenderableComponent::CleanUp()
 {
 	for (Pipeline* pipeline : pipelines)
 	{
-		pipeline->DestroyPipeline();
 		delete pipeline;
 	}
 }

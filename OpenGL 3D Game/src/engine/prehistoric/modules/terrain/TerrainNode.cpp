@@ -21,11 +21,11 @@ TerrainNode::TerrainNode(Factory<TerrainNode>* factory, Pipeline* pipeline, Pipe
 	worldTransform->setScaling({ TerrainConfig::scaleXZ, TerrainConfig::scaleY, TerrainConfig::scaleXZ });
 	worldTransform->setPosition({ -TerrainConfig::scaleXZ / 2.0f, 0, -TerrainConfig::scaleXZ / 2.0f });
 
-	renderer = new Renderer(pipeline, nullptr, window);
-	wireframeRenderer = new Renderer(wireframePipeline, nullptr, window);
+	renderer = new RendererComponent(pipeline, nullptr, window);
+	wireframeRendererComponent = new RendererComponent(wireframePipeline, nullptr, window);
 
 	AddComponent(RENDERER_COMPONENT, renderer);
-	AddComponent(WIREFRAME_RENDERER_COMPONENT, wireframeRenderer);
+	AddComponent(WIREFRAME_RENDERER_COMPONENT, wireframeRendererComponent);
 
 	ComputeWorldPosition();
 	UpdateQuadtree();
@@ -58,11 +58,11 @@ void TerrainNode::Init(Factory<TerrainNode>* factory, Pipeline* pipeline, Pipeli
 	worldTransform->setScaling({ TerrainConfig::scaleXZ, TerrainConfig::scaleY, TerrainConfig::scaleXZ });
 	worldTransform->setPosition({ -TerrainConfig::scaleXZ / 2.0f, 0, -TerrainConfig::scaleXZ / 2.0f });
 
-	renderer = new Renderer(pipeline, nullptr, window);
-	wireframeRenderer = new Renderer(wireframePipeline, nullptr, window);
+	renderer = new RendererComponent(pipeline, nullptr, window);
+	wireframeRendererComponent = new RendererComponent(wireframePipeline, nullptr, window);
 
 	AddComponent(RENDERER_COMPONENT, renderer);
-	AddComponent(WIREFRAME_RENDERER_COMPONENT, wireframeRenderer);
+	AddComponent(WIREFRAME_RENDERER_COMPONENT, wireframeRendererComponent);
 
 	ComputeWorldPosition();
 	UpdateQuadtree();
@@ -78,7 +78,7 @@ void TerrainNode::PreRender(RenderingEngine* renderingEngine)
 	{
 		if (renderingEngine->isWireframeMode())
 		{
-			wireframeRenderer->PreRender(renderingEngine);
+			wireframeRendererComponent->PreRender(renderingEngine);
 		}
 		else
 		{
@@ -140,7 +140,7 @@ void TerrainNode::AddChildNodes(int lod)
 				ss << ", lod: ";
 				ss << lod;
 
-				AddChild(ss.str(), new/*(*factory)*/ TerrainNode(factory, renderer->getPipeline(), wireframeRenderer->getPipeline(), maps,
+				AddChild(ss.str(), new(*factory) TerrainNode(factory, renderer->getPipeline(), wireframeRendererComponent->getPipeline(), maps,
 					window, camera, location + Vector2f(float(i), float(j)) * (gap / 2.f), lod, { float(i), float(j) }));
 			}
 		}
@@ -158,7 +158,7 @@ void TerrainNode::RemoveChildNodes()
 	{
 		for (auto& child : children)
 		{
-			delete child.second;
+			//delete child.second;
 			//TerrainNode::operator delete(child.second, *factory);
 		}
 

@@ -104,11 +104,9 @@ public:
 	virtual void UpdateSharedUniforms(GameObject* object, uint32_t instance_index = 0) const {}
 	virtual void UpdateObjectUniforms(GameObject* object, uint32_t instance_index = 0) const {}
 
-	//Shaders cannot be copied, they are stored as pointers in the Renderer component, and referenced with a shaderIndex
 	Shader(const Shader&) = delete;
-	Shader operator=(const Shader&) = delete;
 	Shader(const Shader&&) = delete;
-	Shader operator=(const Shader&&) = delete;
+	Shader& operator=(Shader) = delete;
 protected:
 	mutable uint32_t counter;
 };

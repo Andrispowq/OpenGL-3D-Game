@@ -2,6 +2,7 @@
 #include "Engine.h"
 
 Engine::Engine()
+	: root(nullptr), renderingEngine(nullptr), audioEngine(nullptr), manager(nullptr)
 {
 	frameTime = 0;
 
@@ -11,33 +12,26 @@ Engine::Engine()
 	AtmosphereConfig::LoadConfig("res/config/atmosphere.cfg");
 
 	//Rootobject init
-	root = new GameObject();
+	root = std::make_unique<GameObject>();
 
 	//Engines' initialization
-	renderingEngine = new RenderingEngine();
-	audioEngine = new AudioEngine();
+	renderingEngine = std::make_unique<RenderingEngine>();
+	audioEngine = std::make_unique<AudioEngine>();
 
-	InputInstance.Init(renderingEngine->GetWindow());
+	InputInstance.Init(renderingEngine->getWindow());
 	renderingEngine->Init();
 
-	manager = new AssetManager(renderingEngine->GetWindow());
+	manager = std::make_unique<AssetManager>(renderingEngine->getWindow());
 	
 	//Loading configs that depend on some engine feature like the window
-	TerrainConfig::LoadConfig("res/config/terrain.cfg", renderingEngine->GetWindow(), manager);
-	Scene::CreateScene(root, renderingEngine->GetWindow(), manager, renderingEngine->GetCamera());
+	TerrainConfig::LoadConfig("res/config/terrain.cfg", renderingEngine->getWindow(), manager.get());
+	Scene::CreateScene(root.get(), renderingEngine->getWindow(), manager.get(), renderingEngine->getCamera());
 }
 
 Engine::~Engine()
 {
 	Scene::DeleteData();
 	Input::DeleteInstance();
-
-	delete manager;
-
-	delete renderingEngine;
-	delete audioEngine;
-
-	delete root;
 }
 
 void Engine::Input(float frameTime)
@@ -61,8 +55,8 @@ void Engine::Update()
 
 void Engine::Render()
 {
-	renderingEngine->GetWindow()->ClearScreen();
-	root->PreRender(renderingEngine);
+	renderingEngine->getWindow()->ClearScreen();
+	root->PreRender(renderingEngine.get());
 
-	renderingEngine->Render(root);
+	renderingEngine->Render();
 }

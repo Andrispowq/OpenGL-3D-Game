@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="src\engine\config\AtmosphereConfig.cpp" />
     <ClCompile Include="src\engine\platform\opengl\buffer\GLShaderStorageBuffer.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\rendering\GLRenderer.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\pipeline\GLComputePipeline.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\pipeline\GLGraphicsPipeline.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\atmosphere\GLAtmosphereScatteringShader.cpp" />
@@ -24,6 +25,9 @@
     <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorPool.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorSet.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorSetBinding.cpp" />
+    <ClCompile Include="src\engine\prehistoric\common\buffer\Framebuffer.cpp" />
+    <ClCompile Include="src\engine\prehistoric\common\rendering\command\CommandBuffer.cpp" />
+    <ClCompile Include="src\engine\prehistoric\common\rendering\Renderer.cpp" />
     <ClCompile Include="src\engine\prehistoric\resources\AssetManager.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\buffer\ShaderStorageBuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\ComputePipeline.cpp" />
@@ -84,8 +88,8 @@
     <ClCompile Include="src\engine\prehistoric\modules\gui\button\GUIButton.cpp" />
     <ClCompile Include="src\engine\prehistoric\modules\gui\GUIElement.cpp" />
     <ClCompile Include="src\engine\prehistoric\component\light\Light.cpp" />
-    <ClCompile Include="src\engine\prehistoric\component\renderer\Renderable.cpp" />
-    <ClCompile Include="src\engine\prehistoric\component\renderer\Renderer.cpp" />
+    <ClCompile Include="src\engine\prehistoric\component\renderer\RenderableComponent.cpp" />
+    <ClCompile Include="src\engine\prehistoric\component\renderer\RendererComponent.cpp" />
     <ClCompile Include="src\engine\prehistoric\core\gameObject\GameObject.cpp" />
     <ClCompile Include="src\engine\prehistoric\core\log\Log.cpp" />
     <ClCompile Include="src\engine\prehistoric\core\model\material\Material.cpp" />
@@ -134,6 +138,7 @@
     <ClInclude Include="src\engine\platform\opengl\buffer\GLShaderStorageBuffer.h" />
     <ClInclude Include="src\engine\platform\opengl\capabilities\GLCapabilities.h" />
     <ClInclude Include="src\engine\platform\opengl\framework\swapchain\GLSwapchain.h" />
+    <ClInclude Include="src\engine\platform\opengl\rendering\GLRenderer.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLComputePipeline.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLGraphicsPipeline.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLPipeline.h" />
@@ -178,6 +183,9 @@
     <ClInclude Include="src\engine\platform\vulkan\util\VKUtil.h" />
     <ClInclude Include="src\engine\platform\windows\WindowsInput.h" />
     <ClInclude Include="src\engine\platform\windows\WindowsWindow.h" />
+    <ClInclude Include="src\engine\prehistoric\common\rendering\command\CommandBuffer.h" />
+    <ClInclude Include="src\engine\prehistoric\common\rendering\Renderer.h" />
+    <ClInclude Include="src\engine\prehistoric\resources\AssembledAssetManager.h" />
     <ClInclude Include="src\engine\prehistoric\resources\AssetManager.h" />
     <ClInclude Include="src\engine\prehistoric\common\buffer\Framebuffer.h" />
     <ClInclude Include="src\engine\prehistoric\common\buffer\MeshVertexBuffer.h" />
@@ -203,8 +211,8 @@
     <ClInclude Include="src\engine\prehistoric\modules\gui\button\GUIButton.h" />
     <ClInclude Include="src\engine\prehistoric\modules\gui\GUIElement.h" />
     <ClInclude Include="src\engine\prehistoric\component\light\Light.h" />
-    <ClInclude Include="src\engine\prehistoric\component\renderer\Renderable.h" />
-    <ClInclude Include="src\engine\prehistoric\component\renderer\Renderer.h" />
+    <ClInclude Include="src\engine\prehistoric\component\renderer\RenderableComponent.h" />
+    <ClInclude Include="src\engine\prehistoric\component\renderer\RendererComponent.h" />
     <ClInclude Include="src\engine\prehistoric\core\gameObject\GameObject.h" />
     <ClInclude Include="src\engine\prehistoric\core\log\ColourCodes.h" />
     <ClInclude Include="src\engine\prehistoric\core\log\Log.h" />

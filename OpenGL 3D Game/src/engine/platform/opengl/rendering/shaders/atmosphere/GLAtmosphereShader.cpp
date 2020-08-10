@@ -22,5 +22,5 @@ void GLAtmosphereShader::UpdateShaderUniforms(Camera* camera, const std::vector<
 
 void GLAtmosphereShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
 {
-	SetUniform("m_transform", object->getWorldTransform()->getTransformationMatrix());
+	SetUniform("m_transform", object->getWorldTransform().getTransformationMatrix());
 }

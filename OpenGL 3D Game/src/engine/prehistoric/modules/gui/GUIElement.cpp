@@ -45,7 +45,7 @@ GUIElement::GUIElement(Window* window, AssetManager* manager, Texture* texture, 
 		pipeline->CreatePipeline(window);
 	}
 
-	Renderer* renderer = new Renderer(pipeline, nullptr, window);
+	RendererComponent* renderer = new RendererComponent(pipeline, nullptr, window);
 	renderer->setPriority(RenderPriority::_2D);
 
 	AddComponent(RENDERER_COMPONENT, renderer);

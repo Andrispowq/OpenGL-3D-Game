@@ -14,7 +14,7 @@
 #include "engine/platform/opengl/rendering/shaders/GLShader.h"
 #include "engine/platform/vulkan/rendering/shaders/VKShader.h"
 
-#include "engine/prehistoric/component/renderer/Renderer.h"
+#include "engine/prehistoric/component/renderer/RendererComponent.h"
 
 enum class GUIType
 {

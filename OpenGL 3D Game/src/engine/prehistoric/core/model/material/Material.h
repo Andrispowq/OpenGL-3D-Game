@@ -5,7 +5,7 @@
 #include "engine/prehistoric/core/math/Math.h"
 #include "engine/prehistoric/core/util/loader/TextureLoader.h"
 
-#include "engine/prehistoric/resources/AssetManager.h"
+class AssetManager;
 
 class Material
 {

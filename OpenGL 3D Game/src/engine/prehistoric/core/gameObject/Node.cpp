@@ -3,36 +3,38 @@
 
 #include "engine/prehistoric/core/Engine.h"
 
-Node::Node()
-{
-    parent = nullptr;
-
-    worldTransform = new Transform();
-}
-
-Node::~Node()
-{
-    for (auto child : children)
+Node::Node(const Node& node)
+{    
+    std::string name = "\0";
+    for (auto& child : parent->children)
     {
-        delete child.second;
+        if (child.second.get() == &node)
+        {
+            name = child.first;
+        }
     }
 
-    delete worldTransform;
+    if (name == "\0")
+    {
+        PR_LOG_ERROR("ERROR: The name of node (at %x) couldn't be aquired!\n", &node);
+    }
+
+    node.parent->AddChild(name + "_cpy", this);
 }
 
 void Node::PreUpdate(Engine* engine)
 {
-    for (auto child : children)
+    for (auto& child : children)
     {
         child.second->PreUpdate(engine);
     }
 }
 
-void Node::PreRender(RenderingEngine* renderingEngine)
+void Node::PreRender(Renderer* renderer)
 {
-    for (auto child : children)
+    for (auto& child : children)
     {
-        child.second->PreRender(renderingEngine);
+        child.second->PreRender(renderer);
     }
 }
 

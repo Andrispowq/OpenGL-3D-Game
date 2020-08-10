@@ -36,7 +36,7 @@ Atmosphere::Atmosphere(Window* window, AssetManager* manager)
 
 	pipeline->CreatePipeline(window);
 
-	AddComponent(RENDERER_COMPONENT, new Renderer(pipeline, nullptr, window));
+	AddComponent(RENDERER_COMPONENT, new RendererComponent(pipeline, nullptr, window));
 
 	sunPosition = AtmosphereConfig::sunPosition;
 }

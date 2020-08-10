@@ -13,7 +13,7 @@ class CoreEngine
 {
 public:
 	CoreEngine();
-	virtual ~CoreEngine();
+	~CoreEngine() {}
 
 	void Start();
 private:
@@ -31,7 +31,7 @@ private:
 	bool running;
 	double frameTime;
 
-	Engine* engine;
+	std::unique_ptr<Engine> engine;
 };
 
 #endif

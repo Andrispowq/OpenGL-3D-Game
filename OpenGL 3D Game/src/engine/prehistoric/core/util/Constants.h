@@ -32,8 +32,8 @@
 #define ALPHA "alpha"
 
 //Component names:
-#define RENDERER_COMPONENT "Renderer"
-#define WIREFRAME_RENDERER_COMPONENT "WireframeRenderer"
+#define RENDERER_COMPONENT "RendererComponent"
+#define WIREFRAME_RENDERER_COMPONENT "WireframeRendererComponent"
 #define LIGHT_COMPONENT "Light"
 
 #define GUI_ELEMENT_COMPONENT "GUIElement"

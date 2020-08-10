@@ -213,6 +213,12 @@ Matrix4f::Matrix4f(const Matrix4f& v)
 	memcpy(this->m, v.m, sizeof(float) * 16);
 }
 
+Matrix4f::Matrix4f(Matrix4f&& v) noexcept
+{
+	m = v.m;
+	v.m = nullptr;
+}
+
 Matrix4f::Matrix4f(const Vector4f& v)
 {
 	m = new float[4 * 4];
@@ -241,23 +247,15 @@ Matrix4f::~Matrix4f()
 	clear();
 }
 
-Matrix4f Matrix4f::operator=(const Matrix4f& v)
+Matrix4f& Matrix4f::operator=(Matrix4f v) noexcept
 {
-	if (this == &v) return *this;
-
-	clear();
-	m = new float[16];
-	for (int i = 0; i < 16; i++)
-	{
-		m[i] = v.m[i];
-	}
-
+	std::swap(*this, v);
 	return *this;
 }
 
 inline Matrix4f Matrix4f::operator+(const Matrix4f& v) const
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -269,7 +267,7 @@ inline Matrix4f Matrix4f::operator+(const Matrix4f& v) const
 
 inline Matrix4f Matrix4f::operator-(const Matrix4f& v) const
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -301,7 +299,7 @@ inline Matrix4f Matrix4f::operator-=(const Matrix4f& v)
 
 inline Matrix4f Matrix4f::operator+(const Vector4f& v) const
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -313,7 +311,7 @@ inline Matrix4f Matrix4f::operator+(const Vector4f& v) const
 
 inline Matrix4f Matrix4f::operator-(const Vector4f& v) const
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -345,7 +343,7 @@ inline Matrix4f Matrix4f::operator-=(const Vector4f& v)
 
 inline Matrix4f Matrix4f::operator+(const float& v) const
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -357,7 +355,7 @@ inline Matrix4f Matrix4f::operator+(const float& v) const
 
 inline Matrix4f Matrix4f::operator-(const float& v) const
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -389,7 +387,7 @@ inline Matrix4f Matrix4f::operator-=(const float& v)
 
 inline Matrix4f Matrix4f::operator*(const Matrix4f& v) const
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -408,7 +406,7 @@ inline Matrix4f Matrix4f::operator*(const Matrix4f& v) const
 
 inline Matrix4f Matrix4f::operator*=(const Matrix4f& v)
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -461,24 +459,24 @@ inline bool Matrix4f::operator==(const Matrix4f& v) const
 	return true;
 }
 
-float* Matrix4f::operator[](const int& index) const
+std::array<float, 4> Matrix4f::operator[](int index) const
 {
-	if (index > 3)
-		return nullptr;
+	std::array<float, 4> arr;
 
-	float* ptr = new float[4];
+	if (index > 3)
+		return arr;
 
 	for (int i = 0; i < 4; i++)
 	{
-		ptr[i] = m[index * 4 + i];
+		arr[i] = m[index * 4 + i];
 	}
 
-	return ptr;
+	return arr;
 }
 
 Matrix4f Matrix4f::Identity()
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -496,7 +494,7 @@ Matrix4f Matrix4f::Identity()
 
 Matrix4f Matrix4f::Zero()
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 16; i++)
 	{
@@ -614,16 +612,16 @@ Matrix4f Matrix4f::View(const Vector3f& forward, const Vector3f& up)
 /*
 	The parameter <i> is the index of the row, so to get the first row, the parameter MUST be 0
 */
-float* const Matrix4f::getRow(const int i) const
+std::array<float, 4> const Matrix4f::getRow(int i) const
 {
-	float* ptr = new float[4];
+	std::array<float, 4> arr;
 
 	for (int j = 0; j < 4; j++)
 	{
-		ptr[j] = m[j * 4 + i];
+		arr[j] = m[j * 4 + i];
 	}
 
-	return ptr;
+	return arr;
 }
 
 void Matrix4f::clear()
@@ -638,6 +636,12 @@ Matrix4f::Matrix4f(const Matrix4f& v)
 	m = new float[4 * 4];
 
 	memcpy(this->m, v.m, sizeof(float) * 16);
+}
+
+Matrix4f::Matrix4f(Matrix4f&& v) noexcept
+{
+	m = v.m;
+	v.m = nullptr;
 }
 
 Matrix4f::Matrix4f(const Vector4f& v)
@@ -668,23 +672,15 @@ Matrix4f::~Matrix4f()
 	clear();
 }
 
-Matrix4f Matrix4f::operator=(const Matrix4f& v)
+Matrix4f& Matrix4f::operator=(Matrix4f v) noexcept
 {
-	if (this == &v) return *this;
-
-	clear();
-	m = new float[16];
-	for (int i = 0; i < 16; i++)
-	{
-		m[i] = v.m[i];
-	}
-
+	std::swap(*this, v);
 	return *this;
 }
 
 inline Matrix4f Matrix4f::operator+(const Matrix4f& v) const
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 16; i++)
 	{
@@ -696,7 +692,7 @@ inline Matrix4f Matrix4f::operator+(const Matrix4f& v) const
 
 inline Matrix4f Matrix4f::operator-(const Matrix4f& v) const
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 16; i++)
 	{
@@ -728,7 +724,7 @@ inline Matrix4f Matrix4f::operator-=(const Matrix4f& v)
 
 inline Matrix4f Matrix4f::operator+(const Vector4f& v) const
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -743,7 +739,7 @@ inline Matrix4f Matrix4f::operator+(const Vector4f& v) const
 
 inline Matrix4f Matrix4f::operator-(const Vector4f& v) const
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -784,7 +780,7 @@ inline Matrix4f Matrix4f::operator-=(const Vector4f& v)
 
 inline Matrix4f Matrix4f::operator+(const float& v) const
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 16; i++)
 	{
@@ -796,7 +792,7 @@ inline Matrix4f Matrix4f::operator+(const float& v) const
 
 inline Matrix4f Matrix4f::operator-(const float& v) const
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 16; i++)
 	{
@@ -828,7 +824,7 @@ inline Matrix4f Matrix4f::operator-=(const float& v)
 
 inline Matrix4f Matrix4f::operator*(const Matrix4f& v) const
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -845,7 +841,7 @@ inline Matrix4f Matrix4f::operator*(const Matrix4f& v) const
 
 inline Matrix4f Matrix4f::operator*=(const Matrix4f& v)
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -888,24 +884,24 @@ inline bool Matrix4f::operator==(const Matrix4f& v) const
 	return true;
 }
 
-float* Matrix4f::operator[](const int& index) const
+std::array<float, 4> Matrix4f::operator[](int index) const
 {
-	if (index > 3)
-		return nullptr;
+	std::array<float, 4> arr;
 
-	float* ptr = new float[4];
+	if (index > 3)
+		return arr;
 
 	for (int i = 0; i < 4; i++)
 	{
-		ptr[i] = m[index * 4 + i];
+		arr[i] = m[index * 4 + i];
 	}
 
-	return ptr;
+	return arr;
 }
 
 Matrix4f Matrix4f::Identity()
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 4; i++)
 	{
@@ -923,7 +919,7 @@ Matrix4f Matrix4f::Identity()
 
 Matrix4f Matrix4f::Zero()
 {
-	Matrix4f res = Matrix4f();
+	Matrix4f res;
 
 	for (int i = 0; i < 16; i++)
 	{
@@ -1041,16 +1037,16 @@ Matrix4f Matrix4f::View(const Vector3f& forward, const Vector3f& up)
 /*
 	The parameter <i> is the index of the row, so to get the first row, the parameter MUST be 0
 */
-float* const Matrix4f::getRow(const int i) const
+std::array<float, 4> const Matrix4f::getRow(int i) const
 {
-	float* ptr = new float[4];
+	std::array<float, 4> arr;
 
 	for (int j = 0; j < 4; j++)
 	{
-		ptr[j] = m[j * 4 + i];
+		arr[j] = m[j * 4 + i];
 	}
 
-	return ptr;
+	return arr;
 }
 
 void Matrix4f::clear()

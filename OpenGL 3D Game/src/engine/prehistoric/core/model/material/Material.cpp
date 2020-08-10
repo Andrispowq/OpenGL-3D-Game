@@ -1,12 +1,14 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "Material.h"
 
+#include "engine/prehistoric/resources/AssetManager.h"
+
 Material::Material(AssetManager* manager, Window* window)
 {
 	this->manager = manager;
 
-	Texture* texture = TextureLoader::LoadTexture("res/textures/default.png", window);
-	textureIDs.insert(std::make_pair("DEFAULT_TEX", manager->addTexture(texture)));
+	size_t def_ID = manager->getResource<Texture>("default.png");
+	textureIDs.insert(std::make_pair("DEFAULT_TEX", def_ID));
 }
 
 void Material::addTexture(const std::string& key, size_t textureID)

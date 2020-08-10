@@ -3,17 +3,9 @@
 
 #include "engine/prehistoric/core/Engine.h"
 
-GameObject::~GameObject()
-{
-	for (auto kv : components)
-	{
-		delete kv.second;
-	}
-}
-
 void GameObject::PreUpdate(Engine* engine)
 {
-	for (auto kv : components)
+	for (auto& kv : components)
 	{
 		kv.second->PreUpdate(engine);
 	}
@@ -24,14 +16,14 @@ void GameObject::PreUpdate(Engine* engine)
 		updateFunction(this, engine->getFrameTime());
 }
 
-void GameObject::PreRender(RenderingEngine* renderingEngine)
+void GameObject::PreRender(Renderer* renderer)
 {
-	for (auto kv : components)
+	for (auto& kv : components)
 	{
-		kv.second->PreRender(renderingEngine);
+		kv.second->PreRender(renderer);
 	}
 
-	Node::PreRender(renderingEngine);
+	Node::PreRender(renderer);
 }
 
 GameObject* GameObject::AddComponent(const std::string& name, Component* component)
@@ -43,5 +35,5 @@ GameObject* GameObject::AddComponent(const std::string& name, Component* compone
 
 Component* GameObject::GetComponent(const std::string& name) const
 {
-	return components.at(name);
+	return components.at(name).get();
 }

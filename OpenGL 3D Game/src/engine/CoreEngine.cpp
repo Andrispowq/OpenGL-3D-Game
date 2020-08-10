@@ -6,14 +6,7 @@ constexpr static double NANOSECOND = 1000000000;
 CoreEngine::CoreEngine()
 {
 	running = false;
-	engine = new Engine();
-
 	frameTime = 1.0 / FrameworkConfig::windowMaxFPS;
-}
-
-CoreEngine::~CoreEngine()
-{
-	delete engine;
 }
 
 void CoreEngine::Start()
@@ -33,7 +26,7 @@ void CoreEngine::Stop()
 	running = false;
 }
 
-/*void CoreEngine::Run()
+void CoreEngine::Run()
 {
 	long lastTime = Time::getTimeNanoseconds();
 	double amountOfTicks = 60.0;
@@ -59,7 +52,7 @@ void CoreEngine::Stop()
 				break;
 			}
 
-			Input(delta);
+			Input(std::max(delta / NANOSECOND, frameTime));
 			Update();
 
 			updates++;
@@ -77,16 +70,9 @@ void CoreEngine::Stop()
 			updates = 0;
 		}
 	}
-}*/
-
-#include <future>
-
-static void Update_func(Engine* engine)
-{
-	engine->Update();
 }
 
-void CoreEngine::Run()
+/*void CoreEngine::Run()
 {
 	uint32_t frames = 0;
 	double frameCounter = 0;
@@ -117,11 +103,7 @@ void CoreEngine::Run()
 			}
 
 			Input(std::max(passedTime / NANOSECOND, frameTime));
-
-			if (!InputInstance.IsPause())
-			{
-				Update();
-			}
+			Update();
 
 			if (frameCounter >= NANOSECOND)
 			{
@@ -140,7 +122,7 @@ void CoreEngine::Run()
 		else
 		{
 			using namespace std::chrono_literals;
-			std::this_thread::sleep_for(0ms);
+			std::this_thread::sleep_for(1ms);
 		}
 	}
-}
+}*/

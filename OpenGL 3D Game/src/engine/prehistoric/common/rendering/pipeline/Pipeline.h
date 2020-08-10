@@ -7,7 +7,7 @@
 #include "engine/prehistoric/core/math/Math.h"
 #include "engine/prehistoric/common/framework/Window.h"
 
-#include "engine/prehistoric/resources/AssetManager.h"
+class AssetManager;
 
 class Pipeline
 {
@@ -27,7 +27,7 @@ public:
 
 	virtual void RecreatePipeline() {};
 
-	Shader* getShader() const { return assetManager->getShader(shaderID); }
+	Shader* getShader() const { return assetManager->getResourceByID<Shader>(shaderID); }
 
 	size_t getShaderID() const { return shaderID; }
 	void setShaderID(size_t shaderID);

@@ -4,7 +4,7 @@
 #include "engine/prehistoric/core/Engine.h"
 
 Light::Light(const Vector3f& colour, const Vector3f& intensity, bool sun)
-	: Component(), colour(colour), intensity(intensity), sun(sun)
+	: colour(colour), intensity(intensity), sun(sun)
 {
 }
 
@@ -12,7 +12,7 @@ void Light::PreUpdate(Engine* engine)
 {
 }
 
-void Light::PreRender(RenderingEngine* renderingEngine)
+void Light::PreRender(Renderer* renderer)
 {
-	renderingEngine->AddLight(this);
+	renderer->AddLight(this);
 }

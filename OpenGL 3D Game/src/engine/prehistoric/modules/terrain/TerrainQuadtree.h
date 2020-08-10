@@ -35,8 +35,8 @@ private:
 
 	TerrainMaps* maps;
 
-	Renderer* renderer;
-	Renderer* wireframeRenderer;
+	RendererComponent* renderer;
+	RendererComponent* wireframeRendererComponent;
 };
 
 #endif

@@ -10,11 +10,11 @@
 #include "engine/platform/opengl/rendering/shaders/gpgpu/GLNormalMapShader.h"
 //#include "engine/platform/vulkan/rendering/shaders/gpgpu/VKNormalMapShader.h"
 
-class NormalMapRenderer
+class NormalMapRendererComponent
 {
 public:
-	NormalMapRenderer(Window* window, AssetManager* manager, float strength, uint32_t N);
-	virtual ~NormalMapRenderer();
+	NormalMapRendererComponent(Window* window, AssetManager* manager, float strength, uint32_t N);
+	virtual ~NormalMapRendererComponent();
 
 	void Render(Texture* heightmap);
 

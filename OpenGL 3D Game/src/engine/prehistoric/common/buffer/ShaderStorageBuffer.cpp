@@ -3,5 +3,4 @@
 
 ShaderStorageBuffer::~ShaderStorageBuffer()
 {
-
 }

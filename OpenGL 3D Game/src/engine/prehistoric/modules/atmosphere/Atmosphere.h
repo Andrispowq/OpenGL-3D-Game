@@ -14,7 +14,7 @@
 #include "engine/platform/opengl/rendering/pipeline/GLGraphicsPipeline.h"
 #include "engine/platform/vulkan/rendering/pipeline/VKGraphicsPipeline.h"
 
-#include "engine/prehistoric/component/renderer/Renderer.h"
+#include "engine/prehistoric/component/renderer/RendererComponent.h"
 
 class Atmosphere : public GameObject
 {

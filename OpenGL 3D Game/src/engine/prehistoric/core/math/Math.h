@@ -82,7 +82,7 @@ public:
 
 	void print() const { PR_LOG_MESSAGE("[ %f, %f ]\n", (float)x, (float)y); }
 	
-	static uint64_t size() { return 2 * sizeof(float); }
+	constexpr static uint64_t size() { return 2 * sizeof(float); }
 public:
 	union
 	{
@@ -163,7 +163,7 @@ public:
 
 	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f ]\n", (float)x, (float)y, (float)z); }
 
-	static uint64_t size() { return 3 * sizeof(float); }
+	constexpr static uint64_t size() { return 3 * sizeof(float); }
 public:
 	union
 	{
@@ -253,7 +253,7 @@ public:
 
 	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f, %f ]", (float)x, (float)y, (float)z, (float)w); }
 
-	static uint64_t size() { return 4 * sizeof(float); }
+	constexpr static uint64_t size() { return 4 * sizeof(float); }
 public:
 	union
 	{
@@ -362,13 +362,14 @@ class Matrix4f
 {
 public:
 	Matrix4f(const Matrix4f& v);
+	Matrix4f(Matrix4f&& v) noexcept;
 
 	Matrix4f(const Vector4f& v);
 	Matrix4f();
 
 	~Matrix4f();
 
-	Matrix4f operator=(const Matrix4f& v);
+	Matrix4f& operator=(Matrix4f v) noexcept;
 
 	inline Matrix4f operator+(const Matrix4f& v) const;
 	inline Matrix4f operator-(const Matrix4f& v) const;
@@ -395,7 +396,7 @@ public:
 
 	inline bool operator==(const Matrix4f& v) const;
 
-	float* operator[](const int& index) const;
+	std::array<float, 4> operator[](int index) const;
 
 	static Matrix4f Identity();
 	static Matrix4f Zero();
@@ -408,7 +409,7 @@ public:
 	static Matrix4f PerspectiveProjection(const float& fov, const float& aspectRatio, const float& nearPlane, const float& farPlane);
 	static Matrix4f View(const Vector3f& forward, const Vector3f& up);
 
-	float* const getRow(const int i) const;
+	std::array<float, 4> const getRow(int i) const;
 
 	void print() const
 	{
@@ -853,13 +854,14 @@ class Matrix4f
 {
 public:
 	Matrix4f(const Matrix4f& v);
+	Matrix4f(Matrix4f&& v) noexcept;
 
 	Matrix4f(const Vector4f& v);
 	Matrix4f();
 
 	~Matrix4f();
 
-	Matrix4f operator=(const Matrix4f& v);
+	Matrix4f& operator=(Matrix4f v) noexcept;
 
 	inline Matrix4f operator+(const Matrix4f& v) const;
 	inline Matrix4f operator-(const Matrix4f& v) const;
@@ -886,7 +888,7 @@ public:
 
 	inline bool operator==(const Matrix4f& v) const;
 
-	float* operator[](const int& index) const;
+	std::array<float, 4> operator[](const int& index) const;
 
 	static Matrix4f Identity();
 	static Matrix4f Zero();
@@ -899,7 +901,7 @@ public:
 	static Matrix4f PerspectiveProjection(const float& fov, const float& aspectRatio, const float& nearPlane, const float& farPlane);
 	static Matrix4f View(const Vector3f& forward, const Vector3f& up);
 
-	float* const getRow(const int i) const;
+	std::array<float, 4> const getRow(const int i) const;
 
 	void print() const
 	{

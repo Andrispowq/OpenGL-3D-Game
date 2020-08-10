@@ -8,15 +8,15 @@
 class MeshVertexBuffer : public VertexBuffer
 {
 public:
-	MeshVertexBuffer() {}
+	MeshVertexBuffer(const Mesh& mesh) : mesh(mesh){}
 	
 	virtual ~MeshVertexBuffer() override = 0;
 
-	virtual void Store(const Mesh& mesh) override = 0;
-
-	virtual void Bind(void* commandBuffer) const override  = 0;
-	virtual void Draw(void* commandBuffer) const = 0;
+	virtual void Bind(CommandBuffer* commandBuffer) const override  = 0;
+	virtual void Draw(CommandBuffer* commandBuffer) const = 0;
 	virtual void Unbind() const override = 0;
+private:
+	Mesh mesh;
 };
 
 #endif

@@ -215,7 +215,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 				if (nameTokens[2] == "component")
 				{
-					if (tokens[1] == "Renderer")
+					if (tokens[1] == "RendererComponent")
 					{
  						std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
 
@@ -294,7 +294,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 						pipeline->CreatePipeline(window);
 
-						Renderer* renderer = new Renderer(pipeline, material, window);
+						RendererComponent* renderer = new RendererComponent(pipeline, material, window);
 
 						obj->AddComponent(tokens[1], renderer);
 					}
@@ -333,7 +333,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 						if (nameTokens[i] == "component")
 						{
-							if (tokens[1] == "Renderer")
+							if (tokens[1] == "RendererComponent")
 							{
 								std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
 
@@ -412,7 +412,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 								pipeline->CreatePipeline(window);
 
-								Renderer* renderer = new Renderer(pipeline, material, window);
+								RendererComponent* renderer = new RendererComponent(pipeline, material, window);
 
 								obj->AddComponent(tokens[1], renderer);
 

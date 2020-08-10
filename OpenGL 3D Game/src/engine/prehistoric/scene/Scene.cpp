@@ -45,7 +45,7 @@ void Scene::CreateScene(GameObject* root, Window* window, AssetManager* manager,
 		//material->AddFloat(ROUGHNESS, 0.3);
 		material->addFloat(OCCLUSION, 1);
 
-		Renderer* renderer = new Renderer(pipeline, material, window);
+		RendererComponent* renderer = new RendererComponent(pipeline, material, window);
 
 		GameObject* obj = new GameObject();
 		obj->AddComponent(RENDERER_COMPONENT, renderer);
@@ -96,7 +96,7 @@ void Scene::CreateScene(GameObject* root, Window* window, AssetManager* manager,
 		GameObject* sun = new GameObject();
 		sun->setUpdateFunction(sun_move_function);
 		sun->AddComponent(LIGHT_COMPONENT, new Light(Vector3f(1, 1, 1), Vector3f(200000000), true));
-		sun->SetPosition({ -2000, -2000, 0 });
+		sun->SetPosition({ -2000, -1000, 0 });
 		root->AddChild("sun", sun);
 
 		GameObject* light = new GameObject();
@@ -108,5 +108,5 @@ void Scene::CreateScene(GameObject* root, Window* window, AssetManager* manager,
 
 void Scene::DeleteData()
 {
-	Renderer::CleanUp();
+	RendererComponent::CleanUp();
 }

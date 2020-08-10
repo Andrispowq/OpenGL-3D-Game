@@ -8,7 +8,7 @@
 #include "engine/prehistoric/core/gameObject/GameObject.h"
 #include "engine/prehistoric/core/model/material/Material.h"
 #include "engine/prehistoric/component/light/Light.h"
-#include "engine/prehistoric/component/renderer/Renderer.h"
+#include "engine/prehistoric/component/renderer/RendererComponent.h"
 
 class VKBasicShader : public VKShader
 {

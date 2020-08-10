@@ -5,13 +5,13 @@ TerrainMaps::TerrainMaps(Window* window, AssetManager* manager)
 {
 	this->heightmap = TextureLoader::LoadTexture(TerrainConfig::heightmap, window, Bilinear);
 
- 	this->normalmapRenderer = new NormalMapRenderer(window, manager, 60, heightmap->getWidth());
-	normalmapRenderer->Render(heightmap);
-	this->normalmap = normalmapRenderer->getNormalmap();
+ 	this->normalmapRendererComponent = new NormalMapRendererComponent(window, manager, 60, heightmap->getWidth());
+	normalmapRendererComponent->Render(heightmap);
+	this->normalmap = normalmapRendererComponent->getNormalmap();
 
-	this->splatmapRenderer = new SplatMapRenderer(window, manager, normalmap->getWidth());
-	splatmapRenderer->Render(normalmap);
-	this->splatmap = splatmapRenderer->getSplatmap();
+	this->splatmapRendererComponent = new SplatMapRendererComponent(window, manager, normalmap->getWidth());
+	splatmapRendererComponent->Render(normalmap);
+	this->splatmap = splatmapRendererComponent->getSplatmap();
 
 	this->query = new TerrainHeightsQuery(window, manager, heightmap->getWidth());
 	query->Query(heightmap);
@@ -21,7 +21,7 @@ TerrainMaps::TerrainMaps(Window* window, AssetManager* manager)
 TerrainMaps::~TerrainMaps()
 {
 	delete heightmap;
-	delete normalmapRenderer;
-	delete splatmapRenderer;
+	delete normalmapRendererComponent;
+	delete splatmapRendererComponent;
 	delete query;
 }

@@ -7,7 +7,7 @@
 #include "engine/prehistoric/common/buffer/MeshVertexBuffer.h"
 #include "engine/prehistoric/core/model/material/Material.h"
 #include "engine/prehistoric/common/rendering/shaders/Shader.h"
-#include "engine/prehistoric/component/renderer/Renderer.h"
+#include "engine/prehistoric/component/renderer/RendererComponent.h"
 #include "engine/prehistoric/core/util/loader/obj/OBJLoader.h"
 
 #include "engine/platform/opengl/rendering/shaders/basic/GLBasicShader.h"

@@ -16,7 +16,7 @@ public:
 	void LogStage() const;
 	void SetProjection(float fov, float width, float height);
 
-    void AddCameraInput(CameraInput* input) { inputs.push_back(input); }
+    void AddCameraInput(CameraInput input) { inputs.push_back(input); }
 
 	void Update(Window* window, float delta);
 	void Move(const Vector3f& dir, const float& amount);
@@ -40,7 +40,7 @@ public:
 
     bool isChanged() const { return cameraMoved || cameraRotated; }
 private:
-    std::vector<CameraInput*> inputs;
+    std::vector<CameraInput> inputs;
     InputData speedControl;
 
 	Vector3f position;

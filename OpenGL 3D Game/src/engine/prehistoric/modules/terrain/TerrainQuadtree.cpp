@@ -4,7 +4,7 @@
 TerrainQuadtree::TerrainQuadtree(Window* window, AssetManager* manager, Camera* camera, TerrainMaps* maps)
 	: window(window), camera(camera), maps(maps)
 {
-	factory = new Factory<TerrainNode>(512);
+	factory = new Factory<TerrainNode>(512); //There will definitly not be more than 512 instances of TerrainNode on this quadtree
 
 	size_t shaderID = -1;
 	Pipeline* pipeline = nullptr;
@@ -46,7 +46,7 @@ TerrainQuadtree::TerrainQuadtree(Window* window, AssetManager* manager, Camera* 
 			ss << ", ";
 			ss << j;
 
-			AddChild(ss.str(), new/*(*factory)*/ TerrainNode(factory, pipeline, wireframePipeline,
+			AddChild(ss.str(), new(*factory) TerrainNode(factory, pipeline, wireframePipeline,
 				maps, window, camera, { i / (float)rootNodes, j / (float)rootNodes },
 				0, { float(i), float(j) }));
 		}
@@ -58,13 +58,8 @@ TerrainQuadtree::TerrainQuadtree(Window* window, AssetManager* manager, Camera* 
 
 TerrainQuadtree::~TerrainQuadtree()
 {
-	//Custom allocator -> custom deletion
-	/*for (auto& child : children)
-	{
-		TerrainNode::operator delete(child.second, *factory);
-	}
-
-	children.clear();*/
+	//Custom allocator -> custom deletion, but the factory deletes them anyway
+	children.clear();
 
 	delete factory;
 }

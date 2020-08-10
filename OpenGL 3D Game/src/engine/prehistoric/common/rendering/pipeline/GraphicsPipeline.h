@@ -11,7 +11,7 @@ public:
 
 	virtual ~GraphicsPipeline();
 
-	VertexBuffer* getVertexBuffer() const { return manager->getVertexBuffer(vboID); }
+	VertexBuffer* getVertexBuffer() const { return manager->getResourceByID<VertexBuffer>(vboID); }
 
 	void setVertexBufferID(size_t vboID);
 

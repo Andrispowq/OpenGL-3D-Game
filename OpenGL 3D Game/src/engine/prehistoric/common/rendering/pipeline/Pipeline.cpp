@@ -2,9 +2,10 @@
 #include "Pipeline.h"
 
 #include "engine/config/FrameworkConfig.h"
+#include "engine/prehistoric/resources/AssetManager.h"
 
 Pipeline::Pipeline(AssetManager* manager, size_t shaderID)
-	: viewportStart{ 0, 0 }, viewportSize{ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight },
+	: viewportStart{0, 0}, viewportSize{ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight },
 		scissorStart{0, 0}, scissorSize{ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight }
 {
 	this->assetManager = manager;
@@ -13,7 +14,7 @@ Pipeline::Pipeline(AssetManager* manager, size_t shaderID)
 
 Pipeline::~Pipeline()
 {
-	//We do not delete this shader, we'll just decrease the refcount, so TODO
+	assetManager->removeReference<Shader>(shaderID);
 	shaderID = -1;
 }
 

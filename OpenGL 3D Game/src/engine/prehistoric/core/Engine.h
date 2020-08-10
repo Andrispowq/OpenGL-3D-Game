@@ -17,16 +17,16 @@ class Engine
 {
 public:
 	Engine();
-	virtual ~Engine();
+	~Engine();
 
 	void Input(float frameTime);
 	void Update();
 	void Render();
 
-	inline RenderingEngine* GetRenderingEngine() const { return renderingEngine; }
-	inline AudioEngine* GetAudioEngine() const { return audioEngine; }
+	inline RenderingEngine* getRenderingEngine() const { return renderingEngine.get(); }
+	inline AudioEngine* getAudioEngine() const { return audioEngine.get(); }
 
-	inline AssetManager* GetAssetManager() const { return manager; }
+	inline AssetManager* getAssetManager() const { return manager.get(); }
 
 	inline float getFrameTime() const { return frameTime; }
 
@@ -36,14 +36,14 @@ public:
 	Engine operator=(const Engine&& engine) = delete;
 private:
 	//Root object
-	GameObject* root;
+	std::unique_ptr<GameObject> root;
 
 	//The asset manager
-	AssetManager* manager;
+	std::unique_ptr<AssetManager> manager;
 
 	//Engines
-	RenderingEngine* renderingEngine;
-	AudioEngine* audioEngine;
+	std::unique_ptr<RenderingEngine> renderingEngine;
+	std::unique_ptr<AudioEngine> audioEngine;
 
 	//Frametime, set once per update
 	float frameTime;

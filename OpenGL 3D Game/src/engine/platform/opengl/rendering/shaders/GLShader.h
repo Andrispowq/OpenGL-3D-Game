@@ -8,7 +8,6 @@
 #include <fstream>
 
 #include "engine/prehistoric/component/light/Light.h"
-
 #include "engine/prehistoric/core/util/Util.h"
 
 class GLShader : public Shader

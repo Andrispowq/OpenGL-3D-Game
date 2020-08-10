@@ -1,14 +1,14 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
-#include "Renderer.h"
+#include "RendererComponent.h"
 #include "engine/prehistoric/common/rendering/pipeline/Pipeline.h"
 #include "engine/prehistoric/engines/RenderingEngine.h"
 #include "engine/prehistoric/core/gameObject/GameObject.h"
 #include "engine/prehistoric/core/model/material/Material.h"
 
-std::vector<Material*> Renderer::materials;
+std::vector<Material*> RendererComponent::materials;
 
-Renderer::Renderer(Pipeline* pipeline, Material* material, Window* window)
-	: Renderable(pipeline, window)
+RendererComponent::RendererComponent(Pipeline* pipeline, Material* material, Window* window)
+	: RenderableComponent(pipeline, window)
 {
 	size_t index;
 	if ((index = FindElement(material, materials)) == 0xFFFFFFFF)
@@ -22,8 +22,8 @@ Renderer::Renderer(Pipeline* pipeline, Material* material, Window* window)
 	}
 }
 
-Renderer::Renderer(Window* window)
-	: Renderable(window)
+RendererComponent::RendererComponent(Window* window)
+	: RenderableComponent(window)
 {
 	size_t index;
 	if ((index = FindElement((Material*)nullptr, materials)) == 0xFFFFFFFF)
@@ -37,12 +37,12 @@ Renderer::Renderer(Window* window)
 	}
 }
 
-Renderer::~Renderer()
+RendererComponent::~RendererComponent()
 {
 	materialIndex = -1;
 }
 
-void Renderer::CleanUp()
+void RendererComponent::CleanUp()
 {
 	for (Material* material : materials)
 	{
@@ -50,20 +50,20 @@ void Renderer::CleanUp()
 			delete material;
 	}
 
-	Renderable::CleanUp();
+	RenderableComponent::CleanUp();
 }
 
-void Renderer::PreRender(RenderingEngine* renderingEngine)
+void RendererComponent::PreRender(Renderer* renderer)
 {
-	renderingEngine->AddModel(this);
+	renderer->AddModel(this);
 }
 
-void Renderer::Render(const RenderingEngine& renderingEngine) const
+void RendererComponent::Render(Renderer* renderer) const
 {
 	Pipeline* pipeline = pipelines[pipelineIndex];
 	
 	pipeline->BindPipeline();
-	pipeline->getShader()->UpdateShaderUniforms(renderingEngine.GetCamera(), renderingEngine.GetLights());
+	pipeline->getShader()->UpdateShaderUniforms(renderer->getCamera(), renderer->getLights());
 	pipeline->getShader()->UpdateSharedUniforms(parent);
 	pipeline->getShader()->UpdateObjectUniforms(parent);
 
@@ -71,7 +71,7 @@ void Renderer::Render(const RenderingEngine& renderingEngine) const
 	pipeline->UnbindPipeline();
 }
 
-void Renderer::BatchRender(const RenderingEngine& renderingEngine) const
+void RendererComponent::BatchRender() const
 {
 	Pipeline* pipeline = pipelines[pipelineIndex];
 

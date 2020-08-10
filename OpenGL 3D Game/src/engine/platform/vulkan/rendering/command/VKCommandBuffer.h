@@ -1,13 +1,15 @@
 #ifndef VK_COMMAND_BUFFER_H
 #define VK_COMMAND_BUFFER_H
 
+#include "engine/prehistoric/common/rendering/command/CommandBuffer.h"
+
 #include <vulkan/vulkan.h>
 
 #include "engine/platform/vulkan/framework/device/VKDevice.h"
 
 class VKCommandPool;
 
-class VKCommandBuffer
+class VKCommandBuffer : public CommandBuffer
 {
 public:
 	VKCommandBuffer(VKCommandPool* commandPool, VkDevice device);

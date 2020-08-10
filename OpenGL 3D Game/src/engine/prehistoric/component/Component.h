@@ -13,7 +13,7 @@ public:
 	virtual ~Component() {}
 
 	virtual void PreUpdate(Engine* engine) {}
-	virtual void PreRender(RenderingEngine* renderingEngine) {}
+	virtual void PreRender(Renderer* renderer) {}
 
 	inline GameObject* getParent() const { return parent; }
 	inline void setParent(GameObject* parent) { this->parent = parent; }

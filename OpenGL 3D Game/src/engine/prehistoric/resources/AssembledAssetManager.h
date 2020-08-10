@@ -1,36 +1,9 @@
-#pragma once
-
-#ifndef ASSET_MANAGER_H
-#define ASSET_MANAGER_H
-
-#include "engine/prehistoric/core/util/Includes.hpp"
-
-#include "engine/prehistoric/common/model/Texture.h"
-#include "engine/prehistoric/common/buffer/VertexBuffer.h"
-#include "engine/prehistoric/common/rendering/shaders/Shader.h"
+#ifndef ASSEMBLED_ASSET_MANAGER_H
+#define ASSEMBLED_ASSET_MANAGER_H
 
 #include "engine/prehistoric/common/framework/Window.h"
-#include "engine/prehistoric/core/util/loader/obj/OBJLoader.h"
-#include "engine/prehistoric/core/util/loader/TextureLoader.h"
 
-#include "engine/platform/opengl/rendering/shaders/atmosphere/GLAtmosphereScatteringShader.h"
-#include "engine/platform/opengl/rendering/shaders/atmosphere/GLAtmosphereShader.h"
-#include "engine/platform/opengl/rendering/shaders/basic/GLBasicShader.h"
-#include "engine/platform/opengl/rendering/shaders/gpgpu/GLNormalmapShader.h"
-#include "engine/platform/opengl/rendering/shaders/gpgpu/GLSplatmapShader.h"
-#include "engine/platform/opengl/rendering/shaders/gpgpu/GLTerrainHeightsShader.h"
-#include "engine/platform/opengl/rendering/shaders/gui/GLGUIShader.h"
-#include "engine/platform/opengl/rendering/shaders/pbr/GLPBRShader.h"
-#include "engine/platform/opengl/rendering/shaders/terrain/GLTerrainShader.h"
-#include "engine/platform/opengl/rendering/shaders/terrain/GLTerrainWireframeShader.h"
-
-#include "engine/platform/vulkan/rendering/shaders/basic/VKBasicShader.h"
-#include "engine/platform/vulkan/rendering/shaders/pbr/VKPBRShader.h"
-
-/*
-	This system works like this: every asset is stored here, and when we need one, we just pass in the the size_t ID of the asset, and we get a pointer back
-*/
-class AssetManager
+class AssembledAssetManager
 {
 public:
 	AssetManager(Window* window);
@@ -252,22 +225,16 @@ private:
 	Window* window;
 
 	//size_t: ID, pointer: data, uint32_t: refcount
-	std::unordered_map<size_t, std::pair<std::unique_ptr<Texture>, uint32_t>> textures;
-	std::unordered_map<size_t, std::pair<std::unique_ptr<VertexBuffer>, uint32_t>> vertexBuffers;
-	std::unordered_map<size_t, std::pair<std::unique_ptr<Shader>, uint32_t>> shaders;
-
-	//Maps for getting the resource ID from the name (only one because there can't be two things with the same name because of the system's naming conventions
-	std::unordered_map<std::string, size_t> ID_map;
+	std::unordered_map<size_t, std::pair<std::unique_ptr<Pipeline>, uint32_t>> pipelines;
+	std::unordered_map<size_t, std::pair<std::unique_ptr<Material>, uint32_t>> materials;
 
 	//The IDs that we assign the next asset we add
-	size_t texture_ID = 0;	
-	size_t vertexBuffer_ID = 0;
-	size_t shader_ID = 0;
+	size_t pipeline_ID = 0;
+	size_t material = 0;
 
 	//These values are just for reference, so I'll mark it as TODO
-	constexpr static size_t TexturesSize = 30;
-	constexpr static size_t VertexBuffersSize = 10;
-	constexpr static size_t ShadersSize = 10;
+	constexpr static size_t PipelinesSize = 40;
+	constexpr static size_t MaterialsSize = 30;
 };
 
 #endif

@@ -3,6 +3,8 @@
 
 #include "engine/prehistoric/core/math/Math.h"
 
+#include "engine/prehistoric/common/rendering/command/CommandBuffer.h"
+
 enum class LayoutType
 {
 	UNSIGNED_INT,
@@ -90,13 +92,10 @@ struct Layout
 class ShaderStorageBuffer
 {
 public:
-	ShaderStorageBuffer() {}
-
+	ShaderStorageBuffer(void* data, const Layout& layout) : data(data), layout(layout) {}
 	virtual ~ShaderStorageBuffer() = 0;
 
-	virtual void Store(void* data, const Layout& layout) = 0;
-
-	virtual void Bind(void* commandBuffer, uint32_t binding) const = 0;
+	virtual void Bind(CommandBuffer* commandBuffer, uint32_t binding) const = 0;
 	virtual void Unbind() const = 0;
 
 	virtual void MapBuffer() = 0;

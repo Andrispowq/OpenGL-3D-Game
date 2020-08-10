@@ -13,13 +13,12 @@ Mesh::~Mesh()
 	indices.clear();
 }
 
-float* Mesh::GetVertexData() const
+std::vector<float> Mesh::GetVertexData() const
 {
 	constexpr size_t numFloats = Vertex::getNumberOfFloats();
+	std::vector<float> data(vertices.size() * numFloats);
 
-	float* data = new float[vertices.size() * numFloats];
 	int counter = 0;
-
 	for (size_t i = 0; i < vertices.size(); i++)
 	{
 		counter = 0;
@@ -37,9 +36,9 @@ float* Mesh::GetVertexData() const
 	return data;
 }
 
-uint16_t* Mesh::GetIndexData() const
+std::vector<uint16_t> Mesh::GetIndexData() const
 {
-	uint16_t* indexArray = new uint16_t[indices.size()];
+	std::vector<uint16_t> indexArray(indices.size());
 
 	for (unsigned int i = 0; i < indices.size(); i++)
 	{

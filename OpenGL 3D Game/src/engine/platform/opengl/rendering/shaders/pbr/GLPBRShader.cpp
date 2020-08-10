@@ -95,7 +95,7 @@ void GLPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>
 
 void GLPBRShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
 {
-	Material* material = dynamic_cast<Renderer*>(object->GetComponent(RENDERER_COMPONENT))->getMaterial();
+	Material* material = dynamic_cast<RendererComponent*>(object->GetComponent(RENDERER_COMPONENT))->getMaterial();
 
 	SetUniform("m_transform", object->getWorldTransform()->getTransformationMatrix());
 

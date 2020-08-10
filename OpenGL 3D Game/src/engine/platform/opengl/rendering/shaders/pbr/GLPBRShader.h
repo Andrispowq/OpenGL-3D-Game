@@ -7,7 +7,7 @@
 
 #include "engine/prehistoric/core/gameObject/GameObject.h"
 #include "engine/prehistoric/core/movement/Camera.h"
-#include "engine/prehistoric/component/renderer/Renderer.h"
+#include "engine/prehistoric/component/renderer/RendererComponent.h"
 #include "engine/prehistoric/core/model/material/Material.h"
 #include "engine/platform/opengl/texture/GLTexture.h"
 

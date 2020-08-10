@@ -6,8 +6,8 @@
 class Framebuffer
 {
 public:
-	Framebuffer(Window* window);
-	virtual ~Framebuffer();
+	Framebuffer(Window* window) : window(window) {}
+	virtual ~Framebuffer() = 0;
 
 	virtual void Bind() const = 0;
 	virtual void Unbind() const = 0;

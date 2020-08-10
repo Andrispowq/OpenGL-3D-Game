@@ -19,8 +19,6 @@ public:
 	VKMeshVertexBuffer(const Mesh& mesh, Window* window);
 	VKMeshVertexBuffer(Window* window);
 
-	virtual ~VKMeshVertexBuffer() override;
-
 	void Store(const Mesh& mesh) override;
 
 	void Bind(void* commandBuffer) const override;
@@ -30,8 +28,8 @@ public:
 	VkVertexInputBindingDescription getBindingDescription() const;
 	std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions() const;
 private:
-	VKBuffer* vertexBuffer;
-	VKBuffer* indexBuffer;
+	std::unique_ptr<VKBuffer> vertexBuffer;
+	std::unique_ptr<VKBuffer> indexBuffer;
 
 	VKPhysicalDevice* physicalDevice;
 	VKDevice* device;

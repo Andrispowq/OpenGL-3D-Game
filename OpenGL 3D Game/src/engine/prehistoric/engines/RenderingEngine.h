@@ -11,49 +11,31 @@
 #include "engine/prehistoric/resources/AssetManager.h"
 
 class GameObject;
-class Renderable;
+class RenderableComponent;
 class Light;
 
 class RenderingEngine
 {
 public:
 	RenderingEngine();
-	virtual ~RenderingEngine();
+	virtual ~RenderingEngine() {}
 
 	void Init() const;
 
 	void Input();
 	void Update(float delta);
-	void Render(GameObject* root);
+	void Render();
 
-	void AddModel(Renderable* renderable);
-	void AddLight(Light* light);
-
-	inline Window* GetWindow() const { return window; }
-	inline Camera* GetCamera() const { return camera; }
-
-	inline std::vector<Light*> GetLights() const { return lights; }
-
-	inline bool isWireframeMode() const { return wireframeMode; }
-
-	inline Light* getSun() const { return sun; }
+	inline Window* getWindow() const { return window.get(); }
+	inline Camera* getCamera() const { return camera.get(); }
 
 	RenderingEngine(const RenderingEngine& engine) = delete;
 	RenderingEngine operator=(const RenderingEngine& engine) = delete;
 private:
-	//This we way we can ensure correct order in drawing
-	std::unordered_map<Pipeline*, std::vector<Renderable*>> models_3d;
-	std::unordered_map<Pipeline*, std::vector<Renderable*>> models_transparency;
-	std::unordered_map<Pipeline*, std::vector<Renderable*>> models_2d;
+	std::unique_ptr<Window> window;
+	std::unique_ptr<Camera> camera;
 
-	std::vector<Light*> lights;
-
-	Light* sun = nullptr;
-
-	Window* window;
-	Camera* camera;
-
-	bool wireframeMode;
+	std::unique_ptr<Renderer> renderer;
 };
 
 #endif

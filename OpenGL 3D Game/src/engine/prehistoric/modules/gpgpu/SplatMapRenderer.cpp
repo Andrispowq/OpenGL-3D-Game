@@ -1,7 +1,7 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
-#include "SplatMapRenderer.h"
+#include "SplatMapRendererComponent.h"
 
-SplatMapRenderer::SplatMapRenderer(Window* window, AssetManager* manager, uint32_t N)
+SplatMapRendererComponent::SplatMapRendererComponent(Window* window, AssetManager* manager, uint32_t N)
 {
 	this->window = window;
 
@@ -42,7 +42,7 @@ SplatMapRenderer::SplatMapRenderer(Window* window, AssetManager* manager, uint32
 	}
 }
 
-SplatMapRenderer::~SplatMapRenderer()
+SplatMapRendererComponent::~SplatMapRendererComponent()
 {
 	pipeline->DestroyPipeline();
 
@@ -50,7 +50,7 @@ SplatMapRenderer::~SplatMapRenderer()
 	delete splatmap;
 }
 
-void SplatMapRenderer::Render(Texture* normalmap)
+void SplatMapRendererComponent::Render(Texture* normalmap)
 {
 	pipeline->BindPipeline();
 

@@ -65,7 +65,7 @@ void VKPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>
 
 void VKPBRShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
 {
-	Material* material = ((Renderer*)object->GetComponent(RENDERER_COMPONENT))->getMaterial();
+	Material* material = ((RendererComponent*)object->GetComponent(RENDERER_COMPONENT))->getMaterial();
 
 	//Offset values are copied from shaders
 	SetUniform("m_transform", object->getWorldTransform()->getTransformationMatrix(), instance_index);

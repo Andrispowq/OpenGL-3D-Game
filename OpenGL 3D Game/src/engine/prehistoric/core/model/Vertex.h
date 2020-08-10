@@ -49,7 +49,7 @@ public:
 	Vector3f normal;
 
 	//Data for loading obj files
-	Vertex* duplicateVertex = nullptr;
+	Vertex* duplicateVertex = nullptr; //non-owned, just a reference to a stack value
 
 	int textureIndex;
 	int normalIndex;

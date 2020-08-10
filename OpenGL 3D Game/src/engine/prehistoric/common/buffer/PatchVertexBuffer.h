@@ -8,14 +8,14 @@
 class PatchVertexBuffer : public VertexBuffer
 {
 public:
-	PatchVertexBuffer() {}
+	PatchVertexBuffer(const std::vector<Vector2f>& vertices) : vertices(vertices) {}
 	virtual ~PatchVertexBuffer() override = 0;
 
-	virtual void Store(const std::vector<Vector2f>& vertices) = 0;
-
-	virtual void Bind(void* commandBuffer) const override = 0;
-	virtual void Draw(void* commandBuffer) const = 0;
+	virtual void Bind(CommandBuffer* commandBuffer) const override = 0;
+	virtual void Draw(CommandBuffer* commandBuffer) const = 0;
 	virtual void Unbind() const override = 0;
+private:
+	std::vector<Vector2f> vertices;
 };
 
 #endif

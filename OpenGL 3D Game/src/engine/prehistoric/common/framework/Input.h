@@ -63,7 +63,7 @@ protected:
 	Input() : scrollOffset(0.0f), pause(false) {};
 	virtual ~Input() {}
 protected:
-	static Input *instance;
+	static Input* instance;
 
 	std::vector<int> pushedKeys;
 	std::vector<int> keysHolding;

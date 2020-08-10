@@ -1,7 +1,7 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
-#include "NormalMapRenderer.h"
+#include "NormalMapRendererComponent.h"
 
-NormalMapRenderer::NormalMapRenderer(Window* window, AssetManager* manager, float strength, uint32_t N)
+NormalMapRendererComponent::NormalMapRendererComponent(Window* window, AssetManager* manager, float strength, uint32_t N)
 {
 	this->window = window;
 
@@ -43,12 +43,12 @@ NormalMapRenderer::NormalMapRenderer(Window* window, AssetManager* manager, floa
 	}
 }
 
-NormalMapRenderer::~NormalMapRenderer()
+NormalMapRendererComponent::~NormalMapRendererComponent()
 {
 	delete pipeline;
 }
 
-void NormalMapRenderer::Render(Texture* heightmap)
+void NormalMapRendererComponent::Render(Texture* heightmap)
 {
 	pipeline->BindPipeline();
 

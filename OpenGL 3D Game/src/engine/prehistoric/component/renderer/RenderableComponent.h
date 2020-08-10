@@ -1,11 +1,10 @@
-#ifndef RENDERABLE_H
-#define RENDERABLE_H
+#ifndef RENDERABLE_COMPONENT_H
+#define RENDERABLE_COMPONENT_H
 
 #include "engine/prehistoric/component/Component.h"
 
 #include "engine/prehistoric/common/rendering/pipeline/Pipeline.h"
 #include "engine/prehistoric/common/framework/Window.h"
-#include "engine/prehistoric/engines/RenderingEngine.h"
 
 #include "engine/prehistoric/core/util/Includes.hpp"
 
@@ -17,21 +16,19 @@ enum class RenderPriority
 	_POST_PROCESSING = 3
 };
 
-class Renderable : public Component
+class RenderableComponent : public Component
 {
 public:
-	Renderable(Pipeline* pipeline, Window* window);
-	Renderable(Window* window);
-	virtual ~Renderable();
+	RenderableComponent(Pipeline* pipeline, Window* window);
+	RenderableComponent(Window* window);
+	virtual ~RenderableComponent();
 
 	static void CleanUp();
-
 	static void RecreatePipelines();
-
-	virtual void Render(const RenderingEngine& renderingEngine) const = 0;
-	virtual void BatchRender(const RenderingEngine& renderingEngine) const = 0;
-
 	static std::vector<Pipeline*> getPipelines() { return pipelines; }
+
+	virtual void Render(Renderer* renderer) const = 0;
+	virtual void BatchRender() const = 0;
 
 	inline size_t getPipelineIndex() const { return pipelineIndex; }
 	inline Pipeline* getPipeline() const { return pipelines.at(pipelineIndex); }
@@ -39,18 +36,15 @@ public:
 	inline RenderPriority getPriority() const { return priority; }
 	inline void setPriority(RenderPriority priority) { this->priority = priority; }
 
-	Renderable(const Renderable& renderable) = delete;
-	Renderable operator=(const Renderable& renderable) = delete;
-	Renderable(const Renderable&& renderable) = delete;
-	Renderable operator=(const Renderable&& renderable) = delete;
+	RenderableComponent(const RenderableComponent&) = delete;
+	RenderableComponent(const RenderableComponent&&) = delete;
+	RenderableComponent& operator=(RenderableComponent) = delete;
 protected:
 	static std::vector<Pipeline*> pipelines;
 
 	Window* window;
 
 	size_t pipelineIndex;
-	uint32_t shader_instance_index;
-
 	RenderPriority priority;
 };
 
