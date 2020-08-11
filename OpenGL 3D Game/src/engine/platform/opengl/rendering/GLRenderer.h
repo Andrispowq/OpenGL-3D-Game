@@ -11,6 +11,9 @@ public:
 	GLRenderer(Window* window, Camera* camera) : Renderer(window, camera) {}
 	virtual ~GLRenderer() {}
 
+	virtual void PrepareRendering();
+	virtual void EndRendering();
+
 	virtual void Render() override;
 };
 

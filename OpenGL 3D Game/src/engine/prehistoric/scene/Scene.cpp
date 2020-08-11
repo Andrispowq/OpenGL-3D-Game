@@ -14,22 +14,27 @@
 
 #include "engine/prehistoric/resources/AssembledAssetManager.h"
 
+//We go around in a circle, from -2000 to 2000 on the y and z axes
 static void sun_move_function(GameObject* object, float frameTime)
 {
-	object->Move(Vector3f(0, 40, 0) * frameTime);
+	constexpr float anglesPerSecond = 20.0f;
+	Vector3f old = object->getWorldTransform().getPosition();
+	old = old.rotate(Vector3f(anglesPerSecond, 0, 0) * frameTime);
+
+	object->SetPosition(old);
 }
 
 Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, Camera* camera)
 {
 	WorldLoader loader;
-	//loader.LoadWorld("res/world/testLevel.wrld", root, window, manager);
+	loader.LoadWorld("res/world/testLevel.wrld", root, window, manager);
 
 	if (FrameworkConfig::api == Vulkan)
 	{
 		size_t vboID = manager->getAssetManager()->getResource<VertexBuffer>("quad.obj");
 		size_t shaderID = manager->getAssetManager()->getResource<Shader>("pbr");
 
-		VKGraphicsPipeline* pipeline = new VKGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID);
+		size_t pipelineID = manager->loadResource<Pipeline>(new VKGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID));
 
 		Material* material = new Material(manager->getAssetManager(), window);
 		material->addTexture(ALBEDO_MAP, manager->getAssetManager()->getResource<Texture>("oakFloor_DIF.png"));
@@ -37,11 +42,13 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 		material->addTexture(METALLIC_MAP, manager->getAssetManager()->getResource<Texture>("oakFloor_MET.png"));
 		material->addTexture(ROUGHNESS_MAP, manager->getAssetManager()->getResource<Texture>("oakFloor_RGH.png"));
 
+		size_t materialID = manager->loadResource<Material>(material);
+
 		//material->AddFloat(METALLIC, 1.0);
 		//material->AddFloat(ROUGHNESS, 0.3);
 		material->addFloat(OCCLUSION, 1);
 
-		RendererComponent* renderer = new RendererComponent(pipeline, material, window, manager);
+		RendererComponent* renderer = new RendererComponent(pipelineID, materialID, window, manager);
 
 		GameObject* obj = new GameObject();
 		obj->AddComponent(RENDERER_COMPONENT, renderer);
@@ -92,7 +99,7 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 		GameObject* sun = new GameObject();
 		sun->setUpdateFunction(sun_move_function);
 		sun->AddComponent(LIGHT_COMPONENT, new Light(Vector3f(1, 1, 1), Vector3f(200000000), true));
-		sun->SetPosition({ -2000, -1000, 0 });
+		sun->SetPosition({ -2000, 0, 0 });
 		root->AddChild("sun", sun);
 
 		GameObject* light = new GameObject();

@@ -1,14 +1,15 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "RenderingEngine.h"
+
 #include "engine/prehistoric/component/renderer/RenderableComponent.h"
 #include "engine/prehistoric/core/gameObject/GameObject.h"
 #include "engine/prehistoric/common/util/DeviceProperties.h"
-#include "engine/platform/vulkan/framework/context/VKContext.h"
 
-#include "engine/prehistoric/modules/gui/button/GUIButton.h"
+#include "engine/platform/opengl/rendering/GLRenderer.h"
+//#include "engine/platform/vulkan/rendering/VKRenderer.h"
 
 RenderingEngine::RenderingEngine()
-	: window(nullptr), camera(nullptr)
+	: window(nullptr), camera(nullptr), renderer(nullptr)
 {
 #if defined(PR_WINDOWS_64)
 	window = std::make_unique<WindowsWindow>();
@@ -40,6 +41,24 @@ RenderingEngine::RenderingEngine()
 
 	camera->LogStage();
 	camera->setSpeedControl({ MOUSE_SCROLL, PR_KEY_UNKNOWN, PR_JOYSTICK_1 });
+
+	if (FrameworkConfig::api == OpenGL)
+	{
+		renderer = std::make_unique<GLRenderer>(window.get(), camera.get());
+	}
+	else if (FrameworkConfig::api == Vulkan)
+	{
+		//renderer = std::make_unique<VKRenderer>(window.get(), camera.get());
+	}
+}
+
+RenderingEngine::~RenderingEngine()
+{
+	//Order is important!
+	delete renderer.release();
+	
+	delete window.release();
+	delete camera.release();
 }
 
 void RenderingEngine::Init() const
@@ -67,6 +86,11 @@ void RenderingEngine::Update(float delta)
 		//window->SetFullscreen(true);
 	}
 
+	if (InputInstance.IsKeyPushed(PR_KEY_E))
+	{
+		renderer->setWireframeMode(renderer->isWireframeMode() xor 0x1);
+	}
+
 	if (window->getResized())
 	{
 		camera->SetProjection(camera->getFov(), (float)window->getWidth(), (float)window->getHeight());
@@ -79,5 +103,7 @@ void RenderingEngine::Update(float delta)
 
 void RenderingEngine::Render()
 {
+	renderer->PrepareRendering();
 	renderer->Render();
+	renderer->EndRendering();
 }

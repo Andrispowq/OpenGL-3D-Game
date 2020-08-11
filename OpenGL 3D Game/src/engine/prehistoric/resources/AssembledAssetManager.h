@@ -49,7 +49,7 @@ public:
 	template<>
 	size_t loadResource<Pipeline>(Pipeline* resource)
 	{
-		for (const auto& elem : pipelines)
+		for (auto& elem : pipelines)
 		{
 			if (elem.second.first.get() == resource)
 			{
@@ -65,7 +65,7 @@ public:
 	template<>
 	size_t loadResource<Material>(Material* resource)
 	{
-		for (const auto& elem : materials)
+		for (auto& elem : materials)
 		{
 			if (elem.second.first.get() == resource)
 			{

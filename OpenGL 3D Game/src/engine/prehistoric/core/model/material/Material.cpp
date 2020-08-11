@@ -7,12 +7,22 @@ Material::Material(AssetManager* manager, Window* window)
 {
 	this->manager = manager;
 
-	size_t def_ID = manager->getResource<Texture>("default.png");
+	size_t def_ID = manager->getResource<Texture>("res/textures/default.png");
+	manager->addReference<Texture>(def_ID);
 	textureIDs.insert(std::make_pair("DEFAULT_TEX", def_ID));
+}
+
+Material::~Material()
+{
+	for (auto& tex : textureIDs)
+	{
+		manager->removeReference<Texture>(tex.second);
+	}
 }
 
 void Material::addTexture(const std::string& key, size_t textureID)
 {
+	manager->addReference<Texture>(textureID);
 	textureIDs.insert(std::make_pair(key, textureID));
 }
 

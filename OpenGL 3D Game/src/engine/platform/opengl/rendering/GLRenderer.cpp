@@ -3,6 +3,21 @@
 
 #include "engine/prehistoric/component/renderer/RenderableComponent.h"
 
+void GLRenderer::PrepareRendering()
+{
+}
+
+void GLRenderer::EndRendering()
+{
+	window->Render();
+
+	//Clear the lists for the next iteration
+	models_3d.clear();
+	models_transparency.clear();
+	models_2d.clear();
+	lights.clear();
+}
+
 void GLRenderer::Render()
 {
 	for (auto pipeline : models_3d)

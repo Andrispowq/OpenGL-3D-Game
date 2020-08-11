@@ -5,20 +5,9 @@
 
 #include "engine/prehistoric/component/light/Light.h"
 
-void Renderer::PrepareRendering()
+Renderer::Renderer(Window* window, Camera* camera)
+	: window(window), camera(camera), wireframeMode(false)
 {
-	//No code yet
-}
-
-void Renderer::EndRendering()
-{
-	window->Render();
-
-	//Clear the lists for the next iteration
-	models_3d.clear();
-	models_transparency.clear();
-	models_2d.clear();
-	lights.clear();
 }
 
 void register_model(std::unordered_map<Pipeline*, std::vector<RenderableComponent*>>& map, RenderableComponent* renderable)

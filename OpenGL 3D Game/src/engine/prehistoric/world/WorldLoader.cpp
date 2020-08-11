@@ -5,6 +5,8 @@
 
 void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Window* window, AssembledAssetManager* manager)
 {
+	AssetManager* manager_ = manager->getAssetManager();
+
 	std::ifstream file;
 	file.open(worldFile.c_str());
 
@@ -39,14 +41,30 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 			{
 				if (nameTokens[1] == "load")
 				{
-					models.insert(std::make_pair(tokens[2], manager->getAssetManager()->getResource<VertexBuffer>(tokens[2])));
+					size_t ID = manager_->getResource<VertexBuffer>(tokens[2]);
+					VertexBuffer* buff = manager_->getResourceByID<VertexBuffer>(ID);
+
+					if (tokens[3] == "clockwise")
+					{
+						buff->setFrontFace(FrontFace::CLOCKWISE);
+					}
+					else if (tokens[3] == "counter-clockwise")
+					{
+						buff->setFrontFace(FrontFace::COUNTER_CLOCKWISE);
+					}
+					else
+					{
+						buff->setFrontFace(FrontFace::DOUBLE_SIDED);
+					}
+
+					models.insert(std::make_pair(tokens[2], ID));
 				}
 			}
 			if (nameTokens[0] == "textures")
 			{
 				if (nameTokens[1] == "load")
 				{
-					textures.insert(std::make_pair(tokens[1], manager->getAssetManager()->getResource<Texture>(tokens[2])));
+					textures.insert(std::make_pair(tokens[1], manager->getAssetManager()->getResource<Texture>(directoryTextures + tokens[2])));
 				}
 			}
 
@@ -56,7 +74,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 				if (nameTokens[1] == "add")
 				{
 					Material* material = new Material(manager->getAssetManager(), window);
-					materials.insert(std::make_pair(tokens[1], material));
+					materials.insert(std::make_pair(tokens[1], manager->loadResource<Material>(material)));
 				}
 				else
 				{
@@ -68,7 +86,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 						continue;
 					}
 
-					Material* material = materials.at(nameTokens[1]);
+					Material* material = manager->getResourceByID<Material>(materials.at(nameTokens[1]));
 					
 					if (nameTokens[2] == "texture")
 					{
@@ -207,8 +225,8 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 						size_t vboID = models.at(compTokens[0]);
 						size_t shaderID = -1;
 
-						Material* material = materials.at(compTokens[2]);
-						Pipeline* pipeline = nullptr;
+						size_t materialID = materials.at(compTokens[2]);
+						size_t pipelineID = -1;
 
 						auto shaderIndex = shaders.find(compTokens[1]);
 						if (shaderIndex != shaders.end())
@@ -224,7 +242,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 						auto pipelineIndex = pipelines.find(compTokens[0] + "," + compTokens[1]);
 						if (pipelineIndex != pipelines.end())
 						{
-							pipeline = pipelineIndex->second;
+							pipelineID = pipelineIndex->second;
 						}
 						else
 						{
@@ -243,10 +261,10 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 								reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);;
 							}
 
-							pipelines.insert(std::make_pair(compTokens[0] + "," + compTokens[1], pipeline));
+							pipelines.insert(std::make_pair(compTokens[0] + "," + compTokens[1], manager->loadResource<Pipeline>(pipeline)));
 						}
 
-						RendererComponent* renderer = new RendererComponent(pipeline, material, window, manager);
+						RendererComponent* renderer = new RendererComponent(pipelineID, materialID, window, manager);
 
 						obj->AddComponent(tokens[1], renderer);
 					}
@@ -258,7 +276,6 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 						std::vector<std::string> posTokens = Util::Split(compTokens[0], ',');
 						light->setColour({ (float) std::atof(posTokens[0].c_str()), (float)std::atof(posTokens[1].c_str()), (float)std::atof(posTokens[2].c_str()) });
-
 						light->setIntensity((float) std::atof(compTokens[1].c_str()));
 
 						obj->AddComponent("Light", light);
@@ -292,8 +309,8 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 								size_t vboID = models.at(compTokens[0]);
 								size_t shaderID = -1;
 
-								Material* material = materials.at(compTokens[2]);
-								Pipeline* pipeline = nullptr;
+								size_t materialID = materials.at(compTokens[2]);
+								size_t pipelineID = -1;
 
 								auto shaderIndex = shaders.find(compTokens[1]);
 								if (shaderIndex != shaders.end())
@@ -302,13 +319,14 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 								}
 								else
 								{
+									Shader* shader = nullptr;
 									shaders.insert(std::make_pair(compTokens[1], manager->getAssetManager()->getResource<Shader>(compTokens[1])));
 								}
 
 								auto pipelineIndex = pipelines.find(compTokens[0] + "," + compTokens[1]);
 								if (pipelineIndex != pipelines.end())
 								{
-									pipeline = pipelineIndex->second;
+									pipelineID = pipelineIndex->second;
 								}
 								else
 								{
@@ -327,10 +345,10 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 										reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);;
 									}
 
-									pipelines.insert(std::make_pair(compTokens[0] + "," + compTokens[1], pipeline));
+									pipelines.insert(std::make_pair(compTokens[0] + "," + compTokens[1], manager->loadResource<Pipeline>(pipeline)));
 								}
 
-								RendererComponent* renderer = new RendererComponent(pipeline, material, window, manager);
+								RendererComponent* renderer = new RendererComponent(pipelineID, materialID, window, manager);
 
 								obj->AddComponent(tokens[1], renderer);
 
@@ -344,7 +362,6 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 								std::vector<std::string> posTokens = Util::Split(compTokens[0], ',');
 								light->setColour({ (float)std::atof(posTokens[0].c_str()), (float)std::atof(posTokens[1].c_str()), (float)std::atof(posTokens[2].c_str()) });
-
 								light->setIntensity((float)std::atof(compTokens[1].c_str()));
 
 								objToAdd->AddComponent("Light", light);

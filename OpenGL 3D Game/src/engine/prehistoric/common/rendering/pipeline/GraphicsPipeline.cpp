@@ -4,8 +4,10 @@
 GraphicsPipeline::GraphicsPipeline(AssetManager* manager, size_t vboID)
 {
 	this->manager = manager;
-	this->vboID = vboID;
 	this->backfaceCulling = true;
+	
+	this->vboID = vboID;
+	manager->addReference<VertexBuffer>(vboID);
 }
 
 GraphicsPipeline::~GraphicsPipeline()

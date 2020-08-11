@@ -9,9 +9,9 @@ TerrainQuadtree::TerrainQuadtree(Window* window, AssembledAssetManager* manager,
 	factory = new Factory<TerrainNode>(512); //There will definitly not be more than 512 instances of TerrainNode on this quadtree
 
 	size_t shaderID = -1;
-	Pipeline* pipeline = nullptr;
+	size_t pipelineID = -1;
 	size_t wireframeShaderID = -1;
-	Pipeline* wireframePipeline = nullptr;
+	size_t wireframePipelineID = -1;
 
 	PatchVertexBuffer* vbo = nullptr;
 
@@ -23,11 +23,8 @@ TerrainQuadtree::TerrainQuadtree(Window* window, AssembledAssetManager* manager,
 		shaderID = manager->getAssetManager()->getResource<Shader>("terrain");
 		wireframeShaderID = manager->getAssetManager()->getResource<Shader>("terrain_wireframe");
 
-		pipeline = new GLGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID);
-		wireframePipeline = new GLGraphicsPipeline(window, manager->getAssetManager(), wireframeShaderID, vboID);
-
-		reinterpret_cast<GLGraphicsPipeline*>(pipeline)->SetBackfaceCulling(true);
-		reinterpret_cast<GLGraphicsPipeline*>(wireframePipeline)->SetBackfaceCulling(true);
+		pipelineID = manager->loadResource<Pipeline>(new GLGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID));
+		wireframePipelineID = manager->loadResource<Pipeline>(new GLGraphicsPipeline(window, manager->getAssetManager(), wireframeShaderID, vboID));
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
@@ -44,7 +41,7 @@ TerrainQuadtree::TerrainQuadtree(Window* window, AssembledAssetManager* manager,
 			ss << ", ";
 			ss << j;
 
-			AddChild(ss.str(), new/*(*factory)*/ TerrainNode(window, camera, manager, maps, pipeline, wireframePipeline,
+			AddChild(ss.str(), new/*(*factory)*/ TerrainNode(window, camera, manager, maps, pipelineID, wireframePipelineID,
 				{ i / (float)rootNodes, j / (float)rootNodes },	0, { float(i), float(j) }));
 		}
 	}

@@ -21,7 +21,7 @@ enum class RenderPriority
 class RenderableComponent : public Component
 {
 public:
-	RenderableComponent(Pipeline* pipeline, Window* window, AssembledAssetManager* manager);
+	RenderableComponent(size_t pipelineID, Window* window, AssembledAssetManager* manager);
 	RenderableComponent(Window* window, AssembledAssetManager* manager);
 	virtual ~RenderableComponent();
 

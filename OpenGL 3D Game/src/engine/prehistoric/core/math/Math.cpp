@@ -247,9 +247,21 @@ Matrix4f::~Matrix4f()
 	clear();
 }
 
-Matrix4f& Matrix4f::operator=(Matrix4f v) noexcept
+Matrix4f& Matrix4f::operator=(const Matrix4f& v)
 {
-	std::swap(*this, v);
+	delete[] m;
+
+	m = new float[4 * 4];
+	memcpy(this->m, v.m, sizeof(float) * 16);
+
+	return *this;
+}
+
+Matrix4f& Matrix4f::operator=(Matrix4f&& v) noexcept
+{
+	m = v.m;
+	v.m = nullptr;
+
 	return *this;
 }
 
@@ -672,9 +684,21 @@ Matrix4f::~Matrix4f()
 	clear();
 }
 
-Matrix4f& Matrix4f::operator=(Matrix4f v) noexcept
+Matrix4f& Matrix4f::operator=(const Matrix4f& v)
 {
-	std::swap(*this, v);
+	delete[] m;
+
+	m = new float[4 * 4];
+	memcpy(this->m, v.m, sizeof(float) * 16);
+
+	return *this;
+}
+
+Matrix4f& Matrix4f::operator=(Matrix4f&& v) noexcept
+{
+	m = v.m;
+	v.m = nullptr;
+
 	return *this;
 }
 

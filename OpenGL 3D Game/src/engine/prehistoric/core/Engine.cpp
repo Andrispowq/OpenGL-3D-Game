@@ -30,7 +30,14 @@ Engine::Engine()
 
 Engine::~Engine()
 {
+	//The order is VERY important here, hence the deletion by hand
 	Input::DeleteInstance();
+	delete scene.release();
+	delete root.release();
+
+	delete manager.release();
+	delete audioEngine.release();
+	delete renderingEngine.release();
 }
 
 void Engine::Input(float frameTime)

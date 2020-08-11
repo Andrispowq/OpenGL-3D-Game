@@ -34,11 +34,11 @@ private:
 
 	//Rendering stuff
 	std::unordered_map<std::string, size_t> textures;
-	std::unordered_map<std::string, Material*> materials;
+	std::unordered_map<std::string, size_t> materials;
 
 	std::unordered_map<std::string, size_t> models;
 	std::unordered_map<std::string, size_t> shaders;
-	std::unordered_map<std::string, Pipeline*> pipelines;
+	std::unordered_map<std::string, size_t> pipelines;
 };
 
 #endif

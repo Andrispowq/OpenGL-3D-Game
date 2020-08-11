@@ -11,7 +11,7 @@
 #include "engine/prehistoric/resources/AssembledAssetManager.h"
 
 size_t GUIElement::vboID = -1;
-Pipeline* GUIElement::pipeline = nullptr;
+size_t GUIElement::pipelineID = -1;
 
 GUIElement::GUIElement(Window* window, AssembledAssetManager* manager, Texture* texture, void* data, size_t dataSize, bool visible)
 	: type(GUIType::Element)
@@ -29,23 +29,23 @@ GUIElement::GUIElement(Window* window, AssembledAssetManager* manager, Texture* 
 		manager->getAssetManager()->getResourceByID<VertexBuffer>(vboID)->setFrontFace(FrontFace::CLOCKWISE);
 	}
 
-	if (pipeline == nullptr)
+	if (pipelineID == -1)
 	{
 		size_t shaderID;
 
 		if (FrameworkConfig::api == OpenGL)
 		{
 			shaderID = manager->getAssetManager()->getResource<Shader>("gui");
-			pipeline = new GLGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID);
+			pipelineID = manager->loadResource<Pipeline>(new GLGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID));
 		}
 		else if (FrameworkConfig::api == Vulkan)
 		{
 			shaderID = manager->getAssetManager()->getResource<Shader>("basic");
-			pipeline = new VKGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID);
+			pipelineID = manager->loadResource<Pipeline>(new VKGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID));
 		}
 	}
 
-	RendererComponent* renderer = new RendererComponent(pipeline, nullptr, window, manager);
+	RendererComponent* renderer = new RendererComponent(pipelineID, manager->loadResource<Material>(nullptr), window, manager);
 	renderer->setPriority(RenderPriority::_2D);
 
 	AddComponent(RENDERER_COMPONENT, renderer);
@@ -88,9 +88,4 @@ GUIElement::~GUIElement()
 {
 	//this data is most likely getting a pointer to a stack variable, so it is not ideal to delete it
 	//delete data;
-}
-
-void GUIElement::CleanUp()
-{
-	delete pipeline;
 }

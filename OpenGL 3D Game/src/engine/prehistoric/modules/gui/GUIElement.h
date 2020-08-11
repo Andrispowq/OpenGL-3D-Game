@@ -27,8 +27,6 @@ public:
 	GUIElement(Window* window, AssembledAssetManager* manager, Texture* texture = nullptr, void* data = nullptr, size_t dataSize = 0, bool visible = true);
 	virtual ~GUIElement();
 
-	static void CleanUp();
-
 	virtual void PreUpdate(Engine* engine) override;
 	virtual void PreRender(Renderer* renderer) override;
 
@@ -58,7 +56,7 @@ protected:
 	size_t dataSize;
 
 	static size_t vboID;
-	static Pipeline* pipeline;
+	static size_t pipelineID;
 	
 	Texture* texture;
 

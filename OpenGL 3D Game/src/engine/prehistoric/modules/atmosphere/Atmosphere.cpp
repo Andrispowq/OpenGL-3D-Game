@@ -12,7 +12,7 @@ Atmosphere::Atmosphere(Window* window, AssembledAssetManager* manager)
 	size_t vboID = manager->getAssetManager()->getResource<VertexBuffer>("dome/sphericalDome.obj");
 
 	size_t shaderID = -1;
-	Pipeline* pipeline = nullptr;
+	size_t pipelineID = -1;
 
 	if (FrameworkConfig::api == OpenGL)
 	{
@@ -21,8 +21,7 @@ Atmosphere::Atmosphere(Window* window, AssembledAssetManager* manager)
 		else
 			shaderID = manager->getAssetManager()->getResource<Shader>("atmosphere");
 
-		pipeline = new GLGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID);
-		reinterpret_cast<GLGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);
+		pipelineID = manager->loadResource<Pipeline>(new GLGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID));
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
@@ -31,11 +30,10 @@ Atmosphere::Atmosphere(Window* window, AssembledAssetManager* manager)
 		else
 			shaderID = manager->getAssetManager()->getResource<Shader>("atmosphere");*/
 
-		pipeline = new VKGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID);
-		reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);
+		pipelineID = manager->loadResource<Pipeline>(new VKGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID));
 	}
 
-	AddComponent(RENDERER_COMPONENT, new RendererComponent(pipeline, nullptr, window, manager));
+	AddComponent(RENDERER_COMPONENT, new RendererComponent(pipelineID, manager->loadResource<Material>(nullptr), window, manager));
 
 	sunPosition = AtmosphereConfig::sunPosition;
 }

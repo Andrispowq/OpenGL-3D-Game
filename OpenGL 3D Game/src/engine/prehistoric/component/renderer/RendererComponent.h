@@ -10,7 +10,7 @@ class Material;
 class RendererComponent : public RenderableComponent
 {
 public:
-	RendererComponent(Pipeline* pipeline, Material* material, Window* window, AssembledAssetManager* manager);
+	RendererComponent(size_t pipelineID, size_t materialID, Window* window, AssembledAssetManager* manager);
 	RendererComponent(Window* window, AssembledAssetManager* manager);
 
 	virtual ~RendererComponent();

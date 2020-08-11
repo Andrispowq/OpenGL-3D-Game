@@ -369,7 +369,8 @@ public:
 
 	~Matrix4f();
 
-	Matrix4f& operator=(Matrix4f v) noexcept;
+	Matrix4f& operator=(const Matrix4f& v);
+	Matrix4f& operator=(Matrix4f&& v) noexcept;
 
 	inline Matrix4f operator+(const Matrix4f& v) const;
 	inline Matrix4f operator-(const Matrix4f& v) const;
@@ -861,7 +862,8 @@ public:
 
 	~Matrix4f();
 
-	Matrix4f& operator=(Matrix4f v) noexcept;
+	Matrix4f& operator=(const Matrix4f& v);
+	Matrix4f& operator=(Matrix4f&& v) noexcept;
 
 	inline Matrix4f operator+(const Matrix4f& v) const;
 	inline Matrix4f operator-(const Matrix4f& v) const;

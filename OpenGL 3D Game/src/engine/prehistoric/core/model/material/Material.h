@@ -11,7 +11,7 @@ class Material
 {
 public:
 	Material(AssetManager* manager, Window* window);
-	~Material() {}
+	~Material();
 
 	void addTexture(const std::string& key, size_t textureID);
 	void addVector4f(const std::string& key, Vector4f value);

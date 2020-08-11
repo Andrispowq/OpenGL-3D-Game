@@ -9,19 +9,14 @@
 
 #include "engine/prehistoric/resources/AssembledAssetManager.h"
 
-RenderableComponent::RenderableComponent(Pipeline* pipeline, Window* window, AssembledAssetManager* manager)
+RenderableComponent::RenderableComponent(size_t pipelineID, Window* window, AssembledAssetManager* manager)
 	: priority(RenderPriority::_3D)
 {
 	this->window = window;
 	this->manager = manager;
 
-	pipelineIndex = manager->loadResource<Pipeline>(pipeline);
-
-	//Just in case, but this might be added as optional because it resets the viewport and the scissor
-	pipeline->setViewportStart(0);
-	pipeline->setViewportSize({ (float) FrameworkConfig::windowWidth, (float) FrameworkConfig::windowHeight });
-	pipeline->setScissorStart(0);
-	pipeline->setScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
+	pipelineIndex = pipelineID;
+	manager->addReference<Pipeline>(pipelineID);
 }
 
 RenderableComponent::RenderableComponent(Window* window, AssembledAssetManager* manager)

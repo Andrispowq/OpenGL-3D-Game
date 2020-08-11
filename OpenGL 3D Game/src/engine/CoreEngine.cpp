@@ -27,7 +27,7 @@ void CoreEngine::Stop()
 	running = false;
 }
 
-void CoreEngine::Run()
+/*void CoreEngine::Run()
 {
 	long long lastTime = Time::getTimeNanoseconds();
 	double amountOfTicks = 60.0;
@@ -66,14 +66,14 @@ void CoreEngine::Run()
 		if ((Time::getTimeNanoseconds() / pow(10, 6) - timer) > 1000)
 		{
 			timer += 1000;
-			PR_LOG_MESSAGE("FPS: %i, TICKS: %i\n", frames, updates);
+			PR_LOG(CYAN, "FPS: %i, TICKS: %i\n", frames, updates);
 			frames = 0;
 			updates = 0;
 		}
 	}
-}
+}*/
 
-/*void CoreEngine::Run()
+void CoreEngine::Run()
 {
 	uint32_t frames = 0;
 	double frameCounter = 0;
@@ -97,7 +97,7 @@ void CoreEngine::Run()
 			render = true;
 			unprocessedTime -= frameTime;
 
-			if (engine->GetRenderingEngine()->GetWindow()->ShouldClose())
+			if (engine->getRenderingEngine()->getWindow()->ShouldClose())
 			{
 				Stop();
 				break;
@@ -126,4 +126,4 @@ void CoreEngine::Run()
 			std::this_thread::sleep_for(1ms);
 		}
 	}
-}*/
+}

@@ -18,7 +18,7 @@ class RenderingEngine
 {
 public:
 	RenderingEngine();
-	virtual ~RenderingEngine() {}
+	virtual ~RenderingEngine();
 
 	void Init() const;
 

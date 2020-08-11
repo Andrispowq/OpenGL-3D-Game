@@ -11,11 +11,11 @@ class RenderableComponent;
 class Renderer
 {
 public:
-	Renderer(Window* window, Camera* camera) : window(window), camera(camera) {}
+	Renderer(Window* window, Camera* camera);
 	virtual ~Renderer() {}
 
-	void PrepareRendering();
-	void EndRendering();
+	virtual void PrepareRendering() = 0;
+	virtual void EndRendering() = 0;
 
 	virtual void Render() = 0;
 
@@ -29,6 +29,7 @@ public:
 	inline Light* getSun() const { return sun; }
 
 	inline bool isWireframeMode() const { return wireframeMode; }
+	inline void setWireframeMode(bool wire) { this->wireframeMode = wire; }
 
 protected:
 	Window* window;

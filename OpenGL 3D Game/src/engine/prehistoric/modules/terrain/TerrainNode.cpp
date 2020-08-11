@@ -2,9 +2,10 @@
 #include "TerrainNode.h"
 
 #include "TerrainQuadtree.h"
+#include "engine/prehistoric/resources/AssembledAssetManager.h"
 
 TerrainNode::TerrainNode(Window* window, Camera* camera, AssembledAssetManager* manager, TerrainMaps* maps,
-	Pipeline* pipeline, Pipeline* wireframePipeline, const Vector2f& location, int lod, const Vector2f& index)
+	size_t pipelineID, size_t wireframePipelineID, const Vector2f& location, int lod, const Vector2f& index)
 	:  window(window), camera(camera), manager(manager), maps(maps), location(location), lod(lod), index(index)
 {
 	this->gap = 1.0f / float(TerrainQuadtree::rootNodes * pow(2, lod));
@@ -18,8 +19,8 @@ TerrainNode::TerrainNode(Window* window, Camera* camera, AssembledAssetManager* 
 	worldTransform.setScaling({ TerrainConfig::scaleXZ, TerrainConfig::scaleY, TerrainConfig::scaleXZ });
 	worldTransform.setPosition({ -TerrainConfig::scaleXZ / 2.0f, 0, -TerrainConfig::scaleXZ / 2.0f });
 
-	rendererComponent = new RendererComponent(pipeline, nullptr, window, manager);
-	wireframeRendererComponent = new RendererComponent(wireframePipeline, nullptr, window, manager);
+	rendererComponent = new RendererComponent(pipelineID, manager->loadResource<Material>(nullptr), window, manager);
+	wireframeRendererComponent = new RendererComponent(wireframePipelineID, manager->loadResource<Material>(nullptr), window, manager);
 
 	AddComponent(RENDERER_COMPONENT, rendererComponent);
 	AddComponent(WIREFRAME_RENDERER_COMPONENT, wireframeRendererComponent);
@@ -96,7 +97,7 @@ void TerrainNode::AddChildNodes(int lod)
 				ss << ", lod: ";
 				ss << lod;
 
-				AddChild(ss.str(), new/*(*factory)*/ TerrainNode(window, camera, manager, maps, rendererComponent->getPipeline(), wireframeRendererComponent->getPipeline(),
+				AddChild(ss.str(), new/*(*factory)*/ TerrainNode(window, camera, manager, maps, rendererComponent->getPipelineIndex(), wireframeRendererComponent->getPipelineIndex(),
 					location + Vector2f(float(i), float(j)) * (gap / 2.f), lod, { float(i), float(j) }));
 			}
 		}

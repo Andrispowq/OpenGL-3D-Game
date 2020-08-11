@@ -17,7 +17,7 @@ class TerrainNode : public GameObject
 public:
 	TerrainNode() {}
 	TerrainNode(Window* window, Camera* camera, AssembledAssetManager* manager, TerrainMaps* maps,
-		Pipeline* pipeline, Pipeline* wireframePipeline, const Vector2f& location, int lod, const Vector2f& index);
+		size_t pipelineID, size_t wireframePipelineID, const Vector2f& location, int lod, const Vector2f& index);
 	virtual ~TerrainNode() {}
 
 	virtual void PreRender(Renderer* renderer) override;

@@ -7,10 +7,11 @@
 
 #include "engine/prehistoric/resources/AssembledAssetManager.h"
 
-RendererComponent::RendererComponent(Pipeline* pipeline, Material* material, Window* window, AssembledAssetManager* manager)
-	: RenderableComponent(pipeline, window, manager)
+RendererComponent::RendererComponent(size_t pipelineID, size_t materialID, Window* window, AssembledAssetManager* manager)
+	: RenderableComponent(pipelineID, window, manager)
 {
-	materialIndex = manager->loadResource<Material>(material);
+	materialIndex = materialID;
+	manager->addReference<Material>(materialID);
 }
 
 RendererComponent::RendererComponent(Window* window, AssembledAssetManager* manager)
