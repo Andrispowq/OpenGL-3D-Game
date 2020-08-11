@@ -1,7 +1,9 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
-#include "SplatMapRendererComponent.h"
+#include "SplatMapRenderer.h"
 
-SplatMapRendererComponent::SplatMapRendererComponent(Window* window, AssetManager* manager, uint32_t N)
+#include "engine/prehistoric/resources/AssetManager.h"
+
+SplatMapRenderer::SplatMapRenderer(Window* window, AssetManager* manager, uint32_t N)
 {
 	this->window = window;
 
@@ -10,14 +12,12 @@ SplatMapRendererComponent::SplatMapRendererComponent(Window* window, AssetManage
 	//TODO: Create the Vulkan equivalent of the GLComputePipeline
 	if (FrameworkConfig::api == OpenGL)
 	{
-		pipeline = new GLComputePipeline(manager, manager->addShader(new GLSplatMapShader()));
+		pipeline = new GLComputePipeline(window, manager, manager->getResource<Shader>("gpgpu_splat"));
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
 		//pipeline = new VKComputePipeline(new VKSplatMapShader());
 	}
-
-	pipeline->CreatePipeline(window);
 
 	if (FrameworkConfig::api == OpenGL)
 	{
@@ -42,15 +42,13 @@ SplatMapRendererComponent::SplatMapRendererComponent(Window* window, AssetManage
 	}
 }
 
-SplatMapRendererComponent::~SplatMapRendererComponent()
+SplatMapRenderer::~SplatMapRenderer()
 {
-	pipeline->DestroyPipeline();
-
 	delete pipeline;
 	delete splatmap;
 }
 
-void SplatMapRendererComponent::Render(Texture* normalmap)
+void SplatMapRenderer::Render(Texture* normalmap)
 {
 	pipeline->BindPipeline();
 

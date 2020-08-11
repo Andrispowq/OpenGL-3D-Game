@@ -11,7 +11,7 @@ RenderingEngine::RenderingEngine()
 	: window(nullptr), camera(nullptr)
 {
 #if defined(PR_WINDOWS_64)
-	window = std::make_unique<WindowsWindow>(FrameworkConfig::windowWidth, FrameworkConfig::windowHeight, FrameworkConfig::windowName.c_str(), FrameworkConfig::windowFullScreen);
+	window = std::make_unique<WindowsWindow>();
 #elif
 	PR_LOG_RUNTIME_ERROR("Unsupported platform is being used!\n");
 #endif
@@ -79,5 +79,5 @@ void RenderingEngine::Update(float delta)
 
 void RenderingEngine::Render()
 {
-	renderer->Render(camera);
+	renderer->Render();
 }

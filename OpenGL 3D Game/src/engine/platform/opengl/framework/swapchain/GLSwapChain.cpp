@@ -3,10 +3,9 @@
 #include "engine/config/FrameworkConfig.h"
 #include "engine/prehistoric/common/framework/Window.h"
 
-void GLSwapchain::SetupSwapchain(Window* window)
+GLSwapchain::GLSwapchain(Window* window)
+	: Swapchain(window)
 {
-	this->window = window;
-
 	//Enabling GL_TEXTURE_2D is deprecated, in debug mode, it will cause the program to break
 	//glEnable(GL_TEXTURE_2D);
 
@@ -17,9 +16,19 @@ void GLSwapchain::SetupSwapchain(Window* window)
 	//glCullFace(GL_BACK);
 }
 
+GLSwapchain::~GLSwapchain()
+{
+}
+
 void GLSwapchain::SwapBuffers()
 {
 	glfwSwapBuffers((GLFWwindow*)window->getWindowHandle());
+}
+
+void GLSwapchain::ClearScreen()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearDepth(1.0);
 }
 
 void GLSwapchain::SetVSync(bool vSync) const
@@ -32,20 +41,4 @@ void GLSwapchain::SetWindowSize(uint32_t width, uint32_t height)
 	glViewport(0, 0, width, height);
 	FrameworkConfig::windowWidth = width;
 	FrameworkConfig::windowHeight = height;
-}
-
-void GLSwapchain::SetClearColor(float red, float green, float blue, float alpha)
-{
-	glClearColor(red, green, blue, alpha);
-}
-
-void GLSwapchain::ClearScreen()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearDepth(1.0);
-}
-
-void GLSwapchain::DeleteSwapchain(void* device)
-{
-	
 }

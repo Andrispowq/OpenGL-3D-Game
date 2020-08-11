@@ -13,18 +13,14 @@
 class VKPipeline : public Pipeline
 {
 public:
-	VKPipeline(AssetManager* manager, size_t shaderID);
-	virtual ~VKPipeline();
+	VKPipeline(Window* window, AssetManager* manager, size_t shaderID);
+	virtual ~VKPipeline() {}
 
-	virtual void CreatePipeline(Window* window) override;
+	virtual void BindPipeline() const override {}
+	virtual void RenderPipeline() const override {}
+	virtual void UnbindPipeline() const override {}
 
-	virtual void BindPipeline() const override;
-	virtual void RenderPipeline() const override;
-	virtual void UnbindPipeline() const override;
-
-	virtual void DestroyPipeline() override;
-
-	virtual void RecreatePipeline();
+	virtual void RecreatePipeline() {}
 protected:
 	//External
 	VKPhysicalDevice* physicalDevice;
@@ -33,9 +29,6 @@ protected:
 
 	Window* window;
 	VKSwapchain* swapchain;
-
-	//Local
-	bool exists;
 };
 
 #endif

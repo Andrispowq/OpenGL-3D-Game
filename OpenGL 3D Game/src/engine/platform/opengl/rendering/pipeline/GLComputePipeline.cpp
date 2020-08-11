@@ -1,12 +1,8 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLComputePipeline.h"
 
-GLComputePipeline::GLComputePipeline(AssetManager* manager, size_t shaderID)
-	: GLPipeline(manager, shaderID), ComputePipeline()
-{
-}
-
-void GLComputePipeline::CreatePipeline(Window* window)
+GLComputePipeline::GLComputePipeline(Window* window, AssetManager* manager, size_t shaderID)
+	: GLPipeline(window, manager, shaderID), ComputePipeline()
 {
 }
 
@@ -54,8 +50,4 @@ void GLComputePipeline::UnbindPipeline() const
 	}
 
 	GLPipeline::UnbindPipeline();
-}
-
-void GLComputePipeline::DestroyPipeline()
-{
 }

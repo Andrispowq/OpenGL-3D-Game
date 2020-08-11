@@ -3,6 +3,8 @@
 
 #include "engine/prehistoric/component/renderer/RenderableComponent.h"
 
+#include "engine/prehistoric/component/light/Light.h"
+
 void Renderer::PrepareRendering()
 {
 	//No code yet

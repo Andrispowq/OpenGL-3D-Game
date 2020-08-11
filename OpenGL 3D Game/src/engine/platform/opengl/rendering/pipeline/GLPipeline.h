@@ -9,16 +9,12 @@
 class GLPipeline : public Pipeline
 {
 public:
-	GLPipeline(AssetManager* manager, size_t shaderID);
+	GLPipeline(Window* window, AssetManager* manager, size_t shaderID);
 	virtual ~GLPipeline() {}
-
-	void CreatePipeline(Window* window) override;
 
 	virtual void BindPipeline() const override;
 	virtual void RenderPipeline() const override;
 	virtual void UnbindPipeline() const override;
-
-	void DestroyPipeline() override;
 };
 
 #endif

@@ -10,25 +10,19 @@ class Material;
 class RendererComponent : public RenderableComponent
 {
 public:
-	RendererComponent(Pipeline* pipeline, Material* material, Window* window);
-	RendererComponent(Window* window);
+	RendererComponent(Pipeline* pipeline, Material* material, Window* window, AssembledAssetManager* manager);
+	RendererComponent(Window* window, AssembledAssetManager* manager);
 
 	virtual ~RendererComponent();
-
-	static void CleanUp();
 
 	void PreRender(Renderer* renderer) override;
 
 	void Render(Renderer* renderer) const override;
 	void BatchRender() const override;
 
-	static std::vector<Material*> getMaterials() { return materials; }
-
 	inline size_t getMaterialIndex() const { return materialIndex; }
-	inline Material* getMaterial() const { return materials.at(materialIndex); }
+	Material* getMaterial() const;
 private:
-	static std::vector<Material*> materials;
-
 	size_t materialIndex;
 };
 

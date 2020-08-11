@@ -27,7 +27,7 @@ public:
 	WorldLoader() {}
 	virtual ~WorldLoader() {}
 
-	void LoadWorld(const std::string& worldFile, GameObject* root, Window* window, AssetManager* manager);
+	void LoadWorld(const std::string& worldFile, GameObject* root, Window* window, AssembledAssetManager* manager);
 private:
 	std::string directoryModels;
 	std::string directoryTextures;

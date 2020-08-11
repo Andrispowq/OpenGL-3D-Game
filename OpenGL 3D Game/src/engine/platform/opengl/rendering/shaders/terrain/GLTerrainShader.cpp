@@ -2,6 +2,7 @@
 #include "GLTerrainShader.h"
 
 #include "engine/prehistoric/modules/terrain/TerrainNode.h"
+#include "engine/prehistoric/core/model/material/Material.h"
 
 GLTerrainShader::GLTerrainShader()
 {
@@ -101,7 +102,7 @@ void GLTerrainShader::UpdateShaderUniforms(Camera* camera, const std::vector<Lig
 		{
 			Light* light = lights[i];
 
-			SetUniform(uniformName + "position", light->getParent()->getWorldTransform()->getPosition());
+			SetUniform(uniformName + "position", light->getParent()->getWorldTransform().getPosition());
 			SetUniform(uniformName + "colour", light->getColour());
 			SetUniform(uniformName + "intensity", light->getIntensity());
 		}
@@ -120,7 +121,7 @@ void GLTerrainShader::UpdateShaderUniforms(Camera* camera, const std::vector<Lig
 
 		Light* light = lights[i];
 
-		SetUniform(uniformName + "position", light->getParent()->getWorldTransform()->getPosition());
+		SetUniform(uniformName + "position", light->getParent()->getWorldTransform().getPosition());
 		SetUniform(uniformName + "colour", light->getColour());
 		SetUniform(uniformName + "intensity", light->getIntensity());
 	}
@@ -197,8 +198,8 @@ void GLTerrainShader::UpdateObjectUniforms(GameObject* object, uint32_t instance
 {
 	TerrainNode* node = (TerrainNode*)object;
 
-	SetUniform(location_localMatrix, node->getLocalTransform()->getTransformationMatrix());
-	SetUniform(location_worldMatrix, object->getWorldTransform()->getTransformationMatrix());
+	SetUniform(location_localMatrix, node->getLocalTransform().getTransformationMatrix());
+	SetUniform(location_worldMatrix, object->getWorldTransform().getTransformationMatrix());
 
 	SetUniform(location_location, node->getLocation());
 	SetUniform(location_index, node->getIndex());

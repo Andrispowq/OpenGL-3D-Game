@@ -17,7 +17,7 @@ public:
 	void PrepareRendering();
 	void EndRendering();
 
-	virtual void Render(Camera* camera) = 0;
+	virtual void Render() = 0;
 
 	void AddModel(RenderableComponent* renderable);
 	void AddLight(Light* light);

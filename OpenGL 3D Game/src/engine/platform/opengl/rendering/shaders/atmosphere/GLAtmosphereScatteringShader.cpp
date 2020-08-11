@@ -67,6 +67,6 @@ void GLAtmosphereScatteringShader::UpdateShaderUniforms(Camera* camera, const st
 
 void GLAtmosphereScatteringShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
 {
-	SetUniform("m_transform", object->getWorldTransform()->getTransformationMatrix());
+	SetUniform("m_transform", object->getWorldTransform().getTransformationMatrix());
 	SetUniform("sunPosition", ((Atmosphere*)object)->getSunPosition());
 }

@@ -2,13 +2,14 @@
 #include "Atmosphere.h"
 
 #include "engine/prehistoric/core/Engine.h"
+#include "engine/prehistoric/resources/AssembledAssetManager.h"
 
-Atmosphere::Atmosphere(Window* window, AssetManager* manager)
+Atmosphere::Atmosphere(Window* window, AssembledAssetManager* manager)
 	: window(window)
 {
 	SetScale(Vector3f(EngineConfig::rendererFarPlane / 2.f));
 
-	size_t vboID = manager->addVertexBuffer(OBJLoader::LoadModel("res/models/dome/", "sphericalDome.obj", "", window, manager));
+	size_t vboID = manager->getAssetManager()->getResource<VertexBuffer>("dome/sphericalDome.obj");
 
 	size_t shaderID = -1;
 	Pipeline* pipeline = nullptr;
@@ -16,27 +17,25 @@ Atmosphere::Atmosphere(Window* window, AssetManager* manager)
 	if (FrameworkConfig::api == OpenGL)
 	{
 		if (AtmosphereConfig::scatteringEnabled)
-			shaderID = manager->addShader(new GLAtmosphereScatteringShader());
+			shaderID = manager->getAssetManager()->getResource<Shader>("atmosphere_scattering");
 		else
-			shaderID = manager->addShader(new GLAtmosphereShader());
+			shaderID = manager->getAssetManager()->getResource<Shader>("atmosphere");
 
-		pipeline = new GLGraphicsPipeline(manager, shaderID, vboID);
+		pipeline = new GLGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID);
 		reinterpret_cast<GLGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
 		/*if (AtmosphereConfig::scatteringEnabled)
-			shaderID = manager->addShader(new VKAtmosphereScatteringShader());
+			shaderID = manager->getAssetManager()->getResource<Shader>("atmosphere_scattering");
 		else
-			shaderID = manager->addShader(new VKAtmosphereShader());*/
+			shaderID = manager->getAssetManager()->getResource<Shader>("atmosphere");*/
 
-		pipeline = new VKGraphicsPipeline(manager, shaderID, vboID);
+		pipeline = new VKGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID);
 		reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);
 	}
 
-	pipeline->CreatePipeline(window);
-
-	AddComponent(RENDERER_COMPONENT, new RendererComponent(pipeline, nullptr, window));
+	AddComponent(RENDERER_COMPONENT, new RendererComponent(pipeline, nullptr, window, manager));
 
 	sunPosition = AtmosphereConfig::sunPosition;
 }
@@ -44,6 +43,6 @@ Atmosphere::Atmosphere(Window* window, AssetManager* manager)
 void Atmosphere::PreUpdate(Engine* engine)
 {
 	//sun logic can go in here
-	if(engine->GetRenderingEngine()->getSun() != nullptr)
-		sunPosition = engine->GetRenderingEngine()->getSun()->getParent()->getWorldTransform()->getPosition();
+	if(engine->getRenderingEngine()->getRenderer()->getSun() != nullptr)
+		sunPosition = engine->getRenderingEngine()->getRenderer()->getSun()->getParent()->getWorldTransform().getPosition();
 }

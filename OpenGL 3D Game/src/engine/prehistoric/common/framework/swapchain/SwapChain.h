@@ -1,7 +1,9 @@
-#ifndef SWAP_CHAIN_H
-#define SWAP_CHAIN_H
+#ifndef SWAPCHAIN_H
+#define SWAPCHAIN_H
 
 #include "engine/prehistoric/core/math/Math.h"
+
+#include "engine/prehistoric/common/rendering/command/CommandBuffer.h"
 
 class Window;
 
@@ -18,7 +20,7 @@ public:
 	virtual void SetWindowSize(uint32_t width, uint32_t height) = 0;
 
 	virtual uint32_t getAquiredImageIndex() const { return -1; };
-	virtual void* getDrawCommandBuffer() const { return nullptr; };
+	virtual CommandBuffer* getDrawCommandBuffer() const { return nullptr; };
 
 	void setClearColour(const Vector4f& colour) { this->clearColour = colour; }
 protected:

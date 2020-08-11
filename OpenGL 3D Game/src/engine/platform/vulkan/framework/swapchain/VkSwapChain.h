@@ -20,23 +20,17 @@ const static uint32_t MAX_FRAMES_IN_FLIGHT = 3;
 class VKSwapchain : public Swapchain
 {
 public:
-	virtual void SetupSwapchain(Window* window);
+	VKSwapchain(Window* window);
+	virtual ~VKSwapchain();
 
 	virtual void SwapBuffers() override;
+	virtual void ClearScreen() override;
 
 	virtual void SetVSync(bool vSync) const override;
 	virtual void SetWindowSize(uint32_t width, uint32_t height) override;
 
-	virtual void SetClearColor(float red, float green, float blue, float alpha) override;
-	virtual void ClearScreen() override;
-
-	virtual void DeleteSwapchain(void* device) override;
-
 	virtual uint32_t getAquiredImageIndex() const override { return aquiredImageIndex; }
-	virtual void* getDrawCommandBuffer() const override { return commandPool->getCommandBuffer(aquiredImageIndex); }
-
-	virtual void PrepareRendering() override;
-	virtual void EndRendering() override;	
+	virtual CommandBuffer* getDrawCommandBuffer() const override { return commandPool->getCommandBuffer(aquiredImageIndex); }
 
 	VkSwapchainKHR getSwapchain() const { return swapchain; }
 	std::vector<VkImage> getSwapchainImages() const { return swapchainImages; }

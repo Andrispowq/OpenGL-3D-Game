@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PREHISTORIC_H
+#define PREHISTORIC_H
 
 /*
 	This file contains data about the platform we're running the app on,
@@ -31,4 +32,6 @@
 #else
 	#define PR_DISABLE_DEBUGGING
 	#define PR_VK_DISABLE_VALIDATION_LAYERS
+#endif
+
 #endif

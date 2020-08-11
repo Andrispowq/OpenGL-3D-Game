@@ -16,16 +16,11 @@ class TerrainNode : public GameObject
 {
 public:
 	TerrainNode() {}
-	TerrainNode(Factory<TerrainNode>* factory, Pipeline* pipeline, Pipeline* wireframePipeline, TerrainMaps* maps,
-		Window* window, Camera* camera, const Vector2f& location,
-		int lod, const Vector2f& index);
-	virtual ~TerrainNode();
+	TerrainNode(Window* window, Camera* camera, AssembledAssetManager* manager, TerrainMaps* maps,
+		Pipeline* pipeline, Pipeline* wireframePipeline, const Vector2f& location, int lod, const Vector2f& index);
+	virtual ~TerrainNode() {}
 
-	void Init(Factory<TerrainNode>* factory, Pipeline* pipeline, Pipeline* wireframePipeline, TerrainMaps* maps,
-		Window* window, Camera* camera, const Vector2f& location,
-		int lod, const Vector2f& index);
-
-	void PreRender(RenderingEngine* renderingEngine) override;
+	virtual void PreRender(Renderer* renderer) override;
 
 	void UpdateQuadtree();
 	void UpdateChildNodes();
@@ -44,10 +39,10 @@ public:
 	Vector2f getIndex() const { return index; }
 	float getGap() const { return gap; }
 
-	Transform* getLocalTransform() const { return localTransform; }
+	Transform getLocalTransform() const { return localTransform; }
 
 	//Overloaded new and delete comes here:
-	void* operator new(size_t size, Factory<TerrainNode>& factory)
+	/*void* operator new(size_t size, Factory<TerrainNode>& factory)
 	{
 		return factory.allocate();
 	}
@@ -68,9 +63,10 @@ public:
 	void operator delete(void* ptr)
 	{
 		free(ptr);
-	}
+	}*/
 private:
-	Factory<TerrainNode>* factory;
+	//Factory<TerrainNode>* factory;
+	AssembledAssetManager* manager;
 
 	Window* window;
 	Camera* camera;
@@ -84,11 +80,11 @@ private:
 	Vector2f index;
 	float gap;
 
-	RendererComponent* renderer;
+	RendererComponent* rendererComponent;
 	RendererComponent* wireframeRendererComponent;
 	Material* material;
 
-	Transform* localTransform;
+	Transform localTransform;
 };
 
 #endif

@@ -354,6 +354,9 @@
     <ClCompile Include="src\engine\platform\opengl\rendering\GLRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\prehistoric\resources\AssembledAssetManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\rendering\shaders\Shader.h">

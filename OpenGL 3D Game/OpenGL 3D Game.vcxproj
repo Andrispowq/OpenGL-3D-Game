@@ -28,6 +28,7 @@
     <ClCompile Include="src\engine\prehistoric\common\buffer\Framebuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\command\CommandBuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\Renderer.cpp" />
+    <ClCompile Include="src\engine\prehistoric\resources\AssembledAssetManager.cpp" />
     <ClCompile Include="src\engine\prehistoric\resources\AssetManager.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\buffer\ShaderStorageBuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\pipeline\ComputePipeline.cpp" />

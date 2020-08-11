@@ -4,6 +4,7 @@
 constexpr static double NANOSECOND = 1000000000;
 
 CoreEngine::CoreEngine()
+	: engine{ std::make_unique<Engine>()}
 {
 	running = false;
 	frameTime = 1.0 / FrameworkConfig::windowMaxFPS;
@@ -28,7 +29,7 @@ void CoreEngine::Stop()
 
 void CoreEngine::Run()
 {
-	long lastTime = Time::getTimeNanoseconds();
+	long long lastTime = Time::getTimeNanoseconds();
 	double amountOfTicks = 60.0;
 	double ns = pow(10, 9) / amountOfTicks;
 	double delta = 0;
@@ -46,7 +47,7 @@ void CoreEngine::Run()
 
 		while (delta >= 1) 
 		{
-			if (engine->GetRenderingEngine()->GetWindow()->ShouldClose())
+			if (engine->getRenderingEngine()->getWindow()->ShouldClose())
 			{
 				Stop();
 				break;

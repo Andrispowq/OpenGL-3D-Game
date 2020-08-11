@@ -3,7 +3,7 @@
 
 #include "engine/prehistoric/core/Engine.h"
 
-GUIButton::GUIButton(Window* window, AssetManager* manager, Texture* texture, void* data, size_t dataSize, bool visible)
+GUIButton::GUIButton(Window* window, AssembledAssetManager* manager, Texture* texture, void* data, size_t dataSize, bool visible)
 	: GUIElement(window, manager, texture, data, dataSize, visible)
 {
 	type = GUIType::Button;

@@ -14,7 +14,6 @@ class WindowsWindow : public Window
 {
 public:
 	WindowsWindow() : Window(), window(nullptr) {}
-	WindowsWindow(uint32_t width, uint32_t height, const char* title, bool fullscreen) : Window(width, height, title, fullscreen), window(nullptr) {}
 
 	virtual ~WindowsWindow();
 

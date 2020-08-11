@@ -29,6 +29,8 @@ public:
 	inline Window* getWindow() const { return window.get(); }
 	inline Camera* getCamera() const { return camera.get(); }
 
+	inline Renderer* getRenderer() const { return renderer.get(); }
+
 	RenderingEngine(const RenderingEngine& engine) = delete;
 	RenderingEngine operator=(const RenderingEngine& engine) = delete;
 private:

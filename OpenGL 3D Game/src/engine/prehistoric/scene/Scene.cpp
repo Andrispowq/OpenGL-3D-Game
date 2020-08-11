@@ -12,40 +12,36 @@
 
 #include "engine/prehistoric/modules/atmosphere/Atmosphere.h"
 
+#include "engine/prehistoric/resources/AssembledAssetManager.h"
+
 static void sun_move_function(GameObject* object, float frameTime)
 {
 	object->Move(Vector3f(0, 40, 0) * frameTime);
 }
 
-void Scene::CreateScene(GameObject* root, Window* window, AssetManager* manager, Camera* camera)
+Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, Camera* camera)
 {
 	WorldLoader loader;
 	//loader.LoadWorld("res/world/testLevel.wrld", root, window, manager);
 
 	if (FrameworkConfig::api == Vulkan)
 	{
-		VKMeshVertexBuffer* vbo = (VKMeshVertexBuffer*)OBJLoader::LoadModel("res/models/", "quad.obj", "", window, manager);
-		vbo->setFrontFace(FrontFace::CLOCKWISE);
-		size_t vboID = manager->addVertexBuffer(vbo);
+		size_t vboID = manager->getAssetManager()->getResource<VertexBuffer>("quad.obj");
+		size_t shaderID = manager->getAssetManager()->getResource<Shader>("pbr");
 
-		size_t shaderID = manager->addShader(new VKPBRShader(window));
+		VKGraphicsPipeline* pipeline = new VKGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID);
 
-		VKGraphicsPipeline* pipeline = new VKGraphicsPipeline(manager, shaderID, vboID);
-
-		pipeline->SetBackfaceCulling(false);
-		pipeline->CreatePipeline(window);
-
-		Material* material = new Material(manager, window);
-		material->addTexture(ALBEDO_MAP, manager->addTexture(TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_DIF.png", window)));
-		material->addTexture(NORMAL_MAP, manager->addTexture(TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_NRM.png", window)));
-		material->addTexture(METALLIC_MAP, manager->addTexture(TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_MET.png", window)));
-		material->addTexture(ROUGHNESS_MAP, manager->addTexture(TextureLoader::LoadTexture("res/textures/oakFloor/oakFloor_RGH.png", window)));
+		Material* material = new Material(manager->getAssetManager(), window);
+		material->addTexture(ALBEDO_MAP, manager->getAssetManager()->getResource<Texture>("oakFloor_DIF.png"));
+		material->addTexture(NORMAL_MAP, manager->getAssetManager()->getResource<Texture>("oakFloor_NRM.png"));
+		material->addTexture(METALLIC_MAP, manager->getAssetManager()->getResource<Texture>("oakFloor_MET.png"));
+		material->addTexture(ROUGHNESS_MAP, manager->getAssetManager()->getResource<Texture>("oakFloor_RGH.png"));
 
 		//material->AddFloat(METALLIC, 1.0);
 		//material->AddFloat(ROUGHNESS, 0.3);
 		material->addFloat(OCCLUSION, 1);
 
-		RendererComponent* renderer = new RendererComponent(pipeline, material, window);
+		RendererComponent* renderer = new RendererComponent(pipeline, material, window, manager);
 
 		GameObject* obj = new GameObject();
 		obj->AddComponent(RENDERER_COMPONENT, renderer);
@@ -104,9 +100,4 @@ void Scene::CreateScene(GameObject* root, Window* window, AssetManager* manager,
 		light->Move({ 100, 200, -300 });
 		root->AddChild("light", light);
 	}
-}
-
-void Scene::DeleteData()
-{
-	RendererComponent::CleanUp();
 }

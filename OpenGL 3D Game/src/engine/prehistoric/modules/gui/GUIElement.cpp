@@ -8,10 +8,12 @@
 
 #include "engine/prehistoric/core/Engine.h"
 
+#include "engine/prehistoric/resources/AssembledAssetManager.h"
+
 size_t GUIElement::vboID = -1;
 Pipeline* GUIElement::pipeline = nullptr;
 
-GUIElement::GUIElement(Window* window, AssetManager* manager, Texture* texture, void* data, size_t dataSize, bool visible)
+GUIElement::GUIElement(Window* window, AssembledAssetManager* manager, Texture* texture, void* data, size_t dataSize, bool visible)
 	: type(GUIType::Element)
 {
 	this->texture = texture;
@@ -23,8 +25,8 @@ GUIElement::GUIElement(Window* window, AssetManager* manager, Texture* texture, 
 
 	if (vboID == -1)
 	{
-		vboID = manager->addVertexBuffer(ModelFabricator::CreateQuad(window));
-		manager->getVertexBuffer(vboID)->setFrontFace(FrontFace::CLOCKWISE);
+		vboID = manager->getAssetManager()->addResource<VertexBuffer>(ModelFabricator::CreateQuad(window));
+		manager->getAssetManager()->getResourceByID<VertexBuffer>(vboID)->setFrontFace(FrontFace::CLOCKWISE);
 	}
 
 	if (pipeline == nullptr)
@@ -33,19 +35,17 @@ GUIElement::GUIElement(Window* window, AssetManager* manager, Texture* texture, 
 
 		if (FrameworkConfig::api == OpenGL)
 		{
-			shaderID = manager->addShader(new GLGUIShader());
-			pipeline = new GLGraphicsPipeline(manager, shaderID, vboID);
+			shaderID = manager->getAssetManager()->getResource<Shader>("gui");
+			pipeline = new GLGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID);
 		}
 		else if (FrameworkConfig::api == Vulkan)
 		{
-			shaderID = manager->addShader(new VKBasicShader(window));
-			pipeline = new VKGraphicsPipeline(manager, shaderID, vboID);
+			shaderID = manager->getAssetManager()->getResource<Shader>("basic");
+			pipeline = new VKGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID);
 		}
-
-		pipeline->CreatePipeline(window);
 	}
 
-	RendererComponent* renderer = new RendererComponent(pipeline, nullptr, window);
+	RendererComponent* renderer = new RendererComponent(pipeline, nullptr, window, manager);
 	renderer->setPriority(RenderPriority::_2D);
 
 	AddComponent(RENDERER_COMPONENT, renderer);
@@ -55,12 +55,12 @@ void GUIElement::PreUpdate(Engine* engine)
 {
 }
 
-void GUIElement::PreRender(RenderingEngine* renderingEngine)
+void GUIElement::PreRender(Renderer* renderer)
 {
 	if (!visible)
 		return;
 
-	GameObject::PreRender(renderingEngine);
+	GameObject::PreRender(renderer);
 }
 
 bool GUIElement::inside(Vector2f cursor)
@@ -70,8 +70,8 @@ bool GUIElement::inside(Vector2f cursor)
 	cursor *= 2;
 	cursor -= 1;
 
-	Vector2f pos = worldTransform->getPosition().xy();
-	Vector2f scale = worldTransform->getScaling().xy();
+	Vector2f pos = worldTransform.getPosition().xy();
+	Vector2f scale = worldTransform.getScaling().xy();
 
 	Vector2f start = pos - scale;
 	Vector2f end = pos + scale;

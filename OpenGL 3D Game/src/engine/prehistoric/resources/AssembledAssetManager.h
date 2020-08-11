@@ -3,226 +3,135 @@
 
 #include "engine/prehistoric/common/framework/Window.h"
 
+#include "AssetManager.h"
+
 class AssembledAssetManager
 {
 public:
-	AssetManager(Window* window);
-	~AssetManager() {}
+	AssembledAssetManager(Window* window);
+	~AssembledAssetManager() {}
 
-	template<typename _Resource>
-	size_t getResource(const std::string& path) throw(std::string)
+	/*
+		You must load the resource externally, and pass ownership to the manager
+	*/
+	template<typename Resource>
+	size_t loadResource(Resource* resource)
 	{
-		std::string name == typeid(_Resource).name();
-		size_t ret;
-
-		if (name == "Texture")
-		{
-			auto index = ID_map.find(path);
-			if (index != ID_map.end())
-			{
-				ret = index->second;
-			}
-			else
-			{
-				Texture* tex = TextureLoader::LoadTexture(TEXTURE_PATH + path, window);
-				ret = texture_ID++;
-
-				textures.insert(std::make_pair(ret, std::make_pair(tex, 0)));
-				ID_map.insert(std::make_pair(path, ret));
-			}
-		}
-		else if (name == "VertexBuffer")
-		{
-			auto index = ID_map.find(path);
-			if (index != ID_map.end())
-			{
-				ret = index->second;
-			}
-			else
-			{
-				VertexBuffer* buff = OBJLoader::LoadModel(MODEL_PATH, path, "", window);
-				ret = vertexBuffer_ID++;
-
-				vertexBuffers.insert(std::make_pair(ret, std::make_pair(buff, 0)));
-				ID_map.insert(std::make_pair(path, ret));
-			}
-		}
-		else if (name == "Shader")
-		{
-			auto index = ID_map.find(path);
-			if (index != ID_map.end())
-			{
-				ret = index->second;
-			}
-			else
-			{
-				Shader* shader;
-				//TODO: temporary solution:
-				if (FrameworkConfig::api == OpenGL)
-				{
-					if (path == "pbr")
-					{
-						shader = new GLPBRShader();
-					}
-					else if (path == "basic")
-					{
-						shader = new GLBasicShader();
-					}
-					else if (path == "atmosphere_scattering")
-					{
-						shader = new GLAtmosphereScatteringShader();
-					}
-					else if (path == "atmosphere")
-					{
-						shader = new GLAtmosphereShader();
-					}
-					else if (path == "terrain_wireframe")
-					{
-						shader = new GLTerrainWireframeShader();
-					}
-					else if (path == "terrain")
-					{
-						shader = new GLTerrainShader();
-					}
-					else if (path == "gui")
-					{
-						shader = new GLGUIShader();
-					}
-					else if (path == "gpgpu_normal")
-					{
-						shader = new GLNormalMapShader();
-					}
-					else if (path == "gpgpu_splat")
-					{
-						shader = new GLSplatMapShader();
-					}
-					else if (path == "gpgpu_terrain_heights")
-					{
-						shader = new GLTerrainHeightsShader();
-					}
-				}
-				else if (FrameworkConfig::api == Vulkan)
-				{
-					if (path == "pbr")
-					{
-						shader = new VKPBRShader();
-					}
-					else if (path == "basic")
-					{
-						shader = new VKBasicShader();
-					}
-				}
-
-				ret = shader_ID++;
-
-				vertexBuffers.insert(std::make_pair(ret, std::make_pair(shader, 0)));
-				ID_map.insert(std::make_pair(path, ret));
-			}
-		}
-		else
-		{
-			throw std::string("Bad resource type: ") + name;
-			return -1;
-		}
-
-		return ret;
+		throw std::string("size_t AssembledAssetManager::loadResource(Resource*) failed, recieved bad type: ") + typeid(Resource).name();
+		return -1;
 	}
 
 	/*
 		Use this function if we are sure that the resource exists
 	*/
-	template<typename _Resource>
-	void addReference(size_t ID) throw(std::string)
+	template<typename Resource>
+	void addReference(size_t ID)
 	{
-		std::string name == typeid(_Resource).name();
-		if (name == "Texture")
-		{
-			textures.at(ID).second++;
-		}
-		else if (name == "VertexBuffer")
-		{
-			vertexBuffers.at(ID).second++;
-		}
-		else if (name == "Shader")
-		{
-			shaders.at(ID).second++;
-		}
-		else
-		{
-			throw std::string("Bad resource type: ") + name;
-			return -1;
-		}
+		throw std::string("size_t AssembledAssetManager::addReference(size_t) failed, recieved bad type: ") + typeid(Resource).name();
 	}
 
-	template<typename _Resource>
-	void removeReference(size_t ID) throw(std::string)
+	template<typename Resource>
+	void removeReference(size_t ID)
 	{
-		std::string name == typeid(_Resource).name();
-		if (name == "Texture")
-		{
-			size_t& refCount = textures.at(ID).second;
-			refCount--;
-
-			if (refCount == 0)
-			{
-				textures.erase(ID);
-			}
-		}
-		else if (name == "VertexBuffer")
-		{
-			size_t& refCount = vertexBuffers.at(ID).second;
-			refCount--;
-
-			if (refCount == 0)
-			{
-				vertexBuffers.erase(ID);
-			}
-		}
-		else if (name == "Shader")
-		{
-			size_t& refCount = shaders.at(ID).second;
-			refCount--;
-
-			if (refCount == 0)
-			{
-				shaders.erase(ID);
-			}
-		}
-		else
-		{
-			throw std::string("Bad resource type: ") + name;
-			return -1;
-		}
+		throw std::string("size_t AssembledAssetManager::removeReference(size_t) failed, recieved bad type: ") + typeid(Resource).name();
 	}
 
 	/*
 		Returns the resource pointer (non-owner)
 	*/
-	template<typename _Resource>
-	_Resource* getResourceByID(size_t ID) throw(std::string)
+	template<typename Resource>
+	Resource* getResourceByID(size_t ID)
 	{
-		std::string name == typeid(_Resource).name();
-		if (name == "Texture")
+		throw std::string("Resource* AssembledAssetManager::getResourceByID(size_t) failed, recieved bad type: ") + typeid(Resource).name();
+		return nullptr;
+	}
+
+	template<>
+	size_t loadResource<Pipeline>(Pipeline* resource)
+	{
+		for (const auto& elem : pipelines)
 		{
-			return textures.at(ID).first.get();
+			if (elem.second.first.get() == resource)
+			{
+				return elem.first;
+			}
 		}
-		else if (name == "VertexBuffer")
+
+		size_t ret = pipeline_ID++;
+		pipelines.insert(std::make_pair(ret, std::make_pair(resource, 0)));
+		return ret;
+	}
+
+	template<>
+	size_t loadResource<Material>(Material* resource)
+	{
+		for (const auto& elem : materials)
 		{
-			return vertexBuffers.at(ID).first.get();
+			if (elem.second.first.get() == resource)
+			{
+				return elem.first;
+			}
 		}
-		else if (name == "Shader")
+
+		size_t ret = material_ID++;
+		materials.insert(std::make_pair(ret, std::make_pair(resource, 0)));
+		return ret;
+	}
+
+	template<>
+	void addReference<Pipeline>(size_t ID)
+	{
+		pipelines.at(ID).second++;
+	}
+
+	template<>
+	void addReference<Material>(size_t ID)
+	{
+		materials.at(ID).second++;
+	}
+
+	template<>
+	void removeReference<Pipeline>(size_t ID)
+	{
+		uint32_t& refCount = pipelines.at(ID).second;
+		refCount--;
+
+		if (refCount == 0)
 		{
-			return shaders.at(ID).first.get();
-		}
-		else
-		{
-			throw std::string("Bad resource type: ") + name;
-			return -1;
+			pipelines.erase(ID);
 		}
 	}
 
+	template<>
+	void removeReference<Material>(size_t ID)
+	{
+		uint32_t& refCount = materials.at(ID).second;
+		refCount--;
+
+		if (refCount == 0)
+		{
+			materials.erase(ID);
+		}
+	}
+
+	template<>
+	Pipeline* getResourceByID<Pipeline>(size_t ID)
+	{
+		return pipelines.at(ID).first.get();
+	}
+
+	template<>
+	Material* getResourceByID<Material>(size_t ID)
+	{
+		return materials.at(ID).first.get();
+	}
+
+	AssetManager* getAssetManager() { return manager.get(); }
+
 private:
 	Window* window;
+
+	std::unique_ptr<AssetManager> manager;
 
 	//size_t: ID, pointer: data, uint32_t: refcount
 	std::unordered_map<size_t, std::pair<std::unique_ptr<Pipeline>, uint32_t>> pipelines;
@@ -230,7 +139,7 @@ private:
 
 	//The IDs that we assign the next asset we add
 	size_t pipeline_ID = 0;
-	size_t material = 0;
+	size_t material_ID = 0;
 
 	//These values are just for reference, so I'll mark it as TODO
 	constexpr static size_t PipelinesSize = 40;

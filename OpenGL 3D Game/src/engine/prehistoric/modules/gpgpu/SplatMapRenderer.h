@@ -10,11 +10,11 @@
 #include "engine/platform/opengl/rendering/shaders/gpgpu/GLSplatMapShader.h"
 //#include "engine/platform/vulkan/rendering/shaders/gpgpu/VKSplatMapShader.h"
 
-class SplatMapRendererComponent
+class SplatMapRenderer
 {
 public:
-	SplatMapRendererComponent(Window* window, AssetManager* manager, uint32_t N);
-	virtual ~SplatMapRendererComponent();
+	SplatMapRenderer(Window* window, AssetManager* manager, uint32_t N);
+	virtual ~SplatMapRenderer();
 
 	void Render(Texture* normalmap);
 

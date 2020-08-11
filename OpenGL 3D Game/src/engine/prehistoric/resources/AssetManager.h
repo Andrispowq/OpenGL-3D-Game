@@ -1,5 +1,3 @@
-#pragma once
-
 #ifndef ASSET_MANAGER_H
 #define ASSET_MANAGER_H
 
@@ -27,6 +25,8 @@
 #include "engine/platform/vulkan/rendering/shaders/basic/VKBasicShader.h"
 #include "engine/platform/vulkan/rendering/shaders/pbr/VKPBRShader.h"
 
+#include <typeinfo>
+
 /*
 	This system works like this: every asset is stored here, and when we need one, we just pass in the the size_t ID of the asset, and we get a pointer back
 */
@@ -34,218 +34,309 @@ class AssetManager
 {
 public:
 	AssetManager(Window* window);
+	AssetManager(const AssetManager&) = default;
 	~AssetManager() {}
 
-	template<typename _Resource>
-	size_t getResource(const std::string& path) throw(std::string)
+	template<typename Resource>
+	size_t getResource(const std::string& path)
 	{
-		std::string name == typeid(_Resource).name();
-		size_t ret;
-
-		if (name == "Texture")
-		{
-			auto index = ID_map.find(path);
-			if (index != ID_map.end())
-			{
-				ret = index->second;
-			}
-			else
-			{
-				Texture* tex = TextureLoader::LoadTexture(TEXTURE_PATH + path, window);
-				ret = texture_ID++;
-
-				textures.insert(std::make_pair(ret, std::make_pair(tex, 0)));
-				ID_map.insert(std::make_pair(path, ret));
-			}
-		}
-		else if (name == "VertexBuffer")
-		{
-			auto index = ID_map.find(path);
-			if (index != ID_map.end())
-			{
-				ret = index->second;
-			}
-			else
-			{
-				VertexBuffer* buff = OBJLoader::LoadModel(MODEL_PATH, path, "", window);
-				ret = vertexBuffer_ID++;
-
-				vertexBuffers.insert(std::make_pair(ret, std::make_pair(buff, 0)));
-				ID_map.insert(std::make_pair(path, ret));
-			}
-		}
-		else if (name == "Shader")
-		{
-			auto index = ID_map.find(path);
-			if (index != ID_map.end())
-			{
-				ret = index->second;
-			}
-			else
-			{
-				Shader* shader;
-				//TODO: temporary solution:
-				if (FrameworkConfig::api == OpenGL)
-				{
-					if (path == "pbr")
-					{
-						shader = new GLPBRShader();
-					}
-					else if (path == "basic")
-					{
-						shader = new GLBasicShader();
-					}
-					else if (path == "atmosphere_scattering")
-					{
-						shader = new GLAtmosphereScatteringShader();
-					}
-					else if (path == "atmosphere")
-					{
-						shader = new GLAtmosphereShader();
-					}
-					else if (path == "terrain_wireframe")
-					{
-						shader = new GLTerrainWireframeShader();
-					}
-					else if (path == "terrain")
-					{
-						shader = new GLTerrainShader();
-					}
-					else if (path == "gui")
-					{
-						shader = new GLGUIShader();
-					}
-					else if (path == "gpgpu_normal")
-					{
-						shader = new GLNormalMapShader();
-					}
-					else if (path == "gpgpu_splat")
-					{
-						shader = new GLSplatMapShader();
-					}
-					else if (path == "gpgpu_terrain_heights")
-					{
-						shader = new GLTerrainHeightsShader();
-					}
-				}
-				else if (FrameworkConfig::api == Vulkan)
-				{
-					if (path == "pbr")
-					{
-						shader = new VKPBRShader();
-					}
-					else if (path == "basic")
-					{
-						shader = new VKBasicShader();
-					}
-				}
-
-				ret = shader_ID++;
-
-				vertexBuffers.insert(std::make_pair(ret, std::make_pair(shader, 0)));
-				ID_map.insert(std::make_pair(path, ret));
-			}
-		}
-		else
-		{
-			throw std::string("Bad resource type: ") + name;
-			return -1;
-		}
-
-		return ret;
+		throw std::string("size_t AssetManager::getResource(const std::string&) failed, recieved bad type: ") + typeid(Resource).name();
+		return -1;
 	}
 
 	/*
 		Use this function if we are sure that the resource exists
 	*/
-	template<typename _Resource>
-	void addReference(size_t ID) throw(std::string)
+	template<typename Resource>
+	size_t addResource(Resource* ptr)
 	{
-		std::string name == typeid(_Resource).name();
-		if (name == "Texture")
-		{
-			textures.at(ID).second++;
-		}
-		else if (name == "VertexBuffer")
-		{
-			vertexBuffers.at(ID).second++;
-		}
-		else if (name == "Shader")
-		{
-			shaders.at(ID).second++;
-		}
-		else
-		{
-			throw std::string("Bad resource type: ") + name;
-			return -1;
-		}
+		throw std::string("size_t AssetManager::addResource(Resource*) failed, recieved bad type: ") + typeid(Resource).name();
+		return -1;
 	}
 
-	template<typename _Resource>
-	void removeReference(size_t ID) throw(std::string)
+	/*
+		Use this function if we are sure that the resource exists
+	*/
+	template<typename Resource>
+	void addReference(size_t ID)
 	{
-		std::string name == typeid(_Resource).name();
-		if (name == "Texture")
-		{
-			size_t& refCount = textures.at(ID).second;
-			refCount--;
+		throw std::string("void AssetManager::addReference(size_t) failed, recieved bad type: ") + typeid(Resource).name();
+	}
 
-			if (refCount == 0)
-			{
-				textures.erase(ID);
-			}
-		}
-		else if (name == "VertexBuffer")
-		{
-			size_t& refCount = vertexBuffers.at(ID).second;
-			refCount--;
-
-			if (refCount == 0)
-			{
-				vertexBuffers.erase(ID);
-			}
-		}
-		else if (name == "Shader")
-		{
-			size_t& refCount = shaders.at(ID).second;
-			refCount--;
-
-			if (refCount == 0)
-			{
-				shaders.erase(ID);
-			}
-		}
-		else
-		{
-			throw std::string("Bad resource type: ") + name;
-			return -1;
-		}
+	template<typename Resource>
+	void removeReference(size_t ID)
+	{
+		throw std::string("void AssetManager::removeReference(size_t) failed, recieved bad type: ") + typeid(Resource).name();
 	}
 
 	/*
 		Returns the resource pointer (non-owner)
 	*/
-	template<typename _Resource>
-	_Resource* getResourceByID(size_t ID) throw(std::string)
+	template<typename Resource>
+	Resource* getResourceByID(size_t ID)
 	{
-		std::string name == typeid(_Resource).name();
-		if (name == "Texture")
+		throw std::string("Resource* AssetManager::getResourceByID(size_t) failed, recieved bad type: ") + typeid(Resource).name();
+		return nullptr;
+	}
+
+	template<>
+	size_t getResource<Texture>(const std::string& path)
+	{
+		auto index = ID_map.find(path);
+		if (index != ID_map.end())
 		{
-			return textures.at(ID).first.get();
+			return index->second;
 		}
-		else if (name == "VertexBuffer")
+
+		Texture* tex = TextureLoader::LoadTexture(TEXTURE_PATH + path, window);
+		size_t ret = texture_ID++;
+
+		textures.insert(std::make_pair(ret, std::make_pair(tex, 0)));
+		ID_map.insert(std::make_pair(path, ret));
+
+		return ret;
+	}
+
+	template<>
+	size_t getResource<VertexBuffer>(const std::string& path)
+	{
+		auto index = ID_map.find(path);
+		if (index != ID_map.end())
 		{
-			return vertexBuffers.at(ID).first.get();
+			return index->second;
 		}
-		else if (name == "Shader")
+
+		VertexBuffer* buff = OBJLoader::LoadModel(MODEL_PATH, path, "", window);
+		size_t ret = vertexBuffer_ID++;
+
+		vertexBuffers.insert(std::make_pair(ret, std::make_pair(buff, 0)));
+		ID_map.insert(std::make_pair(path, ret));
+
+		return ret;
+	}
+
+	template<>
+	size_t getResource<Shader>(const std::string& path)
+	{
+		auto index = ID_map.find(path);
+		if (index != ID_map.end())
 		{
-			return shaders.at(ID).first.get();
+			return index->second;
 		}
-		else
+
+		Shader* shader;
+		//TODO: temporary solution:
+		if (FrameworkConfig::api == OpenGL)
 		{
-			throw std::string("Bad resource type: ") + name;
-			return -1;
+			if (path == "pbr")
+			{
+				shader = new GLPBRShader();
+			}
+			else if (path == "basic")
+			{
+				shader = new GLBasicShader();
+			}
+			else if (path == "atmosphere_scattering")
+			{
+				shader = new GLAtmosphereScatteringShader();
+			}
+			else if (path == "atmosphere")
+			{
+				shader = new GLAtmosphereShader();
+			}
+			else if (path == "terrain_wireframe")
+			{
+				shader = new GLTerrainWireframeShader();
+			}
+			else if (path == "terrain")
+			{
+				shader = new GLTerrainShader();
+			}
+			else if (path == "gui")
+			{
+				shader = new GLGUIShader();
+			}
+			else if (path == "gpgpu_normal")
+			{
+				shader = new GLNormalMapShader();
+			}
+			else if (path == "gpgpu_splat")
+			{
+				shader = new GLSplatMapShader();
+			}
+			else if (path == "gpgpu_terrain_heights")
+			{
+				shader = new GLTerrainHeightsShader();
+			}
 		}
+		else if (FrameworkConfig::api == Vulkan)
+		{
+			if (path == "pbr")
+			{
+				shader = new VKPBRShader(window);
+			}
+			else if (path == "basic")
+			{
+				shader = new VKBasicShader(window);
+			}
+		}
+
+		size_t ret = shader_ID++;
+
+		shaders.insert(std::make_pair(ret, std::make_pair(shader, 0)));
+		ID_map.insert(std::make_pair(path, ret));
+
+		return ret;
+	}
+
+	template<>
+	size_t addResource<Texture>(Texture* ptr)
+	{
+		for (auto& elem : textures)
+		{
+			if (elem.second.first.get() == ptr)
+			{
+				elem.second.second++;
+				return elem.first;
+			}
+		}
+
+		size_t ret = texture_ID++;
+		textures.insert(std::make_pair(ret, std::make_pair(ptr, 0)));
+		return ret;
+	}
+
+	template<>
+	size_t addResource<VertexBuffer>(VertexBuffer* ptr)
+	{
+		for (auto& elem : vertexBuffers)
+		{
+			if (elem.second.first.get() == ptr)
+			{
+				elem.second.second++;
+				return elem.first;
+			}
+		}
+
+		size_t ret = vertexBuffer_ID++;
+		vertexBuffers.insert(std::make_pair(ret, std::make_pair(ptr, 0)));
+		return ret;
+	}
+
+	template<>
+	size_t addResource<Shader>(Shader* ptr)
+	{
+		for (auto& elem : shaders)
+		{
+			if (elem.second.first.get() == ptr)
+			{
+				elem.second.second++;
+				return elem.first;
+			}
+		}
+
+		size_t ret = shader_ID++;
+		shaders.insert(std::make_pair(ret, std::make_pair(ptr, 0)));
+		return ret;
+	}
+
+	template<>
+	void addReference<Texture>(size_t ID)
+	{
+		textures.at(ID).second++;		
+	}
+
+	template<>
+	void addReference<VertexBuffer>(size_t ID)
+	{
+		vertexBuffers.at(ID).second++;
+	}
+
+	template<>
+	void addReference<Shader>(size_t ID)
+	{
+		shaders.at(ID).second++;
+	}
+
+	template<>
+	void removeReference<Texture>(size_t ID)
+	{
+		uint32_t& refCount = textures.at(ID).second;
+		refCount--;
+
+		if (refCount == 0)
+		{
+			textures.erase(ID);
+
+			for (const auto& elem : ID_map)
+			{
+				if (elem.second == ID)
+				{
+					ID_map.erase(elem.first);
+					return;
+				}
+			}
+		}
+	}
+
+	template<>
+	void removeReference<VertexBuffer>(size_t ID)
+	{
+		uint32_t& refCount = vertexBuffers.at(ID).second;
+		refCount--;
+
+		if (refCount == 0)
+		{
+			vertexBuffers.erase(ID);
+
+			for (const auto& elem : ID_map)
+			{
+				if (elem.second == ID)
+				{
+					ID_map.erase(elem.first);
+					return;
+				}
+			}
+		}
+	}
+
+	template<>
+	void removeReference<Shader>(size_t ID)
+	{
+		uint32_t& refCount = shaders.at(ID).second;
+		refCount--;
+
+		if (refCount == 0)
+		{
+			shaders.erase(ID);
+
+			for (const auto& elem : ID_map)
+			{
+				if (elem.second == ID)
+				{
+					ID_map.erase(elem.first);
+					return;
+				}
+			}
+		}
+	}
+
+	template<>
+	Texture* getResourceByID<Texture>(size_t ID)
+	{
+		return textures.at(ID).first.get();
+	}
+
+	template<>
+	VertexBuffer* getResourceByID<VertexBuffer>(size_t ID)
+	{
+		return vertexBuffers.at(ID).first.get();
+	}
+
+	template<>
+	Shader* getResourceByID<Shader>(size_t ID)
+	{
+		return shaders.at(ID).first.get();
 	}
 
 private:

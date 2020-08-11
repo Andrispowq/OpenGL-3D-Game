@@ -16,20 +16,18 @@
 class VKGraphicsPipeline : public VKPipeline, public GraphicsPipeline
 {
 public:
-	VKGraphicsPipeline(AssetManager* manager, size_t shaderID, size_t vboID);
+	VKGraphicsPipeline(Window* window, AssetManager* manager, size_t shaderID, size_t vboID);
 	virtual ~VKGraphicsPipeline();
-
-	virtual void CreatePipeline(Window* window) override;
 
 	virtual void BindPipeline() const override;
 	virtual void RenderPipeline() const override;
 	virtual void UnbindPipeline() const override;
 
-	virtual void DestroyPipeline() override;
-
 	virtual void RecreatePipeline();
 
 	VkPipeline getGraphicsPipeline() const { return graphicsPipeline; }
+private:
+	void CreatePipeline();
 private:
 	VKRenderpass* renderpass;
 

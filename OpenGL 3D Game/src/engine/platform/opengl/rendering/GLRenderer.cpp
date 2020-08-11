@@ -1,7 +1,9 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLRenderer.h"
 
-void GLRenderer::Render(Camera* camera)
+#include "engine/prehistoric/component/renderer/RenderableComponent.h"
+
+void GLRenderer::Render()
 {
 	for (auto pipeline : models_3d)
 	{
@@ -13,7 +15,7 @@ void GLRenderer::Render(Camera* camera)
 
 		for (auto renderer : pipeline.second)
 		{
-			renderer->BatchRender(*this);
+			renderer->BatchRender();
 		}
 
 		pl->UnbindPipeline();
@@ -30,7 +32,7 @@ void GLRenderer::Render(Camera* camera)
 
 		for (auto renderer : pipeline.second)
 		{
-			renderer->BatchRender(*this);
+			renderer->BatchRender();
 		}
 
 		pl->UnbindPipeline();
@@ -45,7 +47,7 @@ void GLRenderer::Render(Camera* camera)
 
 		for (auto renderer : pipeline.second)
 		{
-			renderer->BatchRender(*this);
+			renderer->BatchRender();
 		}
 
 		pl->UnbindPipeline();

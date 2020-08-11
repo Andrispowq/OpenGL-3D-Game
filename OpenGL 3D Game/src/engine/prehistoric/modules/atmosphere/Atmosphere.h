@@ -16,10 +16,12 @@
 
 #include "engine/prehistoric/component/renderer/RendererComponent.h"
 
+class AssembledAssetManager;
+
 class Atmosphere : public GameObject
 {
 public:
-	Atmosphere(Window* window, AssetManager* manager);
+	Atmosphere(Window* window, AssembledAssetManager* manager);
 	virtual ~Atmosphere() {}
 
 	virtual void PreUpdate(Engine* engine) override;

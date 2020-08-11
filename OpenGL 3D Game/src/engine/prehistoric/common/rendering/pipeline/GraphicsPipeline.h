@@ -3,6 +3,8 @@
 
 #include "Pipeline.h"
 
+#include "engine/prehistoric/resources/AssetManager.h"
+
 class GraphicsPipeline
 {
 public:

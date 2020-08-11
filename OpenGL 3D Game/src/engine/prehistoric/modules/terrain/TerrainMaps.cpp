@@ -1,15 +1,17 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "TerrainMaps.h"
 
+#include "engine/prehistoric/resources/AssetManager.h"
+
 TerrainMaps::TerrainMaps(Window* window, AssetManager* manager)
 {
-	this->heightmap = TextureLoader::LoadTexture(TerrainConfig::heightmap, window, Bilinear);
+	this->heightmap = manager->getResourceByID<Texture>(manager->getResource<Texture>(TerrainConfig::heightmap));
 
- 	this->normalmapRendererComponent = new NormalMapRendererComponent(window, manager, 60, heightmap->getWidth());
+ 	this->normalmapRendererComponent = new NormalMapRenderer(window, manager, 60, heightmap->getWidth());
 	normalmapRendererComponent->Render(heightmap);
 	this->normalmap = normalmapRendererComponent->getNormalmap();
 
-	this->splatmapRendererComponent = new SplatMapRendererComponent(window, manager, normalmap->getWidth());
+	this->splatmapRendererComponent = new SplatMapRenderer(window, manager, normalmap->getWidth());
 	splatmapRendererComponent->Render(normalmap);
 	this->splatmap = splatmapRendererComponent->getSplatmap();
 
@@ -20,7 +22,6 @@ TerrainMaps::TerrainMaps(Window* window, AssetManager* manager)
 
 TerrainMaps::~TerrainMaps()
 {
-	delete heightmap;
 	delete normalmapRendererComponent;
 	delete splatmapRendererComponent;
 	delete query;

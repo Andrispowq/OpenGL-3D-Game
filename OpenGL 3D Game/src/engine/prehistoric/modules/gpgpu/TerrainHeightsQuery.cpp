@@ -1,39 +1,36 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "TerrainHeightsQuery.h"
 
+#include "engine/prehistoric/resources/AssetManager.h"
+
 TerrainHeightsQuery::TerrainHeightsQuery(Window* window, AssetManager* manager, uint32_t N)
 {
 	this->window = window;
-
 	this->N = N;
 
 	//TODO: Create the Vulkan equivalent of the GLComputePipeline
 	if (FrameworkConfig::api == OpenGL)
 	{
-		pipeline = new GLComputePipeline(manager, manager->addShader(new GLTerrainHeightsShader()));
+		pipeline = new GLComputePipeline(window, manager, manager->getResource<Shader>("gpgpu_terrain_heights"));
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
 		//pipeline = new VKComputePipeline(new VKTerrainHeightsShader());
 	}
 
-	pipeline->CreatePipeline(window);
+	heights = new float[N * N];
 
-	//heights = new float[N * N];
+	Layout layout;
+	layout.addLayoutMember(LayoutType::FLOAT, LayoutTypeInfo::UNSIZED_ARRAY, N * N);
 
 	if (FrameworkConfig::api == OpenGL)
 	{
-		buffer = new GLShaderStorageBuffer();
+		buffer = new GLShaderStorageBuffer(heights, layout);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
 		//buffer = new VKShaderStorageBuffer();
 	}
-
-	Layout layout;
-	layout.addLayoutMember(LayoutType::FLOAT, LayoutTypeInfo::UNSIZED_ARRAY, N * N);
-
-	buffer->Store(heights, layout);
 
 	if (FrameworkConfig::api == OpenGL)
 	{
@@ -51,8 +48,6 @@ TerrainHeightsQuery::TerrainHeightsQuery(Window* window, AssetManager* manager, 
 
 TerrainHeightsQuery::~TerrainHeightsQuery()
 {
-	pipeline->DestroyPipeline();
-
 	delete pipeline;
 	delete buffer;
 }

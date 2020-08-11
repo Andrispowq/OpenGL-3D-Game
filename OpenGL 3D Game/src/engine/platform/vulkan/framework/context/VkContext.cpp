@@ -7,7 +7,7 @@ VKContext::VKContext(Window* window)
 	surface.CreateSurface(window, &instance);
 
 	physicalDevice.PickPhysicalDevice(&surface, &instance);
-	logicalDevice.CreateLogicalDevice(&physicalDevice, &surface, instance.GetValidationLayers());
+	logicalDevice.CreateLogicalDevice(&physicalDevice, &surface, instance.getValidationLayers());
 
 	VKUtil::Init(physicalDevice.getPhysicalDevice(), logicalDevice.getDevice());
 }

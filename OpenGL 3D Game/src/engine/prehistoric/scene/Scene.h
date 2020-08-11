@@ -9,11 +9,10 @@
 class Scene
 {
 public:
-	static void CreateScene(GameObject* root, Window* window, AssetManager* manager, Camera* camera);
-	static void DeleteData();
-private:
-	Scene() {}
+	Scene(GameObject* root, Window* window, AssembledAssetManager* manager, Camera* camera);
 	virtual ~Scene() {}
+
+	Scene(const Scene&) = default;
 };
 
 #endif

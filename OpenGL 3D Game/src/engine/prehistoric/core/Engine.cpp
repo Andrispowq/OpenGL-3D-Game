@@ -2,7 +2,7 @@
 #include "Engine.h"
 
 Engine::Engine()
-	: root(nullptr), renderingEngine(nullptr), audioEngine(nullptr), manager(nullptr)
+	: root(nullptr), scene(nullptr), renderingEngine(nullptr), audioEngine(nullptr), manager(nullptr)
 {
 	frameTime = 0;
 
@@ -21,16 +21,15 @@ Engine::Engine()
 	InputInstance.Init(renderingEngine->getWindow());
 	renderingEngine->Init();
 
-	manager = std::make_unique<AssetManager>(renderingEngine->getWindow());
+	manager = std::make_unique<AssembledAssetManager>(renderingEngine->getWindow());
 	
 	//Loading configs that depend on some engine feature like the window
-	TerrainConfig::LoadConfig("res/config/terrain.cfg", renderingEngine->getWindow(), manager.get());
-	Scene::CreateScene(root.get(), renderingEngine->getWindow(), manager.get(), renderingEngine->getCamera());
+	TerrainConfig::LoadConfig("res/config/terrain.cfg", renderingEngine->getWindow(), manager->getAssetManager());
+	scene = std::make_unique<Scene>(root.get(), renderingEngine->getWindow(), manager.get(), renderingEngine->getCamera());
 }
 
 Engine::~Engine()
 {
-	Scene::DeleteData();
 	Input::DeleteInstance();
 }
 
@@ -56,7 +55,7 @@ void Engine::Update()
 void Engine::Render()
 {
 	renderingEngine->getWindow()->ClearScreen();
-	root->PreRender(renderingEngine.get());
+	root->PreRender(renderingEngine->getRenderer());
 
 	renderingEngine->Render();
 }

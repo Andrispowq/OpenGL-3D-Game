@@ -18,7 +18,7 @@ public:
 	VkInstance getInstance() const { return instance; }
 	VKDebugMessenger& getDebugMessenger() { return *messenger; }
 
-	std::vector<const char*> GetValidationLayers() const { return validationLayers; }
+	std::vector<const char*> getValidationLayers() const { return validationLayers; }
 private:
 	bool CheckValidationLayerSupport() const;
 	std::vector<const char*> GetRequiredExtensions() const;

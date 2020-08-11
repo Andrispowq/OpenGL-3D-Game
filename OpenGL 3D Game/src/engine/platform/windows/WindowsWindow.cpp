@@ -4,6 +4,9 @@
 #include "engine/platform/opengl/framework/context/GLContext.h"
 #include "engine/platform/vulkan/framework/context/VKContext.h"
 
+#include "engine/platform/opengl/framework/swapchain/GLSwapchain.h"
+#include "engine/platform/vulkan/framework/swapchain/VKSwapchain.h"
+
 #include "WindowsInput.h"
 
 static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -70,14 +73,14 @@ bool WindowsWindow::Create()
 
 	if (FrameworkConfig::api == OpenGL)
 	{
-		context = new GLContext(this);
+		context = std::make_unique<GLContext>(this);
+		swapchain = std::make_unique<GLSwapchain>(this);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
-		context = new VKContext(this);
+		context = std::make_unique<VKContext>(this);
+		swapchain = std::make_unique<VKSwapchain>(this);
 	}
-
-	swapchain->SetupSwapchain(this);
 
 	ImageData data = TextureLoader::LoadTextureData("res/textures/logo.png");
 

@@ -12,25 +12,16 @@ class AssetManager;
 class Pipeline
 {
 public:
-	Pipeline(AssetManager* manager, size_t shaderID);
+	Pipeline(Window* window, AssetManager* manager, size_t shaderID);
 	Pipeline() : samples(0), shaderID(-1) {}
 
 	virtual ~Pipeline();
-
-	virtual void CreatePipeline(Window* window) = 0;
 
 	virtual void BindPipeline() const = 0;
 	virtual void RenderPipeline() const = 0;
 	virtual void UnbindPipeline() const = 0;
 
-	virtual void DestroyPipeline() = 0;
-
 	virtual void RecreatePipeline() {};
-
-	Shader* getShader() const { return assetManager->getResourceByID<Shader>(shaderID); }
-
-	size_t getShaderID() const { return shaderID; }
-	void setShaderID(size_t shaderID);
 
 	Vector2f getViewportStart() const { return viewportStart; }
 	Vector2f getViewportSize() const { return viewportSize; }
@@ -39,13 +30,19 @@ public:
 
 	int getSamples() const { return samples; }
 
+	size_t getShaderID() const { return shaderID; }
+	Shader* getShader() const;
+
 	void setViewportStart(const Vector2f& viewportStart) { this->viewportStart = viewportStart; }
 	void setViewportSize(const Vector2f& viewportSize) { this->viewportSize = viewportSize; }
 	void setScissorStart(const Vector2u& scissorStart) { this->scissorStart = scissorStart; }
 	void setScissorSize(const Vector2u& scissorSize) { this->scissorSize = scissorSize; }
-
 	void setSamples(int samples) { this->samples = samples; }
+
+	void setShaderID(size_t shaderID);
+
 public:
+	Window* window;
 	AssetManager* assetManager;
 
 	size_t shaderID;

@@ -5,25 +5,17 @@
 #include "engine/prehistoric/common/rendering/pipeline/GraphicsPipeline.h"
 #include "engine/prehistoric/common/rendering/pipeline/ComputePipeline.h"
 
-#include "engine/platform/vulkan/rendering/shaders/VkShader.h"
+#include "engine/platform/vulkan/rendering/shaders/VKShader.h"
 
-std::vector<Pipeline*> RenderableComponent::pipelines;
+#include "engine/prehistoric/resources/AssembledAssetManager.h"
 
-RenderableComponent::RenderableComponent(Pipeline* pipeline, Window* window)
+RenderableComponent::RenderableComponent(Pipeline* pipeline, Window* window, AssembledAssetManager* manager)
 	: priority(RenderPriority::_3D)
 {
 	this->window = window;
+	this->manager = manager;
 
-	size_t index;
-	if ((index = FindElement(pipeline, pipelines)) == 0xFFFFFFFF)
-	{
-		pipelines.push_back(pipeline);
-		this->pipelineIndex = pipelines.size() - 1;
-	}
-	else
-	{
-		this->pipelineIndex = index;
-	}
+	pipelineIndex = manager->loadResource<Pipeline>(pipeline);
 
 	//Just in case, but this might be added as optional because it resets the viewport and the scissor
 	pipeline->setViewportStart(0);
@@ -32,21 +24,24 @@ RenderableComponent::RenderableComponent(Pipeline* pipeline, Window* window)
 	pipeline->setScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
 }
 
-RenderableComponent::RenderableComponent(Window* window)
+RenderableComponent::RenderableComponent(Window* window, AssembledAssetManager* manager)
 	: priority(RenderPriority::_3D)
 {
 	pipelineIndex = -1;
 
 	this->window = window;
+	this->manager = manager;
 }
 
 RenderableComponent::~RenderableComponent()
 {
+	manager->removeReference<Pipeline>(pipelineIndex);
+	pipelineIndex = -1;
 }
 
 void RenderableComponent::RecreatePipelines()
 {
-	for (Pipeline* pipeline : pipelines)
+	/*for (Pipeline* pipeline : pipelines)
 	{
 		pipeline->setViewportStart(0);
 		pipeline->setViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
@@ -54,13 +49,10 @@ void RenderableComponent::RecreatePipelines()
 		pipeline->setScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
 
 		pipeline->RecreatePipeline();
-	}
+	}*/
 }
 
-void RenderableComponent::CleanUp()
+Pipeline* RenderableComponent::getPipeline() const
 {
-	for (Pipeline* pipeline : pipelines)
-	{
-		delete pipeline;
-	}
+	return manager->getResourceByID<Pipeline>(pipelineIndex);
 }

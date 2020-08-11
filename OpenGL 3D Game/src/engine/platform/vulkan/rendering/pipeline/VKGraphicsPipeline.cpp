@@ -2,19 +2,50 @@
 #include <glew.h>
 #include "VKGraphicsPipeline.h"
 
-VKGraphicsPipeline::VKGraphicsPipeline(AssetManager* manager, size_t shaderID, size_t vboID)
-	: VKPipeline(manager, shaderID), GraphicsPipeline(manager, vboID)
+VKGraphicsPipeline::VKGraphicsPipeline(Window* window, AssetManager* manager, size_t shaderID, size_t vboID)
+	: VKPipeline(window, manager, shaderID), GraphicsPipeline(manager, vboID)
 {
+	CreatePipeline();
 }
 
 VKGraphicsPipeline::~VKGraphicsPipeline()
 {
+	vkDestroyPipeline(device->getDevice(), graphicsPipeline, nullptr);
 }
 
-void VKGraphicsPipeline::CreatePipeline(Window* window)
+void VKGraphicsPipeline::BindPipeline() const
 {
-	VKPipeline::CreatePipeline(window);
+	//VKPipeline::BindPipeline(); //does nothing
 
+	vkCmdBindPipeline(((VKCommandBuffer*) swapchain->getDrawCommandBuffer())->getCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+	getVertexBuffer()->Bind(swapchain->getDrawCommandBuffer());
+}
+
+void VKGraphicsPipeline::RenderPipeline() const
+{
+	//VKPipeline::RenderPipeline(); //does nothing
+
+	getVertexBuffer()->Draw(swapchain->getDrawCommandBuffer());
+}
+
+void VKGraphicsPipeline::UnbindPipeline() const
+{
+	//these do nothing
+	//getVertexBuffer()->Unbind();
+
+	//VKPipeline::UnbindPipeline();
+}
+
+void VKGraphicsPipeline::RecreatePipeline()
+{
+	VKPipeline::RecreatePipeline();
+
+	vkDestroyPipeline(device->getDevice(), graphicsPipeline, nullptr);
+	CreatePipeline();
+}
+
+void VKGraphicsPipeline::CreatePipeline()
+{
 	this->renderpass = &((VKSwapchain*)window->getSwapchain())->getRenderpass();
 
 	VKMeshVertexBuffer* vbo = (VKMeshVertexBuffer*)getVertexBuffer();
@@ -45,7 +76,7 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 	viewport.maxDepth = 1.0f;
 
 	VkRect2D scissor = {};
-	scissor.offset = { (int32_t) Pipeline::scissorStart.x, (int32_t)Pipeline::scissorStart.y };
+	scissor.offset = { (int32_t)Pipeline::scissorStart.x, (int32_t)Pipeline::scissorStart.y };
 	scissor.extent = { Pipeline::scissorStart.x + Pipeline::scissorSize.x, Pipeline::scissorStart.y + Pipeline::scissorSize.y };
 
 	VkPipelineViewportStateCreateInfo viewportState = {};
@@ -113,7 +144,7 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 
 	VkGraphicsPipelineCreateInfo pipelineInfo = {};
 	pipelineInfo.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
- 	pipelineInfo.stageCount = shader->getModuleCount();
+	pipelineInfo.stageCount = shader->getModuleCount();
 	pipelineInfo.pStages = shader->GetShaderStages();
 	pipelineInfo.pVertexInputState = &vertexInputInfo;
 	pipelineInfo.pInputAssemblyState = &inputAssembly;
@@ -134,41 +165,4 @@ void VKGraphicsPipeline::CreatePipeline(Window* window)
 	{
 		PR_LOG_RUNTIME_ERROR("Graphics pipeline creation has failed!\n");
 	}
-}
-
-void VKGraphicsPipeline::BindPipeline() const
-{
-	//VKPipeline::BindPipeline();
-
-	vkCmdBindPipeline(((VKCommandBuffer*) swapchain->getDrawCommandBuffer())->getCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
-	getVertexBuffer()->Bind(swapchain->getDrawCommandBuffer());
-}
-
-void VKGraphicsPipeline::RenderPipeline() const
-{
-	//VKPipeline::RenderPipeline(); //does nothing
-
-	getVertexBuffer()->Draw(swapchain->getDrawCommandBuffer());
-}
-
-void VKGraphicsPipeline::UnbindPipeline() const
-{
-	//getVertexBuffer()->Unbind();
-
-	//VKPipeline::UnbindPipeline();
-}
-
-void VKGraphicsPipeline::DestroyPipeline()
-{
-	VKPipeline::DestroyPipeline();
-
-	vkDestroyPipeline(device->getDevice(), graphicsPipeline, nullptr);
-}
-
-void VKGraphicsPipeline::RecreatePipeline()
-{
-	VKPipeline::RecreatePipeline();
-
-	DestroyPipeline();
-	CreatePipeline(window);
 }

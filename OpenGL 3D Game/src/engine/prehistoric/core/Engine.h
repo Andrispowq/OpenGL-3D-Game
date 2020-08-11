@@ -13,6 +13,8 @@
 #include "engine/config/TerrainConfig.h"
 #include "engine/config/AtmosphereConfig.h"
 
+#include "engine/prehistoric/resources/AssembledAssetManager.h"
+
 class Engine
 {
 public:
@@ -26,7 +28,7 @@ public:
 	inline RenderingEngine* getRenderingEngine() const { return renderingEngine.get(); }
 	inline AudioEngine* getAudioEngine() const { return audioEngine.get(); }
 
-	inline AssetManager* getAssetManager() const { return manager.get(); }
+	inline AssembledAssetManager* getAssetManager() const { return manager.get(); }
 
 	inline float getFrameTime() const { return frameTime; }
 
@@ -37,9 +39,10 @@ public:
 private:
 	//Root object
 	std::unique_ptr<GameObject> root;
+	std::unique_ptr<Scene> scene;
 
 	//The asset manager
-	std::unique_ptr<AssetManager> manager;
+	std::unique_ptr<AssembledAssetManager> manager;
 
 	//Engines
 	std::unique_ptr<RenderingEngine> renderingEngine;

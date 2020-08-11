@@ -6,7 +6,7 @@
 class GUISlider : public GUIElement
 {
 public:
-	GUISlider(Window* window, AssetManager* manager, float minValue, float maxValue, Texture* texture = nullptr, void* data = nullptr, size_t dataSize = 0, bool visible = true);
+	GUISlider(Window* window, AssembledAssetManager* manager, float minValue, float maxValue, Texture* texture = nullptr, void* data = nullptr, size_t dataSize = 0, bool visible = true);
 
 	virtual void PreUpdate(Engine* engine) override;
 

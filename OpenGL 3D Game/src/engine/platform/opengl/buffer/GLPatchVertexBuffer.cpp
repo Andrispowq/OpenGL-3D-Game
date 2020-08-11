@@ -1,20 +1,10 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLPatchVertexBuffer.h"
 
-GLPatchVertexBuffer::GLPatchVertexBuffer(const std::vector<Vector2f>& vertices) : PatchVertexBuffer()
+GLPatchVertexBuffer::GLPatchVertexBuffer(const std::vector<Vector2f>& vertices)
+	: PatchVertexBuffer(vertices)
 {
-	Store(vertices);
-}
-
-GLPatchVertexBuffer::~GLPatchVertexBuffer()
-{
-	glDeleteVertexArrays(1, &vao);
-	glDeleteBuffers(1, &vbo);
-}
-
-void GLPatchVertexBuffer::Store(const std::vector<Vector2f>& vertices)
-{
-	size = (uint32_t) vertices.size();
+	size = (uint32_t)vertices.size();
 
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
@@ -39,15 +29,21 @@ void GLPatchVertexBuffer::Store(const std::vector<Vector2f>& vertices)
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
- }
+}
 
-void GLPatchVertexBuffer::Bind(void* commandBuffer) const
+GLPatchVertexBuffer::~GLPatchVertexBuffer()
+{
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
+}
+
+void GLPatchVertexBuffer::Bind(CommandBuffer* commandBuffer) const
 {
 	glBindVertexArray(vao);
 	glEnableVertexAttribArray(0);
 }
 
-void GLPatchVertexBuffer::Draw(void* commandBuffer) const
+void GLPatchVertexBuffer::Draw(CommandBuffer* commandBuffer) const
 {
 	glDrawArrays(GL_PATCHES, 0, size);
 }

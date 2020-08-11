@@ -24,13 +24,13 @@ enum class GUIType
 class GUIElement : public GameObject
 {
 public:
-	GUIElement(Window* window, AssetManager* manager, Texture* texture = nullptr, void* data = nullptr, size_t dataSize = 0, bool visible = true);
+	GUIElement(Window* window, AssembledAssetManager* manager, Texture* texture = nullptr, void* data = nullptr, size_t dataSize = 0, bool visible = true);
 	virtual ~GUIElement();
 
 	static void CleanUp();
 
 	virtual void PreUpdate(Engine* engine) override;
-	virtual void PreRender(RenderingEngine* renderingEngine) override;
+	virtual void PreRender(Renderer* renderer) override;
 
 	bool inside(Vector2f cursor);
 

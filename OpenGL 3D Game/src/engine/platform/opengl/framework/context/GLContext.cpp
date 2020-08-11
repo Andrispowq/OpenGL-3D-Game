@@ -103,8 +103,6 @@ static void OpenGLMessageCallback(
 GLContext::GLContext(Window* window)
 	: Context(window)
 {
-	this->window = window;
-
 	glfwMakeContextCurrent(reinterpret_cast<GLFWwindow*>(window->getWindowHandle()));
 
 	GLenum error = glewInit();

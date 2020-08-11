@@ -3,92 +3,48 @@
 
 #include "TerrainQuadtree.h"
 
-TerrainNode::TerrainNode(Factory<TerrainNode>* factory, Pipeline* pipeline, Pipeline* wireframePipeline, TerrainMaps* maps,
-	Window* window, Camera* camera, const Vector2f& location,
-	int lod, const Vector2f& index)
-	: factory(factory), maps(maps), window(window), camera(camera), location(location), lod(lod), index(index)
+TerrainNode::TerrainNode(Window* window, Camera* camera, AssembledAssetManager* manager, TerrainMaps* maps,
+	Pipeline* pipeline, Pipeline* wireframePipeline, const Vector2f& location, int lod, const Vector2f& index)
+	:  window(window), camera(camera), manager(manager), maps(maps), location(location), lod(lod), index(index)
 {
 	this->gap = 1.0f / float(TerrainQuadtree::rootNodes * pow(2, lod));
 
 	Vector3f localScaling = { gap, 0, gap };
 	Vector3f localPosition = { location.x, 0, location.y };
 
-	localTransform = new Transform();
+	localTransform.setScaling(localScaling);
+	localTransform.setPosition(localPosition);
 
-	localTransform->setScaling(localScaling);
-	localTransform->setPosition(localPosition);
+	worldTransform.setScaling({ TerrainConfig::scaleXZ, TerrainConfig::scaleY, TerrainConfig::scaleXZ });
+	worldTransform.setPosition({ -TerrainConfig::scaleXZ / 2.0f, 0, -TerrainConfig::scaleXZ / 2.0f });
 
-	worldTransform->setScaling({ TerrainConfig::scaleXZ, TerrainConfig::scaleY, TerrainConfig::scaleXZ });
-	worldTransform->setPosition({ -TerrainConfig::scaleXZ / 2.0f, 0, -TerrainConfig::scaleXZ / 2.0f });
+	rendererComponent = new RendererComponent(pipeline, nullptr, window, manager);
+	wireframeRendererComponent = new RendererComponent(wireframePipeline, nullptr, window, manager);
 
-	renderer = new RendererComponent(pipeline, nullptr, window);
-	wireframeRendererComponent = new RendererComponent(wireframePipeline, nullptr, window);
-
-	AddComponent(RENDERER_COMPONENT, renderer);
+	AddComponent(RENDERER_COMPONENT, rendererComponent);
 	AddComponent(WIREFRAME_RENDERER_COMPONENT, wireframeRendererComponent);
 
 	ComputeWorldPosition();
 	UpdateQuadtree();
 }
 
-void TerrainNode::Init(Factory<TerrainNode>* factory, Pipeline* pipeline, Pipeline* wireframePipeline, TerrainMaps* maps,
-	Window* window, Camera* camera, const Vector2f& location,
-	int lod, const Vector2f& index)
-{
-	this->factory = factory;
-
-	this->maps = maps;
-	this->window = window;
-	this->camera = camera;
-	
-	this->location = location;
-	this->lod = lod;
-	this->index = index;
-
-	this->gap = 1.0f / float(TerrainQuadtree::rootNodes * pow(2, lod));
-
-	Vector3f localScaling = { gap, 0, gap };
-	Vector3f localPosition = { location.x, 0, location.y };
-
-	localTransform = new Transform();
-
-	localTransform->setScaling(localScaling);
-	localTransform->setPosition(localPosition);
-
-	worldTransform->setScaling({ TerrainConfig::scaleXZ, TerrainConfig::scaleY, TerrainConfig::scaleXZ });
-	worldTransform->setPosition({ -TerrainConfig::scaleXZ / 2.0f, 0, -TerrainConfig::scaleXZ / 2.0f });
-
-	renderer = new RendererComponent(pipeline, nullptr, window);
-	wireframeRendererComponent = new RendererComponent(wireframePipeline, nullptr, window);
-
-	AddComponent(RENDERER_COMPONENT, renderer);
-	AddComponent(WIREFRAME_RENDERER_COMPONENT, wireframeRendererComponent);
-
-	ComputeWorldPosition();
-	UpdateQuadtree();
-}
-
-TerrainNode::~TerrainNode()
-{
-}
-
-void TerrainNode::PreRender(RenderingEngine* renderingEngine)
+void TerrainNode::PreRender(Renderer* renderer)
 {
 	if (leaf)
 	{
-		if (renderingEngine->isWireframeMode())
+		if (renderer->isWireframeMode())
 		{
-			wireframeRendererComponent->PreRender(renderingEngine);
+			wireframeRendererComponent->PreRender(renderer);
 		}
 		else
 		{
-			renderer->PreRender(renderingEngine);
+			rendererComponent->PreRender(renderer);
 		}
 	}
 
-	for (auto child : children)
+	for (auto& child : children)
 	{
-		child.second->PreRender(renderingEngine);
+		child.second->PreRender(renderer);
 	}
 }
 
@@ -98,7 +54,7 @@ void TerrainNode::UpdateQuadtree()
 
 	if (children.size() != 0)
 	{
-		for (auto child : children)
+		for (auto& child : children)
 		{
 			((TerrainNode*)child.second)->UpdateQuadtree();
 		}
@@ -140,8 +96,8 @@ void TerrainNode::AddChildNodes(int lod)
 				ss << ", lod: ";
 				ss << lod;
 
-				AddChild(ss.str(), new(*factory) TerrainNode(factory, renderer->getPipeline(), wireframeRendererComponent->getPipeline(), maps,
-					window, camera, location + Vector2f(float(i), float(j)) * (gap / 2.f), lod, { float(i), float(j) }));
+				AddChild(ss.str(), new/*(*factory)*/ TerrainNode(window, camera, manager, maps, rendererComponent->getPipeline(), wireframeRendererComponent->getPipeline(),
+					location + Vector2f(float(i), float(j)) * (gap / 2.f), lod, { float(i), float(j) }));
 			}
 		}
 	}
@@ -156,11 +112,11 @@ void TerrainNode::RemoveChildNodes()
 
 	if (children.size() != 0)
 	{
-		for (auto& child : children)
+		/*for (auto& child : children)
 		{
-			//delete child.second;
+			delete child.second;
 			//TerrainNode::operator delete(child.second, *factory);
-		}
+		}*/
 
 		children.clear();
 	}

@@ -1,7 +1,9 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "TerrainQuadtree.h"
 
-TerrainQuadtree::TerrainQuadtree(Window* window, AssetManager* manager, Camera* camera, TerrainMaps* maps)
+#include "engine/prehistoric/resources/AssembledAssetManager.h"
+
+TerrainQuadtree::TerrainQuadtree(Window* window, AssembledAssetManager* manager, Camera* camera, TerrainMaps* maps)
 	: window(window), camera(camera), maps(maps)
 {
 	factory = new Factory<TerrainNode>(512); //There will definitly not be more than 512 instances of TerrainNode on this quadtree
@@ -15,15 +17,14 @@ TerrainQuadtree::TerrainQuadtree(Window* window, AssetManager* manager, Camera* 
 
 	if (FrameworkConfig::api == OpenGL)
 	{
-		vbo = new GLPatchVertexBuffer();
-		vbo->Store(generatePatch());
-		size_t vboID = manager->addVertexBuffer(vbo);
+		vbo = new GLPatchVertexBuffer(generatePatch());
+		size_t vboID = manager->getAssetManager()->addResource<VertexBuffer>(vbo);
 
-		shaderID = manager->addShader(new GLTerrainShader());
-		wireframeShaderID = manager->addShader(new GLTerrainWireframeShader());
+		shaderID = manager->getAssetManager()->getResource<Shader>("terrain");
+		wireframeShaderID = manager->getAssetManager()->getResource<Shader>("terrain_wireframe");
 
-		pipeline = new GLGraphicsPipeline(manager, shaderID, vboID);
-		wireframePipeline = new GLGraphicsPipeline(manager, wireframeShaderID, vboID);
+		pipeline = new GLGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID);
+		wireframePipeline = new GLGraphicsPipeline(window, manager->getAssetManager(), wireframeShaderID, vboID);
 
 		reinterpret_cast<GLGraphicsPipeline*>(pipeline)->SetBackfaceCulling(true);
 		reinterpret_cast<GLGraphicsPipeline*>(wireframePipeline)->SetBackfaceCulling(true);
@@ -32,9 +33,6 @@ TerrainQuadtree::TerrainQuadtree(Window* window, AssetManager* manager, Camera* 
 	{
 		//TODO: implement terrains in Vulkan
 	}
-
-	pipeline->CreatePipeline(window);
-	wireframePipeline->CreatePipeline(window);
 
 	for (int i = 0; i < rootNodes; i++)
 	{
@@ -46,27 +44,26 @@ TerrainQuadtree::TerrainQuadtree(Window* window, AssetManager* manager, Camera* 
 			ss << ", ";
 			ss << j;
 
-			AddChild(ss.str(), new(*factory) TerrainNode(factory, pipeline, wireframePipeline,
-				maps, window, camera, { i / (float)rootNodes, j / (float)rootNodes },
-				0, { float(i), float(j) }));
+			AddChild(ss.str(), new/*(*factory)*/ TerrainNode(window, camera, manager, maps, pipeline, wireframePipeline,
+				{ i / (float)rootNodes, j / (float)rootNodes },	0, { float(i), float(j) }));
 		}
 	}
 
-	worldTransform->setScaling({ TerrainConfig::scaleXZ, TerrainConfig::scaleY, TerrainConfig::scaleXZ });
-	worldTransform->setPosition({ -TerrainConfig::scaleXZ / 2.0f, 0, -TerrainConfig::scaleXZ / 2.0f });
+	worldTransform.setScaling({ TerrainConfig::scaleXZ, TerrainConfig::scaleY, TerrainConfig::scaleXZ });
+	worldTransform.setPosition({ -TerrainConfig::scaleXZ / 2.0f, 0, -TerrainConfig::scaleXZ / 2.0f });
 }
 
 TerrainQuadtree::~TerrainQuadtree()
 {
 	//Custom allocator -> custom deletion, but the factory deletes them anyway
-	children.clear();
+	//children.clear();
 
 	delete factory;
 }
 
 void TerrainQuadtree::UpdateQuadtree()
 {
-	for (auto node : children)
+	for (auto& node : children)
 	{
 		((TerrainNode*)node.second)->UpdateQuadtree();
 	}

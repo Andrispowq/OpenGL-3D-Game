@@ -9,17 +9,14 @@
 class GLSwapchain : public Swapchain
 {
 public:
-	virtual void SetupSwapchain(Window* window) override;
+	GLSwapchain(Window* window);
+	virtual ~GLSwapchain();
 
 	virtual void SwapBuffers() override;
+	virtual void ClearScreen() override;
 
 	virtual void SetVSync(bool vSync) const override;
 	virtual void SetWindowSize(uint32_t width, uint32_t height) override;
-
-	virtual void SetClearColor(float red, float green, float blue, float alpha) override;
-	virtual void ClearScreen() override;
-
-	virtual void DeleteSwapchain(void* device) override;
 };
 
 #endif

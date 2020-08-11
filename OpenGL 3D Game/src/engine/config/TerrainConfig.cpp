@@ -2,6 +2,7 @@
 #include "TerrainConfig.h"
 
 #include "engine/prehistoric/modules/terrain/TerrainQuadtree.h"
+#include "engine/prehistoric/core/model/material/Material.h" 
 
 namespace TerrainConfig
 {
@@ -104,7 +105,7 @@ namespace TerrainConfig
 
 						if (nameTokens[2] == "texture")
 						{
-							material->addTexture(tokens[1], manager->addTexture(TextureLoader::LoadTexture(tokens[2], window)));
+							material->addTexture(tokens[1], manager->getResource<Texture>(tokens[2]));
 						}
 						else if (nameTokens[2] == "vec4")
 						{

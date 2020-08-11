@@ -1,23 +1,18 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "Terrain.h"
 
-Terrain::Terrain(Window* window, AssetManager* manager, Camera* camera)
-	: window(window), camera(camera)
+#include "engine/prehistoric/resources/AssembledAssetManager.h"
+
+Terrain::Terrain(Window* window, AssembledAssetManager* manager, Camera* camera)
+	: window(window), camera(camera), maps{ std::make_unique<TerrainMaps>(window, manager->getAssetManager()) }
 {
-	maps = new TerrainMaps(window, manager);
-	
-	AddChild("Quadtree", new TerrainQuadtree(window, manager, camera, maps));
+	AddChild("Quadtree", new TerrainQuadtree(window, manager, camera, maps.get()));
 }
 
-Terrain::~Terrain()
-{
-	delete maps;
-}
-
-void Terrain::PreRender(RenderingEngine* renderingEngine)
+void Terrain::PreRender(Renderer* renderer)
 {
 	UpdateQuadtree();
-	Node::PreRender(renderingEngine);
+	Node::PreRender(renderer);
 }
 
 void Terrain::UpdateQuadtree()

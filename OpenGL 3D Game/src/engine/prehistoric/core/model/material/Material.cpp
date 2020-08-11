@@ -45,9 +45,9 @@ Texture* Material::getTexture(const std::string& key) const
 {
 	auto index = textureIDs.find(key);
 	if (index == textureIDs.end())
-		 return manager->getTexture(textureIDs.begin()->second);
+		 return manager->getResourceByID<Texture>(textureIDs.begin()->second);
 	
-	return manager->getTexture(index->second);
+	return manager->getResourceByID<Texture>(index->second);
 }
 
 Vector4f Material::getVector4f(const std::string& key) const
@@ -93,4 +93,9 @@ int Material::getInt(const std::string& key) const
 		return -1;
 
 	return index->second;
+}
+
+Texture* Material::getDefault() const
+{
+	return manager->getResourceByID<Texture>(textureIDs.at("DEFAULT_TEX"));
 }

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef VK_UTIL_H
+#define VK_UTIL_H
 
 #include "engine/platform/vulkan/framework/surface/VKSurface.h"
 
@@ -56,3 +57,5 @@ namespace VKUtil
 		VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags memoryFlags, VkImage& image, VkDeviceMemory& memory);
 	void CreateImageView(VKDevice* device, VkImage image, VkFormat format, VkImageAspectFlagBits aspect, uint32_t mipLevels, VkImageView& imageView);
 };
+
+#endif

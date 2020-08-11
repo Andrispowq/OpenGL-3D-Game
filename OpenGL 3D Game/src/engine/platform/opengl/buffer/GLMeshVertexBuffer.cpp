@@ -2,19 +2,7 @@
 #include "GLMeshVertexBuffer.h"
 
 GLMeshVertexBuffer::GLMeshVertexBuffer(const Mesh& mesh)
-	: MeshVertexBuffer()
-{
-	Store(mesh);
-}
-
-GLMeshVertexBuffer::~GLMeshVertexBuffer()
-{
-	glDeleteVertexArrays(1, &vao);
-	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &ibo);
-}
-
-void GLMeshVertexBuffer::Store(const Mesh& mesh)
+	: MeshVertexBuffer(mesh)
 {
 	size = static_cast<uint32_t>(mesh.getIndices().size());
 
@@ -38,17 +26,24 @@ void GLMeshVertexBuffer::Store(const Mesh& mesh)
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::getNumberOfFloats()), (void*) (sizeof(float) * 0));
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::getNumberOfFloats()), (void*) (sizeof(float) * 3));
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::getNumberOfFloats()), (void*) (sizeof(float) * 5));
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::getNumberOfFloats()), (void*) (sizeof(float) * 8));
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::getNumberOfFloats()), (void*)(sizeof(float) * 0));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::getNumberOfFloats()), (void*)(sizeof(float) * 3));
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::getNumberOfFloats()), (void*)(sizeof(float) * 5));
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, int(sizeof(float) * Vertex::getNumberOfFloats()), (void*)(sizeof(float) * 8));
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
 
-void GLMeshVertexBuffer::Bind(void* commandBuffer) const
+GLMeshVertexBuffer::~GLMeshVertexBuffer()
+{
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &ibo);
+}
+
+void GLMeshVertexBuffer::Bind(CommandBuffer* commandBuffer) const
 {
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
@@ -58,7 +53,7 @@ void GLMeshVertexBuffer::Bind(void* commandBuffer) const
 	glEnableVertexAttribArray(2);
 }
 
-void GLMeshVertexBuffer::Draw(void* commandBuffer) const
+void GLMeshVertexBuffer::Draw(CommandBuffer* commandBuffer) const
 {
 	glDrawElements(GL_TRIANGLES, size, GL_UNSIGNED_SHORT, (void*) 0);
 }

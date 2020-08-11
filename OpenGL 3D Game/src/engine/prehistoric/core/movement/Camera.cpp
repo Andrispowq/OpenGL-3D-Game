@@ -85,53 +85,53 @@ void Camera::Update(Window* window, float delta)
 
 	//PR_LOG_MESSAGE("Forward: %f\n", inputs[1]->isForward());
 
-	for (CameraInput* in : inputs)
+	for (CameraInput& in : inputs)
 	{
-		if (in->isForward() != 0 && !movedForward)
+		if (in.isForward() != 0 && !movedForward)
 		{
-			Move(forward, movAmt * in->isForward() * delta);
+			Move(forward, movAmt * in.isForward() * delta);
 			movedForward = true;
 		}
-		if (in->isBackward() != 0 && !movedBackward)
+		if (in.isBackward() != 0 && !movedBackward)
 		{
-			Move(forward, -movAmt * in->isBackward() * delta);
+			Move(forward, -movAmt * in.isBackward() * delta);
 			movedBackward = true;
 		}
-		if (in->isLeft() != 0 && !movedLeft)
+		if (in.isLeft() != 0 && !movedLeft)
 		{
-			Move(getLeft(), movAmt * in->isLeft() * delta);
+			Move(getLeft(), movAmt * in.isLeft() * delta);
 			movedLeft = true;
 		}
-		if (in->isRight() != 0 && !movedRight)
+		if (in.isRight() != 0 && !movedRight)
 		{
-			Move(getLeft(), -movAmt * in->isRight() * delta);
+			Move(getLeft(), -movAmt * in.isRight() * delta);
 			movedRight = true;
 		}
 
-		if (in->isUp() != 0 && !rotUp)
+		if (in.isUp() != 0 && !rotUp)
 		{
-			RotateX(static_cast<float>(-rotAmt * 2.0 * in->isUp() * delta));
+			RotateX(static_cast<float>(-rotAmt * 2.0 * in.isUp() * delta));
 			rotUp = true;
 		}
-		if (in->isDown() != 0 && !rotDown)
+		if (in.isDown() != 0 && !rotDown)
 		{
-			RotateX(static_cast<float>(rotAmt * 2.0 * in->isDown() * delta));
+			RotateX(static_cast<float>(rotAmt * 2.0 * in.isDown() * delta));
 			rotDown = true;
 		}
-		if (in->isRightRot() != 0 && !rotRight)
+		if (in.isRightRot() != 0 && !rotRight)
 		{
 			if (FrameworkConfig::api == Vulkan)
-				RotateY(static_cast<float>(-rotAmt * 2.0 * in->isRightRot() * delta));
+				RotateY(static_cast<float>(-rotAmt * 2.0 * in.isRightRot() * delta));
 			else if(FrameworkConfig::api == OpenGL)
-				RotateY(static_cast<float>(rotAmt * 2.0 * in->isRightRot() * delta));
+				RotateY(static_cast<float>(rotAmt * 2.0 * in.isRightRot() * delta));
 			rotRight = true;
 		}
-		if (in->isLeftRot() != 0 && !rotLeft)
+		if (in.isLeftRot() != 0 && !rotLeft)
 		{
 			if (FrameworkConfig::api == Vulkan)
-				RotateY(static_cast<float>(rotAmt * 2.0 * in->isLeftRot() * delta));
+				RotateY(static_cast<float>(rotAmt * 2.0 * in.isLeftRot() * delta));
 			else if (FrameworkConfig::api == OpenGL)
-				RotateY(static_cast<float>(-rotAmt * 2.0 * in->isLeftRot() * delta));
+				RotateY(static_cast<float>(-rotAmt * 2.0 * in.isLeftRot() * delta));
 			rotLeft = true;
 		}
 	}

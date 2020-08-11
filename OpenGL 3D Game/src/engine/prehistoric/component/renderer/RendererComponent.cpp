@@ -5,52 +5,24 @@
 #include "engine/prehistoric/core/gameObject/GameObject.h"
 #include "engine/prehistoric/core/model/material/Material.h"
 
-std::vector<Material*> RendererComponent::materials;
+#include "engine/prehistoric/resources/AssembledAssetManager.h"
 
-RendererComponent::RendererComponent(Pipeline* pipeline, Material* material, Window* window)
-	: RenderableComponent(pipeline, window)
+RendererComponent::RendererComponent(Pipeline* pipeline, Material* material, Window* window, AssembledAssetManager* manager)
+	: RenderableComponent(pipeline, window, manager)
 {
-	size_t index;
-	if ((index = FindElement(material, materials)) == 0xFFFFFFFF)
-	{
-		materials.push_back(material);
-		this->materialIndex = materials.size() - 1;		
-	}
-	else
-	{
-		this->materialIndex = index;
-	}
+	materialIndex = manager->loadResource<Material>(material);
 }
 
-RendererComponent::RendererComponent(Window* window)
-	: RenderableComponent(window)
-{
-	size_t index;
-	if ((index = FindElement((Material*)nullptr, materials)) == 0xFFFFFFFF)
-	{
-		materials.push_back(nullptr);
-		this->materialIndex = materials.size() - 1;
-	}
-	else
-	{
-		this->materialIndex = index;
-	}
-}
-
-RendererComponent::~RendererComponent()
+RendererComponent::RendererComponent(Window* window, AssembledAssetManager* manager)
+	: RenderableComponent(window, manager)
 {
 	materialIndex = -1;
 }
 
-void RendererComponent::CleanUp()
+RendererComponent::~RendererComponent()
 {
-	for (Material* material : materials)
-	{
-		if(material != nullptr)
-			delete material;
-	}
-
-	RenderableComponent::CleanUp();
+	manager->removeReference<Material>(materialIndex);
+	materialIndex = -1;
 }
 
 void RendererComponent::PreRender(Renderer* renderer)
@@ -60,7 +32,7 @@ void RendererComponent::PreRender(Renderer* renderer)
 
 void RendererComponent::Render(Renderer* renderer) const
 {
-	Pipeline* pipeline = pipelines[pipelineIndex];
+	Pipeline* pipeline = getPipeline();
 	
 	pipeline->BindPipeline();
 	pipeline->getShader()->UpdateShaderUniforms(renderer->getCamera(), renderer->getLights());
@@ -73,8 +45,13 @@ void RendererComponent::Render(Renderer* renderer) const
 
 void RendererComponent::BatchRender() const
 {
-	Pipeline* pipeline = pipelines[pipelineIndex];
+	Pipeline* pipeline = getPipeline();
 
-	pipeline->getShader()->UpdateObjectUniforms(parent, shader_instance_index);
+	pipeline->getShader()->UpdateObjectUniforms(parent, 0);
 	pipeline->RenderPipeline();
+}
+
+Material* RendererComponent::getMaterial() const
+{
+	return manager->getResourceByID<Material>(materialIndex);
 }

@@ -1,14 +1,9 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLGraphicsPipeline.h"
 
-GLGraphicsPipeline::GLGraphicsPipeline(AssetManager* manager, size_t shaderID, size_t vboID)
-	: GLPipeline(manager, shaderID), GraphicsPipeline(manager, vboID)
+GLGraphicsPipeline::GLGraphicsPipeline(Window* window, AssetManager* manager, size_t shaderID, size_t vboID)
+	: GLPipeline(window, manager, shaderID), GraphicsPipeline(manager, vboID)
 {
-}
-
-void GLGraphicsPipeline::CreatePipeline(Window* window)
-{
-	GLPipeline::CreatePipeline(window);
 }
 
 void GLGraphicsPipeline::BindPipeline() const
@@ -51,9 +46,4 @@ void GLGraphicsPipeline::UnbindPipeline() const
 	getVertexBuffer()->Unbind();
 
 	GLPipeline::UnbindPipeline();
-}
-
-void GLGraphicsPipeline::DestroyPipeline()
-{
-	GLPipeline::DestroyPipeline();
 }

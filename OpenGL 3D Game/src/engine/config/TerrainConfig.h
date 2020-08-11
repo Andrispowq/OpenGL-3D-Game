@@ -3,10 +3,13 @@
 
 #include "engine/prehistoric/core/util/Includes.hpp"
 
-#include "engine/prehistoric/core/model/material/Material.h"
-
 #include "engine/prehistoric/core/util/Util.h"
 #include "engine/prehistoric/core/math/Math.h"
+
+class Material;
+
+class Window;
+class AssetManager;
 
 namespace TerrainConfig
 {

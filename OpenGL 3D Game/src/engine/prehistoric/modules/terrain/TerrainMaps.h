@@ -6,8 +6,8 @@
 #include "engine/platform/opengl/texture/GLTexture.h"
 #include "engine/platform/vulkan/texture/VKTexture.h"
 
-#include "engine/prehistoric/modules/gpgpu/NormalMapRendererComponent.h"
-#include "engine/prehistoric/modules/gpgpu/SplatMapRendererComponent.h"
+#include "engine/prehistoric/modules/gpgpu/NormalMapRenderer.h"
+#include "engine/prehistoric/modules/gpgpu/SplatMapRenderer.h"
 #include "engine/prehistoric/modules/gpgpu/TerrainHeightsQuery.h"
 
 class TerrainMaps
@@ -30,8 +30,8 @@ private:
 
 	float* heights;
 
-	NormalMapRendererComponent* normalmapRendererComponent;
-	SplatMapRendererComponent* splatmapRendererComponent;
+	NormalMapRenderer* normalmapRendererComponent;
+	SplatMapRenderer* splatmapRendererComponent;
 	TerrainHeightsQuery* query;
 };
 

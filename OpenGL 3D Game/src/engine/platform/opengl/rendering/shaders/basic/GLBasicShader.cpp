@@ -50,7 +50,7 @@ void GLBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light
 		{
 			Light* light = lights[i];
 
-			SetUniform(uniformName + "position", light->getParent()->getWorldTransform()->getPosition());
+			SetUniform(uniformName + "position", light->getParent()->getWorldTransform().getPosition());
 			SetUniform(uniformName + "colour", light->getColour());
 			SetUniform(uniformName + "intensity", light->getIntensity());
 		}
@@ -69,7 +69,7 @@ void GLBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light
 
 		Light* light = lights[i];
 
-		SetUniform(uniformName + "position", light->getParent()->getWorldTransform()->getPosition());
+		SetUniform(uniformName + "position", light->getParent()->getWorldTransform().getPosition());
 		SetUniform(uniformName + "colour", light->getColour());
 		SetUniform(uniformName + "intensity", light->getIntensity());
 	}
@@ -83,7 +83,7 @@ void GLBasicShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_i
 {
 	Material* material = dynamic_cast<RendererComponent*>(object->GetComponent("RendererComponent"))->getMaterial();
 
-	SetUniform("m_transform", object->getWorldTransform()->getTransformationMatrix());
+	SetUniform("m_transform", object->getWorldTransform().getTransformationMatrix());
 
 	material->getTexture("albedoMap")->Bind(0);
 	SetUniformi("material.albedoMap", 0);

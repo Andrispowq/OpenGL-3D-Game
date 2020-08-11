@@ -15,13 +15,4 @@ Window::Window()
 	this->title = FrameworkConfig::windowName.c_str();
 	this->fullscreen = FrameworkConfig::windowFullScreen;
 	this->closed = true;
-
-	if (FrameworkConfig::api == OpenGL)
-	{
-		swapchain = std::make_unique<GLSwapchain>();
-	}
-	else if (FrameworkConfig::api == Vulkan)
-	{
-		swapchain = std::make_unique<VKSwapchain>();
-	}
 }

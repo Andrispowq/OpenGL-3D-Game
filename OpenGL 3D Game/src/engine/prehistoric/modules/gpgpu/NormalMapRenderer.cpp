@@ -1,7 +1,9 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
-#include "NormalMapRendererComponent.h"
+#include "NormalMapRenderer.h"
 
-NormalMapRendererComponent::NormalMapRendererComponent(Window* window, AssetManager* manager, float strength, uint32_t N)
+#include "engine/prehistoric/resources/AssetManager.h"
+
+NormalMapRenderer::NormalMapRenderer(Window* window, AssetManager* manager, float strength, uint32_t N)
 {
 	this->window = window;
 
@@ -11,14 +13,12 @@ NormalMapRendererComponent::NormalMapRendererComponent(Window* window, AssetMana
 	//TODO: Create the Vulkan equivalent of the GLComputePipeline
 	if (FrameworkConfig::api == OpenGL)
 	{
-		pipeline = new GLComputePipeline(manager, manager->addShader(new GLNormalMapShader()));
+		pipeline = new GLComputePipeline(window, manager, manager->getResource<Shader>("gpgpu_normal"));
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
 		//pipeline = new VKComputePipeline(new VKNormalMapShader());
 	}
-
-	pipeline->CreatePipeline(window);
 
 	if (FrameworkConfig::api == OpenGL)
 	{
@@ -43,12 +43,12 @@ NormalMapRendererComponent::NormalMapRendererComponent(Window* window, AssetMana
 	}
 }
 
-NormalMapRendererComponent::~NormalMapRendererComponent()
+NormalMapRenderer::~NormalMapRenderer()
 {
 	delete pipeline;
 }
 
-void NormalMapRendererComponent::Render(Texture* heightmap)
+void NormalMapRenderer::Render(Texture* heightmap)
 {
 	pipeline->BindPipeline();
 

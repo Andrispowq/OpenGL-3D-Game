@@ -8,18 +8,18 @@
 class Terrain : public Node
 {
 public:
-	Terrain(Window* window, AssetManager* manager, Camera* camera);
-	virtual ~Terrain();
+	Terrain(Window* window, AssembledAssetManager* manager, Camera* camera);
+	virtual ~Terrain() {}
 
-	void PreRender(RenderingEngine* renderingEngine) override;
+	void PreRender(Renderer* renderer) override;
 	void UpdateQuadtree();
 
-	TerrainMaps* getMaps() const { return maps; }
+	TerrainMaps* getMaps() const { return maps.get(); }
 private:
 	Window* window;
 	Camera* camera;
 
-	TerrainMaps* maps;
+	std::unique_ptr<TerrainMaps> maps;
 };
 
 #endif

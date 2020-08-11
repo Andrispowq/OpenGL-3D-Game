@@ -1,8 +1,6 @@
 #ifndef COMMAND_BUFFER_H
 #define COMMAND_BUFFER_H
 
-#include "engine/prehistoric/common/framework/Window.h"
-
 class CommandBuffer
 {
 public:

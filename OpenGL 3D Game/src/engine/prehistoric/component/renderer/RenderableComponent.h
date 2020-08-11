@@ -8,6 +8,8 @@
 
 #include "engine/prehistoric/core/util/Includes.hpp"
 
+class AssembledAssetManager;
+
 enum class RenderPriority
 {
 	_3D = 0,
@@ -19,19 +21,17 @@ enum class RenderPriority
 class RenderableComponent : public Component
 {
 public:
-	RenderableComponent(Pipeline* pipeline, Window* window);
-	RenderableComponent(Window* window);
+	RenderableComponent(Pipeline* pipeline, Window* window, AssembledAssetManager* manager);
+	RenderableComponent(Window* window, AssembledAssetManager* manager);
 	virtual ~RenderableComponent();
 
-	static void CleanUp();
 	static void RecreatePipelines();
-	static std::vector<Pipeline*> getPipelines() { return pipelines; }
 
 	virtual void Render(Renderer* renderer) const = 0;
 	virtual void BatchRender() const = 0;
 
 	inline size_t getPipelineIndex() const { return pipelineIndex; }
-	inline Pipeline* getPipeline() const { return pipelines.at(pipelineIndex); }
+	Pipeline* getPipeline() const;
 
 	inline RenderPriority getPriority() const { return priority; }
 	inline void setPriority(RenderPriority priority) { this->priority = priority; }
@@ -40,7 +40,7 @@ public:
 	RenderableComponent(const RenderableComponent&&) = delete;
 	RenderableComponent& operator=(RenderableComponent) = delete;
 protected:
-	static std::vector<Pipeline*> pipelines;
+	AssembledAssetManager* manager;
 
 	Window* window;
 

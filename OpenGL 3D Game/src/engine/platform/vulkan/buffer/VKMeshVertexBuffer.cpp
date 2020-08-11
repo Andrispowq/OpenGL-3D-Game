@@ -4,27 +4,14 @@
 #include "engine/platform/vulkan/rendering/pipeline/VKGraphicsPipeline.h"
 
 VKMeshVertexBuffer::VKMeshVertexBuffer(const Mesh& mesh, Window* window)
-	: vertexBuffer(nullptr), indexBuffer(nullptr)
+	: MeshVertexBuffer(mesh), vertexBuffer(nullptr), indexBuffer(nullptr)
 {
 	this->physicalDevice = reinterpret_cast<VKPhysicalDevice*>(window->getContext()->getPhysicalDevice());
 	this->device = reinterpret_cast<VKDevice*>(window->getContext()->getDevice());
 
 	this->swapchain = (VKSwapchain*) window->getSwapchain();
 
-	Store(mesh);
-}
-
-VKMeshVertexBuffer::VKMeshVertexBuffer(Window* window)
-{
-	this->physicalDevice = reinterpret_cast<VKPhysicalDevice*>(window->getContext()->getPhysicalDevice());
-	this->device = reinterpret_cast<VKDevice*>(window->getContext()->getDevice());
-
-	this->swapchain = (VKSwapchain*)window->getSwapchain();
-}
-
-void VKMeshVertexBuffer::Store(const Mesh& mesh)
-{
-	this->size = (uint32_t) mesh.getIndices().size();
+	this->size = (uint32_t)mesh.getIndices().size();
 
 	//Building mesh data
 	VkDeviceSize vBufferSize = mesh.getVertices().size() * Vertex::getSize();
@@ -44,7 +31,7 @@ void VKMeshVertexBuffer::Store(const Mesh& mesh)
 
 	stagingBuffer->MapMemory(vData.data());
 	stagingBuffer->CopyBuffer(vertexBuffer.get()); //Copies the object which invoked the function to the buffer passed as an argument
-	
+
 	//Creation of index buffer
 	stagingBuffer = std::make_unique<VKBuffer>(physicalDevice, device, iBufferSize,
 		VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
@@ -53,7 +40,11 @@ void VKMeshVertexBuffer::Store(const Mesh& mesh)
 	stagingBuffer->CopyBuffer(indexBuffer.get()); //Copies the object which invoked the function to the buffer passed as an argument
 }
 
-void VKMeshVertexBuffer::Bind(void* commandBuffer) const
+VKMeshVertexBuffer::~VKMeshVertexBuffer()
+{
+}
+
+void VKMeshVertexBuffer::Bind(CommandBuffer* commandBuffer) const
 {
 	VKCommandBuffer* buffer = (VKCommandBuffer*)commandBuffer;
 
@@ -64,7 +55,7 @@ void VKMeshVertexBuffer::Bind(void* commandBuffer) const
 	vkCmdBindIndexBuffer(buffer->getCommandBuffer(), indexBuffer->getBuffer(), 0, VK_INDEX_TYPE_UINT16);
 }
 
-void VKMeshVertexBuffer::Draw(void* commandBuffer) const
+void VKMeshVertexBuffer::Draw(CommandBuffer* commandBuffer) const
 {
 	vkCmdDrawIndexed(((VKCommandBuffer*) commandBuffer)->getCommandBuffer(), size, 1, 0, 0, 0);
 }

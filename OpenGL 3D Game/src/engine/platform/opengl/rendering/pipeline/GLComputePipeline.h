@@ -11,16 +11,12 @@
 class GLComputePipeline : public GLPipeline, public ComputePipeline
 {
 public:
-	GLComputePipeline(AssetManager* manager, size_t shaderID);
+	GLComputePipeline(Window* window, AssetManager* manager, size_t shaderID);
 	virtual ~GLComputePipeline() {}
-
-	virtual void CreatePipeline(Window* window) override;
 
 	virtual void BindPipeline() const override;
 	virtual void RenderPipeline() const override;
 	virtual void UnbindPipeline() const override;
-
-	virtual void DestroyPipeline() override;
 };
 
 #endif
