@@ -27,7 +27,7 @@ namespace TextureLoader
 		Texture* texture = nullptr;
 
 		ImageFormat format;
-		if (channels == 3 && FrameworkConfig::api != Vulkan) //Vulkan can't decide if it's supports 24 bit textures yet, so don't do this
+		if (channels == 3 && FrameworkConfig::api != Vulkan) //Vulkan can't decide if it supports 24 bit textures yet, so don't do this
 			format = R8G8B8_LINEAR;
 		else
 			format = R8G8B8A8_LINEAR;
@@ -36,24 +36,16 @@ namespace TextureLoader
 		//is then copied into the actual texture during generation
 		if (FrameworkConfig::api == OpenGL)
 		{
-			texture = new GLTexture();
-
-			texture->setWidth(static_cast<uint32_t>(width));
-			texture->setHeight(static_cast<uint32_t>(height));
-
-			texture->Generate();
+			texture = new GLTexture(width, height);
 			texture->Bind();
-
-			texture->UploadTextureData((size_t)width * height * channels, channels, data, format);
+			texture->UploadTextureData(data, format);
 		}
 		else if (FrameworkConfig::api == Vulkan)
 		{
 			texture = new VKTexture((VKPhysicalDevice*)window->getContext()->getPhysicalDevice(), (VKDevice*)window->getContext()->getDevice(), width, height);
-
-			texture->UploadTextureData((size_t)width * height * 4, channels, data, format);
-
-			texture->Generate();
 			texture->Bind();
+			texture->UploadTextureData(data, format);
+			texture->Generate();
 		}
 
 		texture->SamplerProperties(filter, wrapMode);

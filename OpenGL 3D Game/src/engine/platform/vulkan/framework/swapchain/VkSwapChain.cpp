@@ -9,7 +9,7 @@ VKSwapchain::VKSwapchain(Window* window)
     this->physicalDevice = (VKPhysicalDevice*)window->getContext()->getPhysicalDevice();
     this->device = (VKDevice*)window->getContext()->getDevice();
 
-    this->surface = &((VKContext*)window->getContext())->getSurface();
+    this->surface = ((VKContext*)window->getContext())->getSurface();
 
     SwapChainSupportDetails swapchainSupport = VKUtil::QuerySwapChainSupport(physicalDevice->getPhysicalDevice(), surface->getSurface());
 
@@ -63,7 +63,6 @@ VKSwapchain::VKSwapchain(Window* window)
 
     //Create images and image views
     vkGetSwapchainImagesKHR(device->getDevice(), swapchain, &NumImages, nullptr);
-
     swapchainImages.resize(NumImages);
     vkGetSwapchainImagesKHR(device->getDevice(), swapchain, &NumImages, swapchainImages.data());
 
@@ -71,7 +70,6 @@ VKSwapchain::VKSwapchain(Window* window)
     swapchainExtent = extent;
 
     swapchainImageViews.resize(NumImages);
-
     for (size_t i = 0; i < NumImages; i++)
     {
         VKUtil::CreateImageView(device, swapchainImages[i], swapchainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1, swapchainImageViews[i]);
@@ -80,8 +78,8 @@ VKSwapchain::VKSwapchain(Window* window)
     //Create multisampled image
     VKUtil::CreateImage(physicalDevice->getPhysicalDevice(), device, swapchainExtent.width, swapchainExtent.height, 1, physicalDevice->getSampleCount(), swapchainImageFormat,
         VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-        colorImage, colorImageMemory);
-    VKUtil::CreateImageView(device, colorImage, swapchainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1, colorImageView);
+        colourImage, colourImageMemory);
+    VKUtil::CreateImageView(device, colourImage, swapchainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1, colourImageView);
 
     //Create depth buffer
     VkFormat depthFormat = VKUtil::FindSupportedFormat(
@@ -97,23 +95,7 @@ VKSwapchain::VKSwapchain(Window* window)
 
     VKUtil::TransitionImageLayout(device, depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
 
-    //Create framebuffers and renderpass
-    renderpass = new VKRenderpass(physicalDevice, device->getDevice(), swapchainImageFormat);
-
-    swapchainFramebuffers.resize(swapchainImageViews.size());
-    for (size_t i = 0; i < swapchainImageViews.size(); i++)
-    {
-        swapchainFramebuffers[i] = new VKFramebuffer(renderpass, device->getDevice(), swapchainExtent, colorImageView, depthImageView, swapchainImageViews[i]);
-    }
-
-    //Create command pool
-    commandPool = new VKCommandPool(physicalDevice->getPhysicalDevice(), device->getDevice(), surface);
-
-    for (size_t i = 0; i < NumImages; i++)
-    {
-        commandPool->AddCommandBuffer();
-    }
-
+    //Create synchronisation primitives
     imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
     renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
     inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
@@ -125,29 +107,13 @@ VKSwapchain::VKSwapchain(Window* window)
         renderFinishedSemaphores[i] = new VKSemaphore(device->getDevice());
         inFlightFences[i] = new VKFence(device->getDevice());
     }
-
-    vkAcquireNextImageKHR(device->getDevice(), swapchain, UINT64_MAX, imageAvailableSemaphores[currentFrame]->getSemaphore(), VK_NULL_HANDLE, &aquiredImageIndex);
-
-    if (imagesInFlight[aquiredImageIndex] != VK_NULL_HANDLE)
-    {
-        vkWaitForFences(device->getDevice(), 1, &imagesInFlight[aquiredImageIndex], VK_TRUE, UINT64_MAX);
-    }
-
-    imagesInFlight[aquiredImageIndex] = inFlightFences[currentFrame]->getFence();
 }
 
 VKSwapchain::~VKSwapchain()
 {
-    VKDevice* dev = reinterpret_cast<VKDevice*>(device);
+    VkDevice dev = device->getDevice();
 
-    vkDeviceWaitIdle(dev->getDevice());
-
-    for (auto framebuffer : swapchainFramebuffers)
-    {
-        delete framebuffer;
-    }
-
-    delete renderpass;
+    vkDeviceWaitIdle(dev);
 
     for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
     {
@@ -156,26 +122,24 @@ VKSwapchain::~VKSwapchain()
         delete inFlightFences[i];
     }
 
-    delete commandPool;
+    vkDestroyImageView(dev, depthImageView, nullptr);
+    vkDestroyImage(dev, depthImage, nullptr);
+    vkFreeMemory(dev, depthImageMemory, nullptr);
 
-    vkDestroyImageView(dev->getDevice(), depthImageView, nullptr);
-    vkDestroyImage(dev->getDevice(), depthImage, nullptr);
-    vkFreeMemory(dev->getDevice(), depthImageMemory, nullptr);
-
-    vkDestroyImageView(dev->getDevice(), colorImageView, nullptr);
-    vkDestroyImage(dev->getDevice(), colorImage, nullptr);
-    vkFreeMemory(dev->getDevice(), colorImageMemory, nullptr);
+    vkDestroyImageView(dev, colourImageView, nullptr);
+    vkDestroyImage(dev, colourImage, nullptr);
+    vkFreeMemory(dev, colourImageMemory, nullptr);
 
     for (auto imageView : swapchainImageViews)
     {
-        vkDestroyImageView(dev->getDevice(), imageView, nullptr);
+        vkDestroyImageView(dev, imageView, nullptr);
     }
 
-    vkDestroySwapchainKHR(dev->getDevice(), swapchain, nullptr);
+    vkDestroySwapchainKHR(dev, swapchain, nullptr);
 }
 
 //TODO: for VKRenderer
-/*void VKSwapchain::PrepareRendering()
+bool VKSwapchain::GetNextImageIndex()
 {
     //get the next available image to render to
     vkWaitForFences(device->getDevice(), 1, &(inFlightFences[currentFrame]->getFence()), VK_TRUE, UINT64_MAX);
@@ -185,6 +149,7 @@ VKSwapchain::~VKSwapchain()
     if (res == VK_ERROR_OUT_OF_DATE_KHR || res == VK_SUBOPTIMAL_KHR)
     {
         SetWindowSize(window->getWidth(), window->getHeight());
+        return false;
     }
 
     if (imagesInFlight[aquiredImageIndex] != VK_NULL_HANDLE)
@@ -194,17 +159,10 @@ VKSwapchain::~VKSwapchain()
 
     imagesInFlight[aquiredImageIndex] = inFlightFences[currentFrame]->getFence();
 
-    commandPool->getCommandBuffer(aquiredImageIndex)->BindBuffer();
-    renderpass->BeginRenderpass(commandPool->getCommandBuffer(aquiredImageIndex), swapchainFramebuffers[aquiredImageIndex], swapchainExtent, clearColor);
+    return true;
 }
 
-void VKSwapchain::EndRendering()
-{
-    renderpass->EndRenderpass(commandPool->getCommandBuffer(aquiredImageIndex));
-    commandPool->getCommandBuffer(aquiredImageIndex)->UnbindBuffer();
-}*/
-
-void VKSwapchain::SwapBuffers()
+void VKSwapchain::SwapBuffers(CommandBuffer* buffer)
 {
     //Submit the graphics queue for rendering
     VkSubmitInfo submitInfo = {};
@@ -216,7 +174,7 @@ void VKSwapchain::SwapBuffers()
     submitInfo.pWaitSemaphores = waitSemaphores;
     submitInfo.pWaitDstStageMask = waitStages;
     submitInfo.commandBufferCount = 1;
-    submitInfo.pCommandBuffers = &commandPool->getCommandBuffer(aquiredImageIndex)->getCommandBuffer();
+    submitInfo.pCommandBuffers = &((VKCommandBuffer*)buffer)->getCommandBuffer();
 
     VkSemaphore signalSemaphores[] = { renderFinishedSemaphores[currentFrame]->getSemaphore() };
     submitInfo.signalSemaphoreCount = 1;
@@ -259,32 +217,20 @@ void VKSwapchain::ClearScreen()
     commandPool->getCommandBuffer(aquiredImageIndex)->UnbindBuffer();*/
 }
 
-void VKSwapchain::SetVSync(bool vSync) const
-{
-    
-}
-
 void VKSwapchain::SetWindowSize(uint32_t width, uint32_t height)
 {
-    vkDeviceWaitIdle(device->getDevice());
+    VkDevice dev = device->getDevice();
+
+    vkDeviceWaitIdle(dev);
 
     //We destroy some objects that should be destroyed
-    vkDestroyImageView(device->getDevice(), depthImageView, nullptr);
-    vkDestroyImage(device->getDevice(), depthImage, nullptr);
-    vkFreeMemory(device->getDevice(), depthImageMemory, nullptr);
+    vkDestroyImageView(dev, depthImageView, nullptr);
+    vkDestroyImage(dev, depthImage, nullptr);
+    vkFreeMemory(dev, depthImageMemory, nullptr);
 
-    vkDestroyImageView(device->getDevice(), colorImageView, nullptr);
-    vkDestroyImage(device->getDevice(), colorImage, nullptr);
-    vkFreeMemory(device->getDevice(), colorImageMemory, nullptr);
-
-    for (auto framebuffer : swapchainFramebuffers)
-    {
-        delete framebuffer;
-    }
-
-    commandPool->DeleteCommandBuffers();
-
-    delete renderpass;
+    vkDestroyImageView(dev, colourImageView, nullptr);
+    vkDestroyImage(dev, colourImage, nullptr);
+    vkFreeMemory(dev, colourImageMemory, nullptr);
 
     for (size_t i = 0; i < NumImages; i++)
     {
@@ -363,8 +309,8 @@ void VKSwapchain::SetWindowSize(uint32_t width, uint32_t height)
     //Create multisampled image
     VKUtil::CreateImage(physicalDevice->getPhysicalDevice(), device, swapchainExtent.width, swapchainExtent.height, 1, physicalDevice->getSampleCount(), swapchainImageFormat,
         VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT | VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
-        colorImage, colorImageMemory);
-    VKUtil::CreateImageView(device, colorImage, swapchainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1, colorImageView);
+        colourImage, colourImageMemory);
+    VKUtil::CreateImageView(device, colourImage, swapchainImageFormat, VK_IMAGE_ASPECT_COLOR_BIT, 1, colourImageView);
 
     //Create depth buffer
     VkFormat depthFormat = VKUtil::FindSupportedFormat(
@@ -379,19 +325,4 @@ void VKSwapchain::SetWindowSize(uint32_t width, uint32_t height)
     VKUtil::CreateImageView(device, depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, 1, depthImageView);
 
     VKUtil::TransitionImageLayout(device, depthImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL, 1);
-
-    //Recreate renderpass
-    renderpass = new VKRenderpass(physicalDevice, device->getDevice(), swapchainImageFormat);
-
-    swapchainFramebuffers.resize(swapchainImageViews.size());
-    for (size_t i = 0; i < swapchainImageViews.size(); i++)
-    {
-        swapchainFramebuffers[i] = new VKFramebuffer(renderpass, device->getDevice(), swapchainExtent, colorImageView, depthImageView, swapchainImageViews[i]);
-    }
-
-    //Reattach command buffers
-    for (size_t i = 0; i < NumImages; i++)
-    {
-        commandPool->AddCommandBuffer();
-    }
 }

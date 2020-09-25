@@ -3,7 +3,7 @@
 
 #include "engine/prehistoric/core/util/Includes.hpp"
 
-#include "engine/prehistoric/common/model/Texture.h"
+#include "engine/prehistoric/common/texture/Texture.h"
 #include "engine/prehistoric/common/buffer/VertexBuffer.h"
 #include "engine/prehistoric/common/rendering/shaders/Shader.h"
 

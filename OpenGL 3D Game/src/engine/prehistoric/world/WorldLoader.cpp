@@ -57,7 +57,8 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 						buff->setFrontFace(FrontFace::DOUBLE_SIDED);
 					}
 
-					models.insert(std::make_pair(tokens[2], ID));
+					//We don't want to save .obj as the key
+					models.insert(std::make_pair(tokens[1], ID));
 				}
 			}
 			if (nameTokens[0] == "textures")
@@ -169,7 +170,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 						GameObject* objToAdd = root;
 						while (true)
 						{
-							objToAdd = reinterpret_cast<GameObject*>(objToAdd->getChildren()[nameTokens[i]]);
+							objToAdd = reinterpret_cast<GameObject*>(objToAdd->getChild(nameTokens[i]));
 							i++;
 
 							if(nameTokens.size() < (size_t(i) + 1))
@@ -218,7 +219,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 				if (nameTokens[2] == "component")
 				{
-					if (tokens[1] == "RendererComponent")
+					if (tokens[1] == "Renderer")
 					{
  						std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
 
@@ -235,8 +236,8 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 						}
 						else
 						{
-							Shader* shader = nullptr;
-							shaders.insert(std::make_pair(compTokens[1], manager->getAssetManager()->getResource<Shader>(compTokens[1])));
+							shaderID = manager->getAssetManager()->getResource<Shader>(compTokens[1]);
+							shaders.insert(std::make_pair(compTokens[1], shaderID));
 						}
 
 						auto pipelineIndex = pipelines.find(compTokens[0] + "," + compTokens[1]);
@@ -261,7 +262,8 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 								reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);;
 							}
 
-							pipelines.insert(std::make_pair(compTokens[0] + "," + compTokens[1], manager->loadResource<Pipeline>(pipeline)));
+							pipelineID = manager->loadResource<Pipeline>(pipeline);
+							pipelines.insert(std::make_pair(compTokens[0] + "," + compTokens[1], pipelineID));
 						}
 
 						RendererComponent* renderer = new RendererComponent(pipelineID, materialID, window, manager);
@@ -302,7 +304,7 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 
 						if (nameTokens[i] == "component")
 						{
-							if (tokens[1] == "RendererComponent")
+							if (tokens[1] == "Renderer")
 							{
 								std::vector<std::string> compTokens = Util::Split(tokens[2], ',');
 
@@ -319,8 +321,8 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 								}
 								else
 								{
-									Shader* shader = nullptr;
-									shaders.insert(std::make_pair(compTokens[1], manager->getAssetManager()->getResource<Shader>(compTokens[1])));
+									shaderID = manager->getAssetManager()->getResource<Shader>(compTokens[1]);
+									shaders.insert(std::make_pair(compTokens[1], shaderID));
 								}
 
 								auto pipelineIndex = pipelines.find(compTokens[0] + "," + compTokens[1]);
@@ -345,7 +347,8 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 										reinterpret_cast<VKGraphicsPipeline*>(pipeline)->SetBackfaceCulling(false);;
 									}
 
-									pipelines.insert(std::make_pair(compTokens[0] + "," + compTokens[1], manager->loadResource<Pipeline>(pipeline)));
+									pipelineID = manager->loadResource<Pipeline>(pipeline);
+									pipelines.insert(std::make_pair(compTokens[0] + "," + compTokens[1], pipelineID));
 								}
 
 								RendererComponent* renderer = new RendererComponent(pipelineID, materialID, window, manager);

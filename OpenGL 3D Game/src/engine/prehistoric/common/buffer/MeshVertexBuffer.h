@@ -8,7 +8,7 @@
 class MeshVertexBuffer : public VertexBuffer
 {
 public:
-	MeshVertexBuffer(const Mesh& mesh) : mesh(mesh){}
+	MeshVertexBuffer(const Mesh& mesh) : mesh(mesh) {}
 	
 	virtual ~MeshVertexBuffer() override = 0;
 

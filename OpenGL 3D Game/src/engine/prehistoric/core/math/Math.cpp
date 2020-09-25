@@ -70,11 +70,14 @@ Vector3f Vector3f::lerp(const Vector3f& b, const Vector3f& t) const
 
 Vector3f Vector3f::rotate(const Vector3f& angles) const
 {
-	Vector3f rotX = this->rotate(Vector3f(1, 0, 0), angles.x);
+	/*Vector3f rotX = this->rotate(Vector3f(1, 0, 0), angles.x);
 	Vector3f rotY = this->rotate(Vector3f(0, 1, 0), angles.y);
 	Vector3f rotZ = this->rotate(Vector3f(0, 0, 1), angles.z);
 
-	return rotX + rotY + rotZ - *this * 2;
+	return rotX + rotY + rotZ - *this * 2;*/
+
+	Matrix4f rot = Matrix4f::Rotation(angles);
+	return (rot * Vector4f(*this, 0)).xyz();
 }
 
 Vector3f Vector3f::rotate(const Vector3f& axis, const float& angle) const

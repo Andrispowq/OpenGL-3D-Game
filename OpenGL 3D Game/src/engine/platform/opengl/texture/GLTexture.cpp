@@ -2,25 +2,30 @@
 #include "GLTexture.h"
 #include "engine/prehistoric/core/util/loader/TextureLoader.h"
 
-GLTexture::GLTexture(GLuint id, GLenum type, uint32_t width, uint32_t height)
-	: id(id), type(type)
+static GLenum getTexType(ImageType type)
 {
-	this->width = width;
-	this->height = height;
+	switch (type)
+	{
+	case TEXTURE_2D:
+		return GL_TEXTURE_2D;
+	case TEXTURE_ARRAY_2D:
+		return GL_TEXTURE_2D_ARRAY;
+	case TEXTURE_CUBE_MAP:
+		return GL_TEXTURE_CUBE_MAP;
+	default:
+		return -1;
+	}
 }
 
-GLTexture::GLTexture(GLuint id, ImageType type, uint32_t width, uint32_t height)
-	: id(id), type(getImageType(type))
+GLTexture::GLTexture(uint32_t width, uint32_t height, ImageFormat format, ImageType type)
+	: Texture(width, height, format, type)
 {
-	this->width = width;
-	this->height = height;
+	glGenTextures(1, &id);
 }
 
-GLTexture::GLTexture(GLuint id)
-	: id(id), type(GL_TEXTURE_2D)
+GLTexture::GLTexture()
 {
-	this->width = 0;
-	this->height = 0;
+	glGenTextures(1, &id);
 }
 
 GLTexture::~GLTexture()
@@ -31,17 +36,17 @@ GLTexture::~GLTexture()
 void GLTexture::Bind(uint32_t slot) const
 {
 	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(type, id);
+	glBindTexture(getTexType(type), id);
 }
 
 void GLTexture::Unbind() const
 {
-	glBindTexture(type, 0);
+	glBindTexture(getTexType(type), 0);
 }
 
-void GLTexture::UploadTextureData(size_t size, uint8_t channels, unsigned char* data, ImageFormat format)
+void GLTexture::UploadTextureData(unsigned char* data, ImageFormat format)
 {
-	if (channels == 3)
+	if (format == R8G8B8_SRGB || format == R8G8B8_LINEAR)
 	{
 		if ((((int32_t)width) & 3) != 0)
 		{
@@ -50,44 +55,41 @@ void GLTexture::UploadTextureData(size_t size, uint8_t channels, unsigned char* 
 
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, (void*)data);
 	}
-	else if (channels == 4)
+	else
 	{
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (void*)data);
 	}
 }
 
-void GLTexture::Generate()
-{
-	glGenTextures(1, &id);
-}
-
 void GLTexture::SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode)
 {
+	GLenum type_ = getTexType(type);
+
 	switch (filter)
 	{
 	case Nearest:
-		glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(type_, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(type_, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		break;
 	case Bilinear:
-		glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(type_, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(type_, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		break;
 	case Trilinear:
-		glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glGenerateMipmap(type);
-		glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(type_, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glGenerateMipmap(type_);
+		glTexParameteri(type_, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		break;
 	case Anisotropic:
-		glTexParameteri(type, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glGenerateMipmap(type);
-		glTexParameteri(type, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(type_, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glGenerateMipmap(type_);
+		glTexParameteri(type_, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
 		if (GL_EXT_texture_filter_anisotropic)
 		{
 			GLfloat maxAnisotropyLevel;
 			glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropyLevel);
-			glTexParameterf(type, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropyLevel);
+			glTexParameterf(type_, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropyLevel);
 		}
 		else
 		{
@@ -103,28 +105,28 @@ void GLTexture::SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode
 	switch (wrapMode)
 	{
 	case ClampToEdge:
-		glTexParameteri(type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		if (type == GL_TEXTURE_CUBE_MAP)
-			glTexParameteri(type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(type_, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(type_, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		if (type_ == GL_TEXTURE_CUBE_MAP)
+			glTexParameteri(type_, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 		break;
 	case ClampToBorder:
-		glTexParameteri(type, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameteri(type, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-		if (type == GL_TEXTURE_CUBE_MAP)
-			glTexParameteri(type, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
+		glTexParameteri(type_, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri(type_, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		if (type_ == GL_TEXTURE_CUBE_MAP)
+			glTexParameteri(type_, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
 		break;
 	case Repeat:
-		glTexParameteri(type, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(type, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		if (type == GL_TEXTURE_CUBE_MAP)
-			glTexParameteri(type, GL_TEXTURE_WRAP_R, GL_REPEAT);
+		glTexParameteri(type_, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(type_, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		if (type_ == GL_TEXTURE_CUBE_MAP)
+			glTexParameteri(type_, GL_TEXTURE_WRAP_R, GL_REPEAT);
 		break;
 	case MirrorRepeat:
-		glTexParameteri(type, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-		glTexParameteri(type, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-		if (type == GL_TEXTURE_CUBE_MAP)
-			glTexParameteri(type, GL_TEXTURE_WRAP_R, GL_MIRRORED_REPEAT);
+		glTexParameteri(type_, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+		glTexParameteri(type_, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+		if (type_ == GL_TEXTURE_CUBE_MAP)
+			glTexParameteri(type_, GL_TEXTURE_WRAP_R, GL_MIRRORED_REPEAT);
 		break;
 	default:
 		PR_LOG_ERROR("This type of texture wrapping does not exist! Type: %u\n", wrapMode);
@@ -142,11 +144,7 @@ Texture* GLTexture::GenTexture(const std::string& file, SamplerFilter filter, Te
 
 Texture* GLTexture::Storage3D(uint32_t width, uint32_t height, uint32_t level, ImageFormat format, SamplerFilter filter, TextureWrapMode wrapMode)
 {
-	GLTexture* texture = new GLTexture();
-	texture->setWidth(width);
-	texture->setHeight(height);
-	texture->setType(TEXTURE_CUBE_MAP);
-	texture->Generate();
+	Texture* texture = new GLTexture(width, height, format, TEXTURE_CUBE_MAP);
 	texture->Bind();
 	texture->SamplerProperties(filter, wrapMode);
 
@@ -161,11 +159,7 @@ Texture* GLTexture::Storage3D(uint32_t width, uint32_t height, uint32_t level, I
 
 Texture* GLTexture::Storage2D(uint32_t width, uint32_t height, uint32_t levels, ImageFormat format, SamplerFilter filter, TextureWrapMode wrapMode)
 {
-	GLTexture* texture = new GLTexture();
-	texture->setWidth(width);
-	texture->setHeight(height);
-	texture->setType(TEXTURE_2D);
-	texture->Generate();
+	Texture* texture = new GLTexture(width, height, format);
 	texture->Bind();
 	texture->SamplerProperties(filter, wrapMode);
 

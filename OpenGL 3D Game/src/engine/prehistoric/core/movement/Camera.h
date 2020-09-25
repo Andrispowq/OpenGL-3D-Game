@@ -23,8 +23,8 @@ public:
 	void RotateX(const float& angle);
 	void RotateY(const float& angle);
 
-	Vector3f getLeft() const { return forward.cross(up).normalize(); }
-	Vector3f getRight() const { return up.cross(forward).normalize(); }
+	Vector3f getLeft() const { return forward.cross(up).normalise(); }
+	Vector3f getRight() const { return up.cross(forward).normalise(); }
 
 	inline Vector3f getPosition() const { return position; }
 	inline Vector3f getForward() const { return forward; }

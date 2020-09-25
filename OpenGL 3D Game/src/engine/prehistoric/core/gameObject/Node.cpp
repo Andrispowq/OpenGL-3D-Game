@@ -3,53 +3,6 @@
 
 #include "engine/prehistoric/core/Engine.h"
 
-/*Node::Node(const Node& node)
-{    
-    std::string name = "\0";
-    for (auto& child : parent->children)
-    {
-        if (child.second == &node)
-        {
-            name = child.first;
-        }
-    }
-
-    if (name == "\0")
-    {
-        PR_LOG_ERROR("ERROR: The name of node (at %x) couldn't be aquired!\n", &node);
-    }
-
-    node.parent->AddChild(name + "_cpy", this);
-}
-
-Node::Node(Node&& node)
-{
-    std::string name = "\0";
-    for (auto& child : parent->children)
-    {
-        if (child.second == &node)
-        {
-            name = std::move(child.first);
-            parent->children.erase(child.first);
-        }
-    }
-
-    if (name == "\0")
-    {
-        PR_LOG_ERROR("ERROR: The name of node (at %x) couldn't be aquired!\n", &node);
-    }
-
-    node.parent->AddChild(name, this);
-}*/
-
-Node::~Node()
-{
-    for (auto& child : children)
-    {
-        delete child.second;
-    }
-}
-
 void Node::PreUpdate(Engine* engine)
 {
     for (auto& child : children)
@@ -69,12 +22,19 @@ void Node::PreRender(Renderer* renderer)
 Node* Node::AddChild(const std::string& key, Node* child)
 {
     child->parent = this;
-    children.emplace(key, child);
+    children.insert(std::make_pair(key, child));
     return this;
 }
 
-/*Node& Node::operator=(Node node)
+std::unordered_map<std::string, Node*> Node::getChildren() const
 {
-    std::swap(*this, node);
-    return *this;
-}*/
+    std::unordered_map<std::string, Node*> map;
+    map.reserve(children.size());
+
+    for (const auto& elem : children)
+    {
+        map.insert(std::make_pair(elem.first, elem.second.get()));
+    }
+
+    return map;
+}

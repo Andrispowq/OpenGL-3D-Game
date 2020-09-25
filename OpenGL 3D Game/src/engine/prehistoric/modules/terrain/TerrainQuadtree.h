@@ -20,23 +20,22 @@
 class TerrainQuadtree : public Node
 {
 public:
-	TerrainQuadtree(Window* window, AssembledAssetManager* manager, Camera* camera, TerrainMaps* maps);
+	TerrainQuadtree(Window* window, Camera* camera, TerrainMaps* maps, AssembledAssetManager* manager);
 	virtual ~TerrainQuadtree();
 
 	void UpdateQuadtree();
 	std::vector<Vector2f> generatePatch() const;
+
+	TerrainQuadtree(const TerrainQuadtree&) = default;
 public:
 	constexpr static int rootNodes = 8;
 private:
 	Window* window;
 	Camera* camera;
 
-	Factory<TerrainNode>* factory;
-
 	TerrainMaps* maps;
 
-	RendererComponent* renderer;
-	RendererComponent* wireframeRendererComponent;
+	Factory<TerrainNode> factory;
 };
 
 #endif

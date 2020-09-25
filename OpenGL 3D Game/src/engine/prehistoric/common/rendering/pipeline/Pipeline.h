@@ -17,7 +17,7 @@ public:
 
 	virtual ~Pipeline();
 
-	virtual void BindPipeline() const = 0;
+	virtual void BindPipeline(CommandBuffer* buffer) const = 0;
 	virtual void RenderPipeline() const = 0;
 	virtual void UnbindPipeline() const = 0;
 

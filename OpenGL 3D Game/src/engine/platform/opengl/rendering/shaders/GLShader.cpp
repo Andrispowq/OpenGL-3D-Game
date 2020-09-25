@@ -114,7 +114,7 @@ GLShader::~GLShader()
 	glDeleteProgram(program);
 }
 
-void GLShader::Bind(void* commandBuffer) const
+void GLShader::Bind(CommandBuffer* commandBuffer) const
 {
 	glUseProgram(program);
 }

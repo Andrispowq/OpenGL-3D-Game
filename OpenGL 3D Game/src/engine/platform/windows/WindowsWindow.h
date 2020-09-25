@@ -20,7 +20,7 @@ public:
 	virtual bool Create() override;
 	virtual bool ShouldClose() const override;
 	virtual void Input() override;
-	virtual void Render() const override;
+	virtual void Render(CommandBuffer* buffer) const override;
 
 	virtual void SetFullscreen(bool fullscreen) override;
 

@@ -19,6 +19,8 @@ public:
 
 	virtual void Render() = 0;
 
+	virtual CommandBuffer* getDrawCommandBuffer() const { return nullptr; }
+
 	void AddModel(RenderableComponent* renderable);
 	void AddLight(Light* light);
 

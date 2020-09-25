@@ -13,7 +13,7 @@
 class TerrainMaps
 {
 public:
-	TerrainMaps(Window* window, AssetManager* manager);
+	TerrainMaps(Window* window, AssembledAssetManager* manager);
 	virtual ~TerrainMaps();
 
 	Texture* getHeightmap() const { return heightmap; }
@@ -23,6 +23,9 @@ public:
 	float* getHeights() const { return heights; }
 private:
 	Window* window;
+	AssembledAssetManager* manager;
+
+	size_t heightmapID;
 
 	Texture* heightmap;
 	Texture* normalmap;

@@ -22,6 +22,8 @@ public:
 	inline std::vector<VkDescriptorSet>& getSets() { return sets; }
 
 	inline std::vector<VKDescriptorSetBinding*>& getBindings() { return bindings; }
+
+	VKDescriptorSet(const VKDescriptorSet&) = default;
 private:
  	VKDevice* device;
 	VKSwapchain* swapchain;

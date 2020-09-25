@@ -2,10 +2,17 @@
 
 layout (location = 0) out vec4 outColour;
 
+const int max_lights = 10;
+const float PI = 3.141592653589793;
+const float emissionFactor = 3.0;
+
+//in mat3 tbn;
 in vec3 position_FS;
 in vec2 texture_FS;
 in vec3 normal_FS;
 in vec3 tangent_FS;
+in vec3 light_position[max_lights];
+in vec3 camera_position;
 
 struct Material
 {
@@ -33,14 +40,9 @@ struct Light
 	vec3 intensity;
 };
 
-const int max_lights = 10;
-const float PI = 3.141592653589793;
-const float emissionFactor = 3.0;
-
 uniform Light lights[max_lights];
 uniform Material material;
 
-uniform vec3 cameraPosition;
 uniform float gamma;
 uniform float exposure;
 uniform int highDetailRange;
@@ -52,7 +54,7 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness);
 vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness);
 vec3 fresnelSchlick(float cosTheta, vec3 F0);
 
-vec3 getColor(sampler2D map, vec3 alternateValue, vec2 texCoords)
+vec3 getColour(sampler2D map, vec3 alternateValue, vec2 texCoords)
 {
 	if(alternateValue.r == -1)
 		return texture(map, texCoords).rgb;
@@ -60,7 +62,7 @@ vec3 getColor(sampler2D map, vec3 alternateValue, vec2 texCoords)
 		return alternateValue;
 }
 
-vec3 getColor(sampler2D map, float alternateValue, vec2 texCoords)
+vec3 getColour(sampler2D map, float alternateValue, vec2 texCoords)
 {
 	if(alternateValue == -1)
 		return texture(map, texCoords).rgb;
@@ -70,49 +72,43 @@ vec3 getColor(sampler2D map, float alternateValue, vec2 texCoords)
 
 void main()
 {
-	vec3 albedoColour = pow(getColor(material.albedoMap, material.colour, texture_FS), vec3(gamma));
+	vec3 albedoColour = pow(getColour(material.albedoMap, material.colour, texture_FS), vec3(gamma));
 	
-	float metallic = getColor(material.metallicMap, material.metallic, texture_FS).r;
-	float roughness = getColor(material.roughnessMap, material.roughness, texture_FS).r;
-	float occlusion = getColor(material.occlusionMap, material.ambientOcclusion, texture_FS).r;
+	float metallic = getColour(material.metallicMap, material.metallic, texture_FS).r;
+	float roughness = getColour(material.roughnessMap, material.roughness, texture_FS).r;
+	float occlusion = getColour(material.occlusionMap, material.ambientOcclusion, texture_FS).r;
 	
-	vec3 emission = getColor(material.emissionMap, material.emission, texture_FS);
-	
-	float dist = length(cameraPosition - position_FS);
-	
-	vec3 normal = normalize(normal_FS);
-	vec3 bumpNormal = vec3(0);
-	
+	vec3 emission = getColour(material.emissionMap, material.emission, texture_FS);
+
+	float dist = length(camera_position - position_FS);
+	vec3 normal = normalize(normal_FS);	
 	if(dist < highDetailRange && material.usesNormalMap == 1)
 	{
-		float attenuation = clamp(-dist / highDetailRange + 1, 0, 1);
+		float attenuation = clamp(-dist / highDetailRange + 1.0, 0.0, 1.0);
 		
-		vec3 bitangent = normalize(cross(tangent_FS, normal));
-		mat3 tbn = mat3(tangent_FS, normal, bitangent);
-		
-		bumpNormal = 2 * texture(material.normalMap, texture_FS).rbg - 1;
-		bumpNormal = normalize(bumpNormal);
-		bumpNormal.xz *= attenuation;
-		
-		normal = normalize(tbn * bumpNormal);
+		normal = 2.0 * texture(material.normalMap, texture_FS).rbg - 1.0;
+		normal = normalize(normal);
+		normal.xz *= attenuation;
+
+		//normal = tbn * normal;
 	}
 	
 	vec3 N = normalize(normal);
-	vec3 V = normalize(cameraPosition - position_FS);
+	vec3 V = normalize(camera_position - position_FS);
 	vec3 R = reflect(-V, N);
 	
 	vec3 F0 = vec3(0.04); 
     F0 = mix(F0, albedoColour, metallic);
-	
+	 
     vec3 Lo = vec3(0);
 	
     // reflectance equation
 	for(int i = 0; i < numberOfLights; ++i)
     {
         // calculate per-light radiance
-        vec3 L = normalize(lights[i].position - position_FS);
+        vec3 L = normalize(light_position[i] - position_FS);
         vec3 H = normalize(V + L);
-        float dist = length(lights[i].position - position_FS);
+        float dist = length(light_position[i] - position_FS);
 		float attenuation = 1 / pow(dist, 2);
         vec3 radiance = lights[i].colour * lights[i].intensity * attenuation; 
         

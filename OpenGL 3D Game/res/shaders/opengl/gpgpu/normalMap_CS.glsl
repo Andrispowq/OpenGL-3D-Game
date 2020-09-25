@@ -17,7 +17,7 @@ void main()
 	// z5 -- z6 -- z7
 	
 	ivec2 x = ivec2(gl_GlobalInvocationID.xy);
-	vec2 texCoord = gl_GlobalInvocationID.xy/float(N);
+	vec2 texCoord = gl_GlobalInvocationID.xy / float(N);
 	
 	float texelSize = 1.0 / N;
 	

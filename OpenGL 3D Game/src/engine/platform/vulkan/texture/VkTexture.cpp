@@ -1,15 +1,15 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "VkTexture.h"
 
-VKTexture::VKTexture(VKPhysicalDevice* physicalDevice, VKDevice* device, uint32_t width, uint32_t height)
+VKTexture::VKTexture(VKPhysicalDevice* physicalDevice, VKDevice* device, uint32_t width, uint32_t height, ImageFormat format, ImageType type)
+	: physicalDevice(physicalDevice), device(device), Texture(width, height, format, type)
 {
-	this->physicalDevice = physicalDevice;
-	this->device = device;
+	this->mipLevels = (uint32_t)(std::floor(std::log2(std::max(width, height)))) + 1;
+}
 
-	this->width = width;
-	this->height = height;
-
-	this->mipLevels = (uint32_t) (std::floor(std::log2(std::max(width, height)))) + 1;
+VKTexture::VKTexture(VKPhysicalDevice* physicalDevice, VKDevice* device)
+	: physicalDevice(physicalDevice), device(device), mipLevels(1)
+{
 }
 
 VKTexture::~VKTexture()
@@ -21,9 +21,13 @@ VKTexture::~VKTexture()
 	vkFreeMemory(device->getDevice(), textureImageMemory, nullptr);
 }
 
-void VKTexture::UploadTextureData(size_t size, uint8_t channels, unsigned char* pixels, ImageFormat format)
+void VKTexture::UploadTextureData(unsigned char* pixels, ImageFormat format)
 {
- 	VKUtil::CreateBuffer(physicalDevice->getPhysicalDevice(), device->getDevice(), size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT, 
+	uint8_t channels = (format == R8G8B8_LINEAR || format == R8G8B8_SRGB) ? 3 : 4;
+	size_t size = width * height * channels;
+
+	//TODO: hardcoded 4 should be removed
+ 	VKUtil::CreateBuffer(physicalDevice->getPhysicalDevice(), device->getDevice(), size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, stagingBuffer, stagingBufferMemory);
 
 	this->format = format;
@@ -32,14 +36,6 @@ void VKTexture::UploadTextureData(size_t size, uint8_t channels, unsigned char* 
 	vkMapMemory(device->getDevice(), stagingBufferMemory, 0, size, 0, &data);
 	memcpy(data, pixels, size);
 	vkUnmapMemory(device->getDevice(), stagingBufferMemory);
-}
-
-void VKTexture::Bind(uint32_t slot) const
-{
-}
-
-void VKTexture::Unbind() const
-{
 }
 
 void VKTexture::Generate()

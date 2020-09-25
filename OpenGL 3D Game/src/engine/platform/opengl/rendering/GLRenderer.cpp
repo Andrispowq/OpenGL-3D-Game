@@ -9,7 +9,7 @@ void GLRenderer::PrepareRendering()
 
 void GLRenderer::EndRendering()
 {
-	window->Render();
+	window->Render(nullptr);
 
 	//Clear the lists for the next iteration
 	models_3d.clear();
@@ -24,7 +24,7 @@ void GLRenderer::Render()
 	{
 		Pipeline* pl = pipeline.first;
 
-		pl->BindPipeline();
+		pl->BindPipeline(nullptr);
 		pl->getShader()->UpdateShaderUniforms(camera, lights);
 		pl->getShader()->UpdateSharedUniforms(pipeline.second[0]->getParent()); //Safe -> there is at least 1 element in the array
 
@@ -41,7 +41,7 @@ void GLRenderer::Render()
 	{
 		Pipeline* pl = pipeline.first;
 
-		pl->BindPipeline();
+		pl->BindPipeline(nullptr);
 		pl->getShader()->UpdateShaderUniforms(camera, lights);
 		pl->getShader()->UpdateSharedUniforms(pipeline.second[0]->getParent()); //Safe -> there is at least 1 element in the array
 
@@ -58,7 +58,7 @@ void GLRenderer::Render()
 	{
 		Pipeline* pl = pipeline.first;
 
-		pl->BindPipeline();
+		pl->BindPipeline(nullptr);
 
 		for (auto renderer : pipeline.second)
 		{

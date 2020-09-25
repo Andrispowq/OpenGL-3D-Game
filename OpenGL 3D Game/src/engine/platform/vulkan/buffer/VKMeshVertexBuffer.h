@@ -17,11 +17,11 @@ class VKMeshVertexBuffer : public MeshVertexBuffer
 {
 public:
 	VKMeshVertexBuffer(const Mesh& mesh, Window* window);
-	virtual ~VKMeshVertexBuffer();
+	virtual ~VKMeshVertexBuffer() {}
 
 	void Bind(CommandBuffer* commandBuffer) const override;
 	void Draw(CommandBuffer* commandBuffer) const override;
-	void Unbind() const override;
+	void Unbind() const override {}
 
 	VkVertexInputBindingDescription getBindingDescription() const;
 	std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions() const;

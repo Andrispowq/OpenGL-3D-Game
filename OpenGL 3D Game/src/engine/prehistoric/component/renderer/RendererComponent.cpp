@@ -35,7 +35,7 @@ void RendererComponent::Render(Renderer* renderer) const
 {
 	Pipeline* pipeline = getPipeline();
 	
-	pipeline->BindPipeline();
+	pipeline->BindPipeline(renderer->getDrawCommandBuffer());
 	pipeline->getShader()->UpdateShaderUniforms(renderer->getCamera(), renderer->getLights());
 	pipeline->getShader()->UpdateSharedUniforms(parent);
 	pipeline->getShader()->UpdateObjectUniforms(parent);

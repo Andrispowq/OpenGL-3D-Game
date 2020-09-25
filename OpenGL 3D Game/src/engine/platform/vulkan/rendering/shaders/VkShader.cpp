@@ -180,10 +180,10 @@ bool VKShader::AddShader(const std::vector<char>& code, ShaderType type)
 	return true;
 }
 
-void VKShader::BindSet(void* commandBuffer, uint32_t set, uint32_t instance_index) const
+void VKShader::BindSet(CommandBuffer* commandBuffer, uint32_t set, uint32_t instance_index) const
 {
-	if (set >= descriptorPool->getNumberOfSets() || instance_index >= instance_counter)
-		PR_LOG_RUNTIME_ERROR("Tried to bind set %i, with instance index %i, but only 0 to %i sets and instance indices 0 to %i are valid!\n", set, instance_index, descriptorPool->getNumberOfSets(), instance_counter - 1);
+	//if (set >= descriptorPool->getNumberOfSets() || instance_index >= instance_counter)
+	//	PR_LOG_RUNTIME_ERROR("Tried to bind set %i, with instance index %i, but only 0 to %i sets and instance indices 0 to %i are valid!\n", set, instance_index, descriptorPool->getNumberOfSets(), instance_counter - 1);
 
 	VKCommandBuffer* vkcmdbuff = reinterpret_cast<VKCommandBuffer*>(commandBuffer);
 	

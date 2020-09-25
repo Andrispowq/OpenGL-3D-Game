@@ -8,13 +8,15 @@
 class Terrain : public Node
 {
 public:
-	Terrain(Window* window, AssembledAssetManager* manager, Camera* camera);
+	Terrain(Window* window, Camera* camera, AssembledAssetManager* manager);
 	virtual ~Terrain() {}
 
 	void PreRender(Renderer* renderer) override;
 	void UpdateQuadtree();
 
 	TerrainMaps* getMaps() const { return maps.get(); }
+
+	Terrain(const Terrain&) = default;
 private:
 	Window* window;
 	Camera* camera;

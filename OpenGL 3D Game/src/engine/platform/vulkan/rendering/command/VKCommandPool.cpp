@@ -19,50 +19,41 @@ VKCommandPool::VKCommandPool(VkPhysicalDevice physicalDevice, VkDevice device, V
 
 VKCommandPool::~VKCommandPool()
 {
-	for (auto buffer : buffers)
-	{
-		delete buffer;
-	}
+	buffers.clear();
 
 	vkDestroyCommandPool(device, commandPool, nullptr);
 }
 
 void VKCommandPool::AddCommandBuffer(VKCommandBuffer& buffer)
 {
-	buffers.push_back(&buffer);
+	buffers.emplace_back(&buffer);
 }
 
 void VKCommandPool::AddCommandBuffer()
 {
-	VKCommandBuffer* buffer = new VKCommandBuffer(this, device);
-
-	buffers.push_back(buffer);
+	buffers.push_back(std::make_unique<VKCommandBuffer>(this, device));
 }
 
 void VKCommandPool::DeleteCommandBuffer(int index)
 {
-	VKCommandBuffer* buffer = buffers[index];
-
 	//We erase the element first because accessing deleted memory is not too nice
-	auto bufferIndex = std::find(buffers.begin(), buffers.end(), buffer);
+	auto bufferIndex = std::find(buffers.begin(), buffers.end(), buffers[index]);
 	buffers.erase(bufferIndex);
-
-	buffer->DeleteBuffer();
-	delete buffer;
 }
 
 void VKCommandPool::DeleteCommandBuffers()
 {
-	VkCommandBuffer* buffs = new VkCommandBuffer[buffers.size()];
+	std::vector<VkCommandBuffer> buffs(buffers.size());
 
 	for (size_t i = 0; i < buffers.size(); i++)
 	{
 		buffs[i] = buffers[i]->getCommandBuffer();
+		buffers[i].release(); //The reason for this is that we explicitly delete every command buffer, and not releasing the pointers to the VKCommandBuffers
+		//would invoke their destructors, so we would delete them twice
 	}
 
-	vkFreeCommandBuffers(device, commandPool, (uint32_t) buffers.size(), buffs);
+	vkFreeCommandBuffers(device, commandPool, (uint32_t) buffers.size(), buffs.data());
 	buffers.clear();
-	delete[] buffs;
 }
 
 void VKCommandPool::BindCommandBuffer(int index) const
@@ -72,7 +63,7 @@ void VKCommandPool::BindCommandBuffer(int index) const
 
 void VKCommandPool::BindCommandPool() const
 {
-	for (auto buffer : buffers)
+	for (auto& buffer : buffers)
 	{
 		buffer->BindBuffer();
 	}
@@ -85,7 +76,7 @@ void VKCommandPool::UnbindCommandBuffer(int index) const
 
 void VKCommandPool::UnbindCommandPool() const
 {
-	for (auto buffer : buffers)
+	for (auto& buffer : buffers)
 	{
 		buffer->UnbindBuffer();
 	}

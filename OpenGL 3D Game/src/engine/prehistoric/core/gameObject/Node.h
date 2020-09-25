@@ -12,10 +12,7 @@ class Node
 {
 public:
     Node() : parent(nullptr) {}
-    //Node(const Node& node);
-    //Node(Node&& node);
-
-    virtual ~Node();
+    virtual ~Node() {}
 
     virtual void PreUpdate(Engine* engine);
     virtual void PreRender(Renderer* renderer);
@@ -24,7 +21,7 @@ public:
 
     inline Transform getWorldTransform() const { return worldTransform; }
 
-    inline std::unordered_map<std::string, Node*> getChildren() const { return children; }
+    inline Node* getChild(const std::string& key) const { return children.at(key).get(); }
 
     inline void Move(const Vector3f& d) { worldTransform.setPosition(worldTransform.getPosition() + d);}
     inline void Rotate(const Vector3f& d) { worldTransform.setRotation(worldTransform.getRotation() + d);}
@@ -34,9 +31,11 @@ public:
     inline void SetRotation(const Vector3f& d) { worldTransform.setRotation(d); }
     inline void SetScale(const Vector3f& d) { worldTransform.setScaling(d); }
 
-    //Node& operator=(Node node);
+    std::unordered_map<std::string, Node*> getChildren() const;
+
+    Node(const Node&) = default;
 protected:
-    std::unordered_map<std::string, Node*> children;
+    std::unordered_map<std::string, std::unique_ptr<Node>> children;
     Node* parent;
 
     Transform worldTransform;

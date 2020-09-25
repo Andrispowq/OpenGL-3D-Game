@@ -26,15 +26,15 @@ public:
 
 	VkCommandPool getCommandPool() const { return commandPool; }
 
-	VKCommandBuffer* getCommandBuffer(int index) const { return buffers[index]; }
-	std::vector<VKCommandBuffer*> getCommandBuffers() const { return buffers; }
+	VKCommandBuffer* getCommandBuffer(int index) const { return buffers[index].get(); }
+	std::vector<std::unique_ptr<VKCommandBuffer>>& getCommandBuffers() { return buffers; }
 private:
 	VkPhysicalDevice physicalDevice;
 	VkDevice device;
 	VKSurface* surface;
 
 	VkCommandPool commandPool;
-	std::vector<VKCommandBuffer*> buffers;
+	std::vector<std::unique_ptr<VKCommandBuffer>> buffers;
 };
 
 #endif

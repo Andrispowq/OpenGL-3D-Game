@@ -25,7 +25,7 @@ public:
 	void* getPhysicalDevice() override { return &physicalDevice; }
 	void* getDevice() override { return &logicalDevice; }
 
-	VKSurface& getSurface() { return surface; }
+	VKSurface* getSurface() { return &surface; }
 private:
 	VKInstance instance;
 

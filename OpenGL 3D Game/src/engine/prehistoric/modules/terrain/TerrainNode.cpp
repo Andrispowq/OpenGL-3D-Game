@@ -4,9 +4,9 @@
 #include "TerrainQuadtree.h"
 #include "engine/prehistoric/resources/AssembledAssetManager.h"
 
-TerrainNode::TerrainNode(Window* window, Camera* camera, AssembledAssetManager* manager, TerrainMaps* maps,
+TerrainNode::TerrainNode(Factory<TerrainNode>* factory, Window* window, Camera* camera, AssembledAssetManager* manager, TerrainMaps* maps,
 	size_t pipelineID, size_t wireframePipelineID, const Vector2f& location, int lod, const Vector2f& index)
-	:  window(window), camera(camera), manager(manager), maps(maps), location(location), lod(lod), index(index)
+	:  factory(factory), window(window), camera(camera), manager(manager), maps(maps), location(location), lod(lod), index(index)
 {
 	this->gap = 1.0f / float(TerrainQuadtree::rootNodes * pow(2, lod));
 
@@ -27,6 +27,17 @@ TerrainNode::TerrainNode(Window* window, Camera* camera, AssembledAssetManager* 
 
 	ComputeWorldPosition();
 	UpdateQuadtree();
+}
+
+TerrainNode::~TerrainNode()
+{
+	//Ensure custom deletion for the children, as they are allocated differently from the rest of the Nodes
+	/*for (auto& child : children)
+	{
+		TerrainNode::operator delete(child.second.release(), *factory);
+	}*/
+
+	children.clear();
 }
 
 void TerrainNode::PreRender(Renderer* renderer)
@@ -57,7 +68,7 @@ void TerrainNode::UpdateQuadtree()
 	{
 		for (auto& child : children)
 		{
-			((TerrainNode*)child.second)->UpdateQuadtree();
+			((TerrainNode*)child.second.get())->UpdateQuadtree();
 		}
 	}
 }
@@ -97,7 +108,7 @@ void TerrainNode::AddChildNodes(int lod)
 				ss << ", lod: ";
 				ss << lod;
 
-				AddChild(ss.str(), new/*(*factory)*/ TerrainNode(window, camera, manager, maps, rendererComponent->getPipelineIndex(), wireframeRendererComponent->getPipelineIndex(),
+				AddChild(ss.str(), new/*(*factory)*/ TerrainNode(factory, window, camera, manager, maps, rendererComponent->getPipelineIndex(), wireframeRendererComponent->getPipelineIndex(),
 					location + Vector2f(float(i), float(j)) * (gap / 2.f), lod, { float(i), float(j) }));
 			}
 		}
@@ -115,8 +126,8 @@ void TerrainNode::RemoveChildNodes()
 	{
 		/*for (auto& child : children)
 		{
-			delete child.second;
-			//TerrainNode::operator delete(child.second, *factory);
+			//delete child.second;
+			TerrainNode::operator delete(child.second, *factory);
 		}*/
 
 		children.clear();

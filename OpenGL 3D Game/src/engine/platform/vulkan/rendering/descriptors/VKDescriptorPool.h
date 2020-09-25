@@ -36,6 +36,8 @@ public:
 
 	inline std::pair<uint32_t, uint32_t> getUniformLocation(const std::string& name) { return uniformLocations.find(name)->second; }
 
+	VKDescriptorPool(const VKDescriptorPool&) = default;
+
 private:
 	VKPhysicalDevice* physicalDevice;
 	VKDevice* device;

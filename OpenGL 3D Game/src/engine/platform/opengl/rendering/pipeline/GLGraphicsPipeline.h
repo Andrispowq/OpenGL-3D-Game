@@ -12,7 +12,7 @@ public:
 	GLGraphicsPipeline(Window* window, AssetManager* manager, size_t shaderID, size_t vboID);
 	virtual ~GLGraphicsPipeline() {}
 
-	virtual void BindPipeline() const override;
+	virtual void BindPipeline(CommandBuffer* buffer) const override;
 	virtual void RenderPipeline() const override;
 	virtual void UnbindPipeline() const override;
 };

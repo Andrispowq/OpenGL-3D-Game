@@ -22,6 +22,8 @@ public:
 
 	//Needs to return a reference
 	VkCommandBuffer& getCommandBuffer() { return commandBuffer; }
+
+	VKCommandBuffer(const VKCommandBuffer&) = default;
 private:
 	VKCommandPool* commandPool;
 	VkDevice device;

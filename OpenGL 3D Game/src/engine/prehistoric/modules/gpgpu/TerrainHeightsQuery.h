@@ -13,10 +13,12 @@
 #include "engine/platform/opengl/rendering/shaders/gpgpu/GLTerrainHeightsShader.h"
 //#include "engine/platform/vulkan/rendering/shaders/gpgpu/VKerrainHeightsShader.h"
 
+class AssembledAssetManager;
+
 class TerrainHeightsQuery
 {
 public:
-	TerrainHeightsQuery(Window* window, AssetManager* manager, uint32_t N);
+	TerrainHeightsQuery(Window* window, AssembledAssetManager* manager, uint32_t N);
 	virtual ~TerrainHeightsQuery();
 
 	void Query(Texture* heightmap);
@@ -24,8 +26,11 @@ public:
 	float* getHeights() { return heights; }
 private:
 	Window* window;
+	AssembledAssetManager* manager;
 
+	size_t pipelineID;
 	Pipeline* pipeline;
+
 	float* heights;
 	ShaderStorageBuffer* buffer;
 

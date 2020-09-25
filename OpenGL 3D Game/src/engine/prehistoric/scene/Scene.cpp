@@ -14,14 +14,21 @@
 
 #include "engine/prehistoric/resources/AssembledAssetManager.h"
 
-//We go around in a circle, from -2000 to 2000 on the y and z axes
+#include <random>
+
+//We go around in a circle, from -range to range on the y and z axes
 static void sun_move_function(GameObject* object, float frameTime)
 {
-	constexpr float anglesPerSecond = 20.0f;
-	Vector3f old = object->getWorldTransform().getPosition();
-	old = old.rotate(Vector3f(anglesPerSecond, 0, 0) * frameTime);
+	constexpr float range = 6000.0f;
+	constexpr float anglesPerSecond = 0.5f;
 
-	object->SetPosition(old);
+	static float angle = 185.0f;
+
+	float x = cos(ToRadians(angle)) * range;
+	float y = sin(ToRadians(angle)) * range;
+	angle -= (anglesPerSecond * frameTime);
+
+	object->SetPosition({ x, y, 0 });
 }
 
 Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, Camera* camera)
@@ -37,10 +44,10 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 		size_t pipelineID = manager->loadResource<Pipeline>(new VKGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID));
 
 		Material* material = new Material(manager->getAssetManager(), window);
-		material->addTexture(ALBEDO_MAP, manager->getAssetManager()->getResource<Texture>("oakFloor_DIF.png"));
-		material->addTexture(NORMAL_MAP, manager->getAssetManager()->getResource<Texture>("oakFloor_NRM.png"));
-		material->addTexture(METALLIC_MAP, manager->getAssetManager()->getResource<Texture>("oakFloor_MET.png"));
-		material->addTexture(ROUGHNESS_MAP, manager->getAssetManager()->getResource<Texture>("oakFloor_RGH.png"));
+		material->addTexture(ALBEDO_MAP, manager->getAssetManager()->getResource<Texture>("res/textures/oakFloor/oakFloor_DIF.png"));
+		material->addTexture(NORMAL_MAP, manager->getAssetManager()->getResource<Texture>("res/textures/oakFloor/oakFloor_NRM.png"));
+		material->addTexture(METALLIC_MAP, manager->getAssetManager()->getResource<Texture>("res/textures/oakFloor/oakFloor_MET.png"));
+		material->addTexture(ROUGHNESS_MAP, manager->getAssetManager()->getResource<Texture>("res/textures/oakFloor/oakFloor_RGH.png"));
 
 		size_t materialID = manager->loadResource<Material>(material);
 
@@ -66,7 +73,7 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 	{
 		root->AddChild("Atmosphere", new Atmosphere(window, manager));		
 
-		Terrain* terrain = new Terrain(window, manager, camera);
+		Terrain* terrain = new Terrain(window, camera, manager);
 		terrain->UpdateQuadtree();
 
 		root->AddChild("Terrain", terrain);
@@ -81,25 +88,10 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 		slider2->SetScale({ 0.125f, 0.05f, 1 });
 		root->AddChild("slider2", slider2);
 
-		/*GameObject* slider3 = new GUISlider(window, manager, 2000.0f, 14000.0f, terrain->getMaps()->getHeightmap(), &AtmosphereConfig::rayleighHeightScale, sizeof(float), true);
-		slider3->SetPosition({ -0.5f, 0.5f, 0 });
-		slider3->SetScale({ 0.125f, 0.05f, 1 });
-		root->AddChild("slider3", slider3);
-
-		GameObject* slider4 = new GUISlider(window, manager, 0.000021f / 2.0f , 0.000021f * 2.0f, terrain->getMaps()->getHeightmap(), &AtmosphereConfig::mie, sizeof(float), true);
-		slider4->SetPosition({ -0.5f, 0.25f, 0 });
-		slider4->SetScale({ 0.125f, 0.05f, 1 });
-		root->AddChild("slider4", slider4);
-
-		GameObject* slider5 = new GUISlider(window, manager, 200.0f, 2200.0f, terrain->getMaps()->getHeightmap(), &AtmosphereConfig::mieHeightScale, sizeof(float), true);
-		slider5->SetPosition({ -0.5f, 0.0f, 0 });
-		slider5->SetScale({ 0.125f, 0.05f, 1 });
-		root->AddChild("slider5", slider5);*/
-
 		GameObject* sun = new GameObject();
 		sun->setUpdateFunction(sun_move_function);
 		sun->AddComponent(LIGHT_COMPONENT, new Light(Vector3f(1, 1, 1), Vector3f(200000000), true));
-		sun->SetPosition({ -2000, 0, 0 });
+		sun->SetPosition({ -6000, 0, 0 });
 		root->AddChild("sun", sun);
 
 		GameObject* light = new GameObject();

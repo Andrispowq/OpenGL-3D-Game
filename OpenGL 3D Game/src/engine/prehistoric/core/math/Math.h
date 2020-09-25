@@ -67,7 +67,7 @@ public:
 
 	inline float length() const { return sqrt(this->dot(*this)); }
 	inline float lengthSquared() const { return this->dot(*this); }
-	inline Vector2f normalize() const { return *this / length(); }
+	inline Vector2f normalise() const { return *this / length(); }
 	inline float dot(const Vector2f& v) const { return x * v.x + y * v.y; }
 
 	inline Vector2f abs() const;
@@ -141,7 +141,7 @@ public:
 
 	inline float length() const { return sqrt(this->dot(*this)); }
 	inline float lengthSquared() const { return this->dot(*this); }
-	inline Vector3f normalize() const { return *this / length(); }
+	inline Vector3f normalise() const { return *this / length(); }
 	inline float dot(const Vector3f& v) const { return x * v.x + y * v.y + z * v.z; }
 
 	inline Vector3f abs() const;
@@ -240,7 +240,7 @@ public:
 
 	inline float length() const { return sqrt(this->dot(*this)); }
 	inline float lengthSquared() const { return this->dot(*this); }
-	inline Vector4f normalize() const { return *this / length(); }
+	inline Vector4f normalise() const { return *this / length(); }
 	inline float dot(const Vector4f& v) const { return x * v.x + y * v.y + z * v.z + w * v.w; }
 
 	inline Vector4f abs() const;
@@ -252,6 +252,8 @@ public:
 	Vector4f negated() { return reg = _mm_sub_ps(_mm_set_ss(0.0), reg); };
 
 	void print() const { PR_LOG_MESSAGE("[ %f, %f, %f, %f ]", (float)x, (float)y, (float)z, (float)w); }
+
+	Vector3f xyz() const { return Vector3f(x, y, z); }
 
 	constexpr static uint64_t size() { return 4 * sizeof(float); }
 public:
@@ -337,7 +339,7 @@ public:
 
 	inline float length() const { return sqrt(this->dot(*this)); }
 	inline float lengthSquared() const { return this->dot(*this); }
-	inline Quaternionf normalize() const { return *this / length(); }
+	inline Quaternionf normalise() const { return *this / length(); }
 	inline float dot(const Quaternionf& v) const { return x * v.x + y * v.y + z * v.z + w * v.w; }
 
 	inline Quaternionf abs() const;
@@ -489,7 +491,7 @@ public:
 
 	inline T length() const { return sqrt(this->dot(*this)); }
 	inline T lengthSquared() const { return this->dot(*this); }
-	inline Vector2<T> normalize() const { return *this / length(); }
+	inline Vector2<T> normalise() const { return *this / length(); }
 	inline T dot(const Vector2<T>& v) const { return x * v.x + y * v.y;	}
 
 	inline Vector2<T> abs() const;
@@ -575,7 +577,7 @@ public:
 
 	inline T length() const { return sqrt(this->dot(*this)); }
 	inline T lengthSquared() const { return this->dot(*this); }
-	inline Vector3<T> normalize() const { return *this / length(); }
+	inline Vector3<T> normalise() const { return *this / length(); }
 	inline T dot(const Vector3<T>& v) const { return x * v.x + y * v.y + z * v.z; }
 
 	inline Vector3<T> abs() const;
@@ -702,7 +704,7 @@ public:
 
 	inline T length() const { return sqrt(this->dot(*this)); }
 	inline T lengthSquared() const { return this->dot(*this); }
-	inline Vector4<T> normalize() const { return *this / length(); }
+	inline Vector4<T> normalise() const { return *this / length(); }
 	inline T dot(const Vector4<T>& v) const { return x * v.x + y * v.y + z * v.z + w * v.w; }
 
 	inline Vector4<T> abs() const;
@@ -807,7 +809,7 @@ public:
 
 	inline T length() const { return sqrt(this->dot(*this)); }
 	inline T lengthSquared() const { return this->dot(*this); }
-	inline Quaternion<T> normalize() const { return *this / length(); }
+	inline Quaternion<T> normalise() const { return *this / length(); }
 	inline T dot(const Quaternion<T>& v) const { return x * v.x + y * v.y + z * v.z + w * v.w; }
 
 	inline Quaternion<T> abs() const;

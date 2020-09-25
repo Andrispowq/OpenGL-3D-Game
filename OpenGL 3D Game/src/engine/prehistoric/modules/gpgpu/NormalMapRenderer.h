@@ -10,18 +10,24 @@
 #include "engine/platform/opengl/rendering/shaders/gpgpu/GLNormalMapShader.h"
 //#include "engine/platform/vulkan/rendering/shaders/gpgpu/VKNormalMapShader.h"
 
+class AssembledAssetManager;
+
 class NormalMapRenderer
 {
 public:
-	NormalMapRenderer(Window* window, AssetManager* manager, float strength, uint32_t N);
+	NormalMapRenderer(Window* window, AssembledAssetManager* manager, float strength, uint32_t N);
 	virtual ~NormalMapRenderer();
 
 	void Render(Texture* heightmap);
 
-	Texture* getNormalmap() { return normalmap; }
+	Texture* getNormalmap() const { return normalmap; }
 private:
 	Window* window;
-	
+	AssembledAssetManager* manager;
+
+	size_t pipelineID;
+	size_t textureID;
+
 	Pipeline* pipeline;
 	Texture* normalmap;
 

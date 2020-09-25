@@ -26,7 +26,7 @@ private:
 	void ListExtensions() const;
 private:
 	VkInstance instance;
-	VKDebugMessenger* messenger;
+	VKDebugMessenger* messenger; //Owned pointer, but optional
 
 	std::vector<const char*> validationLayers;
 };

@@ -29,26 +29,27 @@ VKMeshVertexBuffer::VKMeshVertexBuffer(const Mesh& mesh, Window* window)
 	std::unique_ptr<VKBuffer> stagingBuffer = std::make_unique<VKBuffer>(physicalDevice, device, vBufferSize,
 		VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
-	stagingBuffer->MapMemory(vData.data());
-	stagingBuffer->CopyBuffer(vertexBuffer.get()); //Copies the object which invoked the function to the buffer passed as an argument
+	stagingBuffer->MapMemory();
+	stagingBuffer->Store(vData.data());
+	stagingBuffer->UnmapMemory();
+
+	vertexBuffer->Copy(stagingBuffer.get());
 
 	//Creation of index buffer
 	stagingBuffer = std::make_unique<VKBuffer>(physicalDevice, device, iBufferSize,
 		VK_BUFFER_USAGE_TRANSFER_SRC_BIT, VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT);
 
-	stagingBuffer->MapMemory(iData.data());
-	stagingBuffer->CopyBuffer(indexBuffer.get()); //Copies the object which invoked the function to the buffer passed as an argument
-}
+	stagingBuffer->MapMemory();
+	stagingBuffer->Store(iData.data());
+	stagingBuffer->UnmapMemory();
 
-VKMeshVertexBuffer::~VKMeshVertexBuffer()
-{
+	indexBuffer->Copy(stagingBuffer.get());
 }
 
 void VKMeshVertexBuffer::Bind(CommandBuffer* commandBuffer) const
 {
 	VKCommandBuffer* buffer = (VKCommandBuffer*)commandBuffer;
 
-	//VkBuffer vertexBuffers[] = { vertexBuffer };
 	VkDeviceSize offsets[] = { 0 };
 
 	vkCmdBindVertexBuffers(buffer->getCommandBuffer(), 0, 1, &vertexBuffer->getBuffer(), offsets);
@@ -58,10 +59,6 @@ void VKMeshVertexBuffer::Bind(CommandBuffer* commandBuffer) const
 void VKMeshVertexBuffer::Draw(CommandBuffer* commandBuffer) const
 {
 	vkCmdDrawIndexed(((VKCommandBuffer*) commandBuffer)->getCommandBuffer(), size, 1, 0, 0, 0);
-}
-
-void VKMeshVertexBuffer::Unbind() const
-{
 }
 
 VkVertexInputBindingDescription VKMeshVertexBuffer::getBindingDescription() const

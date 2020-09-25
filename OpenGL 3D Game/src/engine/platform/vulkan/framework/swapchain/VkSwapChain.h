@@ -23,38 +23,39 @@ public:
 	VKSwapchain(Window* window);
 	virtual ~VKSwapchain();
 
-	virtual void SwapBuffers() override;
+	virtual void SwapBuffers(CommandBuffer* buffer) override;
 	virtual void ClearScreen() override;
 
-	virtual void SetVSync(bool vSync) const override;
+	virtual void SetVSync(bool vSync) const override {}
 	virtual void SetWindowSize(uint32_t width, uint32_t height) override;
 
 	virtual uint32_t getAquiredImageIndex() const override { return aquiredImageIndex; }
-	virtual CommandBuffer* getDrawCommandBuffer() const override { return commandPool->getCommandBuffer(aquiredImageIndex); }
+
+	bool GetNextImageIndex(); //If return false, we should recreate the command buffers, and the renderpass along with the framebuffers
 
 	VkSwapchainKHR getSwapchain() const { return swapchain; }
 	std::vector<VkImage> getSwapchainImages() const { return swapchainImages; }
 	std::vector<VkImageView> getSwapchainImageViews() const { return swapchainImageViews; }
 
+	VkImageView getColourImageView() { return colourImageView; }
 	VkImageView& getDepthImageView() { return depthImageView; }
 	VkFormat getSwapchainImageFormat() const { return swapchainImageFormat; }
 	VkExtent2D getSwapchainExtent() const { return swapchainExtent; }
-
-	VKCommandPool& getCommandPool() { return *commandPool; }
-	VKRenderpass& getRenderpass() { return *renderpass; }
+	VKRenderpass* getRenderpass() { return renderpass; }
 
 	void setSurface(VKSurface& surface) { this->surface = &surface; }
+	void setRenderpass(VKRenderpass* renderpass) { this->renderpass = renderpass; }
 private:
 	//External
 	VKPhysicalDevice* physicalDevice;
 	VKDevice* device;
 	VKSurface* surface;
 
-	//Clearing
-	Vector4f clearColor;
+	VKRenderpass* renderpass;
 
 	//Swapchain imageviews and images
 	VkSwapchainKHR swapchain;
+
 	VkFormat swapchainImageFormat;
 	VkExtent2D swapchainExtent;
 
@@ -62,9 +63,9 @@ private:
 	std::vector<VkImageView> swapchainImageViews;
 
 	//For multisampling
-	VkImage colorImage;
-	VkDeviceMemory colorImageMemory;
-	VkImageView colorImageView;
+	VkImage colourImage;
+	VkDeviceMemory colourImageMemory;
+	VkImageView colourImageView;
 	
 	//Depth buffer
 	VkImage depthImage;
@@ -80,11 +81,6 @@ private:
 
 	uint32_t aquiredImageIndex;
 	uint32_t NumImages;
-
-	//Rendering
-	VKCommandPool* commandPool;
-	VKRenderpass* renderpass;
-	std::vector<VKFramebuffer*> swapchainFramebuffers;
 };
 
 #endif

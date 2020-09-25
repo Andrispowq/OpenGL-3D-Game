@@ -28,6 +28,8 @@ public:
 
 	inline Vector3f getSunPosition() const { return sunPosition; }
 
+	Atmosphere(const Atmosphere&) = default;
+
 private:
 	Window* window;
 

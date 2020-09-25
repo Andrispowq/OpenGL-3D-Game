@@ -13,27 +13,26 @@ VKGraphicsPipeline::~VKGraphicsPipeline()
 	vkDestroyPipeline(device->getDevice(), graphicsPipeline, nullptr);
 }
 
-void VKGraphicsPipeline::BindPipeline() const
+void VKGraphicsPipeline::BindPipeline(CommandBuffer* buffer) const
 {
-	//VKPipeline::BindPipeline(); //does nothing
+	VKPipeline::BindPipeline(buffer);
 
-	vkCmdBindPipeline(((VKCommandBuffer*) swapchain->getDrawCommandBuffer())->getCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
-	getVertexBuffer()->Bind(swapchain->getDrawCommandBuffer());
+	vkCmdBindPipeline(((VKCommandBuffer*)buffer)->getCommandBuffer(), VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+	getVertexBuffer()->Bind(buffer);
 }
 
 void VKGraphicsPipeline::RenderPipeline() const
 {
-	//VKPipeline::RenderPipeline(); //does nothing
+	VKPipeline::RenderPipeline();
 
-	getVertexBuffer()->Draw(swapchain->getDrawCommandBuffer());
+	getVertexBuffer()->Draw(buffer);
 }
 
 void VKGraphicsPipeline::UnbindPipeline() const
 {
-	//these do nothing
-	//getVertexBuffer()->Unbind();
+	getVertexBuffer()->Unbind();
 
-	//VKPipeline::UnbindPipeline();
+	VKPipeline::UnbindPipeline();
 }
 
 void VKGraphicsPipeline::RecreatePipeline()
@@ -46,7 +45,7 @@ void VKGraphicsPipeline::RecreatePipeline()
 
 void VKGraphicsPipeline::CreatePipeline()
 {
-	this->renderpass = &((VKSwapchain*)window->getSwapchain())->getRenderpass();
+	this->renderpass = ((VKSwapchain*)window->getSwapchain())->getRenderpass();
 
 	VKMeshVertexBuffer* vbo = (VKMeshVertexBuffer*)getVertexBuffer();
 	VKShader* shader = (VKShader*)getShader();

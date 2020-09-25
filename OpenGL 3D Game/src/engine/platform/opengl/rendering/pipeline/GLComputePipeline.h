@@ -14,7 +14,7 @@ public:
 	GLComputePipeline(Window* window, AssetManager* manager, size_t shaderID);
 	virtual ~GLComputePipeline() {}
 
-	virtual void BindPipeline() const override;
+	virtual void BindPipeline(CommandBuffer* buffer) const override;
 	virtual void RenderPipeline() const override;
 	virtual void UnbindPipeline() const override;
 };

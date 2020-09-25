@@ -26,10 +26,10 @@ public:
 
 	virtual ~VKShader();
 
-	virtual void Bind(void* commandBuffer) const override {}
+	virtual void Bind(CommandBuffer* commandBuffer) const override { this->commandBuffer = commandBuffer; }
 	virtual void Unbind() const override {}
 
-	void BindSet(void* commandBuffer, uint32_t set, uint32_t instance_index = 0) const;
+	void BindSet(CommandBuffer* commandBuffer, uint32_t set, uint32_t instance_index = 0) const;
 
 	virtual bool AddUniform(const std::string& name, uint32_t stages, UniformType type, uint32_t set, uint32_t binding, size_t size, Texture* texture = nullptr) override;
 	virtual bool AddUniformBlock(const std::string& name, uint32_t stages, UniformType type, uint32_t set, uint32_t binding, size_t size, Texture* texture = nullptr) override { return true; }
@@ -71,6 +71,8 @@ protected:
 	VKPhysicalDevice* physicalDevice;
 	VKDevice* device;
 	VKSwapchain* swapchain;
+
+	mutable CommandBuffer* commandBuffer; //The command buffer to use
 
 	uint32_t instance_counter = 0;
 

@@ -16,9 +16,9 @@ class TerrainNode : public GameObject
 {
 public:
 	TerrainNode() {}
-	TerrainNode(Window* window, Camera* camera, AssembledAssetManager* manager, TerrainMaps* maps,
+	TerrainNode(Factory<TerrainNode>* factory, Window* window, Camera* camera, AssembledAssetManager* manager, TerrainMaps* maps,
 		size_t pipelineID, size_t wireframePipelineID, const Vector2f& location, int lod, const Vector2f& index);
-	virtual ~TerrainNode() {}
+	virtual ~TerrainNode();
 
 	virtual void PreRender(Renderer* renderer) override;
 
@@ -41,6 +41,8 @@ public:
 
 	Transform getLocalTransform() const { return localTransform; }
 
+	TerrainNode(const TerrainNode&) = default;
+
 	//Overloaded new and delete comes here:
 	/*void* operator new(size_t size, Factory<TerrainNode>& factory)
 	{
@@ -50,6 +52,10 @@ public:
 	void* operator new(size_t size)
 	{
 		void* ptr = malloc(size);
+	
+		if (!ptr)
+			throw std::bad_alloc();
+
 		return ptr;
 	}
 
@@ -62,10 +68,11 @@ public:
 
 	void operator delete(void* ptr)
 	{
+		((TerrainNode*)ptr)->~TerrainNode();
 		free(ptr);
 	}*/
 private:
-	//Factory<TerrainNode>* factory;
+	Factory<TerrainNode>* factory;
 	AssembledAssetManager* manager;
 
 	Window* window;

@@ -3,7 +3,7 @@
 
 VKDescriptorSet::~VKDescriptorSet()
 {
-	for (auto& binding : bindings)
+	for (const auto& binding : bindings)
 	{
 		delete binding;
 	}

@@ -51,7 +51,7 @@ void VKBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light
 		}
 	}
 
-	BindSet(swapchain->getDrawCommandBuffer(), 0, instance_index);
+	BindSet(commandBuffer, 0, instance_index);
 }
 
 void VKBasicShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
@@ -69,5 +69,5 @@ void VKBasicShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_i
 	SetUniformf("material", material->getFloat(ROUGHNESS), Vector3f::size() + 2 * sizeof(float), instance_index);
 	SetUniformf("material", EngineConfig::rendererGamma, Vector3f::size() + 3 * sizeof(float), instance_index);
 
-	BindSet(swapchain->getDrawCommandBuffer(), 1);
+	BindSet(commandBuffer, 1);
 }

@@ -2,21 +2,9 @@
 #include "VKBuffer.h"
 
 VKBuffer::VKBuffer(VKPhysicalDevice* physicalDevice, VKDevice* device, size_t size, VkBufferUsageFlags buFlags, VkMemoryPropertyFlags mpFlags)
-	: physicalDevice(physicalDevice), device(device), size(size), _buFlags(buFlags), _mpFlags(mpFlags)
+	: physicalDevice(physicalDevice), device(device), size(size), buFlags(buFlags), mpFlags(mpFlags)
 {
 	VKUtil::CreateBuffer(physicalDevice->getPhysicalDevice(), device->getDevice(), size, buFlags, mpFlags, buffer, memory);
-}
-
-VKBuffer::VKBuffer(VKBuffer& other)
-	: physicalDevice(other.physicalDevice), device(other.device), size(other.size), _buFlags(other._buFlags), _mpFlags(other._mpFlags)
-{
-	VKUtil::CreateBuffer(physicalDevice->getPhysicalDevice(), device->getDevice(), other.size, other._buFlags, other._mpFlags, buffer, memory);
-	VKUtil::CopyBuffer(device, other.buffer, buffer, other.size);
-}
-
-VKBuffer::VKBuffer(VKBuffer&& other) noexcept
-{
-	std::swap(*this, other);
 }
 
 VKBuffer::~VKBuffer()
@@ -25,16 +13,36 @@ VKBuffer::~VKBuffer()
 	vkFreeMemory(device->getDevice(), memory, nullptr);
 }
 
-void VKBuffer::MapMemory(void* data_to_map)
+void VKBuffer::MapMemory(size_t offset, size_t size)
 {
-	vkMapMemory(device->getDevice(), memory, 0, size, 0, &data);
-	memcpy(data, data_to_map, size);
+	vkMapMemory(device->getDevice(), memory, offset, (size == -1) ? this->size : size, 0, &mapped);
+}
+
+void VKBuffer::UnmapMemory()
+{
 	vkUnmapMemory(device->getDevice(), memory);
 }
 
-void VKBuffer::CopyBuffer(VKBuffer* buffer)
+void VKBuffer::Store(void* data)
 {
-	VKUtil::CopyBuffer(device, this->buffer, buffer->buffer, size);
+	memcpy(mapped, data, size);
+}
+
+void VKBuffer::Copy(VKBuffer* src)
+{
+	VKUtil::CopyBuffer(device, src->buffer, buffer, size);
+}
+
+VKBuffer::VKBuffer(VKBuffer& other)
+	: physicalDevice(other.physicalDevice), device(other.device), size(other.size), buFlags(other.buFlags), mpFlags(other.mpFlags)
+{
+	VKUtil::CreateBuffer(physicalDevice->getPhysicalDevice(), device->getDevice(), size, buFlags, mpFlags, buffer, memory);
+	VKUtil::CopyBuffer(device, other.buffer, buffer, size);
+}
+
+VKBuffer::VKBuffer(VKBuffer&& other) noexcept
+{
+	std::swap(*this, other);
 }
 
 VKBuffer& VKBuffer::operator=(VKBuffer other)

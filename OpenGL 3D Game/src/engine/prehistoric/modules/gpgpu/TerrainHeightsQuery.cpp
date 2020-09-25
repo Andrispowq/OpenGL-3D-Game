@@ -1,17 +1,21 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "TerrainHeightsQuery.h"
 
-#include "engine/prehistoric/resources/AssetManager.h"
+#include "engine/prehistoric/resources/AssembledAssetManager.h"
 
-TerrainHeightsQuery::TerrainHeightsQuery(Window* window, AssetManager* manager, uint32_t N)
+TerrainHeightsQuery::TerrainHeightsQuery(Window* window, AssembledAssetManager* manager, uint32_t N)
 {
 	this->window = window;
+	this->manager = manager;
+	
 	this->N = N;
 
 	//TODO: Create the Vulkan equivalent of the GLComputePipeline
 	if (FrameworkConfig::api == OpenGL)
 	{
-		pipeline = new GLComputePipeline(window, manager, manager->getResource<Shader>("gpgpu_terrain_heights"));
+		pipeline = new GLComputePipeline(window, manager->getAssetManager(), manager->getAssetManager()->getResource<Shader>("gpgpu_terrain_heights"));
+		pipelineID = manager->loadResource<Pipeline>(pipeline);
+		manager->addReference<Pipeline>(pipelineID);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
@@ -48,13 +52,13 @@ TerrainHeightsQuery::TerrainHeightsQuery(Window* window, AssetManager* manager, 
 
 TerrainHeightsQuery::~TerrainHeightsQuery()
 {
-	delete pipeline;
+	manager->removeReference<Pipeline>(pipelineID);
 	delete buffer;
 }
 
 void TerrainHeightsQuery::Query(Texture* heightmap)
 {
-	pipeline->BindPipeline();
+	pipeline->BindPipeline(nullptr);
 
 	if (FrameworkConfig::api == OpenGL)
 	{

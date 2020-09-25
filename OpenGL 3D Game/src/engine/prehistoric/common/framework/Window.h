@@ -12,12 +12,12 @@ class Window
 {
 public:
 	Window();	
-	virtual ~Window() {}
+	virtual ~Window();
 
 	virtual bool Create() = 0;
 	virtual bool ShouldClose() const = 0; 
 	virtual void Input() = 0;
-	virtual void Render() const = 0;
+	virtual void Render(CommandBuffer* buffer) const = 0;
 
 	virtual void* getWindowHandle() const = 0;
 	virtual void SetFullscreen(bool fullscreen) = 0;

@@ -6,7 +6,7 @@
 #include "engine/prehistoric/common/util/DeviceProperties.h"
 
 #include "engine/platform/opengl/rendering/GLRenderer.h"
-//#include "engine/platform/vulkan/rendering/VKRenderer.h"
+#include "engine/platform/vulkan/rendering/VKRenderer.h"
 
 RenderingEngine::RenderingEngine()
 	: window(nullptr), camera(nullptr), renderer(nullptr)
@@ -48,7 +48,7 @@ RenderingEngine::RenderingEngine()
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
-		//renderer = std::make_unique<VKRenderer>(window.get(), camera.get());
+		renderer = std::make_unique<VKRenderer>(window.get(), camera.get());
 	}
 }
 

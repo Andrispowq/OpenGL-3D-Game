@@ -12,6 +12,8 @@ public:
 
 	float getProgress() const { return progress; }
 
+	GUISlider(const GUISlider&) = default;
+
 private:
 	float minValue;
 	float maxValue;

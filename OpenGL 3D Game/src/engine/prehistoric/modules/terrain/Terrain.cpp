@@ -3,10 +3,10 @@
 
 #include "engine/prehistoric/resources/AssembledAssetManager.h"
 
-Terrain::Terrain(Window* window, AssembledAssetManager* manager, Camera* camera)
-	: window(window), camera(camera), maps{ std::make_unique<TerrainMaps>(window, manager->getAssetManager()) }
+Terrain::Terrain(Window* window, Camera* camera, AssembledAssetManager* manager)
+	: window(window), camera(camera), maps{ std::make_unique<TerrainMaps>(window, manager) }
 {
-	AddChild("Quadtree", new TerrainQuadtree(window, manager, camera, maps.get()));
+	AddChild("Quadtree", new TerrainQuadtree(window, camera, maps.get(), manager));
 }
 
 void Terrain::PreRender(Renderer* renderer)
@@ -19,6 +19,6 @@ void Terrain::UpdateQuadtree()
 {
 	if (camera->isChanged())
 	{
-		((TerrainQuadtree*)children.at("Quadtree"))->UpdateQuadtree();
+		((TerrainQuadtree*)children.at("Quadtree").get())->UpdateQuadtree();
 	}
 }

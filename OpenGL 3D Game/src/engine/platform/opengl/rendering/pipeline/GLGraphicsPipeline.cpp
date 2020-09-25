@@ -6,11 +6,11 @@ GLGraphicsPipeline::GLGraphicsPipeline(Window* window, AssetManager* manager, si
 {
 }
 
-void GLGraphicsPipeline::BindPipeline() const
+void GLGraphicsPipeline::BindPipeline(CommandBuffer* buffer) const
 {
-	GLPipeline::BindPipeline();
+	GLPipeline::BindPipeline(buffer);
 
-	getVertexBuffer()->Bind(nullptr);
+	getVertexBuffer()->Bind(buffer);
 }
 
 void GLGraphicsPipeline::RenderPipeline() const

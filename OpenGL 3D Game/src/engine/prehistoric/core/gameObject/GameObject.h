@@ -20,6 +20,8 @@ public:
 
 	GameObject* AddComponent(const std::string& name, Component* component);
 	Component* GetComponent(const std::string& name) const;
+
+	GameObject(const GameObject&) = default;
 protected:
 	std::unordered_map<std::string, std::unique_ptr<Component>> components;
 	UpdateFunction updateFunction;

@@ -6,9 +6,10 @@ GLPipeline::GLPipeline(Window* window, AssetManager* manager, size_t shaderID)
 {
 }
 
-void GLPipeline::BindPipeline() const
+void GLPipeline::BindPipeline(CommandBuffer* buffer) const
 {
-	getShader()->Bind(nullptr);
+	this->buffer = buffer;
+	getShader()->Bind(buffer);
 }
 
 void GLPipeline::RenderPipeline() const

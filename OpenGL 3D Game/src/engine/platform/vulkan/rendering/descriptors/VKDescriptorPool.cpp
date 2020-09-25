@@ -8,7 +8,7 @@ VKDescriptorPool::VKDescriptorPool(VKPhysicalDevice* physicalDevice, VKDevice* d
 
 VKDescriptorPool::~VKDescriptorPool()
 {
-	for (auto& set : sets)
+	for (const auto& set : sets)
 	{
 		delete set;
 	}
@@ -23,8 +23,7 @@ void VKDescriptorPool::addSet(VKDescriptorSet* set)
 
 void VKDescriptorPool::addSet()
 {
-	VKDescriptorSet* set = new VKDescriptorSet(device, swapchain, (uint32_t)sets.size());
-	sets.push_back(set);
+	sets.push_back(new VKDescriptorSet(device, swapchain, (uint32_t)sets.size()));
 }
 
 void VKDescriptorPool::finalize(VkPipelineLayout& layout)

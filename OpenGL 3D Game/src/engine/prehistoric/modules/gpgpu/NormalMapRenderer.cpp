@@ -1,9 +1,10 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "NormalMapRenderer.h"
 
-#include "engine/prehistoric/resources/AssetManager.h"
+#include "engine/prehistoric/resources/AssembledAssetManager.h"
 
-NormalMapRenderer::NormalMapRenderer(Window* window, AssetManager* manager, float strength, uint32_t N)
+NormalMapRenderer::NormalMapRenderer(Window* window, AssembledAssetManager* manager, float strength, uint32_t N)
+	: manager(manager)
 {
 	this->window = window;
 
@@ -13,20 +14,26 @@ NormalMapRenderer::NormalMapRenderer(Window* window, AssetManager* manager, floa
 	//TODO: Create the Vulkan equivalent of the GLComputePipeline
 	if (FrameworkConfig::api == OpenGL)
 	{
-		pipeline = new GLComputePipeline(window, manager, manager->getResource<Shader>("gpgpu_normal"));
+		pipeline = new GLComputePipeline(window, manager->getAssetManager(), manager->getAssetManager()->getResource<Shader>("gpgpu_normal"));
+		pipelineID = manager->loadResource<Pipeline>(pipeline);
+		manager->addReference<Pipeline>(pipelineID);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
-		//pipeline = new VKComputePipeline(new VKNormalMapShader());
+		//pipeline = new VKComputePipeline(window, manager->getAssetManager(), manager->getAssetManager()->getResource<Shader>("gpgpu_normal"));
+		//pipelineID = manager->loadResource<Pipeline>(pipeline);
+		//manager->addReference<Pipeline>(pipelineID);
 	}
 
 	if (FrameworkConfig::api == OpenGL)
 	{
-		normalmap = GLTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), R8G8B8A8_LINEAR, Bilinear);
+		normalmap = GLTexture::Storage2D(N, N, (uint32_t)(log(N) / log(2)), R8G8B8A8_LINEAR, Bilinear);
+		textureID = manager->getAssetManager()->addResource<Texture>(normalmap);
+		manager->getAssetManager()->addReference<Texture>(textureID);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
-		//normalmap = VKTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), R8G8B8A8_LINEAR, Bilinear);
+		//textureID = manager->getAssetManager()->addResource<Texture>(VKTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), R8G8B8A8_LINEAR, Bilinear));
 	}
 
 	if (FrameworkConfig::api == OpenGL)
@@ -45,12 +52,13 @@ NormalMapRenderer::NormalMapRenderer(Window* window, AssetManager* manager, floa
 
 NormalMapRenderer::~NormalMapRenderer()
 {
-	delete pipeline;
+	manager->getAssetManager()->removeReference<Texture>(textureID);
+	manager->removeReference<Pipeline>(pipelineID);
 }
 
 void NormalMapRenderer::Render(Texture* heightmap)
 {
-	pipeline->BindPipeline();
+	pipeline->BindPipeline(nullptr); //FOR NOW
 
 	if (FrameworkConfig::api == OpenGL)
 	{

@@ -15,18 +15,11 @@ GLTerrainWireframeShader::GLTerrainWireframeShader()
 
 	AddUniform("heightmap");
 
-	//AddUniform("localMatrix");
-	//AddUniform("worldMatrix");
-
-	AddUniform("cameraPosition");
-	//AddUniform("location");
-	//AddUniform("index");
-	AddUniform("scaleY");
-	//AddUniform("gap");
-	//AddUniform("lod");
-
 	location_localMatrix = glGetUniformLocation(program, "localMatrix");
 	location_worldMatrix = glGetUniformLocation(program, "worldMatrix");
+
+	AddUniform("cameraPosition");
+	AddUniform("scaleY");
 
 	location_location = glGetUniformLocation(program, "location");
 	location_index = glGetUniformLocation(program, "index");

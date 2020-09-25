@@ -3,11 +3,9 @@
 
 #include "engine/prehistoric/resources/AssembledAssetManager.h"
 
-TerrainQuadtree::TerrainQuadtree(Window* window, AssembledAssetManager* manager, Camera* camera, TerrainMaps* maps)
-	: window(window), camera(camera), maps(maps)
+TerrainQuadtree::TerrainQuadtree(Window* window, Camera* camera, TerrainMaps* maps, AssembledAssetManager* manager)
+	: window(window), camera(camera), maps(maps), factory{ 512 }
 {
-	factory = new Factory<TerrainNode>(512); //There will definitly not be more than 512 instances of TerrainNode on this quadtree
-
 	size_t shaderID = -1;
 	size_t pipelineID = -1;
 	size_t wireframeShaderID = -1;
@@ -41,7 +39,7 @@ TerrainQuadtree::TerrainQuadtree(Window* window, AssembledAssetManager* manager,
 			ss << ", ";
 			ss << j;
 
-			AddChild(ss.str(), new/*(*factory)*/ TerrainNode(window, camera, manager, maps, pipelineID, wireframePipelineID,
+			AddChild(ss.str(), new/*(factory)*/ TerrainNode(&factory, window, camera, manager, maps, pipelineID, wireframePipelineID,
 				{ i / (float)rootNodes, j / (float)rootNodes },	0, { float(i), float(j) }));
 		}
 	}
@@ -52,17 +50,16 @@ TerrainQuadtree::TerrainQuadtree(Window* window, AssembledAssetManager* manager,
 
 TerrainQuadtree::~TerrainQuadtree()
 {
-	//Custom allocator -> custom deletion, but the factory deletes them anyway
+	//The children will be freed when the Factory is deleted at the end of this destructor but before the Node destructor
+	//so we don't want the automatic Node reclaimation to take place, so we clear the list
 	//children.clear();
-
-	delete factory;
 }
 
 void TerrainQuadtree::UpdateQuadtree()
 {
 	for (auto& node : children)
 	{
-		((TerrainNode*)node.second)->UpdateQuadtree();
+		((TerrainNode*)node.second.get())->UpdateQuadtree();
 	}
 }
 

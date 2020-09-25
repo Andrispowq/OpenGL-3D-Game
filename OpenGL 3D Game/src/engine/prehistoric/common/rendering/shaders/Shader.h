@@ -3,9 +3,11 @@
 
 #include "engine/prehistoric/core/util/Includes.hpp"
 
-#include "engine/prehistoric/common/model/Texture.h"
+#include "engine/prehistoric/common/texture/Texture.h"
 
 #include "engine/prehistoric/core/math/Math.h"
+
+#include "engine/prehistoric/common/rendering/command/CommandBuffer.h"
 
 enum ShaderType
 {
@@ -70,7 +72,7 @@ public:
 	Shader() : counter(0) {}
 	virtual ~Shader() = 0;
 
-	virtual void Bind(void* commandBuffer) const = 0;
+	virtual void Bind(CommandBuffer* commandBuffer) const = 0;
 	virtual void Unbind() const = 0;
 
 	virtual bool AddUniform(const std::string& name, uint32_t stages = GRAPHICS_PIPELINE, UniformType type = UniformBuffer, uint32_t set = 0, uint32_t binding = 0, size_t size = 0, Texture* texture = nullptr) = 0;
@@ -99,7 +101,7 @@ public:
 	//Shader uniforms -> per-shader uniforms, like view and projection matrices
 	//Shared uniforms -> uniforms that are shared between objects, and can be fetched from the first object
 	//Object uniforms -> unique, per-object values
-	virtual void UpdateConstantUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index = 0) const {}
+	virtual void UpdateConstantUniforms(Camera* camera, const std::vector<Light*>& lights) const {}
 	virtual void UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index = 0) const {}
 	virtual void UpdateSharedUniforms(GameObject* object, uint32_t instance_index = 0) const {}
 	virtual void UpdateObjectUniforms(GameObject* object, uint32_t instance_index = 0) const {}

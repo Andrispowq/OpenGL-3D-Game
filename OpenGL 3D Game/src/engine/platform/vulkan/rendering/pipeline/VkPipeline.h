@@ -16,19 +16,20 @@ public:
 	VKPipeline(Window* window, AssetManager* manager, size_t shaderID);
 	virtual ~VKPipeline() {}
 
-	virtual void BindPipeline() const override {}
+	virtual void BindPipeline(CommandBuffer* buffer) const override { getShader()->Bind(buffer); this->buffer = buffer; }
 	virtual void RenderPipeline() const override {}
 	virtual void UnbindPipeline() const override {}
 
 	virtual void RecreatePipeline() {}
 protected:
-	//External
 	VKPhysicalDevice* physicalDevice;
 	VKDevice* device;
 	VKSurface* surface;
 
 	Window* window;
 	VKSwapchain* swapchain;
+
+	mutable CommandBuffer* buffer; //The currently used commandbuffer
 };
 
 #endif

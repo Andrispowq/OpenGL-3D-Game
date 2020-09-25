@@ -3,7 +3,7 @@
 
 #include "engine/prehistoric/core/gameObject/GameObject.h"
 
-#include "engine/prehistoric/common/model/Texture.h"
+#include "engine/prehistoric/common/texture/Texture.h"
 
 #include "engine/platform/opengl/buffer/GLMeshVertexBuffer.h"
 #include "engine/platform/vulkan/buffer/VKMeshVertexBuffer.h"
@@ -46,6 +46,8 @@ public:
 
 	void setData(void* data, size_t dataSize = 0) { this->data = data; this->dataSize = dataSize; }
 	void setTexture(Texture* texture) { this->texture = texture; }
+
+	GUIElement(const GUIElement&) = default;
 protected:
 	GUIType type;
 

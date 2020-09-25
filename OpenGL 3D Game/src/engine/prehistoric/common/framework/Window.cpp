@@ -16,3 +16,9 @@ Window::Window()
 	this->fullscreen = FrameworkConfig::windowFullScreen;
 	this->closed = true;
 }
+
+Window::~Window()
+{
+	delete swapchain.release();
+	delete context.release();
+}

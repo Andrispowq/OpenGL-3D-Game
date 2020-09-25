@@ -1,18 +1,21 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "SplatMapRenderer.h"
 
-#include "engine/prehistoric/resources/AssetManager.h"
+#include "engine/prehistoric/resources/AssembledAssetManager.h"
 
-SplatMapRenderer::SplatMapRenderer(Window* window, AssetManager* manager, uint32_t N)
+SplatMapRenderer::SplatMapRenderer(Window* window, AssembledAssetManager* manager, uint32_t N)
 {
 	this->window = window;
+	this->manager = manager;
 
 	this->N = N;
 
 	//TODO: Create the Vulkan equivalent of the GLComputePipeline
 	if (FrameworkConfig::api == OpenGL)
 	{
-		pipeline = new GLComputePipeline(window, manager, manager->getResource<Shader>("gpgpu_splat"));
+		pipeline = new GLComputePipeline(window, manager->getAssetManager(), manager->getAssetManager()->getResource<Shader>("gpgpu_splat"));
+		pipelineID = manager->loadResource<Pipeline>(pipeline);
+		manager->addReference<Pipeline>(pipelineID);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
@@ -21,7 +24,9 @@ SplatMapRenderer::SplatMapRenderer(Window* window, AssetManager* manager, uint32
 
 	if (FrameworkConfig::api == OpenGL)
 	{
-		splatmap = GLTexture::Storage2D(N, N, (uint32_t) (log(N) / log(2)), R8G8B8A8_LINEAR, Bilinear);
+		splatmap = GLTexture::Storage2D(N, N, (uint32_t)(log(N) / log(2)), R8G8B8A8_LINEAR, Bilinear);
+		textureID = manager->getAssetManager()->addResource<Texture>(splatmap);
+		manager->getAssetManager()->addReference<Texture>(textureID);
 	}
 	else if (FrameworkConfig::api == Vulkan)
 	{
@@ -44,13 +49,13 @@ SplatMapRenderer::SplatMapRenderer(Window* window, AssetManager* manager, uint32
 
 SplatMapRenderer::~SplatMapRenderer()
 {
-	delete pipeline;
-	delete splatmap;
+	manager->getAssetManager()->removeReference<Texture>(textureID);
+	manager->removeReference<Pipeline>(pipelineID);
 }
 
 void SplatMapRenderer::Render(Texture* normalmap)
 {
-	pipeline->BindPipeline();
+	pipeline->BindPipeline(nullptr);
 
 	if (FrameworkConfig::api == OpenGL)
 	{

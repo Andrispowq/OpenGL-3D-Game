@@ -1,7 +1,7 @@
 #ifndef VK_TEXTURE_H
 #define VK_TEXTURE_H
 
-#include "engine/prehistoric/common/model/Texture.h"
+#include "engine/prehistoric/common/texture/Texture.h"
 
 #include <vulkan/vulkan.h>
 
@@ -10,14 +10,15 @@
 class VKTexture : public Texture
 {
 public:
-	VKTexture(VKPhysicalDevice* physicalDevice, VKDevice* device, uint32_t width, uint32_t height);
+	VKTexture(VKPhysicalDevice* physicalDevice, VKDevice* device, uint32_t width, uint32_t height, ImageFormat format = R8G8B8A8_LINEAR, ImageType type = TEXTURE_2D);
+	VKTexture(VKPhysicalDevice* physicalDevice, VKDevice* device);
+
 	virtual ~VKTexture();
 
-	virtual void UploadTextureData(size_t size, uint8_t channels, unsigned char* pixels, ImageFormat format) override;
+	virtual void Bind(uint32_t slot = 0) const override {}
+	virtual void Unbind() const override {}
 
-	virtual void Bind(uint32_t slot = 0) const override;
-	virtual void Unbind() const override;
-
+	virtual void UploadTextureData(unsigned char* pixels, ImageFormat format) override;
 	virtual void Generate() override;
 
 	virtual void SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode) override;
@@ -39,7 +40,6 @@ private:
 	VkImageView textureImageView;
 	VkSampler textureSampler;
 
-	ImageFormat format;
 	uint32_t mipLevels;
 };
 

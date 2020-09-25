@@ -18,7 +18,7 @@ public:
 
 	virtual ~GLShader() override;
 
-	void Bind(void* commandBuffer) const override;
+	void Bind(CommandBuffer* commandBuffer) const override;
 	void Unbind() const override;
 
 	bool AddUniform(const std::string& name, uint32_t stages = GRAPHICS_PIPELINE, UniformType type = UniformBuffer, uint32_t set = 0, uint32_t binding = 0, size_t size = 0, Texture* texture = nullptr) override;
@@ -28,6 +28,7 @@ public:
 	bool AddShader(const std::vector<char>& code, ShaderType type) override;
 	bool CompileShader() const override;
 
+	virtual void UpdateConstantUniforms(Camera* camera, const std::vector<Light*>& lights) const {}
 	virtual void UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index = 0) const override {};
 	virtual void UpdateSharedUniforms(GameObject* object, uint32_t instance_index = 0) const override {}
 	virtual void UpdateObjectUniforms(GameObject* object, uint32_t instance_index = 0) const override {};

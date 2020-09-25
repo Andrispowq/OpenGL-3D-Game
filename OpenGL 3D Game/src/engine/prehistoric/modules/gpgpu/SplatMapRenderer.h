@@ -10,10 +10,12 @@
 #include "engine/platform/opengl/rendering/shaders/gpgpu/GLSplatMapShader.h"
 //#include "engine/platform/vulkan/rendering/shaders/gpgpu/VKSplatMapShader.h"
 
+class AssembledAssetManager;
+
 class SplatMapRenderer
 {
 public:
-	SplatMapRenderer(Window* window, AssetManager* manager, uint32_t N);
+	SplatMapRenderer(Window* window, AssembledAssetManager* manager, uint32_t N);
 	virtual ~SplatMapRenderer();
 
 	void Render(Texture* normalmap);
@@ -21,6 +23,10 @@ public:
 	Texture* getSplatmap() { return splatmap; }
 private:
 	Window* window;
+	AssembledAssetManager* manager;
+
+	size_t pipelineID;
+	size_t textureID;
 
 	Pipeline* pipeline;
 	Texture* splatmap;

@@ -25,6 +25,7 @@
     <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorPool.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorSet.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorSetBinding.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\rendering\VKRenderer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\buffer\Framebuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\command\CommandBuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\Renderer.cpp" />
@@ -94,7 +95,7 @@
     <ClCompile Include="src\engine\prehistoric\core\gameObject\GameObject.cpp" />
     <ClCompile Include="src\engine\prehistoric\core\log\Log.cpp" />
     <ClCompile Include="src\engine\prehistoric\core\model\material\Material.cpp" />
-    <ClCompile Include="src\engine\prehistoric\common\model\Texture.cpp" />
+    <ClCompile Include="src\engine\prehistoric\common\texture\Texture.cpp" />
     <ClCompile Include="src\engine\prehistoric\core\util\Includes.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -180,6 +181,7 @@
     <ClInclude Include="src\engine\platform\vulkan\rendering\synchronization\VKFence.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\synchronization\VKSemaphore.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\shaders\VKShader.h" />
+    <ClInclude Include="src\engine\platform\vulkan\rendering\VKRenderer.h" />
     <ClInclude Include="src\engine\platform\vulkan\texture\VKTexture.h" />
     <ClInclude Include="src\engine\platform\vulkan\util\VKUtil.h" />
     <ClInclude Include="src\engine\platform\windows\WindowsInput.h" />
@@ -218,7 +220,7 @@
     <ClInclude Include="src\engine\prehistoric\core\log\ColourCodes.h" />
     <ClInclude Include="src\engine\prehistoric\core\log\Log.h" />
     <ClInclude Include="src\engine\prehistoric\core\model\material\Material.h" />
-    <ClInclude Include="src\engine\prehistoric\common\model\Texture.h" />
+    <ClInclude Include="src\engine\prehistoric\common\texture\Texture.h" />
     <ClInclude Include="src\engine\prehistoric\core\util\codes\InputCode.h" />
     <ClInclude Include="src\engine\prehistoric\core\util\Includes.hpp" />
     <ClInclude Include="src\engine\prehistoric\core\util\loader\obj\OBJLoader.h" />

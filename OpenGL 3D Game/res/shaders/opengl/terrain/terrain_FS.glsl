@@ -60,7 +60,7 @@ void main()
 	float dist = length(cameraPosition - position_FS);
 	float height = position_FS.y;
 
-	vec3 N = normalize(texture(normalmap, mapCoord_FS).rbg * 2.0 - 1.0);
+	vec3 N = texture(normalmap, mapCoord_FS).rbg * 2.0 - 1.0;
 	
 	vec4 blendValues = texture(splatmap, mapCoord_FS);
 	
@@ -71,7 +71,7 @@ void main()
 		float attenuation = clamp(- dist / (highDetailRange - 50) + 1, 0, 1);
 		
 		vec3 bitangent = normalize(cross(tangent_FS, N));
-		mat3 tbn = mat3(bitangent, N, tangent_FS);
+		mat3 tbn = mat3(tangent_FS, N, bitangent);//mat3(bitangent, N, tangent_FS);
 		
 		vec3 bumpNormal;
 		for(int i = 0; i < 3; i++)
@@ -80,8 +80,7 @@ void main()
 				* blendValueArray[i];
 		}
 		
-		bumpNormal = normalize(bumpNormal);
-		
+		bumpNormal = normalize(bumpNormal);		
 		bumpNormal.xz *= attenuation;
 		
 		N = normalize(tbn * bumpNormal);
@@ -153,23 +152,23 @@ void main()
 		Lo += (kD * albedoColour / PI/* + specular*/) * radiance * NdotL; //TODO: in the terrain_FS this is a temporary solution, as the specular part causes some visual bugs
     }
 	
-	/*vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0), F0, roughness);
+	vec3 F = fresnelSchlickRoughness(max(dot(N, V), 0), F0, roughness);
 	
 	vec3 kS = F;
 	vec3 kD = 1 - kS;
 	kD *= 1 - metallic;
 	
 	vec3 irradiance = vec3(0.23, 0.78, 0.88);//texture(irradianceMap, N).rgb;
-	vec3 diffuse = irradiance * albedoColour;*/
+	vec3 diffuse = irradiance * albedoColour;
 	
 	/*const float MAX_REFLECTION_LOD = 4;
 	vec3 prefilteredColor = textureLod(prefilterMap, R,  roughness * MAX_REFLECTION_LOD).rgb;
 	vec2 envBRDF = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;*/
-	//vec3 specular = vec3(0.23, 0.78, 0.88);//prefilteredColor * (F * envBRDF.x + envBRDF.y);
+	//vec3 specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
 	
-	//vec3 ambient = (kD * diffuse + specular) * occlusion;
+	vec3 ambient = (kD * diffuse + 0) * occlusion;
 
-	vec3 ambient = vec3(0.03);
+	//vec3 ambient = vec3(0.03);
 	
 	vec3 colour = ambient * albedoColour + Lo;
 	

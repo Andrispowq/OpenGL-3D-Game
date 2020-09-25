@@ -121,9 +121,9 @@ void WindowsWindow::Input()
 	glfwPollEvents();
 }
 
-void WindowsWindow::Render() const
+void WindowsWindow::Render(CommandBuffer* buffer) const
 {
-	swapchain->SwapBuffers();
+	swapchain->SwapBuffers(buffer);
 }
 
 void WindowsWindow::SetFullscreen(bool fullscreen)

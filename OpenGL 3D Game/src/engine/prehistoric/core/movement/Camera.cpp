@@ -272,16 +272,16 @@ void Camera::Move(const Vector3f& dir, const float& amount)
 
 void Camera::RotateX(const float& angle)
 {
-	Vector3f hAxis = yAxis.cross(forward).normalize();
-	this->forward = forward.rotate(hAxis, angle).normalize();
-	this->up = forward.cross(hAxis).normalize();
+	Vector3f hAxis = yAxis.cross(forward).normalise();
+	this->forward = forward.rotate(hAxis, angle).normalise();
+	this->up = forward.cross(hAxis).normalise();
 }
 
 void Camera::RotateY(const float& angle)
 {
-	Vector3f hAxis = yAxis.cross(forward).normalize();
-	this->forward = forward.rotate(yAxis, angle).normalize();
-	this->up = forward.cross(hAxis).normalize();
+	Vector3f hAxis = yAxis.cross(forward).normalise();
+	this->forward = forward.rotate(yAxis, angle).normalise();
+	this->up = forward.cross(hAxis).normalise();
 }
 
 void Camera::SetProjection(float fov, float width, float height)

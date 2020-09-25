@@ -12,7 +12,7 @@ public:
 	GLSwapchain(Window* window);
 	virtual ~GLSwapchain();
 
-	virtual void SwapBuffers() override;
+	virtual void SwapBuffers(CommandBuffer* buffer) override;
 	virtual void ClearScreen() override;
 
 	virtual void SetVSync(bool vSync) const override;

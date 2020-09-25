@@ -63,10 +63,10 @@ public:
 		//Mark the used block as free
 		size_t j = index % 32;
 		size_t i = size_t(index / 32);
-		used_bits[i] |= (0x1 << j);
+		used_bits[i] &= ~(0x1 << j);
 	}
 
-	Factory& operator=(const Factory&& factory)
+	Factory& operator=(Factory&& factory)
 	{
 		max_allocations = factory.max_allocations;
 		num_of_uint32_ts = factory.num_of_uint32_ts;

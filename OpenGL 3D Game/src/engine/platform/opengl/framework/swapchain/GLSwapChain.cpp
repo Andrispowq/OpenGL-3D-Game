@@ -20,7 +20,7 @@ GLSwapchain::~GLSwapchain()
 {
 }
 
-void GLSwapchain::SwapBuffers()
+void GLSwapchain::SwapBuffers(CommandBuffer* buffer)
 {
 	glfwSwapBuffers((GLFWwindow*)window->getWindowHandle());
 }
