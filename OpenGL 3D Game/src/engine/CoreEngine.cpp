@@ -92,24 +92,25 @@ void CoreEngine::Run()
 		unprocessedTime += passedTime / NANOSECOND;
 		frameCounter += passedTime;
 
+		Input();
+
+		if (engine->getRenderingEngine()->getWindow()->ShouldClose())
+		{
+			Stop();
+			break;
+		}
+
 		while (unprocessedTime > frameTime)
 		{
 			render = true;
 			unprocessedTime -= frameTime;
 
-			if (engine->getRenderingEngine()->getWindow()->ShouldClose())
-			{
-				Stop();
-				break;
-			}
-
-			Input(std::max(passedTime / NANOSECOND, frameTime));
-			Update();
+			Update(frameTime);
 
 			if (frameCounter >= NANOSECOND)
 			{
 				PR_LOG(CYAN, "FPS: %i\n", frames);
-				PR_LOG(CYAN, "Delta time: %f ms\n", std::max(passedTime / pow(10, 6), frameTime * 1000.0));
+				PR_LOG(CYAN, "Delta time: %f ms\n", frameTime * 1000.0);
 				frames = 0;
 				frameCounter = 0;
 			}

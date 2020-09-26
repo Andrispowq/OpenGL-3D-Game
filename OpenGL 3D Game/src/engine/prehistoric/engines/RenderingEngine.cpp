@@ -28,7 +28,7 @@ RenderingEngine::RenderingEngine()
 
 	window->setClearColour({ 0.23f, 0.78f, 0.88f, 1.0f });
 
-	if (FrameworkConfig::api == OpenGL)
+	if (FrameworkConfig::api != OpenGL)
 	{
 		camera = std::make_unique<Camera>(5.0f, 50.0f, 0.8f, 80.0f, Vector3f(-178, 102, -47));
 		camera->RotateY(-80);

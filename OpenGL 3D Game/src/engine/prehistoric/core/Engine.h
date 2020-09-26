@@ -21,8 +21,8 @@ public:
 	Engine();
 	~Engine();
 
-	void Input(float frameTime);
-	void Update();
+	void Input();
+	void Update(float frameTime);
 	void Render();
 
 	inline RenderingEngine* getRenderingEngine() const { return renderingEngine.get(); }

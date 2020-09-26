@@ -21,8 +21,8 @@ private:
 
 	void Run();
 
-	void Input(double passedTime) { engine->Input(static_cast<float>(passedTime)); }
-	void Update() { engine->Update(); }
+	void Input() { engine->Input(); }
+	void Update(double passedTime) { engine->Update(static_cast<float>(passedTime)); }
 	void Render() { engine->Render(); }
 
 	CoreEngine(const CoreEngine& engine) = delete;

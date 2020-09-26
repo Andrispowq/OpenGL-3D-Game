@@ -7,11 +7,9 @@ layout(location = 3) in vec3 tangent_VS;
 
 const int max_lights = 10;
 
-//out mat3 tbn;
 out vec3 position_FS;
 out vec2 texture_FS;
 out vec3 normal_FS;
-out vec3 tangent_FS;
 out vec3 light_position[max_lights];
 out vec3 camera_position;
 
@@ -41,13 +39,11 @@ void main()
 	T = normalize(T - dot(T, N) * N); // re-orthogonalise T with respect to N
 	vec3 B = normalize(cross(N, T));
 
-	mat3 toTangentSpace = mat3(//T, N, B);
+	mat3 toTangentSpace = mat3(
 		T.x, N.x, B.x,
 		T.y, N.y, B.y,
 		T.z, N.z, B.z
 	);
-
-	//tbn = toTangentSpace;
 
 	for (int i = 0; i < numberOfLights; i++)
 	{
@@ -58,6 +54,5 @@ void main()
 
 	position_FS = toTangentSpace * worldPosition.xyz;
 	texture_FS = texture_VS;
-	normal_FS = N;
-	tangent_FS = T;
+	normal_FS = toTangentSpace * N;
 }

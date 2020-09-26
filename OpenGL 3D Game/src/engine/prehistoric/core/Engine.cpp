@@ -40,10 +40,8 @@ Engine::~Engine()
 	delete renderingEngine.release();
 }
 
-void Engine::Input(float frameTime)
+void Engine::Input()
 {
-	this->frameTime = frameTime;
-
 	InputInstance.Update();
 
 	renderingEngine->Input();
@@ -51,8 +49,10 @@ void Engine::Input(float frameTime)
 
 //For consistency: Engine updates the root node, and then the engines do the work they need to
 //Most components will register themselves into an engine's list of components, and then the engine can update them
-void Engine::Update()
+void Engine::Update(float frameTime)
 {
+	this->frameTime = frameTime;
+
 	root->PreUpdate(this);
 
 	audioEngine->Update(frameTime);

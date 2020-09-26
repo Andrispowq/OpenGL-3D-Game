@@ -6,11 +6,9 @@ const int max_lights = 10;
 const float PI = 3.141592653589793;
 const float emissionFactor = 3.0;
 
-//in mat3 tbn;
 in vec3 position_FS;
 in vec2 texture_FS;
 in vec3 normal_FS;
-in vec3 tangent_FS;
 in vec3 light_position[max_lights];
 in vec3 camera_position;
 
