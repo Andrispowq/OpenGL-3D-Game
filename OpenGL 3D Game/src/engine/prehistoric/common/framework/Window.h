@@ -27,7 +27,6 @@ public:
 
 	uint32_t getWidth() const { return width; }
 	uint32_t getHeight() const { return height; }
-	bool getResized() const { return resized; }
 	bool getClosed() const { return closed; }
 
 	Swapchain* getSwapchain() const { return swapchain.get(); }
@@ -35,7 +34,6 @@ public:
 
 	void setWidth(uint32_t width) { this->width = width; FrameworkConfig::windowWidth = width; }
 	void setHeight(uint32_t height) { this->height = height; FrameworkConfig::windowHeight = height; }
-	void setResized(bool resized) { this->resized = resized; }
 	void setClosed(const bool& closed) { this->closed = closed; }
 	void setClearColour(const Vector4f& clearColour) { swapchain->setClearColour(clearColour); }
 
@@ -45,8 +43,6 @@ protected:
 	const char* title;
 	bool fullscreen;
 	bool closed;
-
-	bool resized;
 
 	std::unique_ptr<Swapchain> swapchain;
 	std::unique_ptr<Context> context;

@@ -29,7 +29,7 @@ public:
 	virtual void Bind(CommandBuffer* commandBuffer) const override { this->commandBuffer = commandBuffer; }
 	virtual void Unbind() const override {}
 
-	void BindSet(CommandBuffer* commandBuffer, uint32_t set, uint32_t instance_index = 0) const;
+	void BindSets(CommandBuffer* commandBuffer, uint32_t first, uint32_t set_count, uint32_t instance_index = 0) const;
 
 	virtual bool AddUniform(const std::string& name, uint32_t stages, UniformType type, uint32_t set, uint32_t binding, size_t size, Texture* texture = nullptr) override;
 	virtual bool AddUniformBlock(const std::string& name, uint32_t stages, UniformType type, uint32_t set, uint32_t binding, size_t size, Texture* texture = nullptr) override { return true; }

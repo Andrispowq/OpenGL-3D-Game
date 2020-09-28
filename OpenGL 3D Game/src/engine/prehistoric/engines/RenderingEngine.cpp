@@ -28,7 +28,7 @@ RenderingEngine::RenderingEngine()
 
 	window->setClearColour({ 0.23f, 0.78f, 0.88f, 1.0f });
 
-	if (FrameworkConfig::api != OpenGL)
+	if (FrameworkConfig::api == OpenGL)
 	{
 		camera = std::make_unique<Camera>(5.0f, 50.0f, 0.8f, 80.0f, Vector3f(-178, 102, -47));
 		camera->RotateY(-80);
@@ -36,19 +36,7 @@ RenderingEngine::RenderingEngine()
 	}
 	else
 	{
-		camera = std::make_unique<Camera>(5.0f, 50.0f, 0.8f, 80.0f, Vector3f(0, 0, -2));
-	}
-
-	camera->LogStage();
-	camera->setSpeedControl({ MOUSE_SCROLL, PR_KEY_UNKNOWN, PR_JOYSTICK_1 });
-
-	if (FrameworkConfig::api == OpenGL)
-	{
-		renderer = std::make_unique<GLRenderer>(window.get(), camera.get());
-	}
-	else if (FrameworkConfig::api == Vulkan)
-	{
-		renderer = std::make_unique<VKRenderer>(window.get(), camera.get());
+		camera = std::make_unique<Camera>(5.0f, 50.0f, 0.8f, 80.0f, Vector3f(0, 5, -2));
 	}
 }
 
@@ -61,12 +49,24 @@ RenderingEngine::~RenderingEngine()
 	delete camera.release();
 }
 
-void RenderingEngine::Init() const
+void RenderingEngine::Init(AssembledAssetManager* manager)
 {
 	CameraInput keyInput({ KEY_HELD, PR_KEY_W, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_S, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_D, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_A, PR_JOYSTICK_1 },
 		{ KEY_HELD, PR_KEY_UP, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_DOWN, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_RIGHT, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_LEFT, PR_JOYSTICK_1 });
 
 	camera->AddCameraInput(keyInput);
+
+	camera->LogStage();
+	camera->setSpeedControl({ MOUSE_SCROLL, PR_KEY_UNKNOWN, PR_JOYSTICK_1 });
+
+	if (FrameworkConfig::api == OpenGL)
+	{
+		renderer = std::make_unique<GLRenderer>(window.get(), camera.get());
+	}
+	else if (FrameworkConfig::api == Vulkan)
+	{
+		renderer = std::make_unique<VKRenderer>(window.get(), camera.get(), manager);
+	}
 }
 
 void RenderingEngine::Input()
@@ -89,13 +89,6 @@ void RenderingEngine::Update(float delta)
 	if (InputInstance.IsKeyPushed(PR_KEY_E))
 	{
 		renderer->setWireframeMode(renderer->isWireframeMode() xor 0x1);
-	}
-
-	if (window->getResized())
-	{
-		camera->SetProjection(camera->getFov(), (float)window->getWidth(), (float)window->getHeight());
-		RenderableComponent::RecreatePipelines();
-		window->setResized(false);
 	}
 
 	camera->Update(window.get(), delta);

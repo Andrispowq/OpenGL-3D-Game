@@ -6,8 +6,8 @@
 #include "engine/platform/vulkan/framework/context/VKContext.h"
 #include "engine/platform/vulkan/framework/swapchain/VKSwapchain.h"
 
-VKRenderer::VKRenderer(Window* window, Camera* camera)
-	: Renderer(window, camera), commandPool(nullptr), renderpass(nullptr)
+VKRenderer::VKRenderer(Window* window, Camera* camera, AssembledAssetManager* manager)
+	: Renderer(window, camera), commandPool(nullptr), renderpass(nullptr), manager(manager)
 {
 	VKContext* context = (VKContext*)window->getContext();
 	VKSwapchain* swapchain = (VKSwapchain*)window->getSwapchain();
@@ -45,6 +45,12 @@ void VKRenderer::PrepareRendering()
 		delete renderpass.release();
 		primaryFramebuffers.clear();
 
+		uint32_t width = window->getWidth();
+		uint32_t height = window->getHeight();
+
+		camera->SetProjection(camera->getFov(), (float)width, (float)height);
+		swapchain->SetWindowSize(width, height);
+
 		VKContext* context = (VKContext*)window->getContext();
 		VKSwapchain* swapchain = (VKSwapchain*)window->getSwapchain();
 
@@ -66,6 +72,13 @@ void VKRenderer::PrepareRendering()
 		for (size_t i = 0; i < NumImages; i++)
 		{
 			commandPool->AddCommandBuffer();
+		}
+
+		//Recreate the pipelines
+		std::vector<Pipeline*> pipes = manager->get<Pipeline>();
+		for (Pipeline* pipe : pipes)
+		{
+			pipe->RecreatePipeline();
 		}
 	}
 

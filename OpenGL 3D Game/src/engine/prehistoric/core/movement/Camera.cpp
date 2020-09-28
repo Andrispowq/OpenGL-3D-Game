@@ -83,8 +83,6 @@ void Camera::Update(Window* window, float delta)
 	bool movedForward = false, movedBackward = false, movedRight = false, movedLeft = false,
 		rotUp = false, rotDown = false, rotRight = false, rotLeft = false;
 
-	//PR_LOG_MESSAGE("Forward: %f\n", inputs[1]->isForward());
-
 	for (CameraInput& in : inputs)
 	{
 		if (in.isForward() != 0 && !movedForward)
@@ -120,39 +118,15 @@ void Camera::Update(Window* window, float delta)
 		}
 		if (in.isRightRot() != 0 && !rotRight)
 		{
-			if (FrameworkConfig::api == Vulkan)
-				RotateY(static_cast<float>(-rotAmt * 2.0 * in.isRightRot() * delta));
-			else if(FrameworkConfig::api == OpenGL)
-				RotateY(static_cast<float>(rotAmt * 2.0 * in.isRightRot() * delta));
+			RotateY(static_cast<float>(rotAmt * 2.0 * in.isRightRot() * delta));
 			rotRight = true;
 		}
 		if (in.isLeftRot() != 0 && !rotLeft)
 		{
-			if (FrameworkConfig::api == Vulkan)
-				RotateY(static_cast<float>(rotAmt * 2.0 * in.isLeftRot() * delta));
-			else if (FrameworkConfig::api == OpenGL)
-				RotateY(static_cast<float>(-rotAmt * 2.0 * in.isLeftRot() * delta));
+			RotateY(static_cast<float>(-rotAmt * 2.0 * in.isLeftRot() * delta));
 			rotLeft = true;
 		}
 	}
-
-	/*if (InputInstance.isKeyHeld(PR_KEY_W))
-		Move(forward, movAmt);
-	if (InputInstance.isKeyHeld(PR_KEY_S))
-		Move(forward, -movAmt);
-	if (InputInstance.isKeyHeld(PR_KEY_A))
-		Move(getLeft(), movAmt);
-	if (InputInstance.isKeyHeld(PR_KEY_D))
-		Move(getLeft(), -movAmt);
-
-	if (InputInstance.isKeyHeld(PR_KEY_UP))
-		RotateX(-rotAmt / 8.0);
-	if (InputInstance.isKeyHeld(PR_KEY_DOWN))
-		RotateX(rotAmt / 8.0);
-	if (InputInstance.isKeyHeld(PR_KEY_LEFT))
-		RotateY(-rotAmt / 8.0);
-	if (InputInstance.isKeyHeld(PR_KEY_RIGHT))
-		RotateY(rotAmt / 8.0);*/
 
 	//Free mouse rotation
 	if (InputInstance.IsButtonHeld((InputCode) 2))
@@ -176,10 +150,7 @@ void Camera::Update(Window* window, float delta)
 			{
 				if (rotYcounter > rotYamt)
 				{
-					if(FrameworkConfig::api == Vulkan)
-						RotateX(rotYstride * mouseSensitivity);
-					else if (FrameworkConfig::api == OpenGL)
-						RotateX(-rotYstride * mouseSensitivity);
+					RotateX(-rotYstride * mouseSensitivity);
 					rotYcounter -= rotYstride;
 					rotYstride *= 0.98f;
 				}
@@ -193,10 +164,7 @@ void Camera::Update(Window* window, float delta)
 			{
 				if (rotYcounter < rotYamt)
 				{
-					if (FrameworkConfig::api == Vulkan)
-						RotateX(-rotYstride * mouseSensitivity);
-					else if (FrameworkConfig::api == OpenGL)
-						RotateX(rotYstride * mouseSensitivity);
+					RotateX(rotYstride * mouseSensitivity);
 					rotYcounter += rotYstride;
 					rotYstride *= 0.98f;
 				}
@@ -291,4 +259,8 @@ void Camera::SetProjection(float fov, float width, float height)
 	this->height = height;
 
 	this->projectionMatrix = Matrix4f::PerspectiveProjection(fovY, width / height, EngineConfig::rendererNearPlane, EngineConfig::rendererFarPlane);
+	if (FrameworkConfig::api == Vulkan)
+	{
+		projectionMatrix.m[1 * 4 + 1] *= -1;
+	}
 }

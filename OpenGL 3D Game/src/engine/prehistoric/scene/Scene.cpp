@@ -19,10 +19,10 @@
 //We go around in a circle, from -range to range on the y and z axes
 static void sun_move_function(GameObject* object, float frameTime)
 {
-	constexpr float range = 6000.0f;
+	constexpr float range = 32000.0f;
 	constexpr float anglesPerSecond = 0.5f;
 
-	static float angle = 185.0f;
+	static float angle = 150.0f;
 
 	float x = cos(ToRadians(angle)) * range;
 	float y = sin(ToRadians(angle)) * range;
@@ -34,11 +34,12 @@ static void sun_move_function(GameObject* object, float frameTime)
 Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, Camera* camera)
 {
 	WorldLoader loader;
-	loader.LoadWorld("res/world/testLevel.wrld", root, window, manager);
+	//loader.LoadWorld("res/world/testLevel.wrld", root, window, manager);
 
 	if (FrameworkConfig::api == Vulkan)
 	{
 		size_t vboID = manager->getAssetManager()->getResource<VertexBuffer>("quad.obj");
+		manager->getAssetManager()->getResourceByID<VertexBuffer>(vboID)->setFrontFace(FrontFace::CLOCKWISE);
 		size_t shaderID = manager->getAssetManager()->getResource<Shader>("pbr");
 
 		size_t pipelineID = manager->loadResource<Pipeline>(new VKGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID));
@@ -59,9 +60,8 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 
 		GameObject* obj = new GameObject();
 		obj->AddComponent(RENDERER_COMPONENT, renderer);
-		obj->Rotate({ 0, 0, 0 });
-		obj->Move({ 0, 0, -5 });
-		obj->SetScale({ 0.5f, 0.5f, 0.5f });
+		obj->Rotate({ 90, 0, 0 });
+		obj->Move({ 0, 0, 0 });
 		root->AddChild("OBJ", obj);
 
 		GameObject* light2 = new GameObject();
@@ -78,7 +78,7 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 
 		root->AddChild("Terrain", terrain);
 
-		GameObject* slider = new GUISlider(window, manager, 0.0f, 2.0f, terrain->getMaps()->getHeightmap(), &EngineConfig::rendererExposure, sizeof(float), true);
+		/*GameObject* slider = new GUISlider(window, manager, 0.0f, 2.0f, terrain->getMaps()->getHeightmap(), &EngineConfig::rendererExposure, sizeof(float), true);
 		slider->SetPosition({ 0.5f, 0.5f, 0 });
 		slider->SetScale({ 0.125f, 0.05f, 1 });
 		root->AddChild("slider", slider);
@@ -86,12 +86,11 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 		GameObject* slider2 = new GUISlider(window, manager, 1.0f, 3.4f, terrain->getMaps()->getHeightmap(), &EngineConfig::rendererGamma, sizeof(float), true);
 		slider2->SetPosition({ 0.5f, 0.25f, 0 });
 		slider2->SetScale({ 0.125f, 0.05f, 1 });
-		root->AddChild("slider2", slider2);
+		root->AddChild("slider2", slider2);*/
 
 		GameObject* sun = new GameObject();
 		sun->setUpdateFunction(sun_move_function);
-		sun->AddComponent(LIGHT_COMPONENT, new Light(Vector3f(1, 1, 1), Vector3f(200000000), true));
-		sun->SetPosition({ -6000, 0, 0 });
+		sun->AddComponent(LIGHT_COMPONENT, new Light(Vector3f(1, 0.95, 0.87), Vector3f(10000000000.0), true));
 		root->AddChild("sun", sun);
 
 		GameObject* light = new GameObject();

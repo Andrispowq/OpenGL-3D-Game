@@ -5,22 +5,21 @@
 VKPBRShader::VKPBRShader(Window* window) : VKShader(window->getContext(), window->getSwapchain())
 {
 	AddShader(ResourceLoader::LoadShaderVK("vulkan/pbr/pbr_VS.spv"), VERTEX_SHADER);
-	AddShader(ResourceLoader::LoadShaderVK("vulkan/pbr/pbr_GS.spv"), GEOMETRY_SHADER);
 	AddShader(ResourceLoader::LoadShaderVK("vulkan/pbr/pbr_FS.spv"), FRAGMENT_SHADER);
 
-	AddUniform("camera", VERTEX_SHADER | GEOMETRY_SHADER | FRAGMENT_SHADER, UniformBuffer, 0, 0, sizeof(float) * 16 * 2 + Vector3f::size());
-	AddUniform("lightConditions", GEOMETRY_SHADER | FRAGMENT_SHADER, UniformBuffer, 0, 1, sizeof(int) * 2 + sizeof(float) + Vector3f::size());
-	AddUniform("lights", FRAGMENT_SHADER, UniformBuffer, 0, 2, Vector4f::size() * 3 * EngineConfig::lightsMaxNumber);
+	AddUniform("camera", VERTEX_SHADER | FRAGMENT_SHADER, UniformBuffer, 0, 0, sizeof(float) * 16 * 2 + Vector4f::size());
+	AddUniform("lightConditions", VERTEX_SHADER | FRAGMENT_SHADER, UniformBuffer, 0, 1, sizeof(int) * 2 + sizeof(float) * 2);
+	AddUniform("lights", VERTEX_SHADER | FRAGMENT_SHADER, UniformBuffer, 0, 2, Vector4f::size() * 3 * EngineConfig::lightsMaxNumber);
 
-	AddUniform("material", GEOMETRY_SHADER | FRAGMENT_SHADER, UniformBuffer, 1, 0, Vector3f::size() * 2 + sizeof(int) + sizeof(float) * 4);
+	AddUniform("material", GEOMETRY_SHADER | FRAGMENT_SHADER, UniformBuffer, 1, 0, Vector4f::size() * 2 + sizeof(int) + sizeof(float) * 4);
 
-	AddUniform(ALBEDO_MAP, GEOMETRY_SHADER | FRAGMENT_SHADER, CombinedImageSampler, 1, 1, 0, nullptr);
-	AddUniform(DISPLACEMENT_MAP, GEOMETRY_SHADER | FRAGMENT_SHADER, CombinedImageSampler, 1, 2, 0, nullptr);
-	AddUniform(NORMAL_MAP, GEOMETRY_SHADER | FRAGMENT_SHADER, CombinedImageSampler, 1, 3, 0, nullptr);
-	AddUniform(METALLIC_MAP, GEOMETRY_SHADER | FRAGMENT_SHADER, CombinedImageSampler, 1, 4, 0, nullptr);
-	AddUniform(ROUGHNESS_MAP, GEOMETRY_SHADER | FRAGMENT_SHADER, CombinedImageSampler, 1, 5, 0, nullptr);
-	AddUniform(OCCLUSION_MAP, GEOMETRY_SHADER | FRAGMENT_SHADER, CombinedImageSampler, 1, 6, 0, nullptr);
-	AddUniform(EMISSION_MAP, GEOMETRY_SHADER | FRAGMENT_SHADER, CombinedImageSampler, 1, 7, 0, nullptr);
+	AddUniform(ALBEDO_MAP, FRAGMENT_SHADER, CombinedImageSampler, 1, 1, 0, nullptr);
+	AddUniform(DISPLACEMENT_MAP, FRAGMENT_SHADER, CombinedImageSampler, 1, 2, 0, nullptr);
+	AddUniform(NORMAL_MAP, FRAGMENT_SHADER, CombinedImageSampler, 1, 3, 0, nullptr);
+	AddUniform(METALLIC_MAP, FRAGMENT_SHADER, CombinedImageSampler, 1, 4, 0, nullptr);
+	AddUniform(ROUGHNESS_MAP, FRAGMENT_SHADER, CombinedImageSampler, 1, 5, 0, nullptr);
+	AddUniform(OCCLUSION_MAP, FRAGMENT_SHADER, CombinedImageSampler, 1, 6, 0, nullptr);
+	AddUniform(EMISSION_MAP, FRAGMENT_SHADER, CombinedImageSampler, 1, 7, 0, nullptr);
 
 	AddUniform("m_transform", VERTEX_SHADER, UniformBuffer, 2, 0, sizeof(float) * 16);
 
@@ -37,6 +36,7 @@ void VKPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>
 	SetUniformi("lightConditions", EngineConfig::rendererHighDetailRange, 0, instance_index);
 	SetUniformi("lightConditions", (uint32_t)lights.size() >= EngineConfig::lightsMaxNumber ? EngineConfig::lightsMaxNumber : (uint32_t)lights.size(), 4, instance_index);
 	SetUniformf("lightConditions", EngineConfig::rendererGamma, 8, instance_index);
+	SetUniformf("lightConditions", EngineConfig::rendererExposure, 12, instance_index);
 
 	size_t baseOffset = EngineConfig::lightsMaxNumber * Vector4f::size();
 
@@ -59,8 +59,6 @@ void VKPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>
 			SetUniform("lights", Vector4f(), baseOffset * 2 + currentOffset, instance_index);
 		}
 	}
-
-  	BindSet(commandBuffer, 0, instance_index);
 }
 
 void VKPBRShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
@@ -86,6 +84,5 @@ void VKPBRShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_ind
 	SetTexture(OCCLUSION_MAP, material->getTexture(OCCLUSION_MAP), instance_index);
 	SetTexture(EMISSION_MAP, material->getTexture(EMISSION_MAP), instance_index);
 
-	BindSet(commandBuffer, 1, instance_index);
-	BindSet(commandBuffer, 2, instance_index);
+	BindSets(commandBuffer, 0, 3, instance_index);
 }

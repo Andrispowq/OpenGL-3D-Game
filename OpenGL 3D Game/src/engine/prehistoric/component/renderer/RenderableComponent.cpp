@@ -34,19 +34,6 @@ RenderableComponent::~RenderableComponent()
 	pipelineIndex = -1;
 }
 
-void RenderableComponent::RecreatePipelines()
-{
-	/*for (Pipeline* pipeline : pipelines)
-	{
-		pipeline->setViewportStart(0);
-		pipeline->setViewportSize({ (float)FrameworkConfig::windowWidth, (float)FrameworkConfig::windowHeight });
-		pipeline->setScissorStart(0);
-		pipeline->setScissorSize({ FrameworkConfig::windowWidth, FrameworkConfig::windowHeight });
-
-		pipeline->RecreatePipeline();
-	}*/
-}
-
 Pipeline* RenderableComponent::getPipeline() const
 {
 	return manager->getResourceByID<Pipeline>(pipelineIndex);

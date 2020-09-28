@@ -87,8 +87,6 @@ void main()
 		normal = 2.0 * texture(material.normalMap, texture_FS).rbg - 1.0;
 		normal = normalize(normal);
 		normal.xz *= attenuation;
-
-		//normal = tbn * normal;
 	}
 	
 	vec3 N = normalize(normal);

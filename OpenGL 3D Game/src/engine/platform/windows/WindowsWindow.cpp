@@ -22,8 +22,6 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	Window* wnd = (Window*)glfwGetWindowUserPointer(window);
 	wnd->setWidth(width);
 	wnd->setHeight(height);
-	wnd->setResized(true);
-	wnd->getSwapchain()->SetWindowSize((uint32_t)width, (uint32_t)height);
 }
 
 static void error_callback(int error, const char* description)

@@ -73,7 +73,7 @@ VkVertexInputBindingDescription VKMeshVertexBuffer::getBindingDescription() cons
 
 std::vector<VkVertexInputAttributeDescription> VKMeshVertexBuffer::getAttributeDescriptions() const
 {
-	std::vector<VkVertexInputAttributeDescription> attributeDescriptions(3);
+	std::vector<VkVertexInputAttributeDescription> attributeDescriptions(4);
 
 	attributeDescriptions[0].binding = 0;
 	attributeDescriptions[0].location = 0;
@@ -89,6 +89,11 @@ std::vector<VkVertexInputAttributeDescription> VKMeshVertexBuffer::getAttributeD
 	attributeDescriptions[2].location = 2;
 	attributeDescriptions[2].format = VK_FORMAT_R32G32B32_SFLOAT;
 	attributeDescriptions[2].offset = uint32_t(Vector3f::size() + Vector2f::size());
+
+	attributeDescriptions[3].binding = 0;
+	attributeDescriptions[3].location = 3;
+	attributeDescriptions[3].format = VK_FORMAT_R32G32B32_SFLOAT;
+	attributeDescriptions[3].offset = uint32_t(Vector3f::size() + Vector2f::size() + Vector3f::size());
 
 	return attributeDescriptions;
 }

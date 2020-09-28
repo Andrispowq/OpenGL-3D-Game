@@ -19,9 +19,9 @@ Engine::Engine()
 	audioEngine = std::make_unique<AudioEngine>();
 
 	InputInstance.Init(renderingEngine->getWindow());
-	renderingEngine->Init();
 
 	manager = std::make_unique<AssembledAssetManager>(renderingEngine->getWindow());
+	renderingEngine->Init(manager.get());
 	
 	//Loading configs that depend on some engine feature like the window
 	TerrainConfig::LoadConfig("res/config/terrain.cfg", renderingEngine->getWindow(), manager->getAssetManager());

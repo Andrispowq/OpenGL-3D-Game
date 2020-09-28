@@ -20,7 +20,7 @@ public:
 	RenderingEngine();
 	virtual ~RenderingEngine();
 
-	void Init() const;
+	void Init(AssembledAssetManager* manager);
 
 	void Input();
 	void Update(float delta);

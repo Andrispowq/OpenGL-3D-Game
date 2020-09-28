@@ -126,6 +126,44 @@ public:
 		return materials.at(ID).first.get();
 	}
 
+	/*
+		Getting the whole vector of resources stored
+	*/
+	template<typename Resource>
+	std::vector<Resource*> get()
+	{
+		throw std::string("size_t AssembledAssetManager::get(void) failed, recieved bad type: ") + typeid(Resource).name();
+		return {};
+	}
+
+	template<>
+	std::vector<Pipeline*> get()
+	{
+		std::vector<Pipeline*> ret;
+		ret.reserve(pipelines.size());
+
+		for (auto it = pipelines.begin(); it != pipelines.end(); it++)
+		{
+			ret.push_back(it->second.first.get());
+		}
+
+		return ret;
+	}
+
+	template<>
+	std::vector<Material*> get()
+	{
+		std::vector<Material*> ret;
+		ret.reserve(materials.size());
+
+		for (auto it = materials.begin(); it != materials.end(); it++)
+		{
+			ret.push_back(it->second.first.get());
+		}
+
+		return ret;
+	}
+
 	AssetManager* getAssetManager() { return manager.get(); }
 
 private:

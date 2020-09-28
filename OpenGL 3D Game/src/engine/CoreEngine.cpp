@@ -92,18 +92,18 @@ void CoreEngine::Run()
 		unprocessedTime += passedTime / NANOSECOND;
 		frameCounter += passedTime;
 
-		Input();
-
-		if (engine->getRenderingEngine()->getWindow()->ShouldClose())
-		{
-			Stop();
-			break;
-		}
-
 		while (unprocessedTime > frameTime)
 		{
 			render = true;
 			unprocessedTime -= frameTime;
+
+			Input();
+
+			if (engine->getRenderingEngine()->getWindow()->ShouldClose())
+			{
+				Stop();
+				break;
+			}
 
 			Update(frameTime);
 

@@ -102,7 +102,7 @@ void VKDescriptorPool::finalize(VkPipelineLayout& layout)
 	VkDescriptorSetAllocateInfo _setAllocInfo = {};
 	_setAllocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
 	_setAllocInfo.descriptorPool = pool;
-	_setAllocInfo.descriptorSetCount = (uint32_t)sets.size() * numImages; //We create a set for every swapchain image for easier synchronization
+	_setAllocInfo.descriptorSetCount = (uint32_t)sets.size() * numImages; //We create a set for every swapchain image for easier synchronisation
 	_setAllocInfo.pSetLayouts = _layouts.data();
 	_setAllocInfo.pNext = nullptr;
 
@@ -121,7 +121,7 @@ void VKDescriptorPool::finalize(VkPipelineLayout& layout)
 	
 	for (auto& set : sets)
 	{
-		std::vector<VkWriteDescriptorSet> _writeSets;
+		/*std::vector<VkWriteDescriptorSet> _writeSets;
 
 		size_t numberOfUniformBuffers = 0;
 
@@ -131,15 +131,21 @@ void VKDescriptorPool::finalize(VkPipelineLayout& layout)
 				numberOfUniformBuffers++;
 		}
 
-		_writeSets.reserve(numberOfUniformBuffers * numImages);
+		if (numberOfUniformBuffers == 0)
+			continue;
 
-		for (uint32_t i = 0; i < numImages; i++)
+		_writeSets.reserve(numberOfUniformBuffers * numImages);*/
+
+		for (auto& binding : set->getBindings())
 		{
-			for (auto& binding : set->getBindings())
-			{
-				if (binding->getBuffer() == nullptr)
-					continue;
+			if (binding->getBuffer() == nullptr)
+				continue;
 
+			std::vector<VkWriteDescriptorSet> _writeSets;
+			_writeSets.reserve(numImages);
+
+			for (uint32_t i = 0; i < numImages; i++)
+			{
 				VkDescriptorBufferInfo _bufferInfo = {};
 				_bufferInfo.buffer = binding->getBuffer()->getBuffer();
 				_bufferInfo.offset = 0;
@@ -156,9 +162,11 @@ void VKDescriptorPool::finalize(VkPipelineLayout& layout)
 
 				_writeSets.push_back(_writeSet);
 			}
+
+			vkUpdateDescriptorSets(device->getDevice(), numImages, _writeSets.data(), 0, nullptr);
 		}
 
-		vkUpdateDescriptorSets(device->getDevice(), (uint32_t)_writeSets.size(), _writeSets.data(), 0, nullptr);
+		//vkUpdateDescriptorSets(device->getDevice(), (uint32_t)_writeSets.size(), _writeSets.data(), 0, nullptr);
 	}
 }
 
