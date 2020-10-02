@@ -5,18 +5,8 @@
 
 int main(int argc, char** args)
 {
-	_CrtMemState state, state_after, state2;
-	_CrtMemCheckpoint(&state);
+	CoreEngine engine;
+	engine.Start();
 
-	{
-		CoreEngine engine;
-		engine.Start();
-	}
-
-	_CrtMemCheckpoint(&state_after);
-	
-	if(_CrtMemDifference(&state2, &state, &state_after))
-		_CrtMemDumpStatistics(&state2);
-
-  	return 0;
+	return 0;
 }
