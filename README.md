@@ -28,4 +28,4 @@ Features to come include:
   * Android, and iOS
   * and probably Xbox and PlayStation
 
-Currently, the engine only supports Windows. If you wish to use this engine, download the whole repositary, and open the OpenGL 3D Game.sln file using Visual Studio 2019. 
+Currently, the engine only supports Windows. If you wish to use this engine, download the whole repository, and open the OpenGL 3D Game.sln file using Visual Studio 2019. 
