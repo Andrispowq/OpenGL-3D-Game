@@ -22,19 +22,6 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 	std::string sSeverity;
 	bool hasSeverityBegan = false;
 
-	if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT)
-	{
-		if (!hasSeverityBegan)
-		{
-			hasSeverityBegan = true;
-		}
-		else
-		{
-			sSeverity.append("and ");
-		}
-
-		sSeverity.append("INFO");
-	}
 	if (messageSeverity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT)
 	{
 		if (!hasSeverityBegan)
@@ -125,14 +112,6 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(
 	else if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
 	{
 		PR_LOG_WARNING(message, sSeverity.c_str(), sType.c_str(), pCallbackData->pMessageIdName, pCallbackData->pMessage);
-	}
-	else if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT)
-	{
-		PR_LOG_MESSAGE(message, sSeverity.c_str(), sType.c_str(), pCallbackData->pMessageIdName, pCallbackData->pMessage);
-	}
-	else if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT)
-	{
-		PR_LOG_MESSAGE(message, sSeverity.c_str(), sType.c_str(), pCallbackData->pMessageIdName, pCallbackData->pMessage);
 	}
 
 	return VK_FALSE;

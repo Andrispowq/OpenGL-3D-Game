@@ -30,9 +30,9 @@ layout(set = 0, binding = 1, std140) uniform LightConditions
 
 layout(set = 0, binding = 2, std140) uniform Lights
 {
-	layout(offset = max_lights * 0 * 16) vec3 position[max_lights];
-	layout(offset = max_lights * 1 * 16) vec3 colour[max_lights];
-	layout(offset = max_lights * 2 * 16) vec3 intensity[max_lights];
+	layout(offset = max_lights * 0 * 16) vec4 position[max_lights];
+	layout(offset = max_lights * 1 * 16) vec4 colour[max_lights];
+	layout(offset = max_lights * 2 * 16) vec4 intensity[max_lights];
 } lights;
 
 layout(set = 2, binding = 0) uniform Model
@@ -58,12 +58,12 @@ void main()
 
 	for (int i = 0; i < numberOfLights; i++)
 	{
-		light_position[i] = toTangentSpace * lights.position[i];
+		light_position[i] = toTangentSpace * lights.position[i].xyz;
 	}
 
 	camera_position = toTangentSpace * cameraPosition;
 
 	position_FS = toTangentSpace * worldPosition.xyz;
 	texture_FS = texture_VS;
-	normal_FS = toTangentSpace * N;
+	normal_FS = N;
 }

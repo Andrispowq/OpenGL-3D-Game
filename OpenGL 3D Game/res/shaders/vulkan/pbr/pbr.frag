@@ -30,9 +30,9 @@ layout(set = 0, binding = 1, std140) uniform LightConditions
 
 layout(set = 0, binding = 2, std140) uniform Lights
 {
-	layout(offset = max_lights * 0 * 16) vec3 position[max_lights];
-	layout(offset = max_lights * 1 * 16) vec3 colour[max_lights];
-	layout(offset = max_lights * 2 * 16) vec3 intensity[max_lights];
+	layout(offset = max_lights * 0 * 16) vec4 position[max_lights];
+	layout(offset = max_lights * 1 * 16) vec4 colour[max_lights];
+	layout(offset = max_lights * 2 * 16) vec4 intensity[max_lights];
 } lights;
 
 layout(set = 1, binding = 0, std140) uniform Material
@@ -98,7 +98,7 @@ void main()
 	}
 	
 	vec3 N = normalize(normal);
-	vec3 V = normalize(position_FS - cameraPosition);
+	vec3 V = normalize(camera_position - position_FS);
 	vec3 R = reflect(-V, N);
 	
 	vec3 F0 = vec3(0.04); 
@@ -114,7 +114,7 @@ void main()
         vec3 H = normalize(V + L);
         float dist = length(light_position[i] - position_FS);
         float attenuation = 1 / pow(dist, 2);
-        vec3 radiance = lights.colour[i] * lights.intensity[i] * attenuation; 
+        vec3 radiance = lights.colour[i].rgb * lights.intensity[i].rgb * attenuation; 
         
         // cook-torrance brdf
         float NDF = DistributionGGX(N, H, roughness);
@@ -126,11 +126,11 @@ void main()
         kD *= 1 - metallic;
         
         vec3 numerator = NDF * G * F;
-        float denominator = 4 * max(dot(N, V), 0) * max(dot(N, L), 0);
+        float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0);
         vec3 specular = numerator / max(denominator, 0.001);
-            
+        
         // add to outgoing radiance Lo
-        float NdotL = max(dot(N, L), 0);
+        float NdotL = max(dot(N, L), 0.0);
         Lo += (kD * albedoColour / PI + specular) * radiance * NdotL;
     }
 

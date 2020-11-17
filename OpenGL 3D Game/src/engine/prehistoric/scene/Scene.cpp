@@ -39,7 +39,7 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 	if (FrameworkConfig::api == Vulkan)
 	{
 		size_t vboID = manager->getAssetManager()->getResource<VertexBuffer>("quad.obj");
-		manager->getAssetManager()->getResourceByID<VertexBuffer>(vboID)->setFrontFace(FrontFace::CLOCKWISE);
+		manager->getAssetManager()->getResourceByID<VertexBuffer>(vboID)->setFrontFace(FrontFace::COUNTER_CLOCKWISE);
 		size_t shaderID = manager->getAssetManager()->getResource<Shader>("pbr");
 
 		size_t pipelineID = manager->loadResource<Pipeline>(new VKGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID));
@@ -52,21 +52,21 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 
 		size_t materialID = manager->loadResource<Material>(material);
 
-		//material->AddFloat(METALLIC, 1.0);
-		//material->AddFloat(ROUGHNESS, 0.3);
+		//material->addFloat(METALLIC, 0.7f);
+		//material->addFloat(ROUGHNESS, 0.3f);
 		material->addFloat(OCCLUSION, 1);
 
 		RendererComponent* renderer = new RendererComponent(pipelineID, materialID, window, manager);
 
 		GameObject* obj = new GameObject();
 		obj->AddComponent(RENDERER_COMPONENT, renderer);
-		obj->Rotate({ 90, 0, 0 });
+		obj->Rotate({ -90, 0, 0 });
 		obj->Move({ 0, 0, 0 });
 		root->AddChild("OBJ", obj);
 
 		GameObject* light2 = new GameObject();
-		light2->AddComponent(LIGHT_COMPONENT, new Light(Vector3f(1, 0, 0), Vector3f(1000)));
-		light2->Move({ -20, 40, 40 });
+		light2->AddComponent(LIGHT_COMPONENT, new Light(Vector3f(1, 0, 0), Vector3f(1000.0f)));
+		light2->Move({ -10, 40, 0 });
 		root->AddChild("l", light2);
 	}
 	else

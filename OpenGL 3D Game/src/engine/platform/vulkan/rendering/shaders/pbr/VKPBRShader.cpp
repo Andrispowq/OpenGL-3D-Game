@@ -59,6 +59,8 @@ void VKPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>
 			SetUniform("lights", Vector4f(), baseOffset * 2 + currentOffset, instance_index);
 		}
 	}
+
+	BindSets(commandBuffer, 0, 1, instance_index);
 }
 
 void VKPBRShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_index) const
@@ -84,5 +86,5 @@ void VKPBRShader::UpdateObjectUniforms(GameObject* object, uint32_t instance_ind
 	SetTexture(OCCLUSION_MAP, material->getTexture(OCCLUSION_MAP), instance_index);
 	SetTexture(EMISSION_MAP, material->getTexture(EMISSION_MAP), instance_index);
 
-	BindSets(commandBuffer, 0, 3, instance_index);
+	BindSets(commandBuffer, 1, 2, instance_index);
 }

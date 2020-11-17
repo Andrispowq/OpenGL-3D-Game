@@ -37,9 +37,10 @@ private:
 
 	VkBuffer buffer;
 	VkDeviceMemory memory;
+	size_t size;
 
 	void* mapped;
-	size_t size;
+	size_t mapped_size;
 
 	VkBufferUsageFlags buFlags;
 	VkMemoryPropertyFlags mpFlags;
