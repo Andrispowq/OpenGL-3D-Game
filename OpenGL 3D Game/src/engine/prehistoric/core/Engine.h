@@ -12,6 +12,7 @@
 #include "engine/config/FrameworkConfig.h"
 #include "engine/config/TerrainConfig.h"
 #include "engine/config/AtmosphereConfig.h"
+#include "engine/config/EnvironmentMapConfig.h"
 
 #include "engine/prehistoric/resources/AssembledAssetManager.h"
 

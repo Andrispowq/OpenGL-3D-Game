@@ -13,7 +13,7 @@ class Framebuffer
 {
 public:
 	Framebuffer(Window* window) : window(window) {}
-	virtual ~Framebuffer();
+	virtual ~Framebuffer() {}
 
 	virtual void Bind() = 0;
 	virtual void Unbind() = 0;

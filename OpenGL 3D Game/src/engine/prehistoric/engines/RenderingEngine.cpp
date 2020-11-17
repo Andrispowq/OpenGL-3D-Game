@@ -51,6 +51,8 @@ RenderingEngine::~RenderingEngine()
 
 void RenderingEngine::Init(AssembledAssetManager* manager)
 {
+	this->manager = manager;
+
 	CameraInput keyInput({ KEY_HELD, PR_KEY_W, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_S, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_D, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_A, PR_JOYSTICK_1 },
 		{ KEY_HELD, PR_KEY_UP, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_DOWN, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_RIGHT, PR_JOYSTICK_1 }, { KEY_HELD, PR_KEY_LEFT, PR_JOYSTICK_1 });
 
@@ -93,6 +95,8 @@ void RenderingEngine::Update(float delta)
 
 	camera->Update(window.get(), delta);
 }
+
+#include "engine/prehistoric/modules/environmentMapRenderer/EnvironmentMapRenderer.h"
 
 void RenderingEngine::Render()
 {

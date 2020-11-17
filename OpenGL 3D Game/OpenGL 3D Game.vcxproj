@@ -12,7 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\engine\config\AtmosphereConfig.cpp" />
-    <ClCompile Include="src\engine\config\EnviromentMapConfig.cpp" />
+    <ClCompile Include="src\engine\config\EnvironmentMapConfig.cpp" />
     <ClCompile Include="src\engine\platform\opengl\buffer\GLShaderStorageBuffer.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\framebuffer\GLFramebuffer.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\GLRenderer.cpp" />
@@ -20,6 +20,11 @@
     <ClCompile Include="src\engine\platform\opengl\rendering\pipeline\GLGraphicsPipeline.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\atmosphere\GLAtmosphereScatteringShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\atmosphere\GLAtmosphereShader.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLBRDFIntegrateShader.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLEnvironmentMapShader.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLEnvironmentShader.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLIrradianceShader.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLPrefilterShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLNormalMapShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLSplatmapShader.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLTerrainHeightsShader.cpp" />
@@ -28,11 +33,10 @@
     <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorSet.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\descriptors\VKDescriptorSetBinding.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\VKRenderer.cpp" />
-    <ClCompile Include="src\engine\prehistoric\common\buffer\Framebuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\command\CommandBuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\framebuffer\Framebuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\Renderer.cpp" />
-    <ClCompile Include="src\engine\prehistoric\modules\enviromentMapRenderer\EnviromentMapRenderer.cpp" />
+    <ClCompile Include="src\engine\prehistoric\modules\environmentMapRenderer\EnvironmentMapRenderer.cpp" />
     <ClCompile Include="src\engine\prehistoric\resources\AssembledAssetManager.cpp" />
     <ClCompile Include="src\engine\prehistoric\resources\AssetManager.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\buffer\ShaderStorageBuffer.cpp" />
@@ -139,7 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\config\AtmosphereConfig.h" />
-    <ClInclude Include="src\engine\config\EnviromentMapConfig.h" />
+    <ClInclude Include="src\engine\config\EnvironmentMapConfig.h" />
     <ClInclude Include="src\engine\config\TerrainConfig.h" />
     <ClInclude Include="src\engine\platform\opengl\buffer\GLPatchVertexBuffer.h" />
     <ClInclude Include="src\engine\platform\opengl\buffer\GLShaderStorageBuffer.h" />
@@ -152,6 +156,11 @@
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLPipeline.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\atmosphere\GLAtmosphereScatteringShader.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\atmosphere\GLAtmosphereShader.h" />
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLBRDFIntegrateShader.h" />
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLEnvironmentMapShader.h" />
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLEnvironmentShader.h" />
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLIrradianceShader.h" />
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLPrefilterShader.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLNormalMapShader.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLSplatmapShader.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\gpgpu\GLTerrainHeightsShader.h" />
@@ -195,10 +204,9 @@
     <ClInclude Include="src\engine\prehistoric\common\rendering\command\CommandBuffer.h" />
     <ClInclude Include="src\engine\prehistoric\common\rendering\framebuffer\Framebuffer.h" />
     <ClInclude Include="src\engine\prehistoric\common\rendering\Renderer.h" />
-    <ClInclude Include="src\engine\prehistoric\modules\enviromentMapRenderer\EnviromentMapRenderer.h" />
+    <ClInclude Include="src\engine\prehistoric\modules\environmentMapRenderer\EnvironmentMapRenderer.h" />
     <ClInclude Include="src\engine\prehistoric\resources\AssembledAssetManager.h" />
     <ClInclude Include="src\engine\prehistoric\resources\AssetManager.h" />
-    <ClInclude Include="src\engine\prehistoric\common\buffer\Framebuffer.h" />
     <ClInclude Include="src\engine\prehistoric\common\buffer\MeshVertexBuffer.h" />
     <ClInclude Include="src\engine\prehistoric\common\buffer\PatchVertexBuffer.h" />
     <ClInclude Include="src\engine\prehistoric\common\buffer\ShaderStorageBuffer.h" />

@@ -1,6 +1,8 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "GLPBRShader.h"
 
+#include "engine/config/EnvironmentMapConfig.h"
+
 GLPBRShader::GLPBRShader() : GLShader()
 {
 	AddShader(ResourceLoader::LoadShaderGL("opengl/pbr/pbr_VS.glsl"), VERTEX_SHADER);
@@ -38,6 +40,10 @@ GLPBRShader::GLPBRShader() : GLShader()
 		AddUniform(name + "].colour");
 		AddUniform(name + "].intensity");
 	}
+
+	AddUniform("irradianceMap");
+	AddUniform("prefilterMap");
+	AddUniform("brdfLUT");
 
 	AddUniform("gamma");
 	AddUniform("exposure");
@@ -86,6 +92,14 @@ void GLPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>
 		SetUniform(uniformName + "intensity", light->getIntensity());
 	}
 #endif
+
+	EnvironmentMapConfig::irradianceMap->Bind(7);
+	EnvironmentMapConfig::prefilterMap->Bind(8);
+	EnvironmentMapConfig::brdfLUT->Bind(9);
+
+	SetUniformi("irradianceMap", 7);
+	SetUniformi("prefilterMap", 8);
+	SetUniformi("brdfLUT", 9);
 
 	SetUniformf("gamma", EngineConfig::rendererGamma);
 	SetUniformf("exposure", EngineConfig::rendererExposure);

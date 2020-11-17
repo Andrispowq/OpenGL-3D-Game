@@ -1,0 +1,27 @@
+#include "engine/prehistoric/core/util/Includes.hpp"
+#include "GLEnvironmentShader.h"
+
+GLEnvironmentShader::GLEnvironmentShader()
+{
+	AddShader(ResourceLoader::LoadShaderGL("opengl/environmentMap/environment_VS.glsl"), VERTEX_SHADER);
+	AddShader(ResourceLoader::LoadShaderGL("opengl/environmentMap/environment_FS.glsl"), FRAGMENT_SHADER);
+
+	CompileShader();
+
+	AddUniform("m_view");
+	AddUniform("m_projection");
+
+	AddUniform("environmentMap");
+	AddUniform("gamma");
+}
+
+void GLEnvironmentShader::UpdateUniforms(const Matrix4f& projection, const Matrix4f& view, Texture* texture) const
+{
+	SetUniform("m_view", view);
+	SetUniform("m_projection", projection);
+
+	texture->Bind(0);
+	SetUniformi("environmentMap", 0);
+
+	SetUniformf("gamma", EngineConfig::rendererGamma);
+}

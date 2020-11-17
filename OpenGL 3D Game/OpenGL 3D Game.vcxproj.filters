@@ -333,9 +333,6 @@
     <ClCompile Include="src\engine\prehistoric\resources\AssetManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\prehistoric\common\buffer\Framebuffer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\prehistoric\common\rendering\command\CommandBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -366,10 +363,25 @@
     <ClCompile Include="src\engine\platform\opengl\rendering\framebuffer\GLFramebuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\prehistoric\modules\enviromentMapRenderer\EnviromentMapRenderer.cpp">
+    <ClCompile Include="src\engine\config\EnvironmentMapConfig.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\config\EnviromentMapConfig.cpp">
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLEnvironmentShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLEnvironmentMapShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\prehistoric\modules\environmentMapRenderer\EnvironmentMapRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLBRDFIntegrateShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLIrradianceShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLPrefilterShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -698,9 +710,6 @@
     <ClInclude Include="src\engine\prehistoric\common\util\RenderUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\prehistoric\common\buffer\Framebuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\prehistoric\common\buffer\VertexBuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -755,10 +764,25 @@
     <ClInclude Include="src\engine\platform\opengl\rendering\framebuffer\GLFramebuffer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\prehistoric\modules\enviromentMapRenderer\EnviromentMapRenderer.h">
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLEnvironmentShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\config\EnviromentMapConfig.h">
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLEnvironmentMapShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\prehistoric\modules\environmentMapRenderer\EnvironmentMapRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\config\EnvironmentMapConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLBRDFIntegrateShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLIrradianceShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLPrefilterShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

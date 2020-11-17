@@ -10,6 +10,7 @@ Engine::Engine()
 	FrameworkConfig::LoadConfig("res/config/framework.cfg");
 	EngineConfig::LoadConfig("res/config/engine.cfg");
 	AtmosphereConfig::LoadConfig("res/config/atmosphere.cfg");
+	EnvironmentMapConfig::LoadConfig("res/config/environment_map.cfg");
 
 	//Rootobject init
 	root = std::make_unique<GameObject>();

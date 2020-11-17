@@ -15,6 +15,7 @@ public:
 	virtual void EndRendering();
 
 	virtual void Render() override;
+
 };
 
 #endif

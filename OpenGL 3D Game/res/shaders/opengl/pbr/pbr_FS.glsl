@@ -136,7 +136,7 @@ void main()
 	vec3 kD = 1.0 - kS;
 	kD *= 1.0 - metallic;
 
-	vec3 irradiance = texture(irradianceMap, normal_FS).rgb;	
+	vec3 irradiance = texture(irradianceMap, N).rgb;	
 	vec3 diffuse = irradiance * albedoColour;
 	
 	const float MAX_REFLECTION_LOD = 4.0;
@@ -151,7 +151,7 @@ void main()
 	colour = 1.0 - exp(-colour * exposure);
 	colour = pow(colour, vec3(1.0 / gamma));
 	
-	outColour = vec4(colour, 1);
+	outColour = vec4(irradiance, 1);
 }
 
 float DistributionGGX(vec3 N, vec3 H, float roughness)
