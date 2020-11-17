@@ -34,7 +34,6 @@ static void sun_move_function(GameObject* object, float frameTime)
 Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, Camera* camera)
 {
 	WorldLoader loader;
-	//loader.LoadWorld("res/world/testLevel.wrld", root, window, manager);
 
 	if (FrameworkConfig::api == Vulkan)
 	{
@@ -71,6 +70,8 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 	}
 	else
 	{
+		loader.LoadWorld("res/world/testLevel.wrld", root, window, manager);
+
 		root->AddChild("Atmosphere", new Atmosphere(window, manager));		
 
 		Terrain* terrain = new Terrain(window, camera, manager);

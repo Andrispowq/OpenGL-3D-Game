@@ -12,18 +12,16 @@ class VKDescriptorSet
 {
 public:
 	VKDescriptorSet(VKDevice* device, VKSwapchain* swapchain, uint32_t set_index) : device(device), swapchain(swapchain), set_index(set_index), layout(VK_NULL_HANDLE) {}
+	VKDescriptorSet(const VKDescriptorSet&);
 	virtual ~VKDescriptorSet();
 
 	void addBinding(VKDescriptorSetBinding* binding);
-
 	void finalize(); //We don't want to add a big overhead by regenerating the set layout everytime we add a binding, so this function should be invoked when we added every descriptor
 
 	inline VkDescriptorSetLayout& getLayout() { return layout; }
 	inline std::vector<VkDescriptorSet>& getSets() { return sets; }
 
 	inline std::vector<VKDescriptorSetBinding*>& getBindings() { return bindings; }
-
-	VKDescriptorSet(const VKDescriptorSet&) = default;
 private:
  	VKDevice* device;
 	VKSwapchain* swapchain;

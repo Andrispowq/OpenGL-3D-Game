@@ -22,6 +22,7 @@ static void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	Window* wnd = (Window*)glfwGetWindowUserPointer(window);
 	wnd->setWidth(width);
 	wnd->setHeight(height);
+	wnd->getSwapchain()->SetWindowSize(width, height);
 }
 
 static void error_callback(int error, const char* description)
@@ -56,9 +57,6 @@ bool WindowsWindow::Create()
 	glfwWindowHint(GLFW_SAMPLES, FrameworkConfig::windowNumSamples);
 
 	window = glfwCreateWindow(width, height, title, fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
-	monitor = glfwGetWindowMonitor(window);
-
-	closed = false;
 
 	//Checking if a valid window was created
 	if (window == NULL)
@@ -68,6 +66,7 @@ bool WindowsWindow::Create()
 		glfwTerminate();
 		return false;
 	}
+	closed = false;
 
 	if (FrameworkConfig::api == OpenGL)
 	{
@@ -126,9 +125,7 @@ void WindowsWindow::Render(CommandBuffer* buffer) const
 
 void WindowsWindow::SetFullscreen(bool fullscreen)
 {
-	bool currFullscreen = glfwGetWindowMonitor(window) != nullptr;
-
-	if (currFullscreen == fullscreen)
+	if (IsFullscreen() == fullscreen)
 	{
 		return;
 	}
@@ -143,17 +140,23 @@ void WindowsWindow::SetFullscreen(bool fullscreen)
 		width = mode->width;
 		height = mode->height;
 
-		glfwSetWindowMonitor(window, monitor, 0, 0, width, height, 0);
+		glfwSetWindowMonitor(window, glfwGetWindowMonitor(window), 0, 0, width, height, 0);
 	}
 	else
 	{
 		width = oldWidth;
 		height = oldHeight;
 
-		glfwSetWindowMonitor(window, monitor, oldX, oldY, width, height, 0);
+		glfwSetWindowMonitor(window, nullptr, oldX, oldY, width, height, 0);
 	}
 
+	this->fullscreen = fullscreen;
 	swapchain->SetWindowSize(width, height);
+}
+
+bool WindowsWindow::IsFullscreen() const
+{
+	return fullscreen;
 }
 
 bool WindowsWindow::ShouldClose() const

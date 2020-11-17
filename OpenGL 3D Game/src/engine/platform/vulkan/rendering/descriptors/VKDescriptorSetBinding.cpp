@@ -1,6 +1,15 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "VKDescriptorSetBinding.h"
 
+VKDescriptorSetBinding::VKDescriptorSetBinding(const VKDescriptorSetBinding& other)
+	: _binding(other._binding), type(other.type), binding(other.binding), stageFlags(other.stageFlags)
+{
+	if (other.buffer != nullptr)
+	{
+		buffer = new VKBuffer(*other.buffer);
+	}
+}
+
 VKDescriptorSetBinding::~VKDescriptorSetBinding()
 {
 	if (!finalized)

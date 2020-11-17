@@ -35,7 +35,7 @@ void VKBuffer::Copy(VKBuffer* src)
 	VKUtil::CopyBuffer(device, src->buffer, buffer, size);
 }
 
-VKBuffer::VKBuffer(VKBuffer& other)
+VKBuffer::VKBuffer(const VKBuffer& other)
 	: physicalDevice(other.physicalDevice), device(other.device), size(other.size), buFlags(other.buFlags), mpFlags(other.mpFlags)
 {
 	VKUtil::CreateBuffer(physicalDevice->getPhysicalDevice(), device->getDevice(), size, buFlags, mpFlags, buffer, memory);

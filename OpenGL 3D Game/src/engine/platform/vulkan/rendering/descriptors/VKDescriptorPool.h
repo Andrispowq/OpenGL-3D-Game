@@ -24,12 +24,10 @@ public:
 	*/
 	void finalize(VkPipelineLayout& layout);
 
-	void registerInstance() {} //TODO: create a uniform for every instance of the shader
-
 	void addUniform(const std::string& name, uint32_t stages, UniformType type, uint32_t set, uint32_t binding, uint32_t size, Texture* texture);
 	VKDescriptorSetBinding* getUniform(const std::string& name);
 
-	VKDescriptorSet* getSet(uint32_t set_index, uint32_t instance_index) { return sets[instance_index * numberOfSets + set_index]; }
+	VKDescriptorSet* getSet(uint32_t set_index, uint32_t instance_index) { return sets[size_t(instance_index * numberOfSets + set_index)]; }
 	uint32_t getNumberOfSets() const { return numberOfSets; }
 
 	inline VkDescriptorPool& getDescriptorPool() { return pool; }

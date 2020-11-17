@@ -23,6 +23,7 @@ public:
 	virtual void Render(CommandBuffer* buffer) const override;
 
 	virtual void SetFullscreen(bool fullscreen) override;
+	virtual bool IsFullscreen() const override;
 
 	virtual void* getWindowHandle() const override { return window; }
 private:
@@ -32,7 +33,6 @@ private:
 	int oldX, oldY;
 
 	GLFWwindow* window;
-	GLFWmonitor* monitor;
 };
 
 #endif

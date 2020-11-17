@@ -28,7 +28,7 @@ public:
 	inline void setSize(size_t size) { this->size = size; }
 
 	//We allow for copying and moving in this case because it is meant to be used in a platform-dependant way
-	VKBuffer(VKBuffer& other);
+	VKBuffer(const VKBuffer& other);
 	VKBuffer(VKBuffer&& other) noexcept;
 	VKBuffer& operator=(VKBuffer other);
 private:

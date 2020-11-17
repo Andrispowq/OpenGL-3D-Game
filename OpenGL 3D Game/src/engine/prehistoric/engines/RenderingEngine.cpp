@@ -83,7 +83,7 @@ void RenderingEngine::Update(float delta)
 
 	if (InputInstance.IsKeyPushed(PR_KEY_F11))
 	{
-		//window->SetFullscreen(true);
+		window->SetFullscreen(window->IsFullscreen() xor 0x1);
 	}
 
 	if (InputInstance.IsKeyPushed(PR_KEY_E))

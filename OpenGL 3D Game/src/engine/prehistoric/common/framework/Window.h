@@ -21,6 +21,7 @@ public:
 
 	virtual void* getWindowHandle() const = 0;
 	virtual void SetFullscreen(bool fullscreen) = 0;
+	virtual bool IsFullscreen() const = 0;
 
 	void ClearScreen() const { swapchain->ClearScreen(); }
 	void SetVSync(bool vsync) const { swapchain->SetVSync(vsync); }

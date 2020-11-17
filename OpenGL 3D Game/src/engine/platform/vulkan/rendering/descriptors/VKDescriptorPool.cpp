@@ -121,20 +121,6 @@ void VKDescriptorPool::finalize(VkPipelineLayout& layout)
 	
 	for (auto& set : sets)
 	{
-		/*std::vector<VkWriteDescriptorSet> _writeSets;
-
-		size_t numberOfUniformBuffers = 0;
-
-		for (auto& binding : set->getBindings())
-		{
-			if (binding->getBuffer() != nullptr)
-				numberOfUniformBuffers++;
-		}
-
-		if (numberOfUniformBuffers == 0)
-			continue;
-
-		_writeSets.reserve(numberOfUniformBuffers * numImages);*/
 
 		for (auto& binding : set->getBindings())
 		{
@@ -165,8 +151,6 @@ void VKDescriptorPool::finalize(VkPipelineLayout& layout)
 
 			vkUpdateDescriptorSets(device->getDevice(), numImages, _writeSets.data(), 0, nullptr);
 		}
-
-		//vkUpdateDescriptorSets(device->getDevice(), (uint32_t)_writeSets.size(), _writeSets.data(), 0, nullptr);
 	}
 }
 

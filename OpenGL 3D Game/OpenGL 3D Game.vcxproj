@@ -12,7 +12,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\engine\config\AtmosphereConfig.cpp" />
+    <ClCompile Include="src\engine\config\EnviromentMapConfig.cpp" />
     <ClCompile Include="src\engine\platform\opengl\buffer\GLShaderStorageBuffer.cpp" />
+    <ClCompile Include="src\engine\platform\opengl\rendering\framebuffer\GLFramebuffer.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\GLRenderer.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\pipeline\GLComputePipeline.cpp" />
     <ClCompile Include="src\engine\platform\opengl\rendering\pipeline\GLGraphicsPipeline.cpp" />
@@ -28,7 +30,9 @@
     <ClCompile Include="src\engine\platform\vulkan\rendering\VKRenderer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\buffer\Framebuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\command\CommandBuffer.cpp" />
+    <ClCompile Include="src\engine\prehistoric\common\rendering\framebuffer\Framebuffer.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\rendering\Renderer.cpp" />
+    <ClCompile Include="src\engine\prehistoric\modules\enviromentMapRenderer\EnviromentMapRenderer.cpp" />
     <ClCompile Include="src\engine\prehistoric\resources\AssembledAssetManager.cpp" />
     <ClCompile Include="src\engine\prehistoric\resources\AssetManager.cpp" />
     <ClCompile Include="src\engine\prehistoric\common\buffer\ShaderStorageBuffer.cpp" />
@@ -135,11 +139,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\config\AtmosphereConfig.h" />
+    <ClInclude Include="src\engine\config\EnviromentMapConfig.h" />
     <ClInclude Include="src\engine\config\TerrainConfig.h" />
     <ClInclude Include="src\engine\platform\opengl\buffer\GLPatchVertexBuffer.h" />
     <ClInclude Include="src\engine\platform\opengl\buffer\GLShaderStorageBuffer.h" />
     <ClInclude Include="src\engine\platform\opengl\capabilities\GLCapabilities.h" />
     <ClInclude Include="src\engine\platform\opengl\framework\swapchain\GLSwapchain.h" />
+    <ClInclude Include="src\engine\platform\opengl\rendering\framebuffer\GLFramebuffer.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\GLRenderer.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLComputePipeline.h" />
     <ClInclude Include="src\engine\platform\opengl\rendering\pipeline\GLGraphicsPipeline.h" />
@@ -187,7 +193,9 @@
     <ClInclude Include="src\engine\platform\windows\WindowsInput.h" />
     <ClInclude Include="src\engine\platform\windows\WindowsWindow.h" />
     <ClInclude Include="src\engine\prehistoric\common\rendering\command\CommandBuffer.h" />
+    <ClInclude Include="src\engine\prehistoric\common\rendering\framebuffer\Framebuffer.h" />
     <ClInclude Include="src\engine\prehistoric\common\rendering\Renderer.h" />
+    <ClInclude Include="src\engine\prehistoric\modules\enviromentMapRenderer\EnviromentMapRenderer.h" />
     <ClInclude Include="src\engine\prehistoric\resources\AssembledAssetManager.h" />
     <ClInclude Include="src\engine\prehistoric\resources\AssetManager.h" />
     <ClInclude Include="src\engine\prehistoric\common\buffer\Framebuffer.h" />

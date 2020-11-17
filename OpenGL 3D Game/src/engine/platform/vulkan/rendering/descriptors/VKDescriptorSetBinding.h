@@ -8,16 +8,11 @@
 #include "engine/platform/vulkan/buffer/VKBuffer.h"
 #include "engine/platform/vulkan/texture/VkTexture.h"
 
-union DescriptorData
-{
-	VKBuffer* buffer;
-	VKTexture* texture;
-};
-
 class VKDescriptorSetBinding
 {
 public:
 	VKDescriptorSetBinding(UniformType type, uint32_t binding, uint32_t stageFlags) : _binding(VkDescriptorSetLayoutBinding{}), type(type), binding(binding), stageFlags(stageFlags) {}
+	VKDescriptorSetBinding(const VKDescriptorSetBinding& other);
 	virtual ~VKDescriptorSetBinding();
 
 	void finalize();

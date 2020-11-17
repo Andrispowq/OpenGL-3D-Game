@@ -1,6 +1,17 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include "VKDescriptorSet.h"
 
+VKDescriptorSet::VKDescriptorSet(const VKDescriptorSet& other)
+	: device(other.device), swapchain(other.swapchain), set_index(other.set_index)
+{
+	bindings.reserve(other.bindings.size());
+
+	for (VKDescriptorSetBinding* binding : bindings)
+	{
+		bindings.push_back(new VKDescriptorSetBinding(*binding));
+	}
+}
+
 VKDescriptorSet::~VKDescriptorSet()
 {
 	for (const auto& binding : bindings)

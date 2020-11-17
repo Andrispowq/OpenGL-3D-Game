@@ -41,6 +41,10 @@ struct Light
 uniform Light lights[max_lights];
 uniform Material material;
 
+uniform samplerCube irradianceMap;
+uniform samplerCube prefilterMap;
+uniform sampler2D brdfLUT;
+
 uniform float gamma;
 uniform float exposure;
 uniform int highDetailRange;
@@ -132,15 +136,15 @@ void main()
 	vec3 kD = 1.0 - kS;
 	kD *= 1.0 - metallic;
 
-	vec3 irradiance = vec3(0.23, 0.78, 0.88);//texture(irradianceMap, normal_FS).rgb;	
+	vec3 irradiance = texture(irradianceMap, normal_FS).rgb;	
 	vec3 diffuse = irradiance * albedoColour;
 	
-	/*const float MAX_REFLECTION_LOD = 4.0;
+	const float MAX_REFLECTION_LOD = 4.0;
 	vec3 prefilteredColor = textureLod(prefilterMap, R,  roughness * MAX_REFLECTION_LOD).rgb;
 	vec2 envBRDF = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
-	vec3 specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);*/
+	vec3 specular = prefilteredColor * (F * envBRDF.x + envBRDF.y);
 
-	vec3 ambient = (kD * diffuse + vec3(0)) * occlusion;
+	vec3 ambient = (kD * diffuse + specular) * occlusion;
 
 	vec3 colour = ambient + Lo + max(emission * emissionFactor, 0.0);
 	
