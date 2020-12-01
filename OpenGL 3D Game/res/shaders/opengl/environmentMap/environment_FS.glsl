@@ -11,7 +11,7 @@ void main()
 {
 	vec3 envColour = textureLod(environmentMap, normalize(vec3(position_FS.x, position_FS.y, -position_FS.z)), 0.2).rgb;
 	
-	envColour = envColour / (envColour + vec3(1.0));
+	envColour = 1.0 - exp(-envColour * 1.0);
 	envColour = pow(envColour, vec3(1.0 / gamma));
 	
 	outColour = vec4(envColour, 1);

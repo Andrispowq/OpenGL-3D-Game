@@ -19,10 +19,18 @@ VKRenderer::VKRenderer(Window* window, Camera* camera, AssembledAssetManager* ma
 
 	size_t NumImages = swapchain->getSwapchainImageViews().size();
 	primaryFramebuffers.resize(NumImages);
+	
 	for (size_t i = 0; i < NumImages; i++)
 	{
-		primaryFramebuffers[i] = std::make_unique<VKFramebuffer>(renderpass.get(), device->getDevice(), swapchain->getSwapchainExtent(),
-			swapchain->getColourImageView(), swapchain->getDepthImageView(), swapchain->getSwapchainImageViews()[i]);
+		VkImageView attachments[] =
+		{
+			swapchain->getColourImageView(),
+			swapchain->getDepthImageView(),
+			swapchain->getSwapchainImageViews()[i]
+		};
+
+		primaryFramebuffers[i] = std::make_unique<VKFramebuffer>(device->getDevice(), renderpass->getRenderPass(), swapchain->getSwapchainExtent().width,
+			swapchain->getSwapchainExtent().height, 3, attachments);
 	}
 
 	//Create command pool
@@ -63,8 +71,15 @@ void VKRenderer::PrepareRendering()
 		primaryFramebuffers.resize(NumImages);
 		for (size_t i = 0; i < NumImages; i++)
 		{
-			primaryFramebuffers[i] = std::make_unique<VKFramebuffer>(renderpass.get(), device->getDevice(), swapchain->getSwapchainExtent(),
-				swapchain->getColourImageView(), swapchain->getDepthImageView(), swapchain->getSwapchainImageViews()[i]);
+			VkImageView attachments[] =
+			{
+				swapchain->getColourImageView(),
+				swapchain->getDepthImageView(),
+				swapchain->getSwapchainImageViews()[i]
+			};
+
+			primaryFramebuffers[i] = std::make_unique<VKFramebuffer>(device->getDevice(), renderpass->getRenderPass(), swapchain->getSwapchainExtent().width,
+				swapchain->getSwapchainExtent().height, 3, attachments);
 		}
 
 		//Create command pool
@@ -117,9 +132,9 @@ void VKRenderer::Render()
 		pl->getShader()->UpdateShaderUniforms(camera, lights);
 		pl->getShader()->UpdateSharedUniforms(pipeline.second[0]->getParent()); //Safe -> there is at least 1 element in the array
 
-		for (auto renderer : pipeline.second)
+		for (size_t i = 0; i < pipeline.second.size(); i++)
 		{
-			renderer->BatchRender();
+			pipeline.second[i]->BatchRender((uint32_t)i);
 		}
 
 		pl->UnbindPipeline();
@@ -134,9 +149,9 @@ void VKRenderer::Render()
 		pl->getShader()->UpdateShaderUniforms(camera, lights);
 		pl->getShader()->UpdateSharedUniforms(pipeline.second[0]->getParent()); //Safe -> there is at least 1 element in the array
 
-		for (auto renderer : pipeline.second)
+		for (size_t i = 0; i < pipeline.second.size(); i++)
 		{
-			renderer->BatchRender();
+			pipeline.second[i]->BatchRender((uint32_t)i);
 		}
 
 		pl->UnbindPipeline();
@@ -149,9 +164,9 @@ void VKRenderer::Render()
 
 		pl->BindPipeline(buffer);
 
-		for (auto renderer : pipeline.second)
+		for (size_t i = 0; i < pipeline.second.size(); i++)
 		{
-			renderer->BatchRender();
+			pipeline.second[i]->BatchRender((uint32_t)i);
 		}
 
 		pl->UnbindPipeline();

@@ -16,7 +16,7 @@ public:
 	virtual ~VKDescriptorSet();
 
 	void addBinding(VKDescriptorSetBinding* binding);
-	void finalize(); //We don't want to add a big overhead by regenerating the set layout everytime we add a binding, so this function should be invoked when we added every descriptor
+	void finalise(); //We don't want to add a big overhead by regenerating the set layout everytime we add a binding, so this function should be invoked when we added every descriptor
 
 	inline VkDescriptorSetLayout& getLayout() { return layout; }
 	inline std::vector<VkDescriptorSet>& getSets() { return sets; }

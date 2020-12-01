@@ -44,13 +44,20 @@ void WorldLoader::LoadWorld(const std::string& worldFile, GameObject* root, Wind
 					size_t ID = manager_->getResource<VertexBuffer>(tokens[2]);
 					VertexBuffer* buff = manager_->getResourceByID<VertexBuffer>(ID);
 
-					if (tokens[3] == "clockwise")
+					if (tokens.size() > 3)
 					{
-						buff->setFrontFace(FrontFace::CLOCKWISE);
-					}
-					else if (tokens[3] == "counter-clockwise")
-					{
-						buff->setFrontFace(FrontFace::COUNTER_CLOCKWISE);
+						if (tokens[3] == "clockwise")
+						{
+							buff->setFrontFace(FrontFace::CLOCKWISE);
+						}
+						else if (tokens[3] == "counter-clockwise")
+						{
+							buff->setFrontFace(FrontFace::COUNTER_CLOCKWISE);
+						}
+						else
+						{
+							buff->setFrontFace(FrontFace::DOUBLE_SIDED);
+						}
 					}
 					else
 					{

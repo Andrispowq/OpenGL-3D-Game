@@ -2,22 +2,36 @@
 #include "VKPhysicalDevice.h"
 #include "engine/config/FrameworkConfig.h"
 
+#include <vulkan/vulkan_beta.h>
+
 VKPhysicalDevice::VKPhysicalDevice()
 {
-	physicalDevice = VK_NULL_HANDLE;
-
+	//Swapchain extension -> obligatory
 	deviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
+
+	//Mesh shading extension
+	optionalDeviceExtensions.push_back(VK_NV_MESH_SHADER_EXTENSION_NAME);
+
+	//Ray tracing extensions
+	optionalDeviceExtensions.push_back(VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME);
+	optionalDeviceExtensions.push_back(VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME);
+
+	//Required by VK_KHR_acceleration_structure
+	optionalDeviceExtensions.push_back(VK_KHR_BUFFER_DEVICE_ADDRESS_EXTENSION_NAME);
+	optionalDeviceExtensions.push_back(VK_KHR_DEFERRED_HOST_OPERATIONS_EXTENSION_NAME);
+	optionalDeviceExtensions.push_back(VK_EXT_DESCRIPTOR_INDEXING_EXTENSION_NAME);
+
+	//Required for VK_KHR_ray_tracing_pipeline
+	optionalDeviceExtensions.push_back(VK_KHR_SPIRV_1_4_EXTENSION_NAME);
+
+	//Required by VK_KHR_spirv_1_4
+	optionalDeviceExtensions.push_back(VK_KHR_SHADER_FLOAT_CONTROLS_EXTENSION_NAME);
 }
 
-VKPhysicalDevice::~VKPhysicalDevice()
-{
-	physicalDevice = VK_NULL_HANDLE;
-}
-
-void VKPhysicalDevice::PickPhysicalDevice(VKSurface* surface, VKInstance* instance)
+void VKPhysicalDevice::PickPhysicalDevice(VkInstance instance, VkSurfaceKHR surface)
 {
 	uint32_t deviceCount = 0;
-	vkEnumeratePhysicalDevices(instance->getInstance(), &deviceCount, nullptr);
+	vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
 
 	if (deviceCount == 0) 
 	{
@@ -25,14 +39,14 @@ void VKPhysicalDevice::PickPhysicalDevice(VKSurface* surface, VKInstance* instan
 	}
 
 	std::vector<VkPhysicalDevice> devices(deviceCount);
-	vkEnumeratePhysicalDevices(instance->getInstance(), &deviceCount, devices.data());
+	vkEnumeratePhysicalDevices(instance, &deviceCount, devices.data());
 
 	VkPhysicalDeviceFeatures deviceFeatures = {};
 	deviceFeatures.samplerAnisotropy = VK_TRUE;
 
 	for (const auto& device : devices) 
 	{
-		if (IsDeviceSuitable(surface, device, deviceFeatures))
+		if (IsDeviceSuitable(device, surface, deviceFeatures))
 		{
 			physicalDevice = device;
 			break;
@@ -58,7 +72,31 @@ void VKPhysicalDevice::PickPhysicalDevice(VKSurface* surface, VKInstance* instan
 	if (counts & VK_SAMPLE_COUNT_64_BIT) msaaSamples = VK_SAMPLE_COUNT_64_BIT;
 }
 
-bool VKPhysicalDevice::IsDeviceSuitable(VKSurface* surface, VkPhysicalDevice device, VkPhysicalDeviceFeatures features) const
+std::vector<const char*> VKPhysicalDevice::getOptionalExtensionsSupported() const
+{
+	uint32_t extensionCount;
+	vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, nullptr);
+
+	std::vector<VkExtensionProperties> availableExtensions(extensionCount);
+	vkEnumerateDeviceExtensionProperties(physicalDevice, nullptr, &extensionCount, availableExtensions.data());
+
+	std::vector<const char*> supported;
+
+	for (const auto& extension : availableExtensions)
+	{
+		for (const auto& ext : optionalDeviceExtensions)
+		{
+			if (ext == extension.extensionName)
+			{
+				supported.push_back(ext);
+			}
+		}
+	}
+
+	return supported;
+}
+
+bool VKPhysicalDevice::IsDeviceSuitable(VkPhysicalDevice device, VkSurfaceKHR surface, VkPhysicalDeviceFeatures features) const
 {
 	VkPhysicalDeviceProperties deviceProperties;
 	VkPhysicalDeviceFeatures deviceFeatures;
@@ -68,14 +106,14 @@ bool VKPhysicalDevice::IsDeviceSuitable(VKSurface* surface, VkPhysicalDevice dev
 
 	if (deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU)
 	{
-		QueueFamilyIndices indices = VKUtil::FindQueueFamilies(device, surface->getSurface());
+		QueueFamilyIndices indices = VKUtil::FindQueueFamilies(device, surface);
 
 		bool extensionsSupported = CheckDeviceExtensionSupport(device);
 
 		bool swapChainAdequate = false;
 		if (extensionsSupported) 
 		{
-			SwapChainSupportDetails swapChainSupport = VKUtil::QuerySwapChainSupport(device, surface->getSurface());
+			SwapChainSupportDetails swapChainSupport = VKUtil::QuerySwapChainSupport(device, surface);
 			swapChainAdequate = !swapChainSupport.formats.empty() && !swapChainSupport.presentModes.empty();
 		}
 		

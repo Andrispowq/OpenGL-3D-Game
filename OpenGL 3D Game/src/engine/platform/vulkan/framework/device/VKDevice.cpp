@@ -12,9 +12,9 @@ VKDevice::~VKDevice()
 	device = VK_NULL_HANDLE;
 }
 
-void VKDevice::CreateLogicalDevice(VKPhysicalDevice* physicalDevice, VKSurface* surface, const std::vector<const char*>& validationLayers)
+void VKDevice::CreateLogicalDevice(VKPhysicalDevice* physicalDevice, VkSurfaceKHR surface, const std::vector<const char*>& validationLayers)
 {
-	QueueFamilyIndices indices = VKUtil::FindQueueFamilies(physicalDevice->getPhysicalDevice(), surface->getSurface());
+	QueueFamilyIndices indices = VKUtil::FindQueueFamilies(physicalDevice->getPhysicalDevice(), surface);
 
 	std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
 	std::set<uint32_t> uniqueQueueFamilies = { indices.graphicsFamily, indices.presentFamily };
@@ -43,8 +43,16 @@ void VKDevice::CreateLogicalDevice(VKPhysicalDevice* physicalDevice, VKSurface* 
 
 	createInfo.pEnabledFeatures = &deviceFeatures;
 
-	createInfo.enabledExtensionCount = static_cast<uint32_t>(physicalDevice->getDeviceExtensions().size());
-	createInfo.ppEnabledExtensionNames = physicalDevice->getDeviceExtensions().data();
+	std::vector<const char*> ext = physicalDevice->getDeviceExtensions();
+	std::vector<const char*> opt = physicalDevice->getOptionalExtensionsSupported();
+
+	for (const auto& extension : opt)
+	{
+		ext.push_back(extension);
+	}
+
+	createInfo.enabledExtensionCount = static_cast<uint32_t>(ext.size());
+	createInfo.ppEnabledExtensionNames = ext.data();
 
 #if defined(PR_VK_ENABLE_VALIDATION_LAYERS)
 	if (FrameworkConfig::apiVulkanUseValidationLayers) 

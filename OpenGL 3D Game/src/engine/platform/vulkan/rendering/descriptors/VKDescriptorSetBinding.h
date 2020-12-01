@@ -15,7 +15,7 @@ public:
 	VKDescriptorSetBinding(const VKDescriptorSetBinding& other);
 	virtual ~VKDescriptorSetBinding();
 
-	void finalize();
+	void finalise();
 
 	inline VkDescriptorSetLayoutBinding& getBinding() { return _binding; }
 
@@ -32,7 +32,7 @@ private:
 	VKBuffer* buffer = nullptr;
 	VKTexture* texture = nullptr;
 
-	bool finalized = false;
+	bool finalised = false;
 
 	UniformType type;
 	uint32_t binding;

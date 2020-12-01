@@ -1,6 +1,6 @@
 #include "engine/prehistoric/core/util/Includes.hpp"
 #include <glew.h>
-#include "VKPBRShader.h"
+#include "VKPBRShader.h" 
 
 VKPBRShader::VKPBRShader(Window* window) : VKShader(window->getContext(), window->getSwapchain())
 {
@@ -23,7 +23,7 @@ VKPBRShader::VKPBRShader(Window* window) : VKShader(window->getContext(), window
 
 	AddUniform("m_transform", VERTEX_SHADER, UniformBuffer, 2, 0, sizeof(float) * 16);
 
-	descriptorPool->finalize(pipelineLayout);
+	descriptorPool->finalise(pipelineLayout);
 }
 
 void VKPBRShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index) const

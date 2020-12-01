@@ -35,7 +35,7 @@ void main()
 		}
 	}
 	
-	irradiance = PI * irradiance * (1.0 / float(nrSamples));
+	irradiance = PI * irradiance * (1.0 / nrSamples);
     
-    out_colour = vec4(irradiance, 1.0);
+    out_colour = vec4(texture(environmentMap, normal).rgb, 1.0);
 }

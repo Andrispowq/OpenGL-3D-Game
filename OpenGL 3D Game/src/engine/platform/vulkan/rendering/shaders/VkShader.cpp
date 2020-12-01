@@ -150,23 +150,23 @@ bool VKShader::AddShader(const std::vector<char>& code, ShaderType type)
 	case MESH_SHADER_NV:
 		flag = VK_SHADER_STAGE_MESH_BIT_NV;
 		break;
-	case RAY_GENERATION_SHADER_NV:
-		flag = VK_SHADER_STAGE_RAYGEN_BIT_NV;
+	case RAY_GENERATION_SHADER_KHR:
+		flag = VK_SHADER_STAGE_RAYGEN_BIT_KHR;
 		break;
-	case RAY_HIT_SHADER_NV:
-		flag = VK_SHADER_STAGE_ANY_HIT_BIT_NV;
+	case RAY_HIT_SHADER_KHR:
+		flag = VK_SHADER_STAGE_ANY_HIT_BIT_KHR;
 		break;
-	case RAY_CLOSEST_HIT_SHADER_NV:
-		flag = VK_SHADER_STAGE_CLOSEST_HIT_BIT_NV;
+	case RAY_CLOSEST_HIT_SHADER_KHR:
+		flag = VK_SHADER_STAGE_CLOSEST_HIT_BIT_KHR;
 		break;
-	case RAY_MISS_SHADER_NV:
-		flag = VK_SHADER_STAGE_MISS_BIT_NV;
+	case RAY_MISS_SHADER_KHR:
+		flag = VK_SHADER_STAGE_MISS_BIT_KHR;
 		break;
-	case RAY_INTERSECTION_SHADER_NV:
-		flag = VK_SHADER_STAGE_INTERSECTION_BIT_NV;
+	case RAY_INTERSECTION_SHADER_KHR:
+		flag = VK_SHADER_STAGE_INTERSECTION_BIT_KHR;
 		break;
-	case RAY_CALLABLE_SHADER_NV:
-		flag = VK_SHADER_STAGE_CALLABLE_BIT_NV;
+	case RAY_CALLABLE_SHADER_KHR:
+		flag = VK_SHADER_STAGE_CALLABLE_BIT_KHR;
 		break;
 	default:
 		return false;
@@ -200,7 +200,7 @@ void VKShader::BindSets(CommandBuffer* commandBuffer, uint32_t first, uint32_t s
 
 void VKShader::SetUniformi(const std::string& name, int value, size_t offset, uint32_t instance_index) const
 {
-	VKBuffer* buff = descriptorPool->getUniform(name)->getBuffer();
+	VKBuffer* buff = descriptorPool->getUniform(name, instance_index)->getBuffer();
 	buff->MapMemory(offset, sizeof(int));
 	buff->Store(&value);
 	buff->UnmapMemory();
@@ -208,7 +208,7 @@ void VKShader::SetUniformi(const std::string& name, int value, size_t offset, ui
 
 void VKShader::SetUniformf(const std::string& name, float value, size_t offset, uint32_t instance_index) const
 {
-	VKBuffer* buff = descriptorPool->getUniform(name)->getBuffer();
+	VKBuffer* buff = descriptorPool->getUniform(name, instance_index)->getBuffer();
 	buff->MapMemory(offset, sizeof(float));
 	buff->Store(&value);
 	buff->UnmapMemory();
@@ -216,7 +216,7 @@ void VKShader::SetUniformf(const std::string& name, float value, size_t offset, 
 
 void VKShader::SetUniform(const std::string& name, const Vector2f& value, size_t offset, uint32_t instance_index) const
 {
-	VKBuffer* buff = descriptorPool->getUniform(name)->getBuffer();
+	VKBuffer* buff = descriptorPool->getUniform(name, instance_index)->getBuffer();
 	buff->MapMemory(offset, Vector2f::size());
 	buff->Store((void*)&value);
 	buff->UnmapMemory();
@@ -224,7 +224,7 @@ void VKShader::SetUniform(const std::string& name, const Vector2f& value, size_t
 
 void VKShader::SetUniform(const std::string& name, const Vector3f& value, size_t offset, uint32_t instance_index) const
 {
-	VKBuffer* buff = descriptorPool->getUniform(name)->getBuffer();
+	VKBuffer* buff = descriptorPool->getUniform(name, instance_index)->getBuffer();
 	buff->MapMemory(offset, Vector3f::size());
 	buff->Store((void*)&value);
 	buff->UnmapMemory();
@@ -232,7 +232,7 @@ void VKShader::SetUniform(const std::string& name, const Vector3f& value, size_t
 
 void VKShader::SetUniform(const std::string& name, const Vector4f& value, size_t offset, uint32_t instance_index) const
 {
-	VKBuffer* buff = descriptorPool->getUniform(name)->getBuffer();
+	VKBuffer* buff = descriptorPool->getUniform(name, instance_index)->getBuffer();
 	buff->MapMemory(offset, Vector4f::size());
 	buff->Store((void*)&value);
 	buff->UnmapMemory();
@@ -240,7 +240,7 @@ void VKShader::SetUniform(const std::string& name, const Vector4f& value, size_t
 
 void VKShader::SetUniform(const std::string& name, const Matrix4f& value, size_t offset, uint32_t instance_index) const
 {
-	VKBuffer* buff = descriptorPool->getUniform(name)->getBuffer();
+	VKBuffer* buff = descriptorPool->getUniform(name, instance_index)->getBuffer();
 	buff->MapMemory(offset, sizeof(float) * 16);
 	buff->Store(value.m);
 	buff->UnmapMemory();
@@ -249,7 +249,7 @@ void VKShader::SetUniform(const std::string& name, const Matrix4f& value, size_t
 void VKShader::SetTexture(const std::string& name, Texture* value, uint32_t instance_index) const
 {
 	VKTexture* tex = (VKTexture*)value;
-	descriptorPool->getUniform(name)->setTexture(tex);
+	descriptorPool->getUniform(name, instance_index)->setTexture(tex);
 
 	std::pair<uint32_t, uint32_t> location = descriptorPool->getUniformLocation(name);
 
@@ -277,7 +277,7 @@ void VKShader::SetTexture(const std::string& name, Texture* value, uint32_t inst
 void VKShader::SetUniform(const std::string& name, const void* value, size_t size, size_t offset, uint32_t instance_index) const
 {
 	void* data;
-	const VkDeviceMemory& mem = descriptorPool->getUniform(name)->getBuffer()->getMemory();
+	const VkDeviceMemory& mem = descriptorPool->getUniform(name, instance_index)->getBuffer()->getMemory();
 
 	vkMapMemory(device->getDevice(), mem, offset, size, 0, &data);
 	memcpy(data, value, size);
@@ -286,7 +286,7 @@ void VKShader::SetUniform(const std::string& name, const void* value, size_t siz
 
 void VKShader::RegisterInstance()
 {
-	instance_counter++;
+	descriptorPool->registerInstance();
 }
 
 VkShaderModule VKShader::CreateShaderModule(const std::vector<char>& code) const

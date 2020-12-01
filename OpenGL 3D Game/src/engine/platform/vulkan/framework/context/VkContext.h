@@ -25,14 +25,14 @@ public:
 	void* getPhysicalDevice() override { return &physicalDevice; }
 	void* getDevice() override { return &logicalDevice; }
 
-	VKSurface* getSurface() { return &surface; }
+	VKSurface* getSurface() { return surface.get(); }
 private:
 	VKInstance instance;
 
 	VKPhysicalDevice physicalDevice;
 	VKDevice logicalDevice;
 
-	VKSurface surface;
+	std::unique_ptr<VKSurface> surface;
 };
 
 #endif

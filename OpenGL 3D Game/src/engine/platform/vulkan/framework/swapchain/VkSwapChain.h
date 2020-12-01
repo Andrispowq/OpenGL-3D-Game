@@ -11,8 +11,8 @@
 #include "engine/platform/vulkan/framework/device/VKDevice.h"
 #include "engine/platform/vulkan/framework/surface/VKSurface.h"
 #include "engine/platform/vulkan/rendering/command/VKCommandPool.h"
-#include "engine/platform/vulkan/rendering/synchronization/VKSemaphore.h"
-#include "engine/platform/vulkan/rendering/synchronization/VKFence.h"
+#include "engine/platform/vulkan/rendering/synchronisation/VKSemaphore.h"
+#include "engine/platform/vulkan/rendering/synchronisation/VKFence.h"
 #include "engine/platform/vulkan/rendering/renderpass/VKRenderpass.h"
 
 const static uint32_t MAX_FRAMES_IN_FLIGHT = 3;
@@ -38,7 +38,7 @@ public:
 	std::vector<VkImageView> getSwapchainImageViews() const { return swapchainImageViews; }
 
 	VkImageView getColourImageView() { return colourImageView; }
-	VkImageView& getDepthImageView() { return depthImageView; }
+	VkImageView getDepthImageView() { return depthImageView; }
 	VkFormat getSwapchainImageFormat() const { return swapchainImageFormat; }
 	VkExtent2D getSwapchainExtent() const { return swapchainExtent; }
 	VKRenderpass* getRenderpass() { return renderpass; }

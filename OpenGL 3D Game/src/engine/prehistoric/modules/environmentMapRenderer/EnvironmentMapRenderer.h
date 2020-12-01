@@ -16,6 +16,8 @@
 class EnvironmentMapRenderer
 {
 public:
+	static EnvironmentMapRenderer* instance;
+
 	EnvironmentMapRenderer(Window* window, AssembledAssetManager* manager);
 	virtual ~EnvironmentMapRenderer() {}
 

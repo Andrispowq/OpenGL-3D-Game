@@ -18,7 +18,7 @@ VKBasicShader::VKBasicShader(Window* window) : VKShader(window->getContext(), wi
 
 	AddUniform("gamma", FRAGMENT_SHADER, UniformBuffer, 0, 7, sizeof(float));
 
-	descriptorPool->finalize(pipelineLayout);
+	descriptorPool->finalise(pipelineLayout);
 }
 
 void VKBasicShader::UpdateShaderUniforms(Camera* camera, const std::vector<Light*>& lights, uint32_t instance_index) const

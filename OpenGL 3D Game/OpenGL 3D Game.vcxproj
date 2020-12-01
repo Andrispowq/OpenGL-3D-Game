@@ -76,8 +76,8 @@
     <ClCompile Include="src\engine\platform\vulkan\rendering\renderpass\VKRenderpass.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\shaders\basic\VKBasicShader.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\shaders\pbr\VKPBRShader.cpp" />
-    <ClCompile Include="src\engine\platform\vulkan\rendering\synchronization\VKFence.cpp" />
-    <ClCompile Include="src\engine\platform\vulkan\rendering\synchronization\VKSemaphore.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\rendering\synchronisation\VKFence.cpp" />
+    <ClCompile Include="src\engine\platform\vulkan\rendering\synchronisation\VKSemaphore.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\rendering\shaders\VKShader.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\texture\VKTexture.cpp" />
     <ClCompile Include="src\engine\platform\vulkan\util\VKUtil.cpp" />
@@ -177,9 +177,9 @@
     <ClInclude Include="src\engine\platform\vulkan\framework\context\VKDebugMessenger.h" />
     <ClInclude Include="src\engine\platform\vulkan\framework\context\VKInstance.h" />
     <ClInclude Include="src\engine\platform\vulkan\framework\device\VKDevice.h" />
-    <ClInclude Include="src\engine\platform\vulkan\framework\queue\VkQueue.h" />
     <ClInclude Include="src\engine\platform\opengl\framework\context\GLContext.h" />
     <ClInclude Include="src\engine\platform\vulkan\framework\device\VKPhysicalDevice.h" />
+    <ClInclude Include="src\engine\platform\vulkan\framework\queue\VkQueue.h" />
     <ClInclude Include="src\engine\platform\vulkan\framework\surface\VKSurface.h" />
     <ClInclude Include="src\engine\platform\vulkan\framework\swapchain\VKSwapchain.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\command\VKCommandBuffer.h" />
@@ -193,8 +193,8 @@
     <ClInclude Include="src\engine\platform\vulkan\rendering\renderpass\VKRenderpass.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\shaders\basic\VKBasicShader.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\shaders\pbr\VKPBRShader.h" />
-    <ClInclude Include="src\engine\platform\vulkan\rendering\synchronization\VKFence.h" />
-    <ClInclude Include="src\engine\platform\vulkan\rendering\synchronization\VKSemaphore.h" />
+    <ClInclude Include="src\engine\platform\vulkan\rendering\synchronisation\VKFence.h" />
+    <ClInclude Include="src\engine\platform\vulkan\rendering\synchronisation\VKSemaphore.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\shaders\VKShader.h" />
     <ClInclude Include="src\engine\platform\vulkan\rendering\VKRenderer.h" />
     <ClInclude Include="src\engine\platform\vulkan\texture\VKTexture.h" />
@@ -328,7 +328,7 @@
       <AssemblerOutput>NoListing</AssemblerOutput>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>engine/prehistoric/core/util/Includes.hpp</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FloatingPointModel>Precise</FloatingPointModel>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
@@ -336,7 +336,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\lib\AL;$(SolutionDir)Dependencies\lib\GL\64 bit;$(SolutionDir)Dependencies\lib\GLFW;$(SolutionDir)Dependencies\lib\Vulkan;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;glfw3.lib;opengl32.lib;glew32s.lib;vulkan-1.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;vulkan-1.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
@@ -353,7 +353,7 @@
       <AssemblerOutput>NoListing</AssemblerOutput>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>engine/prehistoric/core/util/Includes.hpp</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp17</LanguageStandard>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableEnhancedInstructionSet>NotSet</EnableEnhancedInstructionSet>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
@@ -362,7 +362,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\lib\AL;$(SolutionDir)Dependencies\lib\GL\64 bit;$(SolutionDir)Dependencies\lib\GLFW;$(SolutionDir)Dependencies\lib\Vulkan;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>legacy_stdio_definitions.lib;legacy_stdio_wide_specifiers.lib;glfw3.lib;opengl32.lib;glew32s.lib;vulkan-1.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>glfw3.lib;opengl32.lib;glew32s.lib;vulkan-1.lib;OpenAL32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>

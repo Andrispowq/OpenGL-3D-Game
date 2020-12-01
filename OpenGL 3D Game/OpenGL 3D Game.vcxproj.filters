@@ -186,12 +186,6 @@
     <ClCompile Include="src\engine\platform\vulkan\rendering\framebuffer\VKFramebuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\engine\platform\vulkan\rendering\synchronization\VKSemaphore.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\engine\platform\vulkan\rendering\synchronization\VKFence.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine\prehistoric\common\capabilities\Capabilities.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -384,6 +378,12 @@
     <ClCompile Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLPrefilterShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\engine\platform\vulkan\rendering\synchronisation\VKFence.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\engine\platform\vulkan\rendering\synchronisation\VKSemaphore.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\engine\rendering\shaders\Shader.h">
@@ -548,9 +548,6 @@
     <ClInclude Include="src\engine\platform\vulkan\framework\context\VKContext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\engine\platform\vulkan\framework\queue\VkQueue.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\engine\platform\vulkan\framework\swapchain\VKSwapchain.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -582,12 +579,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\platform\vulkan\rendering\pipeline\VKGraphicsPipeline.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\platform\vulkan\rendering\synchronization\VKSemaphore.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\engine\platform\vulkan\rendering\synchronization\VKFence.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\prehistoric\common\capabilities\Capabilities.h">
@@ -783,6 +774,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\engine\platform\opengl\rendering\shaders\environmentMap\GLPrefilterShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\vulkan\framework\queue\VkQueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\vulkan\rendering\synchronisation\VKFence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\engine\platform\vulkan\rendering\synchronisation\VKSemaphore.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

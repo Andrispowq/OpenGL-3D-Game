@@ -18,17 +18,16 @@ void GLGraphicsPipeline::RenderPipeline() const
 	GLPipeline::RenderPipeline();
 
 	VertexBuffer* buff = getVertexBuffer();
-
 	if (buff->getFrontFace() == FrontFace::CLOCKWISE)
 	{
 		glFrontFace(GL_CW);
 	}
-	else
+	else if(buff->getFrontFace() == FrontFace::COUNTER_CLOCKWISE)
 	{
 		glFrontFace(GL_CCW);
 	}
 
-	if (backfaceCulling)
+	if (backfaceCulling && buff->getFrontFace() != FrontFace::DOUBLE_SIDED)
 	{
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);

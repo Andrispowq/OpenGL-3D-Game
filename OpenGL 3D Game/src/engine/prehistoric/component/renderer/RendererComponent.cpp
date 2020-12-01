@@ -12,6 +12,11 @@ RendererComponent::RendererComponent(size_t pipelineID, size_t materialID, Windo
 {
 	materialIndex = materialID;
 	manager->addReference<Material>(materialID);
+
+	if (FrameworkConfig::api == Vulkan)
+	{
+		static_cast<VKShader*>(manager->getResourceByID<Pipeline>(pipelineID)->getShader())->RegisterInstance();
+	}
 }
 
 RendererComponent::RendererComponent(Window* window, AssembledAssetManager* manager)
@@ -44,11 +49,11 @@ void RendererComponent::Render(Renderer* renderer) const
 	pipeline->UnbindPipeline();
 }
 
-void RendererComponent::BatchRender() const
+void RendererComponent::BatchRender(uint32_t instance_index) const
 {
 	Pipeline* pipeline = getPipeline();
 
-	pipeline->getShader()->UpdateObjectUniforms(parent, 0);
+	pipeline->getShader()->UpdateObjectUniforms(parent, instance_index);
 	pipeline->RenderPipeline();
 }
 

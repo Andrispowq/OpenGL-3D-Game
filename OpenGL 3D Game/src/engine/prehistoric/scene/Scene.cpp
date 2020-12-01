@@ -40,7 +40,7 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 		size_t vboID = manager->getAssetManager()->getResource<VertexBuffer>("quad.obj");
 		manager->getAssetManager()->getResourceByID<VertexBuffer>(vboID)->setFrontFace(FrontFace::COUNTER_CLOCKWISE);
 		size_t shaderID = manager->getAssetManager()->getResource<Shader>("pbr");
-
+		
 		size_t pipelineID = manager->loadResource<Pipeline>(new VKGraphicsPipeline(window, manager->getAssetManager(), shaderID, vboID));
 
 		Material* material = new Material(manager->getAssetManager(), window);
@@ -56,12 +56,19 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 		material->addFloat(OCCLUSION, 1);
 
 		RendererComponent* renderer = new RendererComponent(pipelineID, materialID, window, manager);
+		RendererComponent* renderer2 = new RendererComponent(pipelineID, materialID, window, manager);
 
 		GameObject* obj = new GameObject();
 		obj->AddComponent(RENDERER_COMPONENT, renderer);
 		obj->Rotate({ -90, 0, 0 });
 		obj->Move({ 0, 0, 0 });
 		root->AddChild("OBJ", obj);
+
+		GameObject* obj2 = new GameObject();
+		obj2->AddComponent(RENDERER_COMPONENT, renderer2);
+		obj2->Rotate({ -90, 0, 0 });
+		obj2->Move({ 0, 0, -4 });
+		root->AddChild("OBJ2", obj2);
 
 		GameObject* light2 = new GameObject();
 		light2->AddComponent(LIGHT_COMPONENT, new Light(Vector3f(1, 0, 0), Vector3f(1000.0f)));
@@ -70,7 +77,7 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 	}
 	else
 	{
-		//loader.LoadWorld("res/world/testLevel.wrld", root, window, manager);
+		loader.LoadWorld("res/world/testLevel.wrld", root, window, manager);
 
 		root->AddChild("Atmosphere", new Atmosphere(window, manager));
 
@@ -89,17 +96,17 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 		slider2->SetScale({ 0.125f, 0.05f, 1 });
 		root->AddChild("slider2", slider2);*/
 
-		EnvironmentMapRenderer renderer(window, manager);
-		renderer.GenerateEnvironmentMap();
+		EnvironmentMapRenderer::instance = new EnvironmentMapRenderer(window, manager);
+		EnvironmentMapRenderer::instance->GenerateEnvironmentMap();
 
-		GameObject* img = new GUIElement(window, manager, renderer.getIrradianceMap());
+		GameObject* img = new GUIElement(window, manager, EnvironmentMapRenderer::instance->getBRDFMap());
 		img->SetPosition({ 0.5f, 0.5f, 0 });
 		img->SetScale({ 0.125f, 0.125f, 0 });
 		root->AddChild("img", img);
 
 		GameObject* sun = new GameObject();
 		sun->setUpdateFunction(sun_move_function);
-		sun->AddComponent(LIGHT_COMPONENT, new Light(Vector3f(1, 0.95, 0.87), Vector3f(10000000000.0), true));
+		sun->AddComponent(LIGHT_COMPONENT, new Light(Vector3f(1, 0.95f, 0.87f), Vector3f(10000000000.0f), true));
 		root->AddChild("sun", sun);
 
 		GameObject* light = new GameObject();

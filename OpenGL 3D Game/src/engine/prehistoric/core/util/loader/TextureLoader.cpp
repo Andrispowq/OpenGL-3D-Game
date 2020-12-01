@@ -12,6 +12,21 @@ namespace TextureLoader
 			stbi_set_flip_vertically_on_load(0);
 
 		int width, height, channels;
+		if (stbi_is_hdr(path.c_str()))
+		{
+			float* data = stbi_loadf(path.c_str(), &width, &height, &channels, 0);
+
+			GLTexture* texture = new GLTexture(width, height);
+			texture->Bind();
+			texture->UploadHDRTextureData(data);
+
+			texture->SamplerProperties(filter, wrapMode);
+			texture->Unbind();
+
+			stbi_image_free(data);
+
+			return texture;
+		}
 
 		unsigned char* data;
 		if (FrameworkConfig::api == OpenGL)

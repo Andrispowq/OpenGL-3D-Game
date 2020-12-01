@@ -2,12 +2,12 @@
 #include "VkContext.h"
 
 VKContext::VKContext(Window* window)
-	: Context(window)
+	: Context(window), surface{ nullptr }
 {
-	surface.CreateSurface(window, &instance);
+	surface = std::make_unique<VKSurface>(window, instance.getInstance());
 
-	physicalDevice.PickPhysicalDevice(&surface, &instance);
-	logicalDevice.CreateLogicalDevice(&physicalDevice, &surface, instance.getValidationLayers());
+	physicalDevice.PickPhysicalDevice(instance.getInstance(), surface->getSurface());
+	logicalDevice.CreateLogicalDevice(&physicalDevice, surface->getSurface(), instance.getValidationLayers());
 
 	VKUtil::Init(physicalDevice.getPhysicalDevice(), logicalDevice.getDevice());
 }
@@ -17,5 +17,4 @@ VKContext::~VKContext()
 	VKUtil::CleanUp(logicalDevice.getDevice());
 
 	logicalDevice.DestroyLogicalDevice();
-	surface.DeleteSurface();
 }

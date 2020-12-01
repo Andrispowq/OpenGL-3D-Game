@@ -41,12 +41,5 @@ std::vector<float> Mesh::GetVertexData() const
 
 std::vector<uint16_t> Mesh::GetIndexData() const
 {
-	std::vector<uint16_t> indexArray(indices.size());
-
-	for (unsigned int i = 0; i < indices.size(); i++)
-	{
-		indexArray[i] = indices[i];
-	}
-
-	return indexArray;
+	return indices;
 }

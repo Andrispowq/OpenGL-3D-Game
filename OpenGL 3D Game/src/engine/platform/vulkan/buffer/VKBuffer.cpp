@@ -39,7 +39,7 @@ VKBuffer::VKBuffer(const VKBuffer& other)
 	: physicalDevice(other.physicalDevice), device(other.device), size(other.size), buFlags(other.buFlags), mpFlags(other.mpFlags)
 {
 	VKUtil::CreateBuffer(physicalDevice->getPhysicalDevice(), device->getDevice(), size, buFlags, mpFlags, buffer, memory);
-	VKUtil::CopyBuffer(device, other.buffer, buffer, size);
+	//VKUtil::CopyBuffer(device, other.buffer, buffer, size);
 }
 
 VKBuffer::VKBuffer(VKBuffer&& other) noexcept

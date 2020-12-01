@@ -13,7 +13,7 @@ public:
 	{
 		_ASSERT(sizeof(uint32_t) == 4); //We're relying on the fact that a uint32_t is 4 bytes or 32 bits to mark used bits, so it's necessary we check it
 
-		num_of_uint32_ts = ((max_allocations / 32) % 1) ? int(max_allocations / 32) + 1 : max_allocations / 32;
+		num_of_uint32_ts = ((max_allocations / 32) % 1) ? uint32_t(max_allocations / 32) + 1 : max_allocations / 32;
 
 		used_bits = new uint32_t[num_of_uint32_ts];
 		array = new T[max_allocations];
@@ -48,6 +48,11 @@ public:
 
 		if (index == max_allocations)
 			return nullptr;
+
+		//Mark the used block as free
+		size_t j = index % 32;
+		size_t i = size_t(index / 32);
+		used_bits[i] |= 0x1 << j;
 
 		return &array[index];
 	}

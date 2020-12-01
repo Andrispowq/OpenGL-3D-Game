@@ -2,6 +2,8 @@
 #include "VKCapabilities.h"
 #include "engine/platform/vulkan/framework/device/VKPhysicalDevice.h"
 
+#include <vulkan/vulkan_beta.h>
+
 void VKCapabilities::QueryCapabilities(void* physicalDevice)
 {
 	VKPhysicalDevice* physicalDev = reinterpret_cast<VKPhysicalDevice*>(physicalDevice);
@@ -15,16 +17,17 @@ void VKCapabilities::QueryCapabilities(void* physicalDevice)
 	vkGetPhysicalDeviceMemoryProperties(physicalDev->getPhysicalDevice(), &memoryProps);
 
 	//Getting extension features:
-	/*VkPhysicalDeviceRayTracingPropertiesNV rtProps;
+/*
+	VkPhysicalDeviceRayTracingPropertiesNV rtProps;
 	rtProps.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_RAY_TRACING_PROPERTIES_NV;
+	rtProps.pNext = nullptr;
 
 	VkPhysicalDeviceProperties2 props;
 	props.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
 	props.pNext = &rtProps;
 
 	vkGetPhysicalDeviceProperties2(physicalDev->getPhysicalDevice(), &props);
-
-	PR_LOG_MESSAGE("Recursion depth: %u\n", rtProps.maxRecursionDepth);*/
+*/
 
 	physicalDeviceCaps.name = properties.deviceName;
 	physicalDeviceCaps.discrete = properties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
@@ -78,9 +81,20 @@ void VKCapabilities::QueryCapabilities(void* physicalDevice)
 	std::vector<VkExtensionProperties> availableExtensions(extensionCount);
 	vkEnumerateDeviceExtensionProperties(physicalDev->getPhysicalDevice(), nullptr, &extensionCount, availableExtensions.data());
 
+	bool rtPipSupp = false;
+	bool accStrSupp = false;
 	for (uint32_t i = 0; i < extensionCount; i++)
 	{
-		if (strcmp(availableExtensions[i].extensionName, VK_NV_RAY_TRACING_EXTENSION_NAME) == 0)
+		if (strcmp(availableExtensions[i].extensionName, VK_KHR_RAY_TRACING_PIPELINE_EXTENSION_NAME) == 0)
+		{
+			rtPipSupp = true;
+		}
+		else if (strcmp(availableExtensions[i].extensionName, VK_KHR_ACCELERATION_STRUCTURE_EXTENSION_NAME) == 0)
+		{
+			accStrSupp = true;
+		}
+
+		if (rtPipSupp && accStrSupp)
 		{
 			shaderCaps.rayTracingSupported = true;
 			break;

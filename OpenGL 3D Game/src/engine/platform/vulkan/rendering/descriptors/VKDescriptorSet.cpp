@@ -6,7 +6,7 @@ VKDescriptorSet::VKDescriptorSet(const VKDescriptorSet& other)
 {
 	bindings.reserve(other.bindings.size());
 
-	for (VKDescriptorSetBinding* binding : bindings)
+	for (VKDescriptorSetBinding* binding : other.bindings)
 	{
 		bindings.push_back(new VKDescriptorSetBinding(*binding));
 	}
@@ -27,14 +27,14 @@ void VKDescriptorSet::addBinding(VKDescriptorSetBinding* binding)
 	bindings.push_back(binding);
 }
 
-void VKDescriptorSet::finalize()
+void VKDescriptorSet::finalise()
 {
 	std::vector<VkDescriptorSetLayoutBinding> _bindings;
 	_bindings.reserve(bindings.size());
 
 	for (auto& binding : bindings)
 	{
-		binding->finalize();
+		binding->finalise();
 		_bindings.push_back(binding->getBinding());
 	}
 

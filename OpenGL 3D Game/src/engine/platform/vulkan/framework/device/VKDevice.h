@@ -13,7 +13,7 @@ public:
 	VKDevice();
 	virtual ~VKDevice();
 
-	void CreateLogicalDevice(VKPhysicalDevice* physicalDevice, VKSurface* surface, const std::vector<const char*>& validationLayers);
+	void CreateLogicalDevice(VKPhysicalDevice* physicalDevice, VkSurfaceKHR surface, const std::vector<const char*>& validationLayers);
 	void DestroyLogicalDevice();
 
 	//This needs to return a reference

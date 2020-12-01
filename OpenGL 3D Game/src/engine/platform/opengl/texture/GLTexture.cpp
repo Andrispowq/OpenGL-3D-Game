@@ -61,6 +61,11 @@ void GLTexture::UploadTextureData(unsigned char* data, ImageFormat format)
 	}
 }
 
+void GLTexture::UploadHDRTextureData(float* data)
+{
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, data);
+}
+
 void GLTexture::SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode)
 {
 	GLenum type_ = getTexType(type);
@@ -195,6 +200,8 @@ GLenum GLTexture::getInternalFormat(ImageFormat format)
 		return GL_RG16;
 	if (format == R16G16_SFLOAT || format == R16G16_LINEAR)
 		return GL_RG32F;
+	if (format == R8G8B8_16_SRGB || format == R8G8B8_16_LINEAR)
+		return GL_RGB16F;
 	if (format == R8G8B8_SRGB || format == R8G8B8_LINEAR)
 		return GL_RGB32F;
 	if (format == R8G8B8A8_SRGB || format == R8G8B8A8_LINEAR)
@@ -217,7 +224,9 @@ GLenum GLTexture::getFormat(ImageFormat format)
 		return GL_RG;
 	if (format == R16G16_SFLOAT || format == R16G16_LINEAR)
 		return GL_RG;
-	if (format == R8G8B8_SRGB || format == R8G8B8A8_LINEAR)
+	if (format == R8G8B8_16_SRGB || format == R8G8B8_16_LINEAR)
+		return GL_RGB;
+	if (format == R8G8B8_SRGB || format == R8G8B8_LINEAR)
 		return GL_RGB;
 	if (format == R8G8B8A8_SRGB || format == R8G8B8A8_LINEAR)
 		return GL_RGBA;

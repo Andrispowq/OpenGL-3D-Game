@@ -27,5 +27,5 @@ void GLPrefilterShader::UpdateUniforms(const Matrix4f& projection, const Matrix4
 	SetUniformi("environmentMap", 0);
 
 	SetUniformf("environmentMap", roughness);
-	SetUniformf("resolution", EnvironmentMapConfig::prefilterMapResolution);
+	SetUniformf("resolution", (float)EnvironmentMapConfig::prefilterMapResolution);
 }

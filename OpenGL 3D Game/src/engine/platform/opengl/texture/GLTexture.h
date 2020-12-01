@@ -19,6 +19,8 @@ public:
 	virtual void UploadTextureData(unsigned char* data, ImageFormat format) override;
 	virtual void Generate() override {}
 
+	void UploadHDRTextureData(float* data);
+
 	virtual void SamplerProperties(SamplerFilter filter, TextureWrapMode wrapMode) override;
 
 	inline GLuint getTextureID() const { return id; }

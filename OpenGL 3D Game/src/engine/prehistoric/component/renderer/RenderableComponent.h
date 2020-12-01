@@ -25,10 +25,8 @@ public:
 	RenderableComponent(Window* window, AssembledAssetManager* manager);
 	virtual ~RenderableComponent();
 
-	static void RecreatePipelines();
-
 	virtual void Render(Renderer* renderer) const = 0;
-	virtual void BatchRender() const = 0;
+	virtual void BatchRender(uint32_t instance_index = 0) const = 0;
 
 	inline size_t getPipelineIndex() const { return pipelineIndex; }
 	Pipeline* getPipeline() const;

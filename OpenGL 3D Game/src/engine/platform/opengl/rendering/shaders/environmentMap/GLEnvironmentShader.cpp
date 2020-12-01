@@ -8,6 +8,7 @@ GLEnvironmentShader::GLEnvironmentShader()
 
 	CompileShader();
 
+	AddUniform("m_transform");
 	AddUniform("m_view");
 	AddUniform("m_projection");
 
@@ -17,6 +18,7 @@ GLEnvironmentShader::GLEnvironmentShader()
 
 void GLEnvironmentShader::UpdateUniforms(const Matrix4f& projection, const Matrix4f& view, Texture* texture) const
 {
+	SetUniform("m_transform", Matrix4f::Transformation(Vector3f(0, 10, 0), Vector3f(), Vector3f(1)));
 	SetUniform("m_view", view);
 	SetUniform("m_projection", projection);
 

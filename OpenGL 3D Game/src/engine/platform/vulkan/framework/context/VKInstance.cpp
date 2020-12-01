@@ -3,13 +3,15 @@
 
 #include "engine/platform/Prehistoric.h"
 
+#define VK_LAYER_KHRONOS_VALIDATION_EXTENSION_NAME "VK_LAYER_KHRONOS_validation"
+
 VKInstance::VKInstance()
 {
 	//Check for validation layer support, but we only use it in debug mode
 #if defined(PR_ENABLE_DEBUGGING) && defined(PR_VK_ENABLE_VALIDATION_LAYERS)
 	if (FrameworkConfig::apiVulkanUseValidationLayers)
 	{
-		validationLayers.push_back("VK_LAYER_KHRONOS_validation");
+		validationLayers.push_back(VK_LAYER_KHRONOS_VALIDATION_EXTENSION_NAME);
 
 		if (!CheckValidationLayerSupport())
 		{
@@ -24,7 +26,7 @@ VKInstance::VKInstance()
 	appInfo.applicationVersion = VK_MAKE_VERSION(FrameworkConfig::apiVersion.x, FrameworkConfig::apiVersion.y, 0);
 	appInfo.pEngineName = FrameworkConfig::windowName.c_str();
 	appInfo.engineVersion = VK_MAKE_VERSION(FrameworkConfig::apiVersion.x, FrameworkConfig::apiVersion.y, 0);
-	appInfo.apiVersion = VK_API_VERSION_1_0; //We use Vulkan 1.0 for now, this may change
+	appInfo.apiVersion = VK_MAKE_VERSION(FrameworkConfig::apiVersion.x, FrameworkConfig::apiVersion.y, 0);
 
 	VkInstanceCreateInfo createInfo = {};
 	createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;

@@ -18,7 +18,7 @@ public:
 	void PreRender(Renderer* renderer) override;
 
 	void Render(Renderer* renderer) const override;
-	void BatchRender() const override;
+	void BatchRender(uint32_t instance_index = 0) const override;
 
 	inline size_t getMaterialIndex() const { return materialIndex; }
 	Material* getMaterial() const;

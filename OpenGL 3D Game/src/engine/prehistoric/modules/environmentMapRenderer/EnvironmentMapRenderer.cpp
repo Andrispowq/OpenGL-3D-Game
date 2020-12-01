@@ -12,6 +12,8 @@
 #include "engine/platform/opengl/rendering/pipeline/GLGraphicsPipeline.h"
 //#include "engine/platform/vulkan/rendering/pipeline/VKGraphicsPipeline.h"
 
+EnvironmentMapRenderer* EnvironmentMapRenderer::instance;
+
 EnvironmentMapRenderer::EnvironmentMapRenderer(Window* window, AssembledAssetManager* manager)
 	: window(window), manager(manager)
 {
@@ -19,6 +21,10 @@ EnvironmentMapRenderer::EnvironmentMapRenderer(Window* window, AssembledAssetMan
 	cubeID = manager->getAssetManager()->getResource<VertexBuffer>("cube.obj");
 	cubeBuffer = manager->getAssetManager()->getResourceByID<VertexBuffer>(cubeID);
 	cubeBuffer->setFrontFace(FrontFace::DOUBLE_SIDED);
+
+	size_t quadID = manager->getAssetManager()->getResource<VertexBuffer>("quad.obj");
+	VertexBuffer* quadBuffer = manager->getAssetManager()->getResourceByID<VertexBuffer>(quadID);
+	quadBuffer->setFrontFace(FrontFace::CLOCKWISE);
 
 	//Load the shaders and the pipelines
 	environmentMapShader = new GLEnvironmentMapShader();
@@ -38,7 +44,7 @@ EnvironmentMapRenderer::EnvironmentMapRenderer(Window* window, AssembledAssetMan
 	irradiancePipelineID = manager->loadResource<Pipeline>(irradiancePipeline);
 	prefilterPipeline = new GLGraphicsPipeline(window, manager->getAssetManager(), prefilterShaderID, cubeID);
 	prefilterPipelineID = manager->loadResource<Pipeline>(prefilterPipeline);
-	brdfIntegratePipeline = new GLGraphicsPipeline(window, manager->getAssetManager(), brdfIntegrateShaderID, cubeID);
+	brdfIntegratePipeline = new GLGraphicsPipeline(window, manager->getAssetManager(), brdfIntegrateShaderID, quadID);
 	brdfIntegratePipelineID = manager->loadResource<Pipeline>(brdfIntegratePipeline);
 	backgroundPipeline = new GLGraphicsPipeline(window, manager->getAssetManager(), environmentShaderID, cubeID);
 	backgroundPipelineID = manager->loadResource<Pipeline>(backgroundPipeline);
@@ -72,7 +78,7 @@ EnvironmentMapRenderer::EnvironmentMapRenderer(Window* window, AssembledAssetMan
 	framebuffer->Clear(0.0f);
 
 	brdfIntegratePipeline->BindPipeline(nullptr);
-	cubeBuffer->Draw(nullptr);
+	brdfIntegratePipeline->RenderPipeline();
 	brdfIntegratePipeline->UnbindPipeline();
 
 	framebuffer->Unbind();
@@ -90,7 +96,7 @@ void EnvironmentMapRenderer::GenerateEnvironmentMap()
 	framebuffer->addDepthAttachment(size, size);
 	window->getSwapchain()->SetWindowSize(size, size);
 
-	environmentMap = GLTexture::Storage3D(size, size, 0, R8G8B8A8_LINEAR, Bilinear);
+	environmentMap = GLTexture::Storage3D(size, size, 0, R8G8B8_16_LINEAR, Bilinear);
 	environmentMapID = manager->getAssetManager()->addResource<Texture>(environmentMap);
 
 	environmentMapPipeline->BindPipeline(nullptr);
@@ -100,7 +106,7 @@ void EnvironmentMapRenderer::GenerateEnvironmentMap()
 		framebuffer->Clear(0.0f);
 
 		environmentMapShader->UpdateUniforms(projectionMatrix, viewMatrices[i], equirectangularMap);
-		cubeBuffer->Draw(nullptr);
+		environmentMapPipeline->RenderPipeline();
 	}
 	environmentMapPipeline->UnbindPipeline();
 
@@ -110,7 +116,7 @@ void EnvironmentMapRenderer::GenerateEnvironmentMap()
 	//Rendering the diffuse irradiance map
 	size = EnvironmentMapConfig::irradianceMapResolution;
 
-	irradianceMap = GLTexture::Storage3D(size, size, 0, R8G8B8A8_LINEAR, Bilinear);
+	irradianceMap = GLTexture::Storage3D(size, size, 0, R8G8B8_16_LINEAR, Bilinear);
 	irradianceMapID = manager->getAssetManager()->addResource<Texture>(irradianceMap);
 
 	irradiancePipeline->BindPipeline(nullptr);
@@ -120,18 +126,18 @@ void EnvironmentMapRenderer::GenerateEnvironmentMap()
 		framebuffer->Clear(0.0f);
 
 		irradianceShader->UpdateUniforms(projectionMatrix, viewMatrices[i], environmentMap);
-		cubeBuffer->Draw(nullptr);
+		irradiancePipeline->RenderPipeline();
 	}
 	irradiancePipeline->UnbindPipeline();
 
 	//Rendering the pre-filter enviroment map
 	size = EnvironmentMapConfig::prefilterMapResolution;
 
-	prefilterMap = GLTexture::Storage3D(size, size, 0, R8G8B8A8_LINEAR, Trilinear, ClampToEdge);
+	prefilterMap = GLTexture::Storage3D(size, size, 0, R8G8B8_16_LINEAR, Trilinear, ClampToEdge);
 	prefilterMapID = manager->getAssetManager()->addResource<Texture>(prefilterMap);
 
 	prefilterPipeline->BindPipeline(nullptr);
-	for (int level = 0; level < EnvironmentMapConfig::prefilterLevels; ++level)
+	for (int level = 0; level < (int)EnvironmentMapConfig::prefilterLevels; ++level)
 	{
 		int levelSize = (int)(size * pow(0.5f, level));
 
@@ -142,14 +148,17 @@ void EnvironmentMapRenderer::GenerateEnvironmentMap()
 
 		for (int i = 0; i < 6; ++i)
 		{
-			framebuffer->addColourAttachment3D(prefilterMap, i, level);
+			framebuffer->addColourAttachment3D(prefilterMap, i, 0, level);
 			framebuffer->Clear(0.0f);
 
 			prefilterShader->UpdateUniforms(projectionMatrix, viewMatrices[i], environmentMap, roughness);
-			cubeBuffer->Draw(nullptr);
+			prefilterPipeline->RenderPipeline();
 		}
 	}
 	prefilterPipeline->UnbindPipeline();
+
+	//prefilterMap->Bind();
+	//prefilterMap->SamplerProperties(Trilinear, Repeat);
 
 	framebuffer->Unbind();
 	window->getSwapchain()->SetWindowSize(window->getWidth(), window->getHeight());
@@ -163,7 +172,7 @@ void EnvironmentMapRenderer::RenderCube(Camera* camera)
 {
 	backgroundPipeline->BindPipeline(nullptr);
 
-	environmentShader->UpdateUniforms(camera->getProjectionMatrix(), camera->getViewMatrix(), environmentMap);
+	environmentShader->UpdateUniforms(camera->getProjectionMatrix(), camera->getViewMatrix(), irradianceMap);
 	cubeBuffer->Draw(nullptr);
 
 	backgroundPipeline->UnbindPipeline();

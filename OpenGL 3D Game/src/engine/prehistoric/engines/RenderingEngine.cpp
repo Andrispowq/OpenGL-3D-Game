@@ -101,6 +101,8 @@ void RenderingEngine::Update(float delta)
 void RenderingEngine::Render()
 {
 	renderer->PrepareRendering();
+	if(FrameworkConfig::api == OpenGL)
+		EnvironmentMapRenderer::instance->RenderCube(camera.get());
 	renderer->Render();
 	renderer->EndRendering();
 }

@@ -11,12 +11,12 @@
 class VKSurface
 {
 public:
-	void CreateSurface(Window* window, VKInstance* instance);
-	void DeleteSurface();
+	VKSurface(Window* window, VkInstance instance);
+	virtual ~VKSurface();
 
 	VkSurfaceKHR getSurface() const { return surface; }
 private:
-	VKInstance* instance;
+	VkInstance instance;
 
 	VkSurfaceKHR surface;
 };

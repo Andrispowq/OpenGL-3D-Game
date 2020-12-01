@@ -23,7 +23,6 @@ struct SwapChainSupportDetails
 };
 
 class VKDevice;
-class VKPhysicalDevice;
 
 static VkCommandPool copyCommandPool;
 

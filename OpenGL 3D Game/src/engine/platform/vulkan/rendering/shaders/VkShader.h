@@ -57,9 +57,7 @@ public:
 
 	VkPipelineShaderStageCreateInfo* GetShaderStages() { return shaderStages; }
 	VkPipelineLayout& GetPipelineLayout() { return pipelineLayout; }
-
 	uint32_t getModuleCount() { return counter; }
-	uint32_t getInstanceIndex() { return instance_counter; }
 
 	void RegisterInstance();
 private:
@@ -73,8 +71,6 @@ protected:
 	VKSwapchain* swapchain;
 
 	mutable CommandBuffer* commandBuffer; //The command buffer to use
-
-	uint32_t instance_counter = 0;
 
 	//Module data
 	VkShaderModule* modules;

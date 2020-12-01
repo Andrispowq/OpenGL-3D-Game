@@ -22,10 +22,12 @@ public:
 	/*
 		This method will create the descriptor pool, allocate the sets, and so on, and the only thing you can change now is the new instances
 	*/
-	void finalize(VkPipelineLayout& layout);
+	void finalise(VkPipelineLayout& layout);
+
+	void registerInstance();
 
 	void addUniform(const std::string& name, uint32_t stages, UniformType type, uint32_t set, uint32_t binding, uint32_t size, Texture* texture);
-	VKDescriptorSetBinding* getUniform(const std::string& name);
+	VKDescriptorSetBinding* getUniform(const std::string& name, uint32_t instance_index);
 
 	VKDescriptorSet* getSet(uint32_t set_index, uint32_t instance_index) { return sets[size_t(instance_index * numberOfSets + set_index)]; }
 	uint32_t getNumberOfSets() const { return numberOfSets; }
@@ -41,9 +43,13 @@ private:
 	VKDevice* device;
 	VKSwapchain* swapchain;
 
+	std::array<VkDescriptorPoolSize, 2> poolSizes;
 	VkDescriptorPool pool;
 
-	uint32_t instance_count = 1; //We assume the instance count to be one when creating the data structure, and then when we recieve an new instance, we create a copy of the sets in the vector
+	uint32_t uniformCount;
+	uint32_t textureCount;
+
+	uint32_t instance_count = 0;
 	
 	uint32_t numberOfSets;
 	std::vector<VKDescriptorSet*> sets; //First, we allocate the amount of sets as the swapchain images, then extend the vector when recieving the number of instances

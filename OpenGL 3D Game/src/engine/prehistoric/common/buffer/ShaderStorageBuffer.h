@@ -34,14 +34,14 @@ struct Layout
 {
 	constexpr static size_t MAX_MEMBERS = 10;
 
-	LayoutMember* members = nullptr;
+	LayoutMember members[MAX_MEMBERS];
 	size_t memberCount = 0;
 
 	void addLayoutMember(LayoutType type, LayoutTypeInfo typeInfo, size_t count)
 	{
-		if (members == nullptr)
+		if (memberCount == MAX_MEMBERS)
 		{
-			members = new LayoutMember[MAX_MEMBERS];
+			PR_LOG_RUNTIME_ERROR("Tried to add a new member to a Layout descriptor for ShaderStorageBuffer, but already reached the maximum!\n");
 		}
 
 		members[memberCount].count = count;
