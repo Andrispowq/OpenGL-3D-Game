@@ -22,7 +22,7 @@ static void sun_move_function(GameObject* object, float frameTime)
 	constexpr float range = 32000.0f;
 	constexpr float anglesPerSecond = 0.5f;
 
-	static float angle = 150.0f;
+	static float angle = 190.0f;
 
 	float x = cos(ToRadians(angle)) * range;
 	float y = sin(ToRadians(angle)) * range;
@@ -84,7 +84,7 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 		Terrain* terrain = new Terrain(window, camera, manager);
 		terrain->UpdateQuadtree();
 
-		root->AddChild("Terrain", terrain);
+		//root->AddChild("Terrain", terrain);
 
 		/*GameObject* slider = new GUISlider(window, manager, 0.0f, 2.0f, terrain->getMaps()->getHeightmap(), &EngineConfig::rendererExposure, sizeof(float), true);
 		slider->SetPosition({ 0.5f, 0.5f, 0 });
@@ -99,10 +99,10 @@ Scene::Scene(GameObject* root, Window* window, AssembledAssetManager* manager, C
 		EnvironmentMapRenderer::instance = new EnvironmentMapRenderer(window, manager);
 		EnvironmentMapRenderer::instance->GenerateEnvironmentMap();
 
-		GameObject* img = new GUIElement(window, manager, EnvironmentMapRenderer::instance->getBRDFMap());
+		/*GameObject* img = new GUIElement(window, manager, EnvironmentMapRenderer::instance->getBRDFMap());
 		img->SetPosition({ 0.5f, 0.5f, 0 });
 		img->SetScale({ 0.125f, 0.125f, 0 });
-		root->AddChild("img", img);
+		root->AddChild("img", img);*/
 
 		GameObject* sun = new GameObject();
 		sun->setUpdateFunction(sun_move_function);
